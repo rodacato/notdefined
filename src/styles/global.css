@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
 
 /* ── Design tokens ─────────────────────────────────────────── */
 @theme {
@@ -16,9 +15,6 @@
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
-
-  /* Spacing */
-  --spacing-page: 1.5rem;
 }
 
 /* ── Base ──────────────────────────────────────────────────── */
@@ -41,49 +37,143 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Prose (blog posts) ────────────────────────────────────── */
+/* ── Prose — blog post content ─────────────────────────────── */
 .prose {
-  --tw-prose-body:        oklch(85% 0.008 250);
-  --tw-prose-headings:    oklch(96% 0.005 250);
-  --tw-prose-lead:        oklch(70% 0.010 250);
-  --tw-prose-links:       var(--color-accent);
-  --tw-prose-bold:        oklch(96% 0.005 250);
-  --tw-prose-counters:    oklch(55% 0.012 250);
-  --tw-prose-bullets:     oklch(35% 0.015 250);
-  --tw-prose-hr:          oklch(22% 0.016 250);
-  --tw-prose-quotes:      oklch(85% 0.008 250);
-  --tw-prose-quote-borders: var(--color-accent-dim);
-  --tw-prose-captions:    oklch(55% 0.012 250);
-  --tw-prose-code:        oklch(78% 0.12 265);
-  --tw-prose-pre-code:    oklch(88% 0.008 250);
-  --tw-prose-pre-bg:      oklch(11% 0.02 250);
-  --tw-prose-th-borders:  oklch(25% 0.015 250);
-  --tw-prose-td-borders:  oklch(20% 0.015 250);
-
-  font-size: 1.05rem;
+  color: oklch(85% 0.008 250);
+  font-size: 1.0625rem;
   line-height: 1.8;
+  max-width: none;
 }
 
-/* Shiki code block reset — keep its own background */
+.prose > * + * {
+  margin-top: 1.5em;
+}
+
+/* Headings */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: oklch(96% 0.005 250);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+.prose h2 { font-size: 1.4rem; }
+.prose h3 { font-size: 1.15rem; }
+.prose h4 { font-size: 1rem; }
+
+/* Paragraphs */
+.prose p {
+  margin-top: 0;
+  margin-bottom: 1.4em;
+}
+
+/* Links */
+.prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent-dim);
+  text-underline-offset: 3px;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+.prose a:hover {
+  color: oklch(78% 0.20 265);
+  text-decoration-color: var(--color-accent);
+}
+
+/* Bold & italic */
+.prose strong {
+  color: oklch(96% 0.005 250);
+  font-weight: 600;
+}
+.prose em {
+  font-style: italic;
+}
+
+/* Lists */
+.prose ul,
+.prose ol {
+  padding-left: 1.6em;
+  margin-bottom: 1.4em;
+}
+.prose ul { list-style-type: disc; }
+.prose ol { list-style-type: decimal; }
+.prose li {
+  margin-top: 0.35em;
+  margin-bottom: 0.35em;
+}
+.prose li::marker {
+  color: oklch(40% 0.015 250);
+}
+
+/* Blockquote */
+.prose blockquote {
+  border-left: 3px solid var(--color-accent-dim);
+  padding-left: 1.25em;
+  margin-left: 0;
+  color: oklch(70% 0.010 250);
+  font-style: italic;
+}
+
+/* Horizontal rule */
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5em 0;
+}
+
+/* Code blocks (Shiki-rendered) */
 .prose pre {
   background-color: oklch(11% 0.02 250) !important;
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
+  padding: 1.25em 1.5em;
   overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  line-height: 1.7;
+  margin-bottom: 1.5em;
 }
 
 /* Inline code */
-.prose :not(pre) > code::before,
-.prose :not(pre) > code::after {
-  content: none;
-}
-
 .prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  color: oklch(78% 0.12 265);
   background-color: var(--color-surface-2);
   border: 1px solid var(--color-border);
   border-radius: 0.25rem;
   padding: 0.15em 0.4em;
-  font-size: 0.875em;
+}
+
+/* Tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  margin-bottom: 1.5em;
+}
+.prose th {
+  color: oklch(96% 0.005 250);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.6em 1em;
+  border-bottom: 1px solid oklch(25% 0.015 250);
+}
+.prose td {
+  padding: 0.6em 1em;
+  border-bottom: 1px solid oklch(18% 0.015 250);
+  vertical-align: top;
+}
+
+/* Images */
+.prose img {
+  border-radius: 0.5rem;
+  max-width: 100%;
+  height: auto;
 }
 
 /* ── Cursor blink ──────────────────────────────────────────── */
