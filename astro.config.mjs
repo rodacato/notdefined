@@ -8,6 +8,10 @@ export default defineConfig({
       theme: 'github-dark-dimmed',
     },
   },
+  server: {
+    host: true,
+    port: 4321,
+  },
   vite: {
     plugins: [tailwindcss()],
   },
