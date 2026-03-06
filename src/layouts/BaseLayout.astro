@@ -18,39 +18,33 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/logo.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonicalURL} />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content="/logo.png" />
     <meta name="twitter:card" content="summary" />
   </head>
   <body class="flex min-h-full flex-col">
 
-    <header style="border-bottom: 1px solid var(--color-border);">
+    <header class="site-header">
       <div class="mx-auto flex w-full max-w-3xl items-center justify-between px-6 py-4">
-        <a
-          href="/"
-          style="color: var(--color-text); font-weight: 500; letter-spacing: -0.01em;"
-          class="text-sm transition-opacity hover:opacity-70"
-        >
-          notdefined<span class="cursor-blink">_</span>
+        <a href="/" class="brand">
+          <img src="/logo.png" alt="notdefined.dev logo" class="brand-logo" />
+          <span class="brand-name">notdefined<span class="cursor-blink">_</span></span>
         </a>
         <nav class="flex items-center gap-6">
-          <a
-            href="/blog/"
-            style="color: var(--color-muted); font-size: 0.875rem;"
-            class="transition-colors hover:text-[var(--color-text)]"
-          >
-            Blog
-          </a>
+          <a href="/blog/" class="nav-link">Blog</a>
           <a
             href="https://github.com/rodacato"
             target="_blank"
             rel="noopener noreferrer"
-            style="color: var(--color-muted); font-size: 0.875rem;"
-            class="transition-colors hover:text-[var(--color-text)]"
+            class="nav-link"
           >
             GitHub ↗
           </a>
@@ -62,13 +56,58 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
 
-    <footer style="border-top: 1px solid var(--color-border);">
+    <footer class="site-footer">
       <div class="mx-auto w-full max-w-3xl px-6 py-6">
-        <p style="color: var(--color-muted); font-size: 0.8rem;">
-          © {new Date().getFullYear()} Adrian Castillo
-        </p>
+        <p class="footer-text">© {new Date().getFullYear()} Adrian Castillo</p>
       </div>
     </footer>
 
   </body>
 </html>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-bg);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: opacity 150ms ease;
+  }
+  .brand:hover { opacity: 0.7; }
+
+  .brand-logo {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: block;
+  }
+
+  .brand-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+  }
+
+  .nav-link {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+  .nav-link:hover { color: var(--color-text); }
+
+  .site-footer {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer-text {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+</style>

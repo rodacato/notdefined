@@ -2,15 +2,15 @@
 
 /* ── Design tokens ─────────────────────────────────────────── */
 @theme {
-  /* Colors */
-  --color-bg:         oklch(8% 0.015 250);
-  --color-surface:    oklch(12% 0.018 250);
-  --color-surface-2:  oklch(16% 0.018 250);
-  --color-border:     oklch(22% 0.016 250);
-  --color-text:       oklch(92% 0.007 250);
-  --color-muted:      oklch(50% 0.012 250);
-  --color-accent:     oklch(68% 0.20 265);
-  --color-accent-dim: oklch(45% 0.15 265);
+  /* Light theme */
+  --color-bg:         oklch(99.5% 0.002 250);
+  --color-surface:    oklch(96.5% 0.005 250);
+  --color-surface-2:  oklch(93% 0.007 250);
+  --color-border:     oklch(87% 0.010 250);
+  --color-text:       oklch(13% 0.012 250);
+  --color-muted:      oklch(48% 0.012 250);
+  --color-accent:     oklch(52% 0.22 275);
+  --color-accent-dim: oklch(72% 0.14 275);
 
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -23,7 +23,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -39,7 +39,7 @@ body {
 
 /* ── Prose — blog post content ─────────────────────────────── */
 .prose {
-  color: oklch(85% 0.008 250);
+  color: oklch(22% 0.010 250);
   font-size: 1.0625rem;
   line-height: 1.8;
   max-width: none;
@@ -54,7 +54,7 @@ body {
 .prose h2,
 .prose h3,
 .prose h4 {
-  color: oklch(96% 0.005 250);
+  color: oklch(10% 0.010 250);
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.25;
@@ -80,13 +80,13 @@ body {
   transition: color 150ms ease, text-decoration-color 150ms ease;
 }
 .prose a:hover {
-  color: oklch(78% 0.20 265);
+  color: oklch(42% 0.24 275);
   text-decoration-color: var(--color-accent);
 }
 
 /* Bold & italic */
 .prose strong {
-  color: oklch(96% 0.005 250);
+  color: oklch(10% 0.010 250);
   font-weight: 600;
 }
 .prose em {
@@ -106,7 +106,7 @@ body {
   margin-bottom: 0.35em;
 }
 .prose li::marker {
-  color: oklch(40% 0.015 250);
+  color: oklch(65% 0.010 250);
 }
 
 /* Blockquote */
@@ -114,7 +114,7 @@ body {
   border-left: 3px solid var(--color-accent-dim);
   padding-left: 1.25em;
   margin-left: 0;
-  color: oklch(70% 0.010 250);
+  color: oklch(45% 0.010 250);
   font-style: italic;
 }
 
@@ -125,10 +125,10 @@ body {
   margin: 2.5em 0;
 }
 
-/* Code blocks (Shiki-rendered) */
+/* Code blocks (Shiki-rendered — keep dark for contrast) */
 .prose pre {
-  background-color: oklch(11% 0.02 250) !important;
-  border: 1px solid var(--color-border);
+  background-color: oklch(14% 0.018 250) !important;
+  border: 1px solid oklch(22% 0.016 250);
   border-radius: 0.5rem;
   padding: 1.25em 1.5em;
   overflow-x: auto;
@@ -142,7 +142,7 @@ body {
 .prose :not(pre) > code {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  color: oklch(78% 0.12 265);
+  color: oklch(42% 0.20 275);
   background-color: var(--color-surface-2);
   border: 1px solid var(--color-border);
   border-radius: 0.25rem;
@@ -157,15 +157,15 @@ body {
   margin-bottom: 1.5em;
 }
 .prose th {
-  color: oklch(96% 0.005 250);
+  color: oklch(10% 0.010 250);
   font-weight: 600;
   text-align: left;
   padding: 0.6em 1em;
-  border-bottom: 1px solid oklch(25% 0.015 250);
+  border-bottom: 1px solid var(--color-border);
 }
 .prose td {
   padding: 0.6em 1em;
-  border-bottom: 1px solid oklch(18% 0.015 250);
+  border-bottom: 1px solid oklch(91% 0.008 250);
   vertical-align: top;
 }
 
@@ -192,4 +192,4 @@ body {
 ::-webkit-scrollbar        { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track  { background: transparent; }
 ::-webkit-scrollbar-thumb  { background: var(--color-border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: oklch(30% 0.016 250); }
+::-webkit-scrollbar-thumb:hover { background: oklch(78% 0.010 250); }
