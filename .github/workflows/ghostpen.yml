@@ -1,0 +1,64 @@
+name: Ghostpen — AI Blog Post
+
+on:
+  issues:
+    types: [labeled]
+
+# Only run when the 'ghostpen' label is applied
+# (the job-level `if` filters further)
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  models: read
+
+jobs:
+  ghostpen:
+    if: github.event.label.name == 'ghostpen'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate blog post draft
+        id: ghostpen
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: node .github/scripts/ghostpen.mjs
+
+      - name: Commit draft and open PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "ghostpen[bot]"
+          git config user.email "ghostpen@users.noreply.github.com"
+
+          git checkout -b "${{ steps.ghostpen.outputs.branch }}"
+          git add "${{ steps.ghostpen.outputs.file }}"
+          git commit -m "feat(content): ghostpen draft — ${{ github.event.issue.title }}"
+          git push origin "${{ steps.ghostpen.outputs.branch }}"
+
+          gh pr create \
+            --title "ghostpen: ${{ github.event.issue.title }}" \
+            --body "$(cat <<'EOF'
+          AI-generated draft from the ghostpen pipeline.
+
+          Review the post, edit as needed, and merge when ready. The issue will be closed automatically on merge.
+
+          Closes #${{ github.event.issue.number }}
+          EOF
+          )" \
+            --head "${{ steps.ghostpen.outputs.branch }}" \
+            --base main
