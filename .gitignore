@@ -1,0 +1,16 @@
+node_modules/
+.astro/
+dist/
+.vscode/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+
+# Local AI/LLM tool files
+.claude/
+.cursor/
+.windsurf/
+.roo/
+.aider*
