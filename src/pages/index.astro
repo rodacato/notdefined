@@ -1,28 +1,96 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  )
   .slice(0, 5);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
 ---
 
-<BaseLayout title="notdefined.dev" description="Personal site and blog by Adrian Castillo">
-  <header class="mb-10 space-y-4">
-    <p class="text-sm uppercase tracking-wider text-zinc-400">notdefined.dev</p>
-    <h1 class="text-4xl font-bold text-white">Adrian Castillo</h1>
-    <p class="text-zinc-300">Full-stack developer sharing notes on Ruby, JavaScript, backend, and AI workflows.</p>
-  </header>
+<BaseLayout title="notdefined.dev" description="Personal site and blog by Adrian Castillo — full-stack developer writing about Ruby, JavaScript, backend, and AI workflows.">
 
-  <section class="space-y-4">
-    <h2 class="text-2xl font-semibold">Latest posts</h2>
-    <ul class="space-y-3">
-      {posts.map((post) => (
-        <li class="rounded-lg border border-zinc-800 p-4">
-          <a href={`/blog/${post.slug}/`} class="text-lg font-medium text-cyan-400">{post.data.title}</a>
-          <p class="mt-1 text-sm text-zinc-400">{post.data.description}</p>
+  <!-- Hero -->
+  <section class="mb-16">
+    <p style="color: var(--color-accent); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;" class="mb-3">
+      notdefined.dev
+    </p>
+    <h1 style="font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 600; letter-spacing: -0.03em; color: var(--color-text); line-height: 1.15;" class="mb-4">
+      Adrian Castillo
+    </h1>
+    <p style="color: var(--color-muted); max-width: 38rem; line-height: 1.7;" class="text-base">
+      Full-stack developer with 10+ years in Ruby, JavaScript, and backend systems.
+      Writing about what I actually build and ship — including an AI pipeline that
+      runs this blog.
+    </p>
+  </section>
+
+  <!-- Recent posts -->
+  <section>
+    <div class="mb-6 flex items-center justify-between">
+      <h2 style="font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-muted);">
+        Recent posts
+      </h2>
+      <a
+        href="/blog/"
+        style="font-size: 0.8rem; color: var(--color-accent);"
+        class="transition-opacity hover:opacity-70"
+      >
+        All posts →
+      </a>
+    </div>
+
+    <ul class="post-list">
+      {posts.map((post: CollectionEntry<'blog'>, i: number) => (
+        <li class={i > 0 ? 'post-list-item bordered' : 'post-list-item'}>
+          <a href={`/blog/${post.slug}/`} class="post-link">
+            <span class="post-title">{post.data.title}</span>
+            <span class="post-date">{formatDate(post.data.pubDate)}</span>
+          </a>
         </li>
       ))}
     </ul>
   </section>
+
 </BaseLayout>
+
+<style>
+  .post-list {
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .post-list-item.bordered {
+    border-top: 1px solid var(--color-border);
+  }
+  .post-link {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    transition: background-color 150ms ease;
+    text-decoration: none;
+  }
+  .post-link:hover {
+    background-color: var(--color-surface);
+  }
+  .post-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+  .post-date {
+    font-size: 0.78rem;
+    color: var(--color-muted);
+    white-space: nowrap;
+    padding-top: 0.1rem;
+    flex-shrink: 0;
+  }
+</style>

@@ -1,15 +1,93 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-:root {
+/* ── Design tokens ─────────────────────────────────────────── */
+@theme {
+  /* Colors */
+  --color-bg:         oklch(8% 0.015 250);
+  --color-surface:    oklch(12% 0.018 250);
+  --color-surface-2:  oklch(16% 0.018 250);
+  --color-border:     oklch(22% 0.016 250);
+  --color-text:       oklch(92% 0.007 250);
+  --color-muted:      oklch(50% 0.012 250);
+  --color-accent:     oklch(68% 0.18 195);
+  --color-accent-dim: oklch(40% 0.12 195);
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* Spacing */
+  --spacing-page: 1.5rem;
+}
+
+/* ── Base ──────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
   color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  @apply bg-zinc-950 text-zinc-100 antialiased;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  @apply text-cyan-400 hover:text-cyan-300;
+/* ── Prose (blog posts) ────────────────────────────────────── */
+.prose {
+  --tw-prose-body:        oklch(85% 0.008 250);
+  --tw-prose-headings:    oklch(96% 0.005 250);
+  --tw-prose-lead:        oklch(70% 0.010 250);
+  --tw-prose-links:       var(--color-accent);
+  --tw-prose-bold:        oklch(96% 0.005 250);
+  --tw-prose-counters:    oklch(55% 0.012 250);
+  --tw-prose-bullets:     oklch(35% 0.015 250);
+  --tw-prose-hr:          oklch(22% 0.016 250);
+  --tw-prose-quotes:      oklch(85% 0.008 250);
+  --tw-prose-quote-borders: var(--color-accent-dim);
+  --tw-prose-captions:    oklch(55% 0.012 250);
+  --tw-prose-code:        oklch(80% 0.07 195);
+  --tw-prose-pre-code:    oklch(88% 0.008 250);
+  --tw-prose-pre-bg:      oklch(11% 0.02 250);
+  --tw-prose-th-borders:  oklch(25% 0.015 250);
+  --tw-prose-td-borders:  oklch(20% 0.015 250);
+
+  font-size: 1.05rem;
+  line-height: 1.8;
 }
+
+/* Shiki code block reset — keep its own background */
+.prose pre {
+  background-color: oklch(11% 0.02 250) !important;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+/* Inline code */
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
+.prose :not(pre) > code {
+  background-color: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  padding: 0.15em 0.4em;
+  font-size: 0.875em;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: oklch(30% 0.016 250); }

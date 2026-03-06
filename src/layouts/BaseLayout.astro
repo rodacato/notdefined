@@ -7,19 +7,68 @@ interface Props {
 }
 
 const { title, description = 'Personal site and blog by Adrian Castillo' } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
 <html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="canonical" href={canonicalURL} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta name="twitter:card" content="summary" />
   </head>
-  <body class="min-h-full">
-    <main class="mx-auto w-full max-w-3xl px-6 py-12">
+  <body class="flex min-h-full flex-col">
+
+    <header style="border-bottom: 1px solid var(--color-border);">
+      <div class="mx-auto flex w-full max-w-3xl items-center justify-between px-6 py-4">
+        <a
+          href="/"
+          style="color: var(--color-text); font-weight: 500; letter-spacing: -0.01em;"
+          class="text-sm transition-opacity hover:opacity-70"
+        >
+          notdefined<span style="color: var(--color-accent);">.</span>dev
+        </a>
+        <nav class="flex items-center gap-6">
+          <a
+            href="/blog/"
+            style="color: var(--color-muted); font-size: 0.875rem;"
+            class="transition-colors hover:text-[var(--color-text)]"
+          >
+            Blog
+          </a>
+          <a
+            href="https://github.com/rodacato"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="color: var(--color-muted); font-size: 0.875rem;"
+            class="transition-colors hover:text-[var(--color-text)]"
+          >
+            GitHub ↗
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="mx-auto w-full max-w-3xl flex-1 px-6 py-12 md:py-16">
       <slot />
     </main>
+
+    <footer style="border-top: 1px solid var(--color-border);">
+      <div class="mx-auto w-full max-w-3xl px-6 py-6">
+        <p style="color: var(--color-muted); font-size: 0.8rem;">
+          © {new Date().getFullYear()} Adrian Castillo
+        </p>
+      </div>
+    </footer>
+
   </body>
 </html>

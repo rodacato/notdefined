@@ -1,20 +1,129 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
 ---
 
-<BaseLayout title="Blog | notdefined.dev" description="All blog posts by Adrian Castillo">
-  <h1 class="mb-8 text-3xl font-bold">Blog</h1>
-  <ul class="space-y-4">
-    {posts.map((post) => (
-      <li class="rounded-lg border border-zinc-800 p-4">
-        <a href={`/blog/${post.slug}/`} class="text-xl font-semibold text-cyan-400">{post.data.title}</a>
-        <p class="mt-1 text-zinc-400">{post.data.description}</p>
+<BaseLayout title="Blog — notdefined.dev" description="All posts by Adrian Castillo on Ruby, JavaScript, backend, and AI workflows.">
+
+  <header class="mb-10">
+    <p class="label mb-2">Writing</p>
+    <h1 class="page-title">Blog</h1>
+    <p class="page-desc">Notes from the trenches — Ruby, JavaScript, backend architecture, and the occasional AI experiment.</p>
+  </header>
+
+  <ul class="post-list">
+    {posts.map((post: CollectionEntry<'blog'>, i: number) => (
+      <li class={i > 0 ? 'post-item bordered' : 'post-item'}>
+        <a href={`/blog/${post.slug}/`} class="post-link">
+          <div class="post-meta">
+            <span class="post-title">{post.data.title}</span>
+            <p class="post-desc">{post.data.description}</p>
+            {post.data.tags.length > 0 && (
+              <div class="tag-row">
+                {post.data.tags.map((tag: string) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+          <span class="post-date">{formatDate(post.data.pubDate)}</span>
+        </a>
       </li>
     ))}
   </ul>
+
 </BaseLayout>
+
+<style>
+  .label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+  }
+  .page-desc {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    max-width: 36rem;
+  }
+  .post-list {
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .post-item.bordered {
+    border-top: 1px solid var(--color-border);
+  }
+  .post-link {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    transition: background-color 150ms ease;
+    text-decoration: none;
+  }
+  .post-link:hover {
+    background-color: var(--color-surface);
+  }
+  .post-meta {
+    flex: 1;
+    min-width: 0;
+  }
+  .post-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.4;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .post-link:hover .post-title {
+    color: var(--color-accent);
+  }
+  .post-desc {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-top: 0.625rem;
+  }
+  .tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 0.2em 0.55em;
+    border-radius: 0.25rem;
+    background-color: var(--color-surface-2);
+    color: var(--color-muted);
+    border: 1px solid var(--color-border);
+  }
+  .post-date {
+    font-size: 0.78rem;
+    color: var(--color-muted);
+    white-space: nowrap;
+    padding-top: 0.15rem;
+    flex-shrink: 0;
+  }
+</style>
