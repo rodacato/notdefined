@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5);
+---
+
+<BaseLayout title="notdefined.dev" description="Personal site and blog by Adrian Castillo">
+  <header class="mb-10 space-y-4">
+    <p class="text-sm uppercase tracking-wider text-zinc-400">notdefined.dev</p>
+    <h1 class="text-4xl font-bold text-white">Adrian Castillo</h1>
+    <p class="text-zinc-300">Full-stack developer sharing notes on Ruby, JavaScript, backend, and AI workflows.</p>
+  </header>
+
+  <section class="space-y-4">
+    <h2 class="text-2xl font-semibold">Latest posts</h2>
+    <ul class="space-y-3">
+      {posts.map((post) => (
+        <li class="rounded-lg border border-zinc-800 p-4">
+          <a href={`/blog/${post.slug}/`} class="text-lg font-medium text-cyan-400">{post.data.title}</a>
+          <p class="mt-1 text-sm text-zinc-400">{post.data.description}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
