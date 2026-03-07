@@ -4,8 +4,7 @@ on:
   issues:
     types: [labeled]
 
-# Only run when the 'ghostpen' label is applied
-# (the job-level `if` filters further)
+# Runs when 'ghostpen' (blog post) or 'ghostpen-til' (TIL) label is applied.
 
 permissions:
   contents: write
@@ -15,7 +14,7 @@ permissions:
 
 jobs:
   ghostpen:
-    if: github.event.label.name == 'ghostpen'
+    if: github.event.label.name == 'ghostpen' || github.event.label.name == 'ghostpen-til'
     runs-on: ubuntu-latest
 
     steps:
@@ -27,13 +26,14 @@ jobs:
         with:
           node-version: 22
 
-      - name: Generate blog post draft
+      - name: Generate draft
         id: ghostpen
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          POST_TYPE: ${{ github.event.label.name == 'ghostpen-til' && 'til' || 'blog' }}
         run: node .github/scripts/ghostpen.mjs
 
       - name: Commit draft and open PR
@@ -41,17 +41,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          POST_TYPE: ${{ github.event.label.name == 'ghostpen-til' && 'til' || 'blog' }}
         run: |
           git config user.name "ghostpen[bot]"
           git config user.email "ghostpen@users.noreply.github.com"
 
           git checkout -b "${{ steps.ghostpen.outputs.branch }}"
           git add "${{ steps.ghostpen.outputs.file }}"
-          git commit -m "feat(content): ghostpen draft — ${{ github.event.issue.title }}"
+          git commit -m "feat(content): ghostpen $POST_TYPE draft — ${{ github.event.issue.title }}"
           git push origin "${{ steps.ghostpen.outputs.branch }}"
 
           gh pr create \
-            --title "ghostpen: ${{ github.event.issue.title }}" \
+            --title "ghostpen($POST_TYPE): ${{ github.event.issue.title }}" \
             --body "$(cat <<'EOF'
           AI-generated draft from the ghostpen pipeline.
 
@@ -61,4 +62,4 @@ jobs:
           EOF
           )" \
             --head "${{ steps.ghostpen.outputs.branch }}" \
-            --base main
+            --base master

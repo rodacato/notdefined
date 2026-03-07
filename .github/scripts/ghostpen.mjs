@@ -3,7 +3,7 @@
  * ghostpen.mjs — AI blog post generator for notdefined.dev
  *
  * Reads a GitHub Issue title/body, calls GitHub Models API,
- * writes the generated markdown post to src/content/blog/,
+ * writes the generated markdown post to src/content/blog/ or src/content/til/,
  * and outputs branch/file metadata to $GITHUB_OUTPUT.
  *
  * Required env vars:
@@ -11,14 +11,28 @@
  *   ISSUE_TITLE    — issue title (= blog post topic)
  *   ISSUE_NUMBER   — issue number (used in branch name)
  *   ISSUE_BODY     — optional context from issue body
+ *   POST_TYPE      — 'blog' (default) or 'til'
  */
 
-import { writeFileSync, mkdirSync, appendFileSync } from 'fs';
+import { writeFileSync, mkdirSync, appendFileSync, readFileSync } from 'fs';
 
-const { GITHUB_TOKEN, ISSUE_TITLE, ISSUE_NUMBER, ISSUE_BODY = '', GITHUB_OUTPUT } = process.env;
+const { GITHUB_TOKEN, ISSUE_TITLE, ISSUE_NUMBER, ISSUE_BODY = '', GITHUB_OUTPUT, POST_TYPE = 'blog' } = process.env;
 
 if (!GITHUB_TOKEN || !ISSUE_TITLE || !ISSUE_NUMBER) {
   console.error('Missing required env vars: GITHUB_TOKEN, ISSUE_TITLE, ISSUE_NUMBER');
+  process.exit(1);
+}
+
+const isTil = POST_TYPE === 'til';
+const contentDir = isTil ? 'src/content/til' : 'src/content/blog';
+
+// --- Load style guide -------------------------------------------------------
+
+let styleGuide;
+try {
+  styleGuide = readFileSync(`docs/style-${POST_TYPE}.md`, 'utf8');
+} catch {
+  console.error(`Style guide not found: docs/style-${POST_TYPE}.md`);
   process.exit(1);
 }
 
@@ -34,31 +48,19 @@ const slug = ISSUE_TITLE
   .slice(0, 60);
 
 const pubDate = new Date().toISOString().slice(0, 10);
-const branchName = `ghostpen/issue-${ISSUE_NUMBER}-${slug}`;
-const filePath = `src/content/blog/${slug}.md`;
+const branchName = `ghostpen/${POST_TYPE}/issue-${ISSUE_NUMBER}-${slug}`;
+const filePath = `${contentDir}/${slug}.md`;
 
 // --- Prompt -----------------------------------------------------------------
 
-const systemPrompt = `You are writing for Adrian Castillo's personal tech blog at notdefined.dev.
-Adrian is a full-stack developer with 10+ years of experience in Ruby, JavaScript, and backend architecture.
-
-Voice and tone:
-- Technical but approachable and conversational
-- Practical, experience-driven — real examples over theory
-- Occasional dry humor, never forced
-- Direct — no filler phrases, no corporate speak
-- Feels like advice from a senior dev, not a tutorial mill
-
-Post format:
-- Length: 800–1500 words
-- Include code examples where relevant (fenced code blocks with language hints)
-- Good structure: hook intro, H2 sections, concrete takeaway at the end
-- Do NOT start with "In this post..." or "Today we'll learn..."
-- Do NOT end with a bullet-point summary — end with an opinion or next step
-
-Output ONLY the raw markdown file, starting with the YAML frontmatter block.
-
-Use this exact frontmatter format (no extra fields):
+const frontmatterHint = isTil
+  ? `Use this exact frontmatter (no extra fields):
+---
+title: "Post Title"
+date: ${pubDate}
+tags: ["tag1", "tag2"]
+---`
+  : `Use this exact frontmatter (no extra fields):
 ---
 title: "Post Title"
 description: "One-sentence description for SEO, max 160 chars"
@@ -67,13 +69,19 @@ tags: ["tag1", "tag2"]
 draft: false
 ---`;
 
+const systemPrompt = `${styleGuide}
+
+Output ONLY the raw markdown, starting with the YAML frontmatter block.
+
+${frontmatterHint}`;
+
 const userPrompt = ISSUE_BODY.trim()
   ? `Topic: ${ISSUE_TITLE}\n\nContext from the issue:\n${ISSUE_BODY}`
   : `Topic: ${ISSUE_TITLE}`;
 
 // --- GitHub Models API call -------------------------------------------------
 
-console.log(`Calling GitHub Models API for: "${ISSUE_TITLE}"`);
+console.log(`Calling GitHub Models API for: "${ISSUE_TITLE}" (type: ${POST_TYPE})`);
 
 const res = await fetch('https://models.github.ai/inference/chat/completions', {
   method: 'POST',
@@ -87,7 +95,7 @@ const res = await fetch('https://models.github.ai/inference/chat/completions', {
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
     ],
-    max_tokens: 4096,
+    max_tokens: isTil ? 1024 : 4096,
     temperature: 0.7,
   }),
 });
@@ -108,7 +116,7 @@ if (!content) {
 
 // --- Write file -------------------------------------------------------------
 
-mkdirSync('src/content/blog', { recursive: true });
+mkdirSync(contentDir, { recursive: true });
 writeFileSync(filePath, content, 'utf8');
 
 console.log(`Written: ${filePath}`);
