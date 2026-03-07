@@ -4,6 +4,8 @@ description: "Kamal (antes MRSK) llega por defecto con Rails 8 y usa Docker en c
 pubDate: 2026-02-24
 tags: ["ruby", "rails", "devops", "docker"]
 draft: false
+series: "Rails 8 Stack"
+seriesOrder: 3
 ---
 
 ## TL;DR

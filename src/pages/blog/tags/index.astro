@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+const tagMap = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    tagMap.set(tag, (tagMap.get(tag) ?? 0) + 1);
+  }
+}
+
+const tags = [...tagMap.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+---
+
+<BaseLayout title="Tags — notdefined.dev" description="Explora los posts por tema en notdefined.dev.">
+
+  <header class="mb-10">
+    <a href="/blog/" class="back-link">← Blog</a>
+    <p class="label mb-2">Temas</p>
+    <h1 class="page-title">Tags</h1>
+    <p class="page-desc">Todos los temas, ordenados por frecuencia.</p>
+  </header>
+
+  <div class="tag-grid">
+    {tags.map(([tag, count]) => (
+      <a href={`/blog/tags/${tag}/`} class="tag-card">
+        <span class="tag-name">{tag}</span>
+        <span class="tag-count">{count} post{count !== 1 ? 's' : ''}</span>
+      </a>
+    ))}
+  </div>
+
+</BaseLayout>
+
+<style>
+  .back-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    transition: color 150ms ease;
+  }
+  .back-link:hover { color: var(--color-accent); }
+
+  .label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+  }
+  .page-desc {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+
+  .tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .tag-card {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    background-color: var(--color-surface);
+    transition: border-color 150ms ease, background-color 150ms ease;
+  }
+  .tag-card:hover {
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-2);
+  }
+  .tag-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+  .tag-count {
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+</style>

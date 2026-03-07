@@ -3,6 +3,8 @@ title: "Docker multi-stage builds: el cambio que redujo el tamaño de nuestra im
 description: "Un Dockerfile naïve para una app Ruby o Node puede generar imágenes de 2GB. Con multi-stage builds, la misma app puede quedar en 200MB. Te muestro cómo."
 pubDate: 2025-05-06
 tags: ["docker", "devops"]
+series: "Docker en la práctica"
+seriesOrder: 2
 draft: false
 ---
 

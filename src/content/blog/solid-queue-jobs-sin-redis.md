@@ -4,6 +4,8 @@ description: "Rails 8 llega con Solid Queue como backend por defecto para Active
 pubDate: 2025-05-20
 tags: ["ruby", "rails", "backend"]
 draft: false
+series: "Rails 8 Stack"
+seriesOrder: 1
 ---
 
 ## TL;DR

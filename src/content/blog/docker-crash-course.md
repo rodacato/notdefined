@@ -3,6 +3,8 @@ title: "Docker: Rapido y Furioso"
 description: "Si Docker fuera una pelicula, seria esa escena donde presionas el boton de NOS y te mueves a 300 km/hr. Ajusta el cinturon, porque este crash course va directo al grano para que containerices tu codigo como un verdadero Toretto."
 pubDate: 2025-02-20
 tags: ["docker", "devops", "containers"]
+series: "Docker en la práctica"
+seriesOrder: 1
 draft: false
 ---
 

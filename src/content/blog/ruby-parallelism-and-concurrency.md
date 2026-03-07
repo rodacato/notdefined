@@ -3,6 +3,8 @@ title: "Ruby, Concurrencia y Paralelismo: La Verdad"
 description: "Si creias que los threads te darian paralelismo real en Ruby, oops. Hay formas de sacarle jugo a concurrencia y paralelismo con Fibers, Processes y Ractors."
 pubDate: 2025-01-23
 tags: ["ruby", "concurrency", "parallelism"]
+series: "Ruby Internals"
+seriesOrder: 3
 draft: false
 ---
 

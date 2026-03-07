@@ -6,12 +6,12 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Personal site and blog by Adrian Castillo' } = Astro.props;
+const { title, description = 'Sitio personal y blog de Adrian Castillo' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="en" class="h-full">
+<html lang="es" class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,6 +22,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="icon" type="image/png" href="/logo.png" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" type="application/rss+xml" title="notdefined.dev RSS" href="/rss.xml" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
@@ -40,6 +41,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         </a>
         <nav class="flex items-center gap-6">
           <a href="/blog/" class="nav-link">Blog</a>
+          <a href="/search/" class="nav-link">Buscar</a>
           <a
             href="https://github.com/rodacato"
             target="_blank"
@@ -58,7 +60,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <footer class="site-footer">
       <div class="mx-auto w-full max-w-3xl px-6 py-6">
-        <p class="footer-text">© {new Date().getFullYear()} Adrian Castillo</p>
+        <div class="footer-inner">
+          <p class="footer-text">© {new Date().getFullYear()} Adrian Castillo</p>
+          <a href="/rss.xml" class="rss-link" title="Feed RSS">RSS</a>
+        </div>
       </div>
     </footer>
 
@@ -106,8 +111,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     border-top: 1px solid var(--color-border);
   }
 
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .footer-text {
     font-size: 0.8rem;
     color: var(--color-muted);
   }
+
+  .rss-link {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-muted);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 150ms ease;
+  }
+  .rss-link:hover { color: var(--color-accent); }
 </style>

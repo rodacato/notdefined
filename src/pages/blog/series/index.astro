@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft && !!data.series);
+
+const seriesMap = new Map<string, CollectionEntry<'blog'>[]>();
+for (const post of posts) {
+  const s = post.data.series!;
+  if (!seriesMap.has(s)) seriesMap.set(s, []);
+  seriesMap.get(s)!.push(post);
+}
+
+const seriesList = [...seriesMap.entries()]
+  .map(([name, seriesPosts]) => ({
+    name,
+    posts: seriesPosts.sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0)),
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+---
+
+<BaseLayout title="Series — notdefined.dev" description="Colecciones de posts relacionados en notdefined.dev.">
+
+  <header class="mb-10">
+    <a href="/blog/" class="back-link">← Blog</a>
+    <p class="label mb-2">Colecciones</p>
+    <h1 class="page-title">Series</h1>
+    <p class="page-desc">Posts agrupados por tema en orden de lectura.</p>
+  </header>
+
+  {seriesList.length === 0 ? (
+    <p class="empty">No hay series todavía.</p>
+  ) : (
+    <div class="series-list">
+      {seriesList.map(({ name, posts }) => (
+        <div class="series-card">
+          <a href={`/blog/series/${encodeURIComponent(name)}/`} class="series-name">{name}</a>
+          <span class="series-count">{posts.length} parte{posts.length !== 1 ? 's' : ''}</span>
+        </div>
+      ))}
+    </div>
+  )}
+
+</BaseLayout>
+
+<style>
+  .back-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    transition: color 150ms ease;
+  }
+  .back-link:hover { color: var(--color-accent); }
+
+  .label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+  }
+  .page-desc {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+  .empty {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+  .series-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .series-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .series-card:first-child { border-top: none; }
+  .series-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+  .series-name:hover { color: var(--color-accent); }
+  .series-count {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    flex-shrink: 0;
+  }
+</style>

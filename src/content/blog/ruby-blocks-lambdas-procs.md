@@ -3,6 +3,8 @@ title: "Blocks, Lambdas y Procs: Entendiendo la magia en Ruby"
 description: "Si cada vez que te preguntan la diferencia entre blocks, procs y lambdas en Ruby te quedas dudando, este post es para ti. Vamos a ver que son, como funcionan y en que se diferencian, con ejemplos practicos y comparaciones para elegir bien en cada caso."
 pubDate: 2025-01-18
 tags: ["ruby", "programming", "language"]
+series: "Ruby Internals"
+seriesOrder: 2
 draft: false
 ---
 

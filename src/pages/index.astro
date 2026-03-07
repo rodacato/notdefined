@@ -9,11 +9,11 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .slice(0, 5);
 
 function formatDate(date: Date) {
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 ---
 
-<BaseLayout title="notdefined.dev" description="Personal site and blog by Adrian Castillo — full-stack developer writing about Ruby, JavaScript, backend, and AI workflows.">
+<BaseLayout title="notdefined.dev" description="Sitio personal y blog de Adrian Castillo — desarrollador full-stack escribiendo sobre Ruby, JavaScript, backend e IA.">
 
   <!-- Hero -->
   <section class="mb-16">
@@ -24,9 +24,9 @@ function formatDate(date: Date) {
       Adrian Castillo
     </h1>
     <p style="color: var(--color-muted); max-width: 38rem; line-height: 1.7;" class="text-base">
-      Full-stack developer with 10+ years in Ruby, JavaScript, and backend systems.
-      Writing about what I actually build and ship — including an AI pipeline that
-      runs this blog.
+      Desarrollador full-stack con 10+ años en Ruby, JavaScript y sistemas backend.
+      Escribo sobre lo que realmente construyo y shipeo — incluyendo el pipeline de IA
+      que genera este blog.
     </p>
   </section>
 
@@ -34,14 +34,14 @@ function formatDate(date: Date) {
   <section>
     <div class="mb-6 flex items-center justify-between">
       <h2 style="font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-muted);">
-        Recent posts
+        Posts recientes
       </h2>
       <a
         href="/blog/"
-        style="font-size: 0.8rem; color: var(--color-accent);"
+        style="font-size: 0.8rem; color: var(--color-accent); text-decoration: none;"
         class="transition-opacity hover:opacity-70"
       >
-        All posts →
+        Todos los posts →
       </a>
     </div>
 
@@ -85,6 +85,10 @@ function formatDate(date: Date) {
     font-weight: 500;
     color: var(--color-text);
     line-height: 1.4;
+    transition: color 150ms ease;
+  }
+  .post-link:hover .post-title {
+    color: var(--color-accent);
   }
   .post-date {
     font-size: 0.78rem;

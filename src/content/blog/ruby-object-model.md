@@ -3,6 +3,8 @@ title: "Ruby Object Model: Un Recordatorio Rapido"
 description: "Todo en Ruby es un objeto, incluidas las clases mismas. Exploremos como funciona su jerarquia, singleton classes, method lookup y metaprogramacion de forma practica para el dia a dia."
 pubDate: 2025-01-08
 tags: ["ruby", "oop", "metaprogramming"]
+series: "Ruby Internals"
+seriesOrder: 1
 draft: false
 ---
 

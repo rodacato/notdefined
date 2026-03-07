@@ -4,6 +4,8 @@ description: "Rails 8 trae Solid Cache — un backend de caché respaldado por D
 pubDate: 2025-12-16
 tags: ["ruby", "rails", "performance"]
 draft: false
+series: "Rails 8 Stack"
+seriesOrder: 2
 ---
 
 ## TL;DR
