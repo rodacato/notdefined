@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const entries = (await getCollection('til')).sort(
+  (a: CollectionEntry<'til'>, b: CollectionEntry<'til'>) =>
+    b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const byMonth = new Map<string, CollectionEntry<'til'>[]>();
+for (const entry of entries) {
+  const key = entry.data.date.toLocaleDateString('es-MX', { year: 'numeric', month: 'long' });
+  if (!byMonth.has(key)) byMonth.set(key, []);
+  byMonth.get(key)!.push(entry);
+}
+const months = [...byMonth.keys()];
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('es-MX', { month: 'short', day: 'numeric' });
+}
+---
+
+<BaseLayout title="TIL — notdefined.dev" description="Today I Learned — aprendizajes cortos y concretos de Adrian Castillo.">
+
+  <header class="mb-10">
+    <p class="label mb-2">Knowledge base</p>
+    <h1 class="page-title">TIL</h1>
+    <p class="page-desc">Cosas que aprendí hoy. Sin estructura, sin pretensiones. Lo suficiente para no olvidarlas.</p>
+  </header>
+
+  {months.map((month) => (
+    <section class="month-section">
+      <h2 class="month-heading">{month}</h2>
+      <ul class="til-list">
+        {byMonth.get(month)!.map((entry: CollectionEntry<'til'>, i: number) => (
+          <li class={i > 0 ? 'til-item bordered' : 'til-item'}>
+            <a href={`/til/${entry.slug}/`} class="til-link">
+              <span class="til-title">{entry.data.title}</span>
+              <div class="til-footer">
+                <div class="tag-row">
+                  {entry.data.tags.map((tag: string) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+                <span class="til-date">{formatDate(entry.data.date)}</span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+</BaseLayout>
+
+<style>
+  .label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+  }
+  .page-desc {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    max-width: 36rem;
+  }
+
+  .month-section { margin-bottom: 2rem; }
+  .month-heading {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 0.5rem;
+    padding-left: 0.25rem;
+    opacity: 0.6;
+  }
+
+  .til-list {
+    border: 1px solid var(--color-border);
+    border-radius: 0.625rem;
+    overflow: hidden;
+  }
+  .til-item.bordered { border-top: 1px solid var(--color-border); }
+
+  .til-link {
+    display: block;
+    padding: 0.875rem 1.25rem;
+    text-decoration: none;
+    transition: background-color 120ms ease;
+  }
+  .til-link:hover { background-color: var(--color-surface); }
+
+  .til-title {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    transition: color 120ms ease;
+  }
+  .til-link:hover .til-title { color: var(--color-accent); }
+
+  .til-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 0.25rem; min-width: 0; }
+  .tag {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    padding: 0.15em 0.5em;
+    border-radius: 0.2rem;
+    background-color: var(--color-surface-2);
+    color: var(--color-muted);
+    border: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+  .til-date {
+    font-size: 0.72rem;
+    color: var(--color-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+</style>

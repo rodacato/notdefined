@@ -13,6 +13,16 @@ const blogCollection = defineCollection({
   }),
 });
 
+const tilCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
+  }),
+});
+
 export const collections = {
   blog: blogCollection,
+  til: tilCollection,
 };

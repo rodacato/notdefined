@@ -8,6 +8,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   )
   .slice(0, 5);
 
+const tils = (await getCollection('til'))
+  .sort((a: CollectionEntry<'til'>, b: CollectionEntry<'til'>) =>
+    b.data.date.valueOf() - a.data.date.valueOf()
+  )
+  .slice(0, 3);
+
 function formatDate(date: Date) {
   return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
 }
@@ -46,6 +52,25 @@ function formatDate(date: Date) {
           <a href={`/blog/${post.slug}/`} class="post-link">
             <span class="post-title">{post.data.title}</span>
             <span class="post-date">{formatDate(post.data.pubDate)}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Recent TILs -->
+  <section class="til-section">
+    <div class="section-header">
+      <h2 class="section-label">TIL recientes</h2>
+      <a href="/til/" class="section-link">Ver todos →</a>
+    </div>
+
+    <ul class="post-list">
+      {tils.map((entry: CollectionEntry<'til'>, i: number) => (
+        <li class={i > 0 ? 'post-list-item bordered' : 'post-list-item'}>
+          <a href={`/til/${entry.slug}/`} class="post-link">
+            <span class="post-title">{entry.data.title}</span>
+            <span class="post-date">{formatDate(entry.data.date)}</span>
           </a>
         </li>
       ))}
@@ -130,6 +155,7 @@ function formatDate(date: Date) {
     transition: opacity 150ms ease;
   }
   .section-link:hover { opacity: 0.7; }
+  .til-section { margin-top: 3rem; }
 
   .post-list {
     border: 1px solid var(--color-border);

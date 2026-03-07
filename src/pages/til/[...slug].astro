@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('til');
+  return entries.map((entry: CollectionEntry<'til'>) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<BaseLayout title={`${entry.data.title} — TIL`}>
+
+  <article>
+    <header class="til-header">
+      <a href="/til/" class="back-link">← TIL</a>
+      <div class="til-meta">
+        <time class="til-date">{formatDate(entry.data.date)}</time>
+        <div class="tag-row">
+          {entry.data.tags.map((tag: string) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      </div>
+      <h1 class="til-title">{entry.data.title}</h1>
+    </header>
+
+    <div class="til-body prose">
+      <Content />
+    </div>
+  </article>
+
+</BaseLayout>
+
+<style>
+  .til-header {
+    margin-bottom: 2rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    margin-bottom: 1.25rem;
+    transition: color 150ms ease;
+  }
+  .back-link:hover { color: var(--color-accent); }
+
+  .til-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .til-date {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+  .tag {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    padding: 0.15em 0.5em;
+    border-radius: 0.2rem;
+    background-color: var(--color-surface-2);
+    color: var(--color-muted);
+    border: 1px solid var(--color-border);
+  }
+
+  .til-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .til-body {
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.5rem;
+  }
+</style>
