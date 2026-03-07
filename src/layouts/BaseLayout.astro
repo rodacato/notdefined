@@ -39,8 +39,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           <img src="/logo.png" alt="notdefined.dev logo" class="brand-logo" />
           <span class="brand-name">notdefined<span class="cursor-blink">_</span></span>
         </a>
-        <nav class="flex items-center gap-6">
+        <nav class="flex items-center gap-5">
           <a href="/blog/" class="nav-link">Blog</a>
+          <a href="/projects/" class="nav-link">Proyectos</a>
           <a href="/search/" class="nav-link">Buscar</a>
           <a
             href="https://github.com/rodacato"
@@ -61,7 +62,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <footer class="site-footer">
       <div class="mx-auto w-full max-w-3xl px-6 py-6">
         <div class="footer-inner">
-          <p class="footer-text">© {new Date().getFullYear()} Adrian Castillo</p>
+          <div class="footer-links">
+            <p class="footer-text">© {new Date().getFullYear()} Adrian Castillo</p>
+            <a href="/now/" class="footer-nav-link">Ahora</a>
+          </div>
           <a href="/rss.xml" class="rss-link" title="Feed RSS">RSS</a>
         </div>
       </div>
@@ -117,10 +121,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     justify-content: space-between;
   }
 
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
   .footer-text {
     font-size: 0.8rem;
     color: var(--color-muted);
   }
+
+  .footer-nav-link {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+  .footer-nav-link:hover { color: var(--color-text); }
 
   .rss-link {
     font-size: 0.75rem;

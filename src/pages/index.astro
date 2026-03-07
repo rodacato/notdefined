@@ -16,33 +16,28 @@ function formatDate(date: Date) {
 <BaseLayout title="notdefined.dev" description="Sitio personal y blog de Adrian Castillo — desarrollador full-stack escribiendo sobre Ruby, JavaScript, backend e IA.">
 
   <!-- Hero -->
-  <section class="mb-16">
-    <p style="color: var(--color-accent); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;" class="mb-3">
-      notdefined.dev
+  <section class="hero">
+    <p class="hero-label">notdefined.dev</p>
+    <h1 class="hero-title">Ruby, backend, IA.</h1>
+    <p class="hero-desc">
+      Escribo sobre lo que realmente construyo — arquitectura, decisiones de código,
+      experimentos con LLMs, y las cosas que aprendo en el camino.
+      <a href="/now/" class="hero-link">¿Qué estoy haciendo ahora?</a>
     </p>
-    <h1 style="font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 600; letter-spacing: -0.03em; color: var(--color-text); line-height: 1.15;" class="mb-4">
-      Adrian Castillo
-    </h1>
-    <p style="color: var(--color-muted); max-width: 38rem; line-height: 1.7;" class="text-base">
-      Desarrollador full-stack con 10+ años en Ruby, JavaScript y sistemas backend.
-      Escribo sobre lo que realmente construyo y shipeo — incluyendo el pipeline de IA
-      que genera este blog.
-    </p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">Adrian Castillo</span>
+      <span class="hero-sep">·</span>
+      <span class="hero-meta-item">Full-stack · 10+ años</span>
+      <span class="hero-sep">·</span>
+      <a href="/projects/" class="hero-meta-link">Proyectos →</a>
+    </div>
   </section>
 
   <!-- Recent posts -->
   <section>
-    <div class="mb-6 flex items-center justify-between">
-      <h2 style="font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-muted);">
-        Posts recientes
-      </h2>
-      <a
-        href="/blog/"
-        style="font-size: 0.8rem; color: var(--color-accent); text-decoration: none;"
-        class="transition-opacity hover:opacity-70"
-      >
-        Todos los posts →
-      </a>
+    <div class="section-header">
+      <h2 class="section-label">Posts recientes</h2>
+      <a href="/blog/" class="section-link">Todos los posts →</a>
     </div>
 
     <ul class="post-list">
@@ -60,6 +55,82 @@ function formatDate(date: Date) {
 </BaseLayout>
 
 <style>
+  .hero {
+    margin-bottom: 4rem;
+  }
+  .hero-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 0.75rem;
+  }
+  .hero-title {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+  .hero-desc {
+    color: var(--color-muted);
+    max-width: 38rem;
+    line-height: 1.7;
+    font-size: 0.9375rem;
+    margin-bottom: 1.25rem;
+  }
+  .hero-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 150ms ease;
+  }
+  .hero-link:hover { opacity: 0.7; }
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .hero-meta-item {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+  .hero-sep {
+    font-size: 0.8rem;
+    color: var(--color-border);
+  }
+  .hero-meta-link {
+    font-size: 0.8rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 150ms ease;
+  }
+  .hero-meta-link:hover { opacity: 0.7; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .section-link {
+    font-size: 0.8rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 150ms ease;
+  }
+  .section-link:hover { opacity: 0.7; }
+
   .post-list {
     border: 1px solid var(--color-border);
     border-radius: 0.75rem;
@@ -77,9 +148,7 @@ function formatDate(date: Date) {
     transition: background-color 150ms ease;
     text-decoration: none;
   }
-  .post-link:hover {
-    background-color: var(--color-surface);
-  }
+  .post-link:hover { background-color: var(--color-surface); }
   .post-title {
     font-size: 0.95rem;
     font-weight: 500;
@@ -87,9 +156,7 @@ function formatDate(date: Date) {
     line-height: 1.4;
     transition: color 150ms ease;
   }
-  .post-link:hover .post-title {
-    color: var(--color-accent);
-  }
+  .post-link:hover .post-title { color: var(--color-accent); }
   .post-date {
     font-size: 0.78rem;
     color: var(--color-muted);
