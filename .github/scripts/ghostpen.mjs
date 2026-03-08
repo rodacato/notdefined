@@ -16,10 +16,19 @@
 
 import { writeFileSync, mkdirSync, appendFileSync, readFileSync } from 'fs';
 
-const { GITHUB_TOKEN, ISSUE_TITLE, ISSUE_NUMBER, ISSUE_BODY = '', GITHUB_OUTPUT, POST_TYPE = 'blog' } = process.env;
+const {
+  GITHUB_TOKEN,
+  ISSUE_TITLE,
+  ISSUE_NUMBER,
+  ISSUE_BODY = '',
+  GITHUB_OUTPUT,
+  POST_TYPE = 'blog',
+} = process.env;
 
 if (!GITHUB_TOKEN || !ISSUE_TITLE || !ISSUE_NUMBER) {
-  console.error('Missing required env vars: GITHUB_TOKEN, ISSUE_TITLE, ISSUE_NUMBER');
+  console.error(
+    'Missing required env vars: GITHUB_TOKEN, ISSUE_TITLE, ISSUE_NUMBER',
+  );
   process.exit(1);
 }
 
@@ -38,8 +47,7 @@ try {
 
 // --- Slug & metadata --------------------------------------------------------
 
-const slug = ISSUE_TITLE
-  .toLowerCase()
+const slug = ISSUE_TITLE.toLowerCase()
   .trim()
   .replace(/[^a-z0-9\s-]/g, '')
   .replace(/\s+/g, '-')
@@ -81,7 +89,9 @@ const userPrompt = ISSUE_BODY.trim()
 
 // --- GitHub Models API call -------------------------------------------------
 
-console.log(`Calling GitHub Models API for: "${ISSUE_TITLE}" (type: ${POST_TYPE})`);
+console.log(
+  `Calling GitHub Models API for: "${ISSUE_TITLE}" (type: ${POST_TYPE})`,
+);
 
 const res = await fetch('https://models.github.ai/inference/chat/completions', {
   method: 'POST',

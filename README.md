@@ -37,7 +37,7 @@ notdefined/
   public/               ← assets estáticos
   .github/
     workflows/
-      deploy.yml        ← deploy a GitHub Pages al mergear a main
+      deploy.yml        ← deploy a GitHub Pages al mergear a master
       ghostpen.yml      ← pipeline agéntico de generación de posts
     scripts/
       ghostpen.mjs      ← script que llama a GitHub Models y genera el .md
@@ -53,8 +53,14 @@ notdefined/
 ```bash
 npm install
 npm run dev        # servidor en http://localhost:4321
+npm run check      # type checking con Astro
+npm run lint       # lint de código (Astro + JS/TS)
+npm run format:check
+npm run lint:md
 npm run build      # build estático en dist/
 npm run preview    # previsualizar el build
+npm run check:links # valida enlaces internos
+npm run ci         # quality gate completo (local/CI)
 ```
 
 ---
@@ -81,7 +87,7 @@ Los posts con `draft: true` no aparecen en el sitio.
 
 ## Deploy
 
-El workflow [deploy.yml](.github/workflows/deploy.yml) se ejecuta automáticamente en cada push a `main`:
+El workflow [deploy.yml](.github/workflows/deploy.yml) se ejecuta automáticamente en cada push a `master`:
 
 1. Instala dependencias y corre `npm run build`
 2. Publica el directorio `dist/` en GitHub Pages
