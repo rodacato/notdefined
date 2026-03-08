@@ -1,16 +1,17 @@
 export const siteProfile = {
   name: 'Adrian Castillo',
   handle: 'rodacato',
-  role: 'Staff Engineer',
-  tagline: 'Ruby, backend e IA aplicada sin humo.',
-  bio: 'Construyo software desde hace más de 10 años. Escribo sobre decisiones reales de arquitectura, aprendizajes prácticos y proyectos open-source.',
-  location: 'México',
+  tagline: 'Resuelvo problemas reales con código real.',
+  bio: 'Llevo más de 10 años construyendo software — de startups en San Francisco a proyectos propios desde Colima. Escribo sobre arquitectura, decisiones técnicas y experimentos con IA porque me cuesta entender algo si no lo explico.',
+  location: 'Colima, México',
   socials: [
     {
       label: 'GitHub',
       href: 'https://github.com/rodacato',
     },
-    // Agrega aquí tus otras redes cuando quieras publicarlas.
-    // { label: 'LinkedIn', href: 'https://www.linkedin.com/in/tu-handle/' },
+    {
+      label: 'LinkedIn',
+      href: 'https://www.linkedin.com/in/rodacato/',
+    },
   ],
 };

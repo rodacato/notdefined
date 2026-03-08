@@ -1,106 +1,140 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHeader from '../components/PageHeader.astro';
-import CardList from '../components/CardList.astro';
 import { siteProfile } from '../data/site';
+
+const avatarUrl = `https://github.com/${siteProfile.handle}.png?size=200`;
+
+const icons: Record<string, string> = {
+  GitHub: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844a9.59 9.59 0 012.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>`,
+  LinkedIn: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`,
+};
 ---
 
 <BaseLayout
   title="About — notdefined.dev"
-  description="Quién está detrás de notdefined.dev y dónde seguir su trabajo."
+  description="Quién está detrás de notdefined.dev."
 >
-  <PageHeader
-    label="Perfil"
-    title="About"
-    description="Este sitio prioriza código, proyectos y aprendizajes reales. Si quieres seguir mi trabajo, aquí están los enlaces públicos."
-  />
+  <section class="about">
+    <div class="about-header">
+      <img src={avatarUrl} alt={siteProfile.name} class="avatar" />
+      <div class="about-meta">
+        <h1 class="about-name">{siteProfile.name}</h1>
+        <p class="about-location">{siteProfile.location}</p>
+      </div>
+    </div>
 
-  <section class="about-section">
-    <h2 class="section-title">Identidad técnica</h2>
-    <p class="about-text">
-      <strong>{siteProfile.name}</strong> · {siteProfile.role}
-    </p>
-    <p class="about-text">{siteProfile.tagline}</p>
-    <p class="about-text">{siteProfile.bio}</p>
-  </section>
+    <p class="about-tagline">{siteProfile.tagline}</p>
+    <p class="about-bio">{siteProfile.bio}</p>
 
-  <section class="about-section">
-    <h2 class="section-title">Perfiles públicos</h2>
-    <CardList>
+    <div class="socials">
       {
         siteProfile.socials.map((social) => (
-          <div class="card-list-item social-item">
-            <a
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="social-link"
-            >
-              <span class="social-name">{social.label}</span>
-              <span class="social-url">{social.href}</span>
-            </a>
-          </div>
+          <a
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-pill"
+            title={social.label}
+          >
+            <span class="social-icon" set:html={icons[social.label]} />
+            <span>{social.label}</span>
+          </a>
         ))
       }
-    </CardList>
-  </section>
-
-  <section class="about-section">
-    <h2 class="section-title">Cómo actualizar esta página</h2>
-    <p class="about-text">
-      Edita <code>src/data/site.ts</code> para cambiar biografía, rol y redes sociales
-      sin tocar el template.
-    </p>
+    </div>
   </section>
 </BaseLayout>
 
 <style>
-  .about-section + .about-section {
-    margin-top: 2rem;
+  .about {
+    max-width: 36rem;
+    padding-top: 1rem;
   }
 
-  .section-title {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-    margin-bottom: 0.75rem;
-  }
-
-  .about-text {
-    color: var(--color-text);
-    font-size: 0.95rem;
-    line-height: 1.65;
-    margin-bottom: 0.5rem;
-  }
-
-  .social-item {
-    padding: 0;
-  }
-
-  .social-link {
+  .about-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    text-decoration: none;
-    padding: 1rem 1.25rem;
-    transition: background-color 120ms ease;
-  }
-  .social-link:hover {
-    background-color: var(--color-surface);
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
   }
 
-  .social-name {
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .about-name {
+    font-size: 1.25rem;
+    font-weight: 600;
     color: var(--color-text);
-    font-size: 0.95rem;
-    font-weight: 500;
+    margin: 0 0 0.2rem;
+    letter-spacing: -0.02em;
   }
 
-  .social-url {
+  .about-location {
+    font-size: 0.8rem;
     color: var(--color-muted);
-    font-size: 0.78rem;
-    white-space: nowrap;
+    margin: 0;
+  }
+
+  .about-tagline {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    margin: 0 0 1rem;
+    line-height: 1.5;
+  }
+
+  .about-bio {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.75;
+    margin: 0 0 1.75rem;
+  }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .social-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: none;
+    background-color: var(--color-surface);
+    transition:
+      border-color 150ms ease,
+      color 150ms ease,
+      background-color 150ms ease;
+  }
+
+  .social-pill:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background-color: var(--color-surface-2);
+  }
+
+  .social-icon {
+    width: 1rem;
+    height: 1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .social-icon svg {
+    width: 100%;
+    height: 100%;
   }
 </style>
