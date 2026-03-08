@@ -6,6 +6,14 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview --host",
+    "preview:ci": "astro preview --host 127.0.0.1 --port 4173",
+    "check": "astro check",
+    "lint": "eslint .",
+    "format": "prettier --write \"**/*.{js,mjs,cjs,ts,mts,cts,astro,css,json,jsonc,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{js,mjs,cjs,ts,mts,cts,astro,css,json,jsonc,yml,yaml}\"",
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#dist\"",
+    "check:links": "start-server-and-test \"npm run preview:ci\" http://127.0.0.1:4173 \"linkinator http://127.0.0.1:4173 --recurse --skip '^https?://(?!127\\\\.0\\\\.0\\\\.1:4173)'\"",
+    "ci": "npm run check && npm run lint && npm run format:check && npm run lint:md && npm run build && npm run check:links",
     "astro": "astro"
   },
   "dependencies": {
@@ -14,5 +22,19 @@
     "astro": "^5.5.0",
     "sharp": "^0.33.5",
     "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@eslint/js": "^9.23.0",
+    "eslint": "^9.23.0",
+    "eslint-plugin-astro": "^1.3.1",
+    "globals": "^16.0.0",
+    "linkinator": "^7.5.0",
+    "markdownlint-cli2": "^0.18.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "start-server-and-test": "^2.0.10",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.28.0"
   }
 }
