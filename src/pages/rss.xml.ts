@@ -9,7 +9,8 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: 'notdefined.dev',
-    description: 'Notes from the trenches — Ruby, JavaScript, backend architecture, and the occasional AI experiment.',
+    description:
+      'Notas desde las trincheras: Ruby, JavaScript, arquitectura backend y experimentos con IA.',
     site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,

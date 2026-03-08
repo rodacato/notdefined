@@ -1,104 +1,75 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import CardList from '../components/CardList.astro';
+import TagPill from '../components/TagPill.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
-const projects = [
-  {
-    name: 'Stockerly',
-    description: 'Plataforma open-source para monitorear mercados, gestionar portfolios de inversión y configurar alertas de precio. Alternativa self-hosted a apps comerciales de tracking financiero.',
-    url: 'https://stockerly.notdefined.dev',
-    repo: 'https://github.com/rodacato/stockerly',
-    lang: 'Ruby',
-    status: 'activo',
-    tags: [],
-  },
-  {
-    name: 'SheLLM',
-    description: 'Tus suscripciones de LLM como una sola REST API. Unifica OpenAI, Claude y otros providers bajo un endpoint estándar — sin cambiar tu código cuando cambias de modelo.',
-    url: null,
-    repo: 'https://github.com/rodacato/SheLLM',
-    lang: 'JavaScript',
-    status: 'activo',
-    tags: ['ai', 'api', 'llm'],
-  },
-  {
-    name: 'Kenobot',
-    description: 'Bot de Telegram con memoria persistente entre conversaciones y soporte para múltiples providers de LLM (Claude, Gemini, Cerebras). Diseñado para correr en infraestructura mínima.',
-    url: null,
-    repo: 'https://github.com/rodacato/kenobot',
-    lang: 'JavaScript',
-    status: 'activo',
-    tags: ['ai', 'bot', 'telegram', 'llm'],
-  },
-];
+const projects = (await getCollection('projects')).sort(
+  (a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) =>
+    a.data.order - b.data.order || a.data.name.localeCompare(b.data.name),
+);
 ---
 
-<BaseLayout title="Proyectos — notdefined.dev" description="Proyectos y experimentos de Adrian Castillo.">
+<BaseLayout
+  title="Proyectos — notdefined.dev"
+  description="Proyectos y experimentos de Adrian Castillo."
+>
+  <PageHeader
+    label="Trabajo"
+    title="Proyectos"
+    description="Cosas que construyo, experimento o sigo desarrollando."
+  />
 
-  <header class="mb-10">
-    <p class="label mb-2">Trabajo</p>
-    <h1 class="page-title">Proyectos</h1>
-    <p class="page-desc">Cosas que construyo, experimento, o sigo desarrollando.</p>
-  </header>
-
-  <ul class="project-list">
-    {projects.map((project, i) => (
-      <li class={i > 0 ? 'project-item bordered' : 'project-item'}>
-        <div class="project-header">
-          <div class="project-name-row">
-            <h2 class="project-name">{project.name}</h2>
-            <span class={`status status-${project.status}`}>{project.status}</span>
-          </div>
-          <div class="project-links">
-            {project.url && (
-              <a href={project.url} target="_blank" rel="noopener noreferrer" class="project-link">
-                sitio ↗
+  <CardList>
+    {
+      projects.map((project) => (
+        <li class="card-list-item project-item">
+          <div class="project-header">
+            <div class="project-name-row">
+              <h2 class="project-name">{project.data.name}</h2>
+              <span class={`status status-${project.data.status}`}>
+                {project.data.status}
+              </span>
+            </div>
+            <div class="project-links">
+              {project.data.url && (
+                <a
+                  href={project.data.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="project-link"
+                >
+                  sitio ↗
+                </a>
+              )}
+              <a
+                href={project.data.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="project-link"
+              >
+                GitHub ↗
               </a>
-            )}
-            <a href={project.repo} target="_blank" rel="noopener noreferrer" class="project-link">
-              GitHub ↗
-            </a>
+            </div>
           </div>
-        </div>
-        <p class="project-desc">{project.description}</p>
-        <div class="project-footer">
-          <span class="lang">{project.lang}</span>
-          {project.tags.map((tag: string) => (
-            <span class="tag">{tag}</span>
-          ))}
-        </div>
-      </li>
-    ))}
-  </ul>
-
+          <p class="project-desc">{project.data.description}</p>
+          <div class="project-footer">
+            <TagPill label={project.data.lang} />
+            {project.data.tags.map((tag: string) => (
+              <TagPill label={tag} />
+            ))}
+          </div>
+        </li>
+      ))
+    }
+  </CardList>
 </BaseLayout>
 
 <style>
-  .label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent);
+  .project-item {
+    padding: 1.5rem;
   }
-  .page-title {
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    color: var(--color-text);
-    margin-bottom: 0.5rem;
-  }
-  .page-desc {
-    color: var(--color-muted);
-    font-size: 0.95rem;
-  }
-
-  .project-list {
-    border: 1px solid var(--color-border);
-    border-radius: 0.75rem;
-    overflow: hidden;
-  }
-  .project-item { padding: 1.5rem; }
-  .project-item.bordered { border-top: 1px solid var(--color-border); }
 
   .project-header {
     display: flex;
@@ -107,17 +78,20 @@ const projects = [
     gap: 1rem;
     margin-bottom: 0.625rem;
   }
+
   .project-name-row {
     display: flex;
     align-items: center;
     gap: 0.625rem;
   }
+
   .project-name {
     font-size: 1rem;
     font-weight: 600;
     color: var(--color-text);
     margin: 0;
   }
+
   .status {
     font-size: 0.65rem;
     font-weight: 500;
@@ -126,23 +100,40 @@ const projects = [
     border-radius: 0.25rem;
     text-transform: lowercase;
   }
+
   .status-activo {
     background-color: oklch(92% 0.06 145);
     color: oklch(38% 0.12 145);
     border: 1px solid oklch(82% 0.09 145);
   }
+
+  .status-mantenimiento {
+    background-color: oklch(94% 0.04 95);
+    color: oklch(40% 0.09 95);
+    border: 1px solid oklch(84% 0.06 95);
+  }
+
+  .status-pausado {
+    background-color: oklch(93% 0.01 250);
+    color: oklch(38% 0.01 250);
+    border: 1px solid oklch(84% 0.01 250);
+  }
+
   .project-links {
     display: flex;
     gap: 0.75rem;
     flex-shrink: 0;
   }
+
   .project-link {
     font-size: 0.8rem;
     color: var(--color-muted);
     text-decoration: none;
     transition: color 150ms ease;
   }
-  .project-link:hover { color: var(--color-accent); }
+  .project-link:hover {
+    color: var(--color-accent);
+  }
 
   .project-desc {
     font-size: 0.875rem;
@@ -150,30 +141,11 @@ const projects = [
     line-height: 1.6;
     margin: 0 0 0.875rem;
   }
+
   .project-footer {
     display: flex;
     align-items: center;
     gap: 0.375rem;
     flex-wrap: wrap;
-  }
-  .lang {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 0.15em 0.5em;
-    border-radius: 0.2rem;
-    background-color: var(--color-surface-2);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-  }
-  .tag {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    padding: 0.15em 0.5em;
-    border-radius: 0.2rem;
-    background-color: var(--color-surface-2);
-    color: var(--color-muted);
-    border: 1px solid var(--color-border);
   }
 </style>

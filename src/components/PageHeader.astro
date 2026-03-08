@@ -1,0 +1,33 @@
+---
+interface Props {
+  label?: string;
+  title: string;
+  description?: string;
+  backHref?: string;
+  backLabel?: string;
+  class?: string;
+}
+
+const {
+  label,
+  title,
+  description,
+  backHref,
+  backLabel,
+  class: className,
+} = Astro.props;
+---
+
+<header class={`page-header ${className ?? ''}`.trim()}>
+  {
+    backHref && backLabel && (
+      <a href={backHref} class="page-back-link">
+        {backLabel}
+      </a>
+    )
+  }
+  {label && <p class="page-label">{label}</p>}
+  <h1 class="page-title">{title}</h1>
+  {description && <p class="page-desc">{description}</p>}
+  <slot name="actions" />
+</header>

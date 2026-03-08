@@ -3,31 +3,39 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
-    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  .sort(
+    (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+      b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   )
   .slice(0, 5);
 
 const tils = (await getCollection('til'))
-  .sort((a: CollectionEntry<'til'>, b: CollectionEntry<'til'>) =>
-    b.data.date.valueOf() - a.data.date.valueOf()
+  .sort(
+    (a: CollectionEntry<'til'>, b: CollectionEntry<'til'>) =>
+      b.data.date.valueOf() - a.data.date.valueOf(),
   )
   .slice(0, 3);
 
 function formatDate(date: Date) {
-  return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
+  return date.toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
 }
 ---
 
-<BaseLayout title="notdefined.dev" description="Sitio personal y blog de Adrian Castillo — desarrollador full-stack escribiendo sobre Ruby, JavaScript, backend e IA.">
-
+<BaseLayout
+  title="notdefined.dev"
+  description="Sitio personal y blog de Adrian Castillo — desarrollador full-stack escribiendo sobre Ruby, JavaScript, backend e IA."
+>
   <!-- Hero -->
   <section class="hero">
     <p class="hero-label">notdefined.dev</p>
     <h1 class="hero-title">Ruby, backend, IA.</h1>
     <p class="hero-desc">
-      Escribo sobre lo que realmente construyo — arquitectura, decisiones de código,
-      experimentos con LLMs, y las cosas que aprendo en el camino.
+      Escribo sobre lo que realmente construyo — arquitectura, decisiones de
+      código, experimentos con LLMs, y las cosas que aprendo en el camino.
       <a href="/now/" class="hero-link">¿Qué estoy haciendo ahora?</a>
     </p>
     <div class="hero-meta">
@@ -47,14 +55,16 @@ function formatDate(date: Date) {
     </div>
 
     <ul class="post-list">
-      {posts.map((post: CollectionEntry<'blog'>, i: number) => (
-        <li class={i > 0 ? 'post-list-item bordered' : 'post-list-item'}>
-          <a href={`/blog/${post.slug}/`} class="post-link">
-            <span class="post-title">{post.data.title}</span>
-            <span class="post-date">{formatDate(post.data.pubDate)}</span>
-          </a>
-        </li>
-      ))}
+      {
+        posts.map((post, i) => (
+          <li class={i > 0 ? 'post-list-item bordered' : 'post-list-item'}>
+            <a href={`/blog/${post.slug}/`} class="post-link">
+              <span class="post-title">{post.data.title}</span>
+              <span class="post-date">{formatDate(post.data.pubDate)}</span>
+            </a>
+          </li>
+        ))
+      }
     </ul>
   </section>
 
@@ -66,17 +76,18 @@ function formatDate(date: Date) {
     </div>
 
     <ul class="post-list">
-      {tils.map((entry: CollectionEntry<'til'>, i: number) => (
-        <li class={i > 0 ? 'post-list-item bordered' : 'post-list-item'}>
-          <a href={`/til/${entry.slug}/`} class="post-link">
-            <span class="post-title">{entry.data.title}</span>
-            <span class="post-date">{formatDate(entry.data.date)}</span>
-          </a>
-        </li>
-      ))}
+      {
+        tils.map((entry, i) => (
+          <li class={i > 0 ? 'post-list-item bordered' : 'post-list-item'}>
+            <a href={`/til/${entry.slug}/`} class="post-link">
+              <span class="post-title">{entry.data.title}</span>
+              <span class="post-date">{formatDate(entry.data.date)}</span>
+            </a>
+          </li>
+        ))
+      }
     </ul>
   </section>
-
 </BaseLayout>
 
 <style>
@@ -112,7 +123,9 @@ function formatDate(date: Date) {
     white-space: nowrap;
     transition: opacity 150ms ease;
   }
-  .hero-link:hover { opacity: 0.7; }
+  .hero-link:hover {
+    opacity: 0.7;
+  }
   .hero-meta {
     display: flex;
     align-items: center;
@@ -133,7 +146,9 @@ function formatDate(date: Date) {
     text-decoration: none;
     transition: opacity 150ms ease;
   }
-  .hero-meta-link:hover { opacity: 0.7; }
+  .hero-meta-link:hover {
+    opacity: 0.7;
+  }
 
   .section-header {
     display: flex;
@@ -154,8 +169,12 @@ function formatDate(date: Date) {
     text-decoration: none;
     transition: opacity 150ms ease;
   }
-  .section-link:hover { opacity: 0.7; }
-  .til-section { margin-top: 3rem; }
+  .section-link:hover {
+    opacity: 0.7;
+  }
+  .til-section {
+    margin-top: 3rem;
+  }
 
   .post-list {
     border: 1px solid var(--color-border);
@@ -174,7 +193,9 @@ function formatDate(date: Date) {
     transition: background-color 150ms ease;
     text-decoration: none;
   }
-  .post-link:hover { background-color: var(--color-surface); }
+  .post-link:hover {
+    background-color: var(--color-surface);
+  }
   .post-title {
     font-size: 0.95rem;
     font-weight: 500;
@@ -182,7 +203,9 @@ function formatDate(date: Date) {
     line-height: 1.4;
     transition: color 150ms ease;
   }
-  .post-link:hover .post-title { color: var(--color-accent); }
+  .post-link:hover .post-title {
+    color: var(--color-accent);
+  }
   .post-date {
     font-size: 0.78rem;
     color: var(--color-muted);

@@ -23,10 +23,15 @@ const related = allPosts
   .filter((p) => p.slug !== post.slug)
   .map((p) => ({
     post: p,
-    shared: p.data.tags.filter((t: string) => post.data.tags.includes(t)).length,
+    shared: p.data.tags.filter((t: string) => post.data.tags.includes(t))
+      .length,
   }))
   .filter(({ shared }) => shared > 0)
-  .sort((a, b) => b.shared - a.shared || b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf())
+  .sort(
+    (a, b) =>
+      b.shared - a.shared ||
+      b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf(),
+  )
   .slice(0, 3)
   .map(({ post }) => post);
 
@@ -40,33 +45,53 @@ if (post.data.series) {
   seriesIndex = seriesPosts.findIndex((p) => p.slug === post.slug);
 }
 const prevInSeries = seriesIndex > 0 ? seriesPosts[seriesIndex - 1] : null;
-const nextInSeries = seriesIndex >= 0 && seriesIndex < seriesPosts.length - 1 ? seriesPosts[seriesIndex + 1] : null;
+const nextInSeries =
+  seriesIndex >= 0 && seriesIndex < seriesPosts.length - 1
+    ? seriesPosts[seriesIndex + 1]
+    : null;
 
 function formatDate(date: Date) {
-  return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+  return date.toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 }
 
 function formatDateShort(date: Date) {
-  return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
+  return date.toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
 }
 ---
 
-<BaseLayout title={`${post.data.title} — notdefined.dev`} description={post.data.description}>
-
+<BaseLayout
+  title={`${post.data.title} — notdefined.dev`}
+  description={post.data.description}
+>
   <article>
     <!-- Back link -->
     <a href="/blog/" class="back-link">← Todos los posts</a>
 
     <!-- Series banner -->
-    {post.data.series && (
-      <div class="series-banner">
-        <span class="series-label">Serie</span>
-        <a href={`/blog/series/${encodeURIComponent(post.data.series)}/`} class="series-name">
-          {post.data.series}
-        </a>
-        <span class="series-part">Parte {seriesIndex + 1} de {seriesPosts.length}</span>
-      </div>
-    )}
+    {
+      post.data.series && (
+        <div class="series-banner">
+          <span class="series-label">Serie</span>
+          <a
+            href={`/blog/series/${encodeURIComponent(post.data.series)}/`}
+            class="series-name"
+          >
+            {post.data.series}
+          </a>
+          <span class="series-part">
+            Parte {seriesIndex + 1} de {seriesPosts.length}
+          </span>
+        </div>
+      )
+    }
 
     <!-- Header -->
     <header class="post-header">
@@ -77,16 +102,20 @@ function formatDateShort(date: Date) {
         </time>
         <span class="separator">·</span>
         <span class="read-time">{mins} min de lectura</span>
-        {post.data.tags.length > 0 && (
-          <>
-            <span class="separator">·</span>
-            <div class="tag-row">
-              {post.data.tags.map((tag: string) => (
-                <a href={`/blog/tags/${tag}/`} class="tag">{tag}</a>
-              ))}
-            </div>
-          </>
-        )}
+        {
+          post.data.tags.length > 0 && (
+            <>
+              <span class="separator">·</span>
+              <div class="tag-row">
+                {post.data.tags.map((tag: string) => (
+                  <a href={`/blog/tags/${tag}/`} class="tag">
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            </>
+          )
+        }
       </div>
     </header>
 
@@ -97,43 +126,54 @@ function formatDateShort(date: Date) {
   </article>
 
   <!-- Series prev/next -->
-  {(prevInSeries || nextInSeries) && (
-    <nav class="series-nav">
-      <p class="series-nav-label">Más en esta serie</p>
-      <div class="series-nav-links">
-        {prevInSeries && (
-          <a href={`/blog/${prevInSeries.slug}/`} class="series-nav-item series-nav-prev">
-            <span class="nav-dir">← Anterior</span>
-            <span class="nav-title">{prevInSeries.data.title}</span>
-          </a>
-        )}
-        {nextInSeries && (
-          <a href={`/blog/${nextInSeries.slug}/`} class="series-nav-item series-nav-next">
-            <span class="nav-dir">Siguiente →</span>
-            <span class="nav-title">{nextInSeries.data.title}</span>
-          </a>
-        )}
-      </div>
-    </nav>
-  )}
+  {
+    (prevInSeries || nextInSeries) && (
+      <nav class="series-nav">
+        <p class="series-nav-label">Más en esta serie</p>
+        <div class="series-nav-links">
+          {prevInSeries && (
+            <a
+              href={`/blog/${prevInSeries.slug}/`}
+              class="series-nav-item series-nav-prev"
+            >
+              <span class="nav-dir">← Anterior</span>
+              <span class="nav-title">{prevInSeries.data.title}</span>
+            </a>
+          )}
+          {nextInSeries && (
+            <a
+              href={`/blog/${nextInSeries.slug}/`}
+              class="series-nav-item series-nav-next"
+            >
+              <span class="nav-dir">Siguiente →</span>
+              <span class="nav-title">{nextInSeries.data.title}</span>
+            </a>
+          )}
+        </div>
+      </nav>
+    )
+  }
 
   <!-- Related posts -->
-  {related.length > 0 && (
-    <aside class="related">
-      <h2 class="related-title">Posts relacionados</h2>
-      <ul class="related-list">
-        {related.map((rel: CollectionEntry<'blog'>) => (
-          <li class="related-item">
-            <a href={`/blog/${rel.slug}/`} class="related-link">
-              <span class="related-post-title">{rel.data.title}</span>
-              <span class="related-date">{formatDateShort(rel.data.pubDate)}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </aside>
-  )}
-
+  {
+    related.length > 0 && (
+      <aside class="related">
+        <h2 class="related-title">Posts relacionados</h2>
+        <ul class="related-list">
+          {related.map((rel) => (
+            <li class="related-item">
+              <a href={`/blog/${rel.slug}/`} class="related-link">
+                <span class="related-post-title">{rel.data.title}</span>
+                <span class="related-date">
+                  {formatDateShort(rel.data.pubDate)}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    )
+  }
 </BaseLayout>
 
 <style>
@@ -145,7 +185,9 @@ function formatDateShort(date: Date) {
     margin-bottom: 1.5rem;
     transition: color 150ms ease;
   }
-  .back-link:hover { color: var(--color-accent); }
+  .back-link:hover {
+    color: var(--color-accent);
+  }
 
   /* Series banner */
   .series-banner {
@@ -173,7 +215,9 @@ function formatDateShort(date: Date) {
     text-decoration: none;
     transition: opacity 150ms ease;
   }
-  .series-name:hover { opacity: 0.75; }
+  .series-name:hover {
+    opacity: 0.75;
+  }
   .series-part {
     font-size: 0.78rem;
     color: var(--color-muted);
@@ -201,9 +245,18 @@ function formatDateShort(date: Date) {
     font-size: 0.85rem;
     color: var(--color-muted);
   }
-  .separator { color: var(--color-border); }
-  .read-time { font-size: 0.85rem; color: var(--color-muted); }
-  .tag-row { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+  .separator {
+    color: var(--color-border);
+  }
+  .read-time {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
   .tag {
     font-size: 0.7rem;
     font-weight: 500;
@@ -214,9 +267,14 @@ function formatDateShort(date: Date) {
     color: var(--color-muted);
     border: 1px solid var(--color-border);
     text-decoration: none;
-    transition: border-color 150ms ease, color 150ms ease;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease;
   }
-  .tag:hover { border-color: var(--color-accent); color: var(--color-accent); }
+  .tag:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
 
   /* Series nav */
   .series-nav {
@@ -247,10 +305,17 @@ function formatDateShort(date: Date) {
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     text-decoration: none;
-    transition: border-color 150ms ease, background-color 150ms ease;
+    transition:
+      border-color 150ms ease,
+      background-color 150ms ease;
   }
-  .series-nav-item:hover { border-color: var(--color-accent); background-color: var(--color-surface); }
-  .series-nav-next { text-align: right; }
+  .series-nav-item:hover {
+    border-color: var(--color-accent);
+    background-color: var(--color-surface);
+  }
+  .series-nav-next {
+    text-align: right;
+  }
   .nav-dir {
     font-size: 0.72rem;
     font-weight: 500;
@@ -265,7 +330,9 @@ function formatDateShort(date: Date) {
     line-height: 1.35;
     transition: color 150ms ease;
   }
-  .series-nav-item:hover .nav-title { color: var(--color-accent); }
+  .series-nav-item:hover .nav-title {
+    color: var(--color-accent);
+  }
 
   /* Related posts */
   .related {
@@ -288,7 +355,9 @@ function formatDateShort(date: Date) {
     border-radius: 0.75rem;
     overflow: hidden;
   }
-  .related-item + .related-item { border-top: 1px solid var(--color-border); }
+  .related-item + .related-item {
+    border-top: 1px solid var(--color-border);
+  }
   .related-link {
     display: flex;
     justify-content: space-between;
@@ -298,7 +367,9 @@ function formatDateShort(date: Date) {
     text-decoration: none;
     transition: background-color 150ms ease;
   }
-  .related-link:hover { background-color: var(--color-surface); }
+  .related-link:hover {
+    background-color: var(--color-surface);
+  }
   .related-post-title {
     font-size: 0.9rem;
     font-weight: 500;
@@ -306,7 +377,9 @@ function formatDateShort(date: Date) {
     line-height: 1.4;
     transition: color 150ms ease;
   }
-  .related-link:hover .related-post-title { color: var(--color-accent); }
+  .related-link:hover .related-post-title {
+    color: var(--color-accent);
+  }
   .related-date {
     font-size: 0.75rem;
     color: var(--color-muted);

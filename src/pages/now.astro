@@ -1,79 +1,69 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { getCollection } from 'astro:content';
 
-const updatedAt = '2026-03-07';
+const [current] = (await getCollection('now')).sort(
+  (a, b) => b.data.updatedAt.valueOf() - a.data.updatedAt.valueOf(),
+);
+
+if (!current) {
+  throw new Error('No existe contenido en src/content/now/.');
+}
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
 ---
 
-<BaseLayout title="Ahora — notdefined.dev" description="En qué está trabajando Adrian Castillo en este momento.">
-
-  <header class="mb-10">
-    <p class="label mb-2">Ahora</p>
-    <h1 class="page-title">¿Qué estoy haciendo?</h1>
-    <p class="page-desc">Una snapshot de lo que ocupa mi tiempo. Actualizado cuando algo cambia.</p>
-  </header>
+<BaseLayout
+  title="Ahora — notdefined.dev"
+  description="En qué está trabajando Adrian Castillo en este momento."
+>
+  <PageHeader
+    label="Ahora"
+    title="¿Qué estoy haciendo?"
+    description="Una snapshot de lo que ocupa mi tiempo. Actualizo esto cuando algo cambia."
+  />
 
   <div class="now-content">
-
-    <section class="now-section">
+    <section>
       <h2 class="section-title">Construyendo</h2>
       <ul class="now-list">
-        <li><strong>Stockerly</strong> — plataforma de tracking de inversiones. Arquitectura Ruby on Rails, PostgreSQL, integraciones con APIs de mercado.</li>
-        <li><strong>SheLLM</strong> — API unificada para LLMs. Simplificar el switching entre providers sin tocar el código del cliente.</li>
-        <li><strong>notdefined.dev</strong> — este sitio. Blog estático con Astro y un pipeline de IA (ghostpen) que genera drafts desde GitHub Issues.</li>
+        {current.data.building.map((item: string) => <li set:html={item} />)}
       </ul>
     </section>
 
-    <section class="now-section">
+    <section>
       <h2 class="section-title">Explorando</h2>
       <ul class="now-list">
-        <li>Patrones de arquitectura para apps Rails que escalan sin volverse inmanejables.</li>
-        <li>Cómo integrar LLMs en flujos de trabajo reales sin que el costo y la latencia rompan el producto.</li>
-        <li>Rust — lentamente, sin presión.</li>
+        {current.data.exploring.map((item: string) => <li>{item}</li>)}
       </ul>
     </section>
 
-    <section class="now-section">
+    <section>
       <h2 class="section-title">Escribiendo sobre</h2>
       <ul class="now-list">
-        <li>Ruby, Rails, y las decisiones de arquitectura que importan a los 3 meses de estar en producción.</li>
-        <li>IA práctica para developers — no hype, sino casos reales con tradeoffs honestos.</li>
+        {current.data.writing.map((item: string) => <li>{item}</li>)}
       </ul>
     </section>
-
   </div>
 
-  <p class="updated">Última actualización: {updatedAt}</p>
-
+  <p class="updated">
+    Última actualización: {formatDate(current.data.updatedAt)}
+  </p>
 </BaseLayout>
 
 <style>
-  .label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-  .page-title {
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    color: var(--color-text);
-    margin-bottom: 0.5rem;
-  }
-  .page-desc {
-    color: var(--color-muted);
-    font-size: 0.95rem;
-    max-width: 36rem;
-  }
-
   .now-content {
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
   }
-
-  .now-section {}
 
   .section-title {
     font-size: 0.7rem;
@@ -93,6 +83,7 @@ const updatedAt = '2026-03-07';
     flex-direction: column;
     gap: 0.625rem;
   }
+
   .now-list li {
     font-size: 0.9375rem;
     color: var(--color-text);
@@ -100,16 +91,13 @@ const updatedAt = '2026-03-07';
     padding-left: 1rem;
     position: relative;
   }
+
   .now-list li::before {
     content: '–';
     position: absolute;
     left: 0;
     color: var(--color-muted);
     opacity: 0.5;
-  }
-  .now-list strong {
-    font-weight: 600;
-    color: var(--color-text);
   }
 
   .updated {

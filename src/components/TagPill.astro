@@ -1,0 +1,20 @@
+---
+interface Props {
+  label: string;
+  href?: string;
+  active?: boolean;
+}
+
+const { label, href, active = false } = Astro.props;
+const className = `tag-pill${active ? ' is-active' : ''}`;
+---
+
+{
+  href ? (
+    <a href={href} class={className}>
+      {label}
+    </a>
+  ) : (
+    <span class={className}>{label}</span>
+  )
+}

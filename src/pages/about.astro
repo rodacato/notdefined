@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import CardList from '../components/CardList.astro';
+import { siteProfile } from '../data/site';
+---
+
+<BaseLayout
+  title="About — notdefined.dev"
+  description="Quién está detrás de notdefined.dev y dónde seguir su trabajo."
+>
+  <PageHeader
+    label="Perfil"
+    title="About"
+    description="Este sitio prioriza código, proyectos y aprendizajes reales. Si quieres seguir mi trabajo, aquí están los enlaces públicos."
+  />
+
+  <section class="about-section">
+    <h2 class="section-title">Identidad técnica</h2>
+    <p class="about-text">
+      <strong>{siteProfile.name}</strong> · {siteProfile.role}
+    </p>
+    <p class="about-text">{siteProfile.tagline}</p>
+    <p class="about-text">{siteProfile.bio}</p>
+  </section>
+
+  <section class="about-section">
+    <h2 class="section-title">Perfiles públicos</h2>
+    <CardList>
+      {
+        siteProfile.socials.map((social) => (
+          <div class="card-list-item social-item">
+            <a
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-link"
+            >
+              <span class="social-name">{social.label}</span>
+              <span class="social-url">{social.href}</span>
+            </a>
+          </div>
+        ))
+      }
+    </CardList>
+  </section>
+
+  <section class="about-section">
+    <h2 class="section-title">Cómo actualizar esta página</h2>
+    <p class="about-text">
+      Edita <code>src/data/site.ts</code> para cambiar biografía, rol y redes sociales
+      sin tocar el template.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-section + .about-section {
+    margin-top: 2rem;
+  }
+
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .about-text {
+    color: var(--color-text);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin-bottom: 0.5rem;
+  }
+
+  .social-item {
+    padding: 0;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    text-decoration: none;
+    padding: 1rem 1.25rem;
+    transition: background-color 120ms ease;
+  }
+  .social-link:hover {
+    background-color: var(--color-surface);
+  }
+
+  .social-name {
+    color: var(--color-text);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .social-url {
+    color: var(--color-muted);
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+</style>

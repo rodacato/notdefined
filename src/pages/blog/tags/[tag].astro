@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import CardList from '../../../components/CardList.astro';
+import TagPill from '../../../components/TagPill.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -15,16 +18,23 @@ export async function getStaticPaths() {
     props: {
       tag,
       posts: posts
-        .filter((p) => p.data.tags.includes(tag))
+        .filter((post) => post.data.tags.includes(tag))
         .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
     },
   }));
 }
 
-const { tag, posts } = Astro.props as { tag: string; posts: CollectionEntry<'blog'>[] };
+const { tag, posts } = Astro.props as {
+  tag: string;
+  posts: CollectionEntry<'blog'>[];
+};
 
 function formatDate(date: Date) {
-  return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
+  return date.toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
 }
 ---
 
@@ -32,77 +42,43 @@ function formatDate(date: Date) {
   title={`#${tag} — notdefined.dev`}
   description={`Posts etiquetados con "${tag}" en notdefined.dev.`}
 >
+  <PageHeader
+    backHref="/blog/tags/"
+    backLabel="← Todos los tags"
+    label="Tag"
+    title={`#${tag}`}
+    description={`${posts.length} post${posts.length !== 1 ? 's' : ''}`}
+  />
 
-  <header class="mb-10">
-    <a href="/blog/tags/" class="back-link">← Todos los tags</a>
-    <p class="label mb-2">Tag</p>
-    <h1 class="page-title">#{tag}</h1>
-    <p class="page-desc">{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
-  </header>
-
-  <ul class="post-list">
-    {posts.map((post: CollectionEntry<'blog'>, i: number) => (
-      <li class={i > 0 ? 'post-item bordered' : 'post-item'}>
-        <a href={`/blog/${post.slug}/`} class="post-link">
-          <div class="post-meta">
-            <span class="post-title">{post.data.title}</span>
-            <p class="post-desc">{post.data.description}</p>
-            {post.data.tags.length > 0 && (
-              <div class="tag-row">
-                {post.data.tags.map((t: string) => (
-                  <a
-                    href={`/blog/tags/${t}/`}
-                    class={`tag${t === tag ? ' tag-active' : ''}`}
-                    onclick="event.stopPropagation()"
-                  >{t}</a>
-                ))}
-              </div>
-            )}
-          </div>
-          <span class="post-date">{formatDate(post.data.pubDate)}</span>
-        </a>
-      </li>
-    ))}
-  </ul>
-
+  <CardList>
+    {
+      posts.map((post) => (
+        <li class="card-list-item">
+          <a href={`/blog/${post.slug}/`} class="post-link">
+            <div class="post-meta">
+              <span class="post-title">{post.data.title}</span>
+              <p class="post-desc">{post.data.description}</p>
+              {post.data.tags.length > 0 && (
+                <div class="tag-row">
+                  {post.data.tags.map((itemTag: string) => (
+                    <TagPill
+                      label={itemTag}
+                      href={`/blog/tags/${itemTag}/`}
+                      active={itemTag === tag}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+            <span class="post-date">{formatDate(post.data.pubDate)}</span>
+          </a>
+        </li>
+      ))
+    }
+  </CardList>
 </BaseLayout>
 
 <style>
-  .back-link {
-    display: inline-block;
-    font-size: 0.85rem;
-    color: var(--color-muted);
-    text-decoration: none;
-    margin-bottom: 1.5rem;
-    transition: color 150ms ease;
-  }
-  .back-link:hover { color: var(--color-accent); }
-
-  .label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-  .page-title {
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    color: var(--color-text);
-    margin-bottom: 0.5rem;
-  }
-  .page-desc {
-    color: var(--color-muted);
-    font-size: 0.95rem;
-  }
-
-  .post-list {
-    border: 1px solid var(--color-border);
-    border-radius: 0.75rem;
-    overflow: hidden;
-  }
-  .post-item.bordered { border-top: 1px solid var(--color-border); }
   .post-link {
     display: flex;
     justify-content: space-between;
@@ -111,8 +87,15 @@ function formatDate(date: Date) {
     transition: background-color 150ms ease;
     text-decoration: none;
   }
-  .post-link:hover { background-color: var(--color-surface); }
-  .post-meta { flex: 1; min-width: 0; }
+  .post-link:hover {
+    background-color: var(--color-surface);
+  }
+
+  .post-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
   .post-title {
     font-size: 1rem;
     font-weight: 500;
@@ -121,35 +104,24 @@ function formatDate(date: Date) {
     display: block;
     margin-bottom: 0.25rem;
   }
-  .post-link:hover .post-title { color: var(--color-accent); }
+  .post-link:hover .post-title {
+    color: var(--color-accent);
+  }
+
   .post-desc {
     font-size: 0.875rem;
     color: var(--color-muted);
     line-height: 1.5;
     margin: 0;
   }
+
   .tag-row {
     display: flex;
     flex-wrap: wrap;
     gap: 0.375rem;
     margin-top: 0.625rem;
   }
-  .tag {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    padding: 0.2em 0.55em;
-    border-radius: 0.25rem;
-    background-color: var(--color-surface-2);
-    color: var(--color-muted);
-    border: 1px solid var(--color-border);
-    text-decoration: none;
-  }
-  .tag-active {
-    background-color: var(--color-accent);
-    color: var(--color-bg);
-    border-color: var(--color-accent);
-  }
+
   .post-date {
     font-size: 0.78rem;
     color: var(--color-muted);

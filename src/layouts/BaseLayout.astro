@@ -1,13 +1,16 @@
 ---
 import '../styles/global.css';
+import { siteProfile } from '../data/site';
 
 interface Props {
   title: string;
   description?: string;
 }
 
-const { title, description = 'Sitio personal y blog de Adrian Castillo' } = Astro.props;
+const { title, description = 'Sitio personal y blog de Adrian Castillo' } =
+  Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL('/logo.png', Astro.site);
 ---
 
 <!doctype html>
@@ -17,41 +20,48 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" href="/logo.png" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonicalURL} />
-    <link rel="alternate" type="application/rss+xml" title="notdefined.dev RSS" href="/rss.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="notdefined.dev RSS"
+      href="/rss.xml"
+    />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:image" content="/logo.png" />
+    <meta property="og:image" content={ogImageURL} />
     <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
   </head>
   <body class="flex min-h-full flex-col">
-
     <header class="site-header">
-      <div class="mx-auto flex w-full max-w-3xl items-center justify-between px-6 py-4">
+      <div
+        class="mx-auto flex w-full max-w-3xl items-center justify-between px-6 py-4"
+      >
         <a href="/" class="brand">
           <img src="/logo.png" alt="notdefined.dev logo" class="brand-logo" />
-          <span class="brand-name">notdefined<span class="cursor-blink">_</span></span>
+          <span class="brand-name"
+            >notdefined<span class="cursor-blink">_</span></span
+          >
         </a>
         <nav class="flex items-center gap-5">
           <a href="/blog/" class="nav-link">Blog</a>
           <a href="/til/" class="nav-link">TIL</a>
           <a href="/projects/" class="nav-link">Proyectos</a>
+          <a href="/about/" class="nav-link">About</a>
           <a href="/search/" class="nav-link">Buscar</a>
-          <a
-            href="https://github.com/rodacato"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="nav-link"
-          >
-            GitHub ↗
-          </a>
         </nav>
       </div>
     </header>
@@ -64,14 +74,17 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="mx-auto w-full max-w-3xl px-6 py-6">
         <div class="footer-inner">
           <div class="footer-links">
-            <p class="footer-text">© {new Date().getFullYear()} Adrian Castillo</p>
+            <p class="footer-text">
+              © {new Date().getFullYear()}
+              {siteProfile.name}
+            </p>
             <a href="/now/" class="footer-nav-link">Ahora</a>
+            <a href="/about/" class="footer-nav-link">About</a>
           </div>
           <a href="/rss.xml" class="rss-link" title="Feed RSS">RSS</a>
         </div>
       </div>
     </footer>
-
   </body>
 </html>
 
@@ -88,7 +101,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     text-decoration: none;
     transition: opacity 150ms ease;
   }
-  .brand:hover { opacity: 0.7; }
+  .brand:hover {
+    opacity: 0.7;
+  }
 
   .brand-logo {
     width: 26px;
@@ -110,7 +125,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     text-decoration: none;
     transition: color 150ms ease;
   }
-  .nav-link:hover { color: var(--color-text); }
+  .nav-link:hover {
+    color: var(--color-text);
+  }
 
   .site-footer {
     border-top: 1px solid var(--color-border);
@@ -139,7 +156,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     text-decoration: none;
     transition: color 150ms ease;
   }
-  .footer-nav-link:hover { color: var(--color-text); }
+  .footer-nav-link:hover {
+    color: var(--color-text);
+  }
 
   .rss-link {
     font-size: 0.75rem;
@@ -149,5 +168,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     letter-spacing: 0.05em;
     transition: color 150ms ease;
   }
-  .rss-link:hover { color: var(--color-accent); }
+  .rss-link:hover {
+    color: var(--color-accent);
+  }
 </style>

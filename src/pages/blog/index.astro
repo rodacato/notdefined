@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import CardList from '../../components/CardList.astro';
+import TagPill from '../../components/TagPill.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { readingTime } from '../../utils/reading-time';
 
@@ -21,81 +24,78 @@ function formatDate(date: Date) {
 }
 ---
 
-<BaseLayout title="Blog — notdefined.dev" description="Todos los posts de Adrian Castillo sobre Ruby, JavaScript, backend e IA.">
-
-  <header class="mb-10">
-    <p class="label mb-2">Escritura</p>
-    <h1 class="page-title">Blog</h1>
-    <p class="page-desc">Notas desde las trincheras — Ruby, JavaScript, arquitectura backend, y algún que otro experimento con IA.</p>
-    <div class="header-actions">
+<BaseLayout
+  title="Blog — notdefined.dev"
+  description="Todos los posts de Adrian Castillo sobre Ruby, JavaScript, backend e IA."
+>
+  <PageHeader
+    label="Escritura"
+    title="Blog"
+    description="Notas desde las trincheras: Ruby, JavaScript, arquitectura backend y experimentos con IA."
+  >
+    <div slot="actions" class="header-actions">
       <a href="/blog/tags/" class="action-link">Explorar por tag →</a>
       <span class="action-sep">·</span>
       <a href="/blog/series/" class="action-link">Ver series →</a>
     </div>
-  </header>
+  </PageHeader>
 
-  {years.map((year) => (
-    <section class="year-section">
-      <h2 class="year-heading">{year}</h2>
-      <ul class="post-list">
-        {postsByYear.get(year)!.map((post: CollectionEntry<'blog'>, i: number) => (
-          <li class={i > 0 ? 'post-item bordered' : 'post-item'}>
-            <a href={`/blog/${post.slug}/`} class="post-link">
-              <h3 class="post-title">{post.data.title}</h3>
-              <p class="post-desc">{post.data.description}</p>
-              <div class="post-footer">
-                <div class="tag-row">
-                  {post.data.tags.map((tag: string) => (
-                    <span class="tag">{tag}</span>
-                  ))}
+  {
+    years.map((year) => (
+      <section class="year-section">
+        <h2 class="year-heading">{year}</h2>
+        <CardList>
+          {postsByYear.get(year)!.map((post) => (
+            <li class="card-list-item">
+              <a href={`/blog/${post.slug}/`} class="post-link">
+                <h3 class="post-title">{post.data.title}</h3>
+                <p class="post-desc">{post.data.description}</p>
+                <div class="post-footer">
+                  <div class="tag-row">
+                    {post.data.tags.map((tag: string) => (
+                      <TagPill label={tag} />
+                    ))}
+                  </div>
+                  <span class="post-meta">
+                    {formatDate(post.data.pubDate)} · {readingTime(post.body)}{' '}
+                    min
+                  </span>
                 </div>
-                <span class="post-meta">{formatDate(post.data.pubDate)} · {readingTime(post.body)} min</span>
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ))}
-
+              </a>
+            </li>
+          ))}
+        </CardList>
+      </section>
+    ))
+  }
 </BaseLayout>
 
 <style>
-  .label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-  .page-title {
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    color: var(--color-text);
-    margin-bottom: 0.5rem;
-  }
-  .page-desc {
-    color: var(--color-muted);
-    font-size: 0.95rem;
-    max-width: 36rem;
-  }
   .header-actions {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     margin-top: 0.75rem;
   }
+
   .action-link {
     font-size: 0.85rem;
     color: var(--color-accent);
     text-decoration: none;
     transition: opacity 150ms ease;
   }
-  .action-link:hover { opacity: 0.7; }
-  .action-sep { font-size: 0.85rem; color: var(--color-border); }
+  .action-link:hover {
+    opacity: 0.7;
+  }
+  .action-sep {
+    font-size: 0.85rem;
+    color: var(--color-border);
+  }
 
-  .year-section { margin-bottom: 2rem; }
+  .year-section {
+    margin-bottom: 2rem;
+  }
+
   .year-heading {
     font-size: 0.7rem;
     font-weight: 600;
@@ -107,20 +107,15 @@ function formatDate(date: Date) {
     opacity: 0.6;
   }
 
-  .post-list {
-    border: 1px solid var(--color-border);
-    border-radius: 0.625rem;
-    overflow: hidden;
-  }
-  .post-item.bordered { border-top: 1px solid var(--color-border); }
-
   .post-link {
     display: block;
     padding: 1rem 1.25rem;
     text-decoration: none;
     transition: background-color 120ms ease;
   }
-  .post-link:hover { background-color: var(--color-surface); }
+  .post-link:hover {
+    background-color: var(--color-surface);
+  }
 
   .post-title {
     font-size: 0.9375rem;
@@ -130,7 +125,9 @@ function formatDate(date: Date) {
     margin: 0 0 0.25rem;
     transition: color 120ms ease;
   }
-  .post-link:hover .post-title { color: var(--color-accent); }
+  .post-link:hover .post-title {
+    color: var(--color-accent);
+  }
 
   .post-desc {
     font-size: 0.8125rem;
@@ -149,18 +146,14 @@ function formatDate(date: Date) {
     justify-content: space-between;
     gap: 0.75rem;
   }
-  .tag-row { display: flex; flex-wrap: wrap; gap: 0.25rem; min-width: 0; }
-  .tag {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    padding: 0.15em 0.5em;
-    border-radius: 0.2rem;
-    background-color: var(--color-surface-2);
-    color: var(--color-muted);
-    border: 1px solid var(--color-border);
-    white-space: nowrap;
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    min-width: 0;
   }
+
   .post-meta {
     font-size: 0.72rem;
     color: var(--color-muted);

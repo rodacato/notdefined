@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -9,16 +10,19 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     title: post.data.title,
     description: post.data.description,
     tags: post.data.tags,
-    date: post.data.pubDate.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' }),
+    date: post.data.pubDate.toLocaleDateString('es-MX', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    }),
   }));
 ---
 
-<BaseLayout title="Search — notdefined.dev" description="Busca en todos los posts de notdefined.dev.">
-
-  <header class="mb-8">
-    <p class="label mb-2">Buscar</p>
-    <h1 class="page-title">Search</h1>
-  </header>
+<BaseLayout
+  title="Buscar — notdefined.dev"
+  description="Busca en todos los posts de notdefined.dev."
+>
+  <PageHeader label="Buscar" title="Buscar" />
 
   <div class="search-wrap">
     <input
@@ -31,57 +35,88 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   </div>
 
   <p id="search-count" class="search-count"></p>
-
-  <ul id="results" class="post-list"></ul>
-
-  <p id="search-empty" class="search-empty hidden">No hay resultados para esta búsqueda.</p>
-
+  <ul id="results" class="card-list"></ul>
+  <p id="search-empty" class="search-empty hidden">
+    No hay resultados para esta búsqueda.
+  </p>
 </BaseLayout>
 
 <script is:inline define:vars={{ posts }}>
+  /* global posts */
   const input = document.getElementById('search-input');
   const list = document.getElementById('results');
   const count = document.getElementById('search-count');
   const empty = document.getElementById('search-empty');
 
-  function formatDate(str) { return str; }
+  function createTag(label) {
+    const tag = document.createElement('span');
+    tag.className = 'tag-pill';
+    tag.textContent = label;
+    return tag;
+  }
 
   function render(filtered) {
     list.innerHTML = '';
     empty.classList.add('hidden');
 
-    if (filtered.length === 0 && input.value.trim()) {
+    const query = input.value.trim();
+    if (filtered.length === 0 && query) {
       empty.classList.remove('hidden');
       count.textContent = '';
       return;
     }
 
-    count.textContent = input.value.trim()
+    count.textContent = query
       ? `${filtered.length} resultado${filtered.length !== 1 ? 's' : ''}`
       : '';
 
-    filtered.forEach((post, i) => {
-      const li = document.createElement('li');
-      li.className = i > 0 ? 'post-item bordered' : 'post-item';
-      li.innerHTML = `
-        <a href="/blog/${post.slug}/" class="post-link">
-          <h3 class="post-title">${post.title}</h3>
-          <p class="post-desc">${post.description}</p>
-          <div class="post-footer">
-            <div class="tag-row">${post.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-            <span class="post-meta">${post.date}</span>
-          </div>
-        </a>`;
-      list.appendChild(li);
+    filtered.forEach((post) => {
+      const item = document.createElement('li');
+      item.className = 'card-list-item post-item';
+
+      const link = document.createElement('a');
+      link.className = 'post-link';
+      link.href = `/blog/${post.slug}/`;
+
+      const title = document.createElement('h3');
+      title.className = 'post-title';
+      title.textContent = post.title;
+
+      const desc = document.createElement('p');
+      desc.className = 'post-desc';
+      desc.textContent = post.description;
+
+      const footer = document.createElement('div');
+      footer.className = 'post-footer';
+
+      const tags = document.createElement('div');
+      tags.className = 'tag-row';
+      post.tags.forEach((tag) => tags.appendChild(createTag(tag)));
+
+      const date = document.createElement('span');
+      date.className = 'post-meta';
+      date.textContent = post.date;
+
+      footer.appendChild(tags);
+      footer.appendChild(date);
+      link.appendChild(title);
+      link.appendChild(desc);
+      link.appendChild(footer);
+      item.appendChild(link);
+      list.appendChild(item);
     });
   }
 
   function search(q) {
-    if (!q.trim()) { render([]); return; }
+    if (!q.trim()) {
+      render([]);
+      return;
+    }
     const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
-    const results = posts.filter(post => {
-      const haystack = `${post.title} ${post.description} ${post.tags.join(' ')}`.toLowerCase();
-      return terms.every(t => haystack.includes(t));
+    const results = posts.filter((post) => {
+      const haystack =
+        `${post.title} ${post.description} ${post.tags.join(' ')}`.toLowerCase();
+      return terms.every((t) => haystack.includes(t));
     });
     render(results);
   }
@@ -90,22 +125,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 </script>
 
 <style>
-  .label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-  .page-title {
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    color: var(--color-text);
-    margin-bottom: 0.5rem;
+  .search-wrap {
+    margin-bottom: 1rem;
   }
 
-  .search-wrap { margin-bottom: 1rem; }
   .search-input {
     width: 100%;
     padding: 0.75rem 1rem;
@@ -118,8 +141,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     outline: none;
     transition: border-color 150ms ease;
   }
-  .search-input:focus { border-color: var(--color-accent); }
-  .search-input::placeholder { color: var(--color-muted); opacity: 0.6; }
+  .search-input:focus {
+    border-color: var(--color-accent);
+  }
+  .search-input::placeholder {
+    color: var(--color-muted);
+    opacity: 0.6;
+  }
 
   .search-count {
     font-size: 0.78rem;
@@ -127,21 +155,20 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     margin-bottom: 0.75rem;
     min-height: 1.2em;
   }
+
   .search-empty {
     font-size: 0.9rem;
     color: var(--color-muted);
     padding: 2rem 0;
     text-align: center;
   }
-  .hidden { display: none; }
 
-  .post-list {
-    border: 1px solid var(--color-border);
-    border-radius: 0.625rem;
-    overflow: hidden;
+  .hidden {
+    display: none;
   }
-  .post-list:empty { display: none; }
-  .post-item.bordered { border-top: 1px solid var(--color-border); }
+  .card-list:empty {
+    display: none;
+  }
 
   .post-link {
     display: block;
@@ -149,7 +176,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     text-decoration: none;
     transition: background-color 120ms ease;
   }
-  .post-link:hover { background-color: var(--color-surface); }
+  .post-link:hover {
+    background-color: var(--color-surface);
+  }
 
   .post-title {
     font-size: 0.9375rem;
@@ -159,7 +188,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     margin: 0 0 0.25rem;
     transition: color 120ms ease;
   }
-  .post-link:hover .post-title { color: var(--color-accent); }
+  .post-link:hover .post-title {
+    color: var(--color-accent);
+  }
 
   .post-desc {
     font-size: 0.8125rem;
@@ -178,18 +209,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     justify-content: space-between;
     gap: 0.75rem;
   }
-  .tag-row { display: flex; flex-wrap: wrap; gap: 0.25rem; }
-  .tag {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    padding: 0.15em 0.5em;
-    border-radius: 0.2rem;
-    background-color: var(--color-surface-2);
-    color: var(--color-muted);
-    border: 1px solid var(--color-border);
-    white-space: nowrap;
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
   }
+
   .post-meta {
     font-size: 0.72rem;
     color: var(--color-muted);
