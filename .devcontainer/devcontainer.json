@@ -11,13 +11,17 @@
   },
   "mounts": [
     "source=notdefined-bashhistory,target=/commandhistory,type=volume",
-    "source=notdefined-npmcache,target=/home/node/.npm,type=volume"
+    "source=notdefined-npmcache,target=/home/node/.npm,type=volume",
+    "source=notdefined-rubygems,target=/usr/local/rvm/gems,type=volume"
   ],
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "npm install && gem install bundler",
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/sshd:1": {},
+    "ghcr.io/devcontainers/features/ruby:1": {
+      "version": "3.4"
+    },
     "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
   },
   "customizations": {
@@ -25,6 +29,7 @@
       "extensions": [
         "astro-build.astro-vscode",
         "bradlc.vscode-tailwindcss",
+        "shopify.ruby-lsp",
         "anthropic.claude-code"
       ]
     }
