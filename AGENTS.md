@@ -1,6 +1,6 @@
 # AGENTS.md — Contexto para agentes AI
 
-Este archivo es el índice de contexto para agentes AI (Claude Code, Copilot, ghostpen, etc.) trabajando en `notdefined.dev`.
+Este archivo es el índice de contexto para agentes AI (Claude Code, Copilot, etc.) trabajando en `notdefined.dev`.
 
 ---
 
@@ -33,12 +33,9 @@ Guiado por [GHOSTWRITER.md](GHOSTWRITER.md): voz de Adrian, guía de blog posts 
 
 | Archivo | Propósito |
 |---------|-----------|
-| `README.md` | Overview público: tech stack, dev setup, deploy, ghostpen |
+| `README.md` | Overview público: tech stack, dev setup, deploy |
 | `AGENTS.md` | Este archivo — índice de contexto para agentes AI |
 | `IDENTITY.md` | Persona técnica: arquitectura, estándares, repo map, comandos |
-| `GHOSTWRITER.md` | Persona de contenido: voz, estilo, guía de redacción |
+| `GHOSTWRITER.md` | Persona de contenido — voz, estilo, guía de redacción |
 | `ROADMAP.md` | Backlog activo: ideas de posts y mejoras pendientes |
-| `docs/ghostpen.md` | Referencia técnica completa de ghostpen |
 | `docs/branding.md` | Brand guide: logo, colores, tipografía, voz |
-| `docs/style-blog.md` | Guía de voz para blog posts (usada por ghostpen) |
-| `docs/style-til.md` | Guía de voz para TILs (usada por ghostpen) |

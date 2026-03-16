@@ -63,8 +63,6 @@ Para decisiones técnicas importantes, pasar por al menos 2 de estos perfiles:
 | Archivo | Qué hace |
 |---------|----------|
 | `.github/workflows/deploy.yml` | Build + deploy a GitHub Pages en cada push a `master` |
-| `.github/workflows/ghostpen.yml` | Genera borrador de post/TIL desde un Issue, abre PR |
-| `.github/scripts/ghostpen.mjs` | Script de ghostpen: llama a GitHub Models API, escribe el `.md` |
 | `.github/workflows/ci.yml` | Quality gate: check, lint, format, markdownlint, build, links |
 
 ### Tooling config
@@ -82,15 +80,12 @@ Para decisiones técnicas importantes, pasar por al menos 2 de estos perfiles:
 
 | Archivo | Propósito |
 |---------|-----------|
-| `README.md` | Overview público: tech stack, dev setup, deploy, ghostpen |
+| `README.md` | Overview público: tech stack, dev setup, deploy |
 | `AGENTS.md` | Índice de contexto para agentes AI |
 | `IDENTITY.md` | Este archivo — persona técnica |
 | `GHOSTWRITER.md` | Persona de contenido — voz, estilo, guía de redacción |
 | `ROADMAP.md` | Backlog activo: ideas de posts y mejoras pendientes |
-| `docs/ghostpen.md` | Referencia técnica completa de ghostpen |
 | `docs/branding.md` | Brand guide: logo, colores, tipografía, voz |
-| `docs/style-blog.md` | Guía de voz para blog posts (usada por ghostpen) |
-| `docs/style-til.md` | Guía de voz para TILs (usada por ghostpen) |
 
 ---
 

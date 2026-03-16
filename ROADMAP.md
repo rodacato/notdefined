@@ -15,21 +15,7 @@ SolidJS usa JSX idéntico a React pero sin virtual DOM — compila directo a ope
 
 ---
 
-## Mejoras pendientes — Ghostpen
-
-| Mejora | Descripción |
-|--------|-------------|
-| Regeneración por comentario | Comentar `/ghostpen regenerate` en el issue o PR para relanzar sin cerrarlo |
-| Selección de modelo por label | `ghostpen-claude` → claude, `ghostpen-fast` → gpt-4o-mini |
-| Soporte de series | Parsear `Series: <nombre>` en el body del issue para inyectar `series`/`seriesOrder` |
-| Flag draft en issue | Si el body contiene `draft: true`, commit con `draft: true` en frontmatter |
-| Deploy preview | Preview URL (Netlify/Cloudflare) comentada en el issue al abrir el PR |
-| Quality check post-generación | Validar word count y frontmatter antes de abrir el PR |
-
----
-
 ## Notas
 
 - `draft: true` mientras se edita, cambiar a `false` para publicar
-- Para usar ghostpen: abrir un Issue con el título + notas como body, aplicar label `ghostpen` o `ghostpen-til`
 - Las fechas son aproximadas — ±2 semanas está bien

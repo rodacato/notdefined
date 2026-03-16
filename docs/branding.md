@@ -136,7 +136,7 @@ Loaded via Google Fonts in `BaseLayout.astro`:
 
 ## Voice & Tone
 
-Writing style for posts (also used as Ghostpen LLM guidance):
+Writing style for posts (see GHOSTWRITER.md for full editorial guide):
 
 - **Technical but approachable** — explains concepts clearly, doesn't condescend
 - **Opinionated** — has a point of view, says "I think" when it's opinion
