@@ -123,7 +123,7 @@ El script Lua en Redis es **atómico** — no hay race conditions.
 
 ## Dónde poner el rate limiter — y por qué importa la capa
 
-Los tres algoritmos de arriba son el "qué". Ahora el "dónde" — porque puedes tener el mejor token bucket del mundo y seguir recibiendo tráfico basura si lo pones en la capa incorrecta.
+Puedes tener el mejor token bucket del mundo y seguir recibiendo tráfico basura si lo pones en la capa incorrecta.
 
 ### nginx — para protección masiva
 

@@ -41,7 +41,7 @@ Database (query cache de AR — automático por request)
 
 Cada capa es más específica pero más fácil de implementar. Empieza arriba cuando puedas.
 
-## Fragment caching: cachear partes de la vista
+## Fragment caching
 
 ```erb
 <%# app/views/products/show.html.erb %>
@@ -64,9 +64,9 @@ La cache key se genera automáticamente usando el cache_key del modelo:
 
 Cuando el producto se actualiza (`update!`), `updated_at` cambia, la key cambia, y el fragmento se regenera automáticamente. Cero invalidación manual.
 
-## Russian doll caching: cachés anidados (el que más impresiona en code reviews)
+## Russian doll caching
 
-El patrón más poderoso: cachés dentro de cachés donde la invalidación se propaga en cascada. El nombre viene de las muñecas rusas que se contienen entre sí — misma idea, más elegante.
+Cachés dentro de cachés donde la invalidación se propaga en cascada. El nombre viene de las muñecas rusas — misma idea.
 
 ```erb
 <%# Lista de productos %>
@@ -103,7 +103,7 @@ class Review < ApplicationRecord
 end
 ```
 
-## `Rails.cache`: caché de bajo nivel
+## `Rails.cache` para todo lo demás
 
 Para cachear objetos arbitrarios (resultados de queries costosos, respuestas de APIs externas):
 
@@ -222,7 +222,7 @@ Cuándo seguir usando Redis como cache:
 - Tienes millones de entries con alta rotación (Solid Cache puede ser más lento con writes masivos)
 - Ya tienes Redis por otros motivos (Sidekiq) y no tiene sentido quitar esa dependencia
 
-## La invalidación: siempre "la parte difícil"
+## Invalidación
 
 ```ruby
 # Invalidación por tiempo (la más simple)

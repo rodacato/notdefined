@@ -150,7 +150,7 @@ end
 
 Sin esto, los jobs que fallaron definitivamente desaparecen en silencio y nunca te enteras.
 
-## Unique jobs: cuando el mismo job no debe correr dos veces en paralelo
+## Unique jobs para evitar duplicados en paralelo
 
 Si un usuario puede triggear el mismo job múltiples veces rápidamente (doble click, múltiples requests concurrentes):
 

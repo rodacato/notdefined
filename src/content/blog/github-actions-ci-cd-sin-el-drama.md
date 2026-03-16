@@ -124,7 +124,7 @@ strategy:
         os: macos-latest  # esta combinación específica no nos importa
 ```
 
-## Caching: la diferencia entre 5 minutos y 1 minuto
+## Caching bien hecho (de 5 minutos a 1)
 
 Sin cache, cada job descarga e instala todas las dependencias desde cero. Con cache:
 
