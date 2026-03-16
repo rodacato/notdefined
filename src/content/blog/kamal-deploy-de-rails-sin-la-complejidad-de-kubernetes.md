@@ -188,7 +188,7 @@ La diferencia de costo entre Kamal en Hetzner y Heroku es 5-10x. Para una app bo
 
 **No gestiona tu base de datos de producción**. El accessory de postgres en Kamal es conveniente para dev/staging, pero para producción de verdad probablemente quieres un managed PostgreSQL (RDS, Supabase, Neon) con backups automáticos, replicación, y monitoring incluidos.
 
-**No incluye monitoring**. Necesitas configurar separadamente: métricas (Grafana/Prometheus o Datadog), logs agregados (Papertrail, Logtail), y alertas. Las plataformas managed lo incluyen.
+**El monitoring corre por tu cuenta**. Necesitas configurar separadamente: métricas (Grafana/Prometheus o Datadog), logs agregados (Papertrail, Logtail), y alertas. Las plataformas managed lo incluyen.
 
 **Tú parcheas el OS**. Actualizaciones de seguridad, gestión de SSH keys, firewall — todo eso es tu responsabilidad.
 
