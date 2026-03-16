@@ -170,5 +170,5 @@ Si intentamos modificar métodos en módulos después de incluirlos en una clase
 - Usar `prepend` en lugar de `include`.
 - Usar `extend` en la clase para métodos de clase dinámicos.
 
-Pero bueno, esto ya es más de metaprogramación. Y para eso, mejor hacemos otro post. 🚀
+Pero bueno, esto ya es más de metaprogramación. Y para eso, mejor hacemos otro post.
 

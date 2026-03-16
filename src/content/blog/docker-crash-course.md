@@ -13,18 +13,18 @@ draft: false
 Docker te permite empaquetar aplicaciones en contenedores ligeros que pueden ejecutarse en cualquier sistema sin preocuparte por dependencias. Con Docker Compose, puedes definir múltiples servicios (como una API y su base de datos) en un solo archivo `docker-compose.yml`. Este blogpost es una referencia rápida para recordarme cómo usar Docker de manera efectiva sin perder tiempo buscando documentación.
 
 
-## 🐳 Introducción rápida a Docker
+## Introducción rápida a Docker
 
-### 🏗 Containerización vs Virtualización
+### Containerización vs Virtualización
 La containerización no es lo mismo que la virtualización. Mientras que una **máquina virtual (VM)** necesita un sistema operativo completo, un **contenedor** comparte el mismo kernel del host, haciendo que sea más liviano y rápido. Básicamente, las VMs son como casas independientes, mientras que los contenedores son departamentos en el mismo edificio, compartiendo algunos recursos pero aislados entre sí.
 
-### 🔑 Docker: La Magia de la Containerización
+### Docker: La Magia de la Containerización
 Imagina que estás desarrollando una aplicación con dependencias específicas. Configurar el entorno correcto en cada máquina puede ser un dolor de cabeza. Aquí es donde **Docker** brilla, empaquetando todo en **contenedores** que aseguran que tu aplicación se ejecute de manera idéntica en cualquier lugar.
 
-### 🔗 Complemento con **notdefined-workbench**
+### Complemento con **notdefined-workbench**
 Si quieres ejemplos listos para levantar y probar diferentes tecnologías con Docker, revisa el repositorio [notdefined-workbench](https://github.com/rodacato/notdefined-workbench). Ahí encontrarás configuraciones listas con `docker-compose.yml` para múltiples stacks.
 
-### 🔑 Problemas que Docker resuelve
+### Problemas que Docker resuelve
 
 ¿Aún sigues confundido? Hagamos esto más práctico. ¿Has pasado por alguno de estos problemas?
 
@@ -37,7 +37,7 @@ La clave de Docker es la **containerización**, empaquetando tu aplicación y to
 
 No confundir con la **virtualización**, que crea múltiples entornos virtuales en una sola máquina física. Docker no virtualiza un SO, sino que usa el mismo kernel del sistema host para crear contenedores ligeros.
 
-## 🔑 Conceptos clave en Docker
+## Conceptos clave en Docker
 
 - **Imagen**: Plantilla con código, librerías y configuraciones necesarias para crear un contenedor.
 - **Contenedor**: Instancia en ejecución de una imagen. Son aislados y predecibles.
@@ -48,7 +48,7 @@ No confundir con la **virtualización**, que crea múltiples entornos virtuales 
 - **Red**: Permite la comunicación entre contenedores y con el host.
 
 
-## 🏗 Instalación de Docker (Mac/Linux)
+## Instalación de Docker (Mac/Linux)
 Para instalar Docker en Linux o macOS, simplemente ejecuta:
 ```sh
 curl -fsSL https://get.docker.com | bash
@@ -70,7 +70,7 @@ Para ver los contenedores en ejecución:
 docker ps
 ```
 
-### 🎉 ¡Felicidades, tu primer contenedor está corriendo! ¿Ahora qué?
+### ¡Felicidades, tu primer contenedor está corriendo! ¿Ahora qué?
 
 Puedes conectarte a PostgreSQL dentro del contenedor, ver logs o persistir los datos usando volúmenes.
 
@@ -102,7 +102,7 @@ Luego puedes acceder con:
 psql -h localhost -U postgres
 ```
 
-## 📌 Ejemplo Completo
+## Ejemplo Completo
 
 ¿Quieres ensuciarte las manos aún más? Ahora hagamos un ejemplo más completo: vamos a crear una API en Node.js.
 
@@ -174,7 +174,7 @@ EXPOSE 3000
 CMD ["node", "index.js"]
 ```
 
-### 🔹  Construcción y Ejecución del Contenedor
+### Construcción y Ejecución del Contenedor
 Para comenzar, primero tenemos que generar la imagen. Para ello, ejecutamos los siguientes comandos desde el directorio `app` (sin `docker-compose` por ahora):
 ```sh
 docker build -t mi-app .
@@ -186,7 +186,7 @@ Ahora puedes visitar `http://localhost:3000` para ver el servidor en funcionamie
 docker stop <CONTAINER_ID>
 ```
 
-### 🔹 Usando `docker-compose`
+### Usando `docker-compose`
 
 Ahora probemos usando `docker-compose`. Vamos a crear el archivo `docker-compose.yml` fuera del directorio `app`, así:
 
@@ -291,7 +291,7 @@ Empiezas a ver los beneficios, ¿verdad? ¡Estupendo! Ahora imagina tus proyecto
 
 
 
-## 📦 Volúmenes en Docker
+## Volúmenes en Docker
 
 Los volúmenes en Docker permiten persistir datos más allá del ciclo de vida de un contenedor. Algunas cosas clave que debes saber:
 
@@ -314,7 +314,7 @@ Para eliminar volúmenes no usados:
 docker volume prune
 ```
 
-## 🌐 Redes en Docker
+## Redes en Docker
 
 Docker permite la comunicación entre contenedores a través de redes personalizadas.
 
@@ -333,7 +333,7 @@ apk add --no-cache postgresql-client
 psql -h db -U postgres
 ```
 
-## 📉 Optimización de Imágenes en Docker
+## Optimización de Imágenes en Docker
 
 La optimización de imágenes en Docker es clave para reducir su tamaño, mejorar la seguridad y acelerar despliegues. Aplicamos múltiples estrategias para mejorar nuestras imágenes, pero alcanzamos un punto donde ya no había mejoras en tamaño. Esto indica que hemos eliminado lo innecesario y tenemos una imagen eficiente.
 
@@ -376,24 +376,24 @@ mi-app-original    latest    abc123456789   5 minutes ago   500MB
 mi-app-opt         latest    def987654321   3 minutes ago   150MB
 ```
 
-## 📡 Logs & Monitoring en Docker
+## Logs & Monitoring en Docker
 
 Porque ir a ciegas no es divertido, aquí tienes algunos comandos útiles para ver qué está pasando antes de quedarte pelón como Toretto.
 
 
-### 🔹 Ver logs de contenedores en tiempo real
+### Ver logs de contenedores en tiempo real
 ```sh
 docker logs -f nombre_del_contenedor
 ```
 Esto es útil para monitorear la API en vivo sin necesidad de entrar al contenedor.
 
-### 🔹 Monitoreo de recursos en vivo
+### Monitoreo de recursos en vivo
 ```sh
 docker stats
 ```
 Muestra el consumo de CPU, memoria y red de los contenedores en ejecución.
 
-### 🔹 Acceder a un contenedor en ejecución
+### Acceder a un contenedor en ejecución
 ```sh
 docker exec -it nombre_del_contenedor sh
 ```
@@ -402,7 +402,7 @@ Si tiene `bash`, puedes usar:
 docker exec -it nombre_del_contenedor bash
 ```
 
-### 🔹 Detectar contenedores fallidos
+### Detectar contenedores fallidos
 Si un contenedor se apaga inesperadamente:
 ```sh
 docker ps -a
@@ -412,7 +412,7 @@ Si el código de salida es `1`, revisa los logs:
 docker logs nombre_del_contenedor
 ```
 
-### 🔹 Configurar logs en `docker-compose.yml`
+### Configurar logs en `docker-compose.yml`
 ```yaml
 services:
   app:
@@ -424,37 +424,37 @@ services:
 ```
 Esto evita que los logs ocupen demasiado espacio.
 
-### 🔹 Ver logs de todos los servicios en `docker-compose`
+### Ver logs de todos los servicios en `docker-compose`
 ```sh
 docker-compose logs -f
 ```
 Facilita la depuración cuando hay múltiples servicios.
 
-## 🛠 Debugging en Docker
+## Debugging en Docker
 
 Mientras usemos Docker, no todo va a salir como esperamos. Para esos casos, hay que saber cómo depurar. Aquí tengo unos tips para cuando ese momento llegue, y llegará.
 
-### 🔹 Ver contenedores en ejecución
+### Ver contenedores en ejecución
 ```sh
 docker ps -a
 ```
 
-### 🔹 Revisar logs de un contenedor
+### Revisar logs de un contenedor
 ```sh
 docker logs nombre_del_contenedor
 ```
 
-### 🔹 Acceder a un contenedor en ejecución
+### Acceder a un contenedor en ejecución
 ```sh
 docker exec -it nombre_del_contenedor sh
 ```
 
-### 🔹 Reconstruir imágenes desde cero
+### Reconstruir imágenes desde cero
 ```sh
 docker-compose build --no-cache
 ```
 
-### 🔹 Ver códigos de salida
+### Ver códigos de salida
 Si un contenedor sale inmediatamente después de ejecutarse, revisa su código de salida:
 ```sh
 docker ps -a
@@ -462,16 +462,16 @@ docker ps -a
 
 Si el estado es `Exited (0)`, significa que el proceso terminó correctamente, pero no tenía un proceso en segundo plano para mantenerlo vivo.
 
-### 🔹 Limpiar Docker de imágenes y contenedores no usados
+### Limpiar Docker de imágenes y contenedores no usados
 ```sh
 docker system prune -a -f
 ```
 
-## 🔥 Limpiar el entorno de Docker
+## Limpiar el entorno de Docker
 
 A medida que usas Docker, los contenedores, imágenes, volúmenes y redes pueden acumularse y ocupar espacio innecesario. Aquí te dejo algunos comandos esenciales para limpiar tu entorno de Docker.
 
-### 🔹 Detener y eliminar contenedores
+### Detener y eliminar contenedores
 Para detener todos los contenedores en ejecución:
 ```sh
 docker stop $(docker ps -q)
@@ -481,7 +481,7 @@ Para eliminar todos los contenedores detenidos:
 docker rm $(docker ps -aq)
 ```
 
-### 🔹 Eliminar imágenes innecesarias
+### Eliminar imágenes innecesarias
 Para eliminar imágenes que ya no están en uso:
 ```sh
 docker image prune -a
@@ -491,7 +491,7 @@ Si necesitas eliminar una imagen específica:
 docker rmi nombre_imagen
 ```
 
-### 🔹 Limpiar volúmenes sin uso
+### Limpiar volúmenes sin uso
 Para eliminar volúmenes que no están en uso:
 ```sh
 docker volume prune
@@ -501,7 +501,7 @@ Si quieres eliminar un volumen específico:
 docker volume rm nombre_volumen
 ```
 
-### 🔹 Eliminar redes no utilizadas
+### Eliminar redes no utilizadas
 Si tienes redes creadas que ya no usas:
 ```sh
 docker network prune
@@ -511,7 +511,7 @@ Para eliminar una red específica:
 docker network rm nombre_red
 ```
 
-### 🔹 Limpiar todo el sistema Docker
+### Limpiar todo el sistema Docker
 Si quieres hacer una limpieza completa de contenedores, imágenes, volúmenes y redes no utilizadas, usa:
 ```sh
 docker system prune -a
@@ -519,7 +519,7 @@ docker system prune -a
 **Advertencia:** Esto eliminará **todo lo que no esté en uso por un contenedor en ejecución**.
 
 
-## 🔥 Comandos esenciales de Docker
+## Comandos esenciales de Docker
 
 | Comando | Descripción |
 |---------|------------|

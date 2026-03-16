@@ -32,7 +32,7 @@ Vamos a dejar las cosas claras, para que no te confundas.
 
 Ahora sí, sabiendo qué es, podemos ver qué cuchara usar y cómo comerlo.
 
-### 1️⃣ Threads: Concurrencia dentro de un proceso
+### Threads: Concurrencia dentro de un proceso
 
 Los **threads** son unidades ligeras de ejecución dentro de un solo proceso que comparten el mismo espacio de memoria. MRI (la implementación estándar de Ruby) históricamente usaba **green threads** gestionados por la VM, lo que significa que no había paralelismo real. Hoy en día, usa **threads nativos**, pero el **Global Interpreter Lock (GIL)** impide la ejecución paralela de múltiples threads en CPU.
 
@@ -69,7 +69,7 @@ threads.each(&:join)
 puts counter  # Siempre será 10
 ```
 
-### 2️⃣ Fibers: Concurrencia cooperativa
+### Fibers: Concurrencia cooperativa
 
 Los **fibers** son incluso más livianos que los threads. Son **hilos cooperativos** que solo avanzan cuando explícitamente se les indica. No son preemptivos, lo que significa que un fiber **no interrumpe a otro automáticamente**.
 
@@ -96,7 +96,7 @@ puts "Done."
 
 A diferencia de los threads, los fibers no se ejecutan automáticamente; debes gestionarlos manualmente. Úsalos con tareas livianas para evitar complicaciones
 
-### 3️⃣ Processes: Paralelismo real
+### Processes: Paralelismo real
 
 Los **procesos** son instancias separadas del intérprete de Ruby, cada una con su propio espacio de memoria. Debido a esto, **evitan el GIL** y pueden ejecutarse en paralelo.
 
@@ -119,7 +119,7 @@ puts "All processes done."
 
 Cada proceso es independiente, lo que significa mayor consumo de memoria (uno por cada proceso que crees). La mayor dificultad es compartir datos entre ellos, pero puedes usar Pipes o una base de datos para solucionarlo.
 
-### 4️⃣ Ractors: Concurrencia en Ruby 3+
+### Ractors: Concurrencia en Ruby 3+
 
 Los **ractors** (Ruby 3+) permiten paralelismo sin las limitaciones del GIL. Funcionan con **estado aislado**, lo que evita condiciones de carrera y problemas de concurrencia.
 
@@ -142,7 +142,7 @@ puts "Main Ractor: Done"
 
 Esto es lo nuevo y emocionante. Aún no los he usado en un proyecto real, pero nada es gratis. Luego actualizaré el post para reflejar lo que aprenda de ellos. Mientras tanto, úsalos con precaución.
 
-## 🛠 En resumen, Cuándo usar qué
+## Cuándo usar qué
 
 Yo diria que todo esta claro, pero si no, aqui tienes un resumen
 
@@ -159,4 +159,4 @@ Me concentraría en threads y processes. Honestamente, rara vez uso fibers, y Ra
 
 - Processes: Son como cocinas separadas, cada una con su propio equipo y recursos. No comparten nada directamente,usan mas memoria y son perfectos para tareas pesadas en CPU (calculos, etc).
 
-Ya te la sabes,**Threads para I/O, Processes para CPU, Fibers para control fino.**. Y si todo falla, **prueba Elixir o Rust. 😆**
+Ya te la sabes, **Threads para I/O, Processes para CPU, Fibers para control fino.** Y si todo falla, prueba Elixir o Rust.
