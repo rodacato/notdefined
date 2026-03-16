@@ -189,7 +189,7 @@ const messages = [
 
 ## Streaming: no hace la respuesta más rápida, la hace más usable
 
-Una aclaración que vale la pena hacer: **streaming no reduce el tiempo total de la respuesta**. El LLM tarda lo mismo en generar todos los tokens. La diferencia es cuándo el usuario ve el primer token.
+Algo que confunde a muchos: **streaming no reduce el tiempo total de la respuesta**. El LLM tarda lo mismo en generar todos los tokens. La diferencia es cuándo el usuario ve el primer token.
 
 ```
 Sin streaming:  [=====8 segundos de espera=====] [respuesta completa aparece]

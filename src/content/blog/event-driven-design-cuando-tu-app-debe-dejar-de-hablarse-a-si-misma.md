@@ -160,7 +160,7 @@ UserRegisteredEvent.publish(user)
 
 ## Cuándo Kafka no es la respuesta
 
-La respuesta es casi siempre. Kafka es increíblemente poderoso y operacionalmente complejo. Lo necesitas cuando:
+La respuesta es casi siempre. Kafka es potente y operacionalmente complejo. Lo necesitas cuando:
 
 - Tienes **múltiples servicios** (microservicios reales) que necesitan consumir los mismos eventos
 - Necesitas **replay** — poder reprocesar eventos históricos

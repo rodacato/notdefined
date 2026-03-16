@@ -16,7 +16,7 @@ draft: false
 
 ---
 
-Existe un rito de pasaje para todo equipo que lanza GraphQL por primera vez: los primeros dos meses todo funciona, el equipo está contento, los queries son flexibles. Luego alguien en el frontend agrega un campo más, otro campo más, y de repente la DB tiene 50,000 queries por request y los pods están en el suelo. Así se ve GraphQL en producción.
+Todo equipo que lanza GraphQL pasa por lo mismo: los primeros dos meses todo funciona, el equipo está contento, los queries son flexibles. Luego alguien en el frontend agrega un campo más, otro campo más, y de repente la DB tiene 50,000 queries por request y los pods están en el suelo. Así se ve GraphQL en producción.
 
 Este post es el mapa que nadie te da en el tutorial de intro. Todo lo que te muerde tres meses después de lanzar.
 
@@ -296,6 +296,6 @@ introspection: (request) => {
 
 ---
 
-GraphQL es una herramienta poderosa y estas cinco cosas no son edge cases — son el precio de admisión para una API que sobrevive más de tres meses en producción. La buena noticia: todas tienen solución bien establecida. La mala: tienes que implementarlas tú, y nadie te va a avisar hasta que algo explote.
+Estas cinco cosas no son edge cases — son el precio de admisión para una API GraphQL que sobrevive más de tres meses en producción. La buena noticia: todas tienen solución bien establecida. La mala: tienes que implementarlas tú, y nadie te va a avisar hasta que algo explote.
 
 Ya lo sabes. Ahora no tienes excusa.
