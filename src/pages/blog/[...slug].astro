@@ -4,10 +4,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { readingTime } from '../../utils/reading-time';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
-  return posts.map((post: CollectionEntry<'blog'>) => ({
+  const allPosts = await getCollection('blog');
+  const published = allPosts.filter((p) => !p.data.draft);
+  return allPosts.map((post: CollectionEntry<'blog'>) => ({
     params: { slug: post.slug },
-    props: { post, allPosts: posts },
+    props: { post, allPosts: published },
   }));
 }
 
@@ -74,6 +75,18 @@ function formatDateShort(date: Date) {
   <article>
     <!-- Back link -->
     <a href="/blog/" class="back-link">← Todos los posts</a>
+
+    <!-- Draft banner -->
+    {
+      post.data.draft && (
+        <div class="draft-banner">
+          <span class="draft-badge">DRAFT</span>
+          <span class="draft-text">
+            Este post es un borrador y no aparece en el sitio.
+          </span>
+        </div>
+      )
+    }
 
     <!-- Series banner -->
     {
@@ -187,6 +200,32 @@ function formatDateShort(date: Date) {
   }
   .back-link:hover {
     color: var(--color-accent);
+  }
+
+  /* Draft banner */
+  .draft-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    border: 1px dashed #f59e0b;
+    border-radius: 0.5rem;
+    background-color: rgba(245, 158, 11, 0.08);
+    margin-bottom: 1.5rem;
+  }
+  .draft-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 0.2em 0.5em;
+    border-radius: 0.25rem;
+    background-color: #f59e0b;
+    color: #000;
+    flex-shrink: 0;
+  }
+  .draft-text {
+    font-size: 0.8rem;
+    color: #f59e0b;
   }
 
   /* Series banner */
