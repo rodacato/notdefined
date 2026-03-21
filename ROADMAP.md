@@ -1,6 +1,6 @@
-# ROADMAP.md — Backlog activo
+# ROADMAP.md — Posts en progreso
 
-Ideas de posts pendientes y mejoras al pipeline. Actualizar cuando algo avance o cambie.
+Posts con fecha tentativa y en camino a publicarse. Para ideas sin fecha, ver [BACKLOG.md](BACKLOG.md).
 
 ---
 

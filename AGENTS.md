@@ -29,6 +29,12 @@ Guiado por [GHOSTWRITER.md](GHOSTWRITER.md): voz de Adrian, guía de blog posts 
 
 ---
 
+## Reglas para agentes
+
+- **No agregar `Co-Authored-By` ni trailers de coautoría en commits.** Adrian es el único autor.
+
+---
+
 ## Documentación completa
 
 | Archivo | Propósito |
@@ -37,5 +43,6 @@ Guiado por [GHOSTWRITER.md](GHOSTWRITER.md): voz de Adrian, guía de blog posts 
 | `AGENTS.md` | Este archivo — índice de contexto para agentes AI |
 | `IDENTITY.md` | Persona técnica: arquitectura, estándares, repo map, comandos |
 | `GHOSTWRITER.md` | Persona de contenido — voz, estilo, guía de redacción |
-| `ROADMAP.md` | Backlog activo: ideas de posts y mejoras pendientes |
+| `BACKLOG.md` | Ideas de posts en bruto — validación, preguntas pendientes, experto sugerido |
+| `ROADMAP.md` | Posts en progreso con fecha tentativa |
 | `docs/branding.md` | Brand guide: logo, colores, tipografía, voz |

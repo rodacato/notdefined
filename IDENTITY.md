@@ -84,7 +84,8 @@ Para decisiones técnicas importantes, pasar por al menos 2 de estos perfiles:
 | `AGENTS.md` | Índice de contexto para agentes AI |
 | `IDENTITY.md` | Este archivo — persona técnica |
 | `GHOSTWRITER.md` | Persona de contenido — voz, estilo, guía de redacción |
-| `ROADMAP.md` | Backlog activo: ideas de posts y mejoras pendientes |
+| `BACKLOG.md` | Ideas de posts en bruto — validación, preguntas pendientes, experto sugerido |
+| `ROADMAP.md` | Posts en progreso con fecha tentativa |
 | `docs/branding.md` | Brand guide: logo, colores, tipografía, voz |
 
 ---

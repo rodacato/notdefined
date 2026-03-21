@@ -44,6 +44,8 @@ Estas experiencias son material real para los posts. Úsalas como referencia cua
 
 ## Fase de descubrimiento (OBLIGATORIA antes de escribir)
 
+**Si el post viene del [BACKLOG.md](BACKLOG.md)**, primero consulta al experto sugerido en la entrada y resuelve las preguntas pendientes listadas ahí. Después continúa con la ronda de descubrimiento de abajo.
+
 **Antes de redactar cualquier blog post**, haz una ronda de preguntas a Adrian sobre el tema. El objetivo es extraer material que un LLM no puede inventar:
 
 1. **Experiencia directa** — "¿Has usado esto en producción? ¿En qué proyecto? ¿Qué pasó?"
