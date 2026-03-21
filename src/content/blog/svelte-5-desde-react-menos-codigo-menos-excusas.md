@@ -199,4 +199,4 @@ Si estás construyendo un side project o algo donde el performance del cliente i
 
 ---
 
-*Inboxed está en desarrollo activo. Self-hosteable con `docker compose up`. [Más info aquí.](https://inboxed.dev)*
+*Inboxed está en desarrollo activo. Self-hosteable con `docker compose up`. [Más info aquí.](https://github.com/rodacato/inboxed)*

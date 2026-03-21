@@ -24,7 +24,7 @@ const projects = (await getCollection('projects')).sort(
   <CardList>
     {
       projects.map((project) => (
-        <li class="card-list-item project-item">
+        <li class="card-list-item project-item fade-in-item">
           <div class="project-header">
             <div class="project-name-row">
               <h2 class="project-name">{project.data.name}</h2>

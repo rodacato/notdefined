@@ -46,6 +46,7 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     <meta name="twitter:image" content={ogImageURL} />
   </head>
   <body class="flex min-h-full flex-col">
+    <div class="cursor-glow" aria-hidden="true"></div>
     <header class="site-header">
       <div
         class="mx-auto flex w-full max-w-3xl items-center justify-between px-6 py-4"
@@ -64,13 +65,14 @@ const ogImageURL = new URL('/logo.png', Astro.site);
           <a href="/search/" class="nav-link">Buscar</a>
         </nav>
       </div>
+      <div class="header-accent-line" aria-hidden="true"></div>
     </header>
 
-    <main class="mx-auto w-full max-w-3xl flex-1 px-6 py-12 md:py-16">
+    <main class="mx-auto w-full max-w-3xl flex-1 px-6 py-12 md:py-16" style="position: relative; z-index: 1;">
       <slot />
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer" style="position: relative; z-index: 1;">
       <div class="mx-auto w-full max-w-3xl px-6 py-6">
         <div class="footer-inner">
           <div class="footer-links">
@@ -90,8 +92,19 @@ const ogImageURL = new URL('/logo.png', Astro.site);
 
 <style>
   .site-header {
-    border-bottom: 1px solid var(--color-border);
-    background-color: var(--color-bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: oklch(99.5% 0.002 250 / 0.8);
+    backdrop-filter: blur(0px);
+    transition:
+      backdrop-filter 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  .site-header.is-scrolled {
+    backdrop-filter: blur(12px);
+    background-color: oklch(99.5% 0.002 250 / 0.92);
   }
 
   .brand {
@@ -172,3 +185,70 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     color: var(--color-accent);
   }
 </style>
+
+<script>
+  // Cursor glow
+  const glow = document.querySelector('.cursor-glow') as HTMLElement | null;
+  if (glow && window.matchMedia('(pointer: fine)').matches) {
+    document.addEventListener('mousemove', (e) => {
+      glow.style.left = `${e.clientX}px`;
+      glow.style.top = `${e.clientY}px`;
+      if (!glow.classList.contains('is-visible')) {
+        glow.classList.add('is-visible');
+      }
+    });
+    document.addEventListener('mouseleave', () => {
+      glow.classList.remove('is-visible');
+    });
+  }
+
+  // Scroll-aware header blur
+  const header = document.querySelector('.site-header');
+  if (header) {
+    const onScroll = () => {
+      header.classList.toggle('is-scrolled', window.scrollY > 10);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // Staggered fade-in on scroll
+  const items = document.querySelectorAll('.fade-in-item');
+  if (items.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+    items.forEach((item, i) => {
+      (item as HTMLElement).style.transitionDelay = `${i * 50}ms`;
+      observer.observe(item);
+    });
+  }
+
+  // Tag pills staggered landing
+  document.querySelectorAll('.fade-in-item.is-visible .tag-pill, .tag-pill').forEach((pill, i) => {
+    (pill as HTMLElement).style.animationDelay = `${i * 60}ms`;
+    pill.classList.add('is-landed');
+  });
+
+  // Parallax sections (landing page only)
+  const parallaxSections = document.querySelectorAll('[data-parallax]');
+  if (parallaxSections.length > 0) {
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      parallaxSections.forEach((section) => {
+        const speed = parseFloat((section as HTMLElement).dataset.parallax || '0.03');
+        const rect = (section as HTMLElement).getBoundingClientRect();
+        const offset = (rect.top + scrollY - window.innerHeight / 2) * speed;
+        (section as HTMLElement).style.transform = `translateY(${offset}px)`;
+      });
+    }, { passive: true });
+  }
+</script>

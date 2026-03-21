@@ -39,6 +39,63 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Dot grid background ──────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle,
+    oklch(70% 0.01 250 / 0.18) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+/* ── Noise texture overlay ────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ── Cursor glow ──────────────────────────────────────────── */
+.cursor-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  background: radial-gradient(
+    circle,
+    oklch(52% 0.22 275 / 0.045) 0%,
+    transparent 70%
+  );
+  transition: opacity 0.4s ease;
+  transform: translate(-50%, -50%);
+  will-change: left, top;
+}
+
+.cursor-glow.is-visible {
+  opacity: 1;
+}
+
+@media (pointer: coarse) {
+  .cursor-glow {
+    display: none;
+  }
+}
+
 /* ── Prose — blog post content ─────────────────────────────── */
 .prose {
   color: oklch(22% 0.01 250);
@@ -150,6 +207,12 @@ body {
   font-size: 0.875em;
   line-height: 1.7;
   margin-bottom: 1.5em;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.prose pre:hover {
+  border-color: oklch(52% 0.22 275 / 0.4);
+  box-shadow: 0 0 20px oklch(52% 0.22 275 / 0.06);
 }
 
 /* Inline code */
@@ -284,9 +347,25 @@ body {
   border: 1px solid var(--color-border);
   white-space: nowrap;
   text-decoration: none;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: tag-land 0.35s ease forwards;
+  animation-play-state: paused;
   transition:
     border-color 150ms ease,
     color 150ms ease;
+}
+
+.is-visible .tag-pill,
+.tag-pill.is-landed {
+  animation-play-state: running;
+}
+
+@keyframes tag-land {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .tag-pill:hover {
@@ -298,4 +377,67 @@ body {
   background-color: var(--color-accent);
   color: var(--color-bg);
   border-color: var(--color-accent);
+}
+
+/* ── Animated header accent line ─────────────────────────── */
+.header-accent-line {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-accent-dim),
+    var(--color-accent),
+    var(--color-accent-dim),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: accent-slide 8s ease-in-out infinite alternate;
+}
+
+@keyframes accent-slide {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ── Staggered fade-in on scroll ─────────────────────────── */
+.fade-in-item {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+.fade-in-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Hover accent border on card items ───────────────────── */
+.card-list-item {
+  position: relative;
+}
+
+.card-list-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    var(--color-accent),
+    var(--color-accent-dim)
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.card-list-item:hover::before {
+  opacity: 1;
 }

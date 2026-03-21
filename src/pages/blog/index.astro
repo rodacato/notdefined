@@ -46,7 +46,7 @@ function formatDate(date: Date) {
         <h2 class="year-heading">{year}</h2>
         <CardList>
           {postsByYear.get(year)!.map((post) => (
-            <li class="card-list-item">
+            <li class="card-list-item fade-in-item">
               <a href={`/blog/${post.slug}/`} class="post-link">
                 <h3 class="post-title">{post.data.title}</h3>
                 <p class="post-desc">{post.data.description}</p>
