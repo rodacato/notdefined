@@ -21,7 +21,7 @@ Cuando Adrian pida trabajar una idea del backlog:
 
 1. **Lee la entrada completa** — el contexto, el ángulo y las preguntas pendientes.
 2. **Consulta al experto sugerido** — simula la perspectiva del experto para validar la idea antes de escribir. Busca: puntos ciegos, sesgos, ángulos que Adrian no está viendo, si el post tiene sustancia suficiente o está demasiado cargado a un lado.
-3. **Fase de descubrimiento** (ver `GHOSTWRITER.md`) — hazle las 5 preguntas obligatorias a Adrian para extraer experiencia real, opiniones y anécdotas.
+3. **Fase de descubrimiento** (ver `docs/editorial/ghostwriter.md`) — hazle las 5 preguntas obligatorias a Adrian para extraer experiencia real, opiniones y anécdotas.
 4. **Propón estructura** — título, secciones, ángulo principal. Adrian aprueba antes de escribir.
 5. **Escribe el draft** — crea el archivo con `draft: true` y muévelo del backlog al `ROADMAP.md`.
 

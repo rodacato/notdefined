@@ -57,7 +57,7 @@ For visual / interaction design:
 
 For copy:
 
-- See [`../../GHOSTWRITER.md`](../../GHOSTWRITER.md) for editorial voice (blog posts, TILs).
+- See [`../editorial/ghostwriter.md`](../editorial/ghostwriter.md) for editorial voice (blog posts, TILs).
 - For UI / chrome / nav: español mexicano casual, technical terms in English. Direct, no marketing fluff.
 
 ---

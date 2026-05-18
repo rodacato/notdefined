@@ -45,12 +45,12 @@ Siete anti-patrones identificados en retrospectiva de un proyecto previo, traduc
 | # | Anti-patrón | Señal de alarma en este proyecto |
 |---|-------------|----------------------------------|
 | 1 | **"Siguiente fase = siguiente cosa que construir"** | Agregar sección/componente/página sin razón documentada |
-| 2 | **PRD como evangelio** | Construir para personas no documentadas en `AUDIENCE.md` (comments, newsletter, admin) |
+| 2 | **PRD como evangelio** | Construir para personas no documentadas en `docs/editorial/audience-panel.md` (comments, newsletter, admin) |
 | 3 | **Patrones sobre pragmatismo** | Componentes genéricos "por si acaso" usados una sola vez |
 | 4 | **Inflación documental** | Doc >200 líneas, archivos `.md` nuevos que duplican uno existente |
 | 5 | **Saltarse checks fundacionales** | Efectos nuevos con `npm run ci` rojo, RSS roto, links rotos |
 | 6 | **Rediseños fragmentados sin cerrar** | Tocar 3 componentes para un vibe change sin terminar uno |
-| 7 | **Sin retros / sin auditoría** | Publicar post sin pasarlo por el panel de `AUDIENCE.md` |
+| 7 | **Sin retros / sin auditoría** | Publicar post sin pasarlo por el panel de `docs/editorial/audience-panel.md` |
 
 Cada uno tiene su enforcement detallado en [`.kwik-e/memory/feedback_anti_patterns.md`](.kwik-e/memory/feedback_anti_patterns.md).
 
@@ -65,8 +65,8 @@ Una sola fuente por tipo. Nunca duplicar. Cuando dos docs se contradicen, uno es
 | Tipo | Vive en |
 |------|---------|
 | Persona técnica (este archivo) | `IDENTITY.md` |
-| Persona editorial — voz, estilo, anti-LLM | `GHOSTWRITER.md` |
-| Panel de audiencia simulada (revisión post-escritura) | `AUDIENCE.md` |
+| Persona editorial — voz, estilo, anti-LLM | `docs/editorial/ghostwriter.md` |
+| Panel de audiencia simulada (revisión post-escritura) | `docs/editorial/audience-panel.md` |
 | Índice para agentes AI | `AGENTS.md` |
 | Vision, audiencia, JTBDs, non-goals | `docs/vision/` |
 | Decisiones arquitectónicas inmutables | `docs/architecture/adr/` |
@@ -148,15 +148,15 @@ Si una consulta cambia significativamente la dirección del proyecto → ADR en 
 | `README.md` | Overview público: tech stack, dev setup, deploy |
 | `AGENTS.md` | Índice de contexto para agentes AI |
 | `IDENTITY.md` | Este archivo — persona técnica |
-| `GHOSTWRITER.md` | Persona de contenido — voz, estilo, guía de redacción |
-| `AUDIENCE.md` | Panel de audiencia simulada — revisión de blog posts terminados |
+| `docs/editorial/ghostwriter.md` | Persona de contenido — voz, estilo, guía de redacción |
+| `docs/editorial/audience-panel.md` | Panel de audiencia simulada — revisión de blog posts terminados |
 | `BACKLOG.md` | Ideas de posts en bruto — validación, preguntas pendientes |
 | `ROADMAP.md` | Posts en progreso con fecha tentativa |
 | `docs/vision/` | North star, audiencia, non-goals, JTBDs |
 | `docs/architecture/adr/` | Decisiones arquitectónicas inmutables |
 | `docs/design/` | Brand, tokens, componentes, kit portable para AI design |
 | `docs/research/experts.md` | Panel de expertos canónico |
-| `.kwik-e/memory/` | Memoria persistente del agente (tracked in git) |
+| `.kwik-e/memory/` | Memoria persistente del agente (local-only, gitignored) |
 
 ---
 

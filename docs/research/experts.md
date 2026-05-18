@@ -2,7 +2,7 @@
 
 > Virtual expert panel that the AI assistant consults before making significant decisions. They advise — the AI decides — Adrian has the final voice.
 >
-> This is the **canonical doc**. [`IDENTITY.md`](../../IDENTITY.md), [`GHOSTWRITER.md`](../../GHOSTWRITER.md), and [`AUDIENCE.md`](../../AUDIENCE.md) point here; they don't duplicate the roster.
+> This is the **canonical doc**. [`IDENTITY.md`](../../IDENTITY.md), [`ghostwriter.md`](../editorial/ghostwriter.md), and [`audience-panel.md`](../editorial/audience-panel.md) point here; they don't duplicate the roster.
 
 ---
 
@@ -61,7 +61,7 @@
 - Renaming a variable, moving a file, fixing a typo.
 - A decision already settled by an ADR — read the ADR.
 - As a ritual before every commit.
-- For a TIL — too short; the [`GHOSTWRITER.md`](../../GHOSTWRITER.md) filter is enough.
+- For a TIL — too short; the [`ghostwriter.md`](../editorial/ghostwriter.md) filter is enough.
 
 Invoke when:
 - A decision will live longer than one post or one sprint of work.
@@ -86,7 +86,7 @@ Invoke when:
 - Anecdote-anchoring — pushes the post toward specific projects, specific stacks, specific failures.
 - Cuts diplomatic softening that doesn't belong in Adrian's voice.
 
-**When to consult:** every blog post before `draft: false`. Every editorial-voice question. Any time GHOSTWRITER.md feels ambiguous.
+**When to consult:** every blog post before `draft: false`. Every editorial-voice question. Any time `docs/editorial/ghostwriter.md` feels ambiguous.
 
 **Style:** Cita el texto literal. Si un párrafo huele a LLM, marca la frase entre comillas y explica por qué.
 

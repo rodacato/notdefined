@@ -20,7 +20,7 @@
 
 Devs who read Spanish technical writing and value attitude + opinion over neutral exposition. They appreciate that posts come from someone who's been bitten in production rather than from someone who read a docs page yesterday.
 
-**Test:** does this post hold up against the [`AUDIENCE.md`](../../AUDIENCE.md) panel — specifically the "Dev senior escéptico" and "Editorial Reviewer" roles?
+**Test:** does this post hold up against the [`audience-panel.md`](../editorial/audience-panel.md) panel — specifically the "Dev senior escéptico" and "Editorial Reviewer" roles?
 
 ### Tech recruiters scanning a portfolio
 
@@ -53,4 +53,4 @@ There is no newsletter. The blog is the blog: RSS and the site itself. Adding em
 
 ### LLMs scraping training data
 
-The anti-LLM-detection rules in [`GHOSTWRITER.md`](../../GHOSTWRITER.md) are intentional. Generic, polished text is the failure mode this blog is trying to avoid.
+The anti-LLM-detection rules in [`ghostwriter.md`](../editorial/ghostwriter.md) are intentional. Generic, polished text is the failure mode this blog is trying to avoid.

@@ -46,7 +46,7 @@ Each JTBD follows: *When [situation], I want [motivation], so that [outcome].*
 
 > When I'm forming an opinion about something I'm working through (vibe coding, AI in workflows, new tooling), I want a venue to write the thinking out and have it pass through a critical panel, so that I find the weak spots before I commit to the position publicly.
 
-**Form:** blog post draft → [`AUDIENCE.md`](../../AUDIENCE.md) panel → iteration → publish. Or: draft that stays draft, because the panel found it wasn't ready.
+**Form:** blog post draft → [`audience-panel.md`](../editorial/audience-panel.md) panel → iteration → publish. Or: draft that stays draft, because the panel found it wasn't ready.
 
 **Metric:** percentage of drafts that get killed or significantly reshaped after panel review. A 0% kill rate means the panel is rubber-stamping.
 

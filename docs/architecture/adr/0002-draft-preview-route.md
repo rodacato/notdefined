@@ -10,7 +10,7 @@
 
 The editorial pipeline (see [`../../vision/jobs-to-be-done.md`](../../vision/jobs-to-be-done.md) — JTBD-4) requires a venue to preview a post in its final rendered form before flipping `draft: false`. Options:
 
-1. **Local-only preview.** Run `npm run dev` and view the post locally. Works but means panel review (per [`AUDIENCE.md`](../../../AUDIENCE.md)) requires Adrian to be at his machine to see the rendered version.
+1. **Local-only preview.** Run `npm run dev` and view the post locally. Works but means panel review (per [`audience-panel.md`](../../editorial/audience-panel.md)) requires Adrian to be at his machine to see the rendered version.
 2. **Separate preview deploy.** Provision a second Pages / Netlify environment for drafts. Heavy for the value.
 3. **Drafts visible in production at a known route.** A `/blog/drafts/` page lists in-progress posts. URLs are not linked from the main feed, not in RSS, not in the sitemap — but are reachable.
 
@@ -35,7 +35,7 @@ A reader visiting `/blog/drafts/` sees the list of in-progress drafts. A reader 
 ## Consequences
 
 **Easier:**
-- Panel review (per AUDIENCE.md) works from any device — share the URL.
+- Panel review (per `docs/editorial/audience-panel.md`) works from any device — share the URL.
 - Iterating on a post and re-reading it as a real reader would is trivial.
 - No second deploy environment to maintain.
 
