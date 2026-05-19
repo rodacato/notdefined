@@ -1,6 +1,6 @@
 # BACKLOG.md — Ideas de posts
 
-Ideas en bruto, sin compromiso de fecha. Cuando una madure lo suficiente, pasa a `ROADMAP.md` con fecha tentativa y crea el archivo `.md` con `draft: true`.
+Ideas en bruto, sin compromiso de fecha. Cuando una madure lo suficiente, crea directamente el archivo `.md` con `draft: true` en `src/content/blog/` o `src/content/til/`; mientras `draft: true`, el post vive solo en `/blog/drafts/`.
 
 ---
 
@@ -23,7 +23,7 @@ Cuando Adrian pida trabajar una idea del backlog:
 2. **Consulta al experto sugerido** — simula la perspectiva del experto para validar la idea antes de escribir. Busca: puntos ciegos, sesgos, ángulos que Adrian no está viendo, si el post tiene sustancia suficiente o está demasiado cargado a un lado.
 3. **Fase de descubrimiento** (ver `docs/editorial/ghostwriter.md`) — hazle las 5 preguntas obligatorias a Adrian para extraer experiencia real, opiniones y anécdotas.
 4. **Propón estructura** — título, secciones, ángulo principal. Adrian aprueba antes de escribir.
-5. **Escribe el draft** — crea el archivo con `draft: true` y muévelo del backlog al `ROADMAP.md`.
+5. **Escribe el draft** — crea el archivo con `draft: true` en `src/content/blog/` (o `til/`). Quítalo del backlog cuando ya esté en archivo; el `/blog/drafts/` index lo lista hasta `draft: false`.
 
 Si una idea no tiene pies o cabeza después de la validación del experto, dilo. Es mejor matar una idea temprano que publicar un post vacío.
 

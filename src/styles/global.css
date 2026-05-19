@@ -207,7 +207,9 @@ body::before {
   font-size: 0.875em;
   line-height: 1.7;
   margin-bottom: 1.5em;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .prose pre:hover {
