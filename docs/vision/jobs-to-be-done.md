@@ -63,6 +63,6 @@ Each JTBD follows: *When [situation], I want [motivation], so that [outcome].*
 
 ## How JTBDs are used
 
-- Every BACKLOG idea references which JTBD it serves (or proposes a new JTBD with the same 4-filter rigor).
+- Every idea in the editorial Project (`rodacato/projects/7`) references which JTBD it serves (or proposes a new JTBD with the same 4-filter rigor).
 - Every proposal that doesn't fit a JTBD gets rejected with the reason "no JTBD anchor".
 - When a JTBD turns out not to actually be a job (no usage, no inbound, no re-read), it gets retired here with a note.

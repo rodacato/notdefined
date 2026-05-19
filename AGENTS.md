@@ -87,9 +87,9 @@ Detalle operativo completo: [`.kwik-e/memory/feedback_project_v2_no_convert.md`]
 
 ### Pipeline editorial
 
-| Archivo | Propósito |
+| Recurso | Propósito |
 |---------|-----------|
-| `BACKLOG.md` | Ideas de posts en bruto — validación, preguntas pendientes, experto sugerido |
+| GitHub Project v2 privado [`rodacato/projects/7`](https://github.com/users/rodacato/projects/7) | Ideas de posts (draft items) — contexto, ángulo, experto sugerido, preguntas pendientes. Solo Adrian tiene acceso. |
 
 ### Vision y arquitectura
 
