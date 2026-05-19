@@ -48,6 +48,31 @@ Guiado por [docs/editorial/ghostwriter.md](docs/editorial/ghostwriter.md): voz d
 
 ---
 
+## GitHub Project safety
+
+El workflow editorial corre en un **Project v2 privado** a nivel de usuario (`rodacato`) con **solo draft items**. Los items viven dentro del Project, **no como issues en ningún repo**. El repo público `rodacato/notdefined` debe tener **cero issues internos**.
+
+**Acciones prohibidas:**
+- `gh issue create -R rodacato/notdefined ...` — crea issue público, expone el contenido.
+- "Convert to issue" en la UI del Project apuntando al repo público — misma fuga, cerrar el issue después NO lo oculta.
+- Toggle del Project de Private → Public — expone todos los drafts.
+- Agregar linked items que apunten a issues de `rodacato/notdefined` (esos issues ya son públicos).
+
+**Acciones seguras (defaults):**
+
+| Necesitas | gh CLI |
+|-----------|--------|
+| Crear idea / draft | `gh project item-create <N> --owner rodacato --title "..." --body "..."` |
+| Listar items del Project | `gh project item-list <N> --owner rodacato` |
+| Editar campo (Status, Type, etc.) | `gh project item-edit --id <ITEM_ID> --field-id <F_ID> --single-select-option-id <OPT_ID>` |
+| Borrar item | `gh project item-delete --id <ITEM_ID>` |
+
+**Check de fuga:** `npm run check:project` lista issues del repo público. Debería estar vacío salvo issues externos legítimos filed por lectores.
+
+Detalle operativo completo: [`.kwik-e/memory/feedback_project_v2_no_convert.md`](.kwik-e/memory/feedback_project_v2_no_convert.md) (local).
+
+---
+
 ## Documentación completa
 
 ### Personas y operación
