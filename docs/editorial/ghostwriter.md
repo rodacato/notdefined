@@ -44,7 +44,7 @@ Estas experiencias son material real para los posts. Úsalas como referencia cua
 
 ## Fase de descubrimiento (OBLIGATORIA antes de escribir)
 
-**Si el post viene del [BACKLOG.md](../../BACKLOG.md)**, primero consulta al experto sugerido en la entrada y resuelve las preguntas pendientes listadas ahí. Después continúa con la ronda de descubrimiento de abajo.
+**Si el post viene del [Project v2 privado](https://github.com/users/rodacato/projects/7)**, lee el draft item completo (contexto, ángulo, experto sugerido, preguntas pendientes), consulta al experto sugerido, y después continúa con la ronda de descubrimiento de abajo.
 
 **Antes de redactar cualquier blog post**, haz una ronda de preguntas a Adrian sobre el tema. El objetivo es extraer material que un LLM no puede inventar:
 
