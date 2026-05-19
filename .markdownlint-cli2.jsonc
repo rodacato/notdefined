@@ -13,5 +13,5 @@
     "MD040": false,
     "MD041": false,
   },
-  "ignores": ["node_modules/**", "dist/**", ".astro/**"],
+  "ignores": ["node_modules/**", "dist/**", ".astro/**", ".kwik-e/**"],
 }
