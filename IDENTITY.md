@@ -73,7 +73,6 @@ Una sola fuente por tipo. Nunca duplicar. Cuando dos docs se contradicen, uno es
 | Brand, tokens, componentes, kit portable | `docs/design/` |
 | Panel de expertos (canónico) | `docs/research/experts.md` |
 | Ideas de posts en incubación | `BACKLOG.md` |
-| Posts agendados con fecha tentativa | `ROADMAP.md` |
 | Posts y TILs (contenido) | `src/content/blog/`, `src/content/til/` |
 | Memoria persistente del agente | `.kwik-e/memory/` |
 
@@ -151,7 +150,6 @@ Si una consulta cambia significativamente la dirección del proyecto → ADR en 
 | `docs/editorial/ghostwriter.md` | Persona de contenido — voz, estilo, guía de redacción |
 | `docs/editorial/audience-panel.md` | Panel de audiencia simulada — revisión de blog posts terminados |
 | `BACKLOG.md` | Ideas de posts en bruto — validación, preguntas pendientes |
-| `ROADMAP.md` | Posts en progreso con fecha tentativa |
 | `docs/vision/` | North star, audiencia, non-goals, JTBDs |
 | `docs/architecture/adr/` | Decisiones arquitectónicas inmutables |
 | `docs/design/` | Brand, tokens, componentes, kit portable para AI design |

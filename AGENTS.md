@@ -65,7 +65,6 @@ Guiado por [docs/editorial/ghostwriter.md](docs/editorial/ghostwriter.md): voz d
 | Archivo | Propósito |
 |---------|-----------|
 | `BACKLOG.md` | Ideas de posts en bruto — validación, preguntas pendientes, experto sugerido |
-| `ROADMAP.md` | Posts en progreso con fecha tentativa |
 
 ### Vision y arquitectura
 

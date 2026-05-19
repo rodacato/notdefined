@@ -11,7 +11,7 @@ services:
       - rubygems:/usr/local/rvm/gems
     command: sleep infinity
     ports:
-      - "4321:4321"
+      - '4321:4321'
 
 volumes:
   bashhistory:

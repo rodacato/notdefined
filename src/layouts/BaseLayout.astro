@@ -68,7 +68,10 @@ const ogImageURL = new URL('/logo.png', Astro.site);
       <div class="header-accent-line" aria-hidden="true"></div>
     </header>
 
-    <main class="mx-auto w-full max-w-3xl flex-1 px-6 py-12 md:py-16" style="position: relative; z-index: 1;">
+    <main
+      class="mx-auto w-full max-w-3xl flex-1 px-6 py-12 md:py-16"
+      style="position: relative; z-index: 1;"
+    >
       <slot />
     </main>
 
@@ -233,22 +236,30 @@ const ogImageURL = new URL('/logo.png', Astro.site);
   }
 
   // Tag pills staggered landing
-  document.querySelectorAll('.fade-in-item.is-visible .tag-pill, .tag-pill').forEach((pill, i) => {
-    (pill as HTMLElement).style.animationDelay = `${i * 60}ms`;
-    pill.classList.add('is-landed');
-  });
+  document
+    .querySelectorAll('.fade-in-item.is-visible .tag-pill, .tag-pill')
+    .forEach((pill, i) => {
+      (pill as HTMLElement).style.animationDelay = `${i * 60}ms`;
+      pill.classList.add('is-landed');
+    });
 
   // Parallax sections (landing page only)
   const parallaxSections = document.querySelectorAll('[data-parallax]');
   if (parallaxSections.length > 0) {
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY;
-      parallaxSections.forEach((section) => {
-        const speed = parseFloat((section as HTMLElement).dataset.parallax || '0.03');
-        const rect = (section as HTMLElement).getBoundingClientRect();
-        const offset = (rect.top + scrollY - window.innerHeight / 2) * speed;
-        (section as HTMLElement).style.transform = `translateY(${offset}px)`;
-      });
-    }, { passive: true });
+    window.addEventListener(
+      'scroll',
+      () => {
+        const scrollY = window.scrollY;
+        parallaxSections.forEach((section) => {
+          const speed = parseFloat(
+            (section as HTMLElement).dataset.parallax || '0.03',
+          );
+          const rect = (section as HTMLElement).getBoundingClientRect();
+          const offset = (rect.top + scrollY - window.innerHeight / 2) * speed;
+          (section as HTMLElement).style.transform = `translateY(${offset}px)`;
+        });
+      },
+      { passive: true },
+    );
   }
 </script>
