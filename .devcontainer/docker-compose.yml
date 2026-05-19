@@ -1,0 +1,19 @@
+services:
+  notdefined:
+    container_name: notdefined
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+      - bashhistory:/commandhistory
+      - npmcache:/home/node/.npm
+      - rubygems:/usr/local/rvm/gems
+    command: sleep infinity
+    ports:
+      - "4321:4321"
+
+volumes:
+  bashhistory:
+  npmcache:
+  rubygems:
