@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteProfile } from '../data/site';
+import { cv } from '../data/cv';
+
+const recentRoles = cv.experience.slice(0, 4);
 
 const avatarUrl = `https://github.com/${siteProfile.handle}.png?size=200`;
 
@@ -54,18 +57,20 @@ const icons: Record<string, string> = {
     <h2 class="section-title">Trayectoria</h2>
     <ul class="timeline">
       {
-        siteProfile.experience.map((job) => (
+        recentRoles.map((job) => (
           <li class="timeline-item">
             <div class="timeline-head">
               <span class="timeline-company">{job.company}</span>
               <span class="timeline-period">{job.period}</span>
             </div>
             <span class="timeline-role">{job.role}</span>
-            <p class="timeline-note">{job.note}</p>
           </li>
         ))
       }
     </ul>
+    <p class="uses-pointer">
+      Historial completo y descargable en <a href="/cv/">/cv</a>.
+    </p>
   </section>
 </BaseLayout>
 
@@ -190,13 +195,6 @@ const icons: Record<string, string> = {
   .timeline-role {
     font-size: 0.82rem;
     color: var(--color-accent);
-  }
-
-  .timeline-note {
-    font-size: 0.875rem;
-    color: var(--color-muted);
-    line-height: 1.6;
-    margin: 0.35rem 0 0;
   }
 
   .uses-pointer {
