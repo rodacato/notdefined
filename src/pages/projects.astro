@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
-import CardList from '../components/CardList.astro';
 import TagPill from '../components/TagPill.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
@@ -22,11 +21,11 @@ const projects = (await getCollection('projects')).sort(
     description="Cosas que construyo, experimento o sigo desarrollando."
   />
 
-  <CardList>
+  <div class="projects-grid">
     {
       projects.map((project) => (
-        <li
-          class="card-list-item project-item fade-in-item"
+        <article
+          class="project-card fade-in-item"
           style={`--accent: ${project.data.accent ?? '#6366f1'}`}
         >
           {project.data.image && (
@@ -38,74 +37,87 @@ const projects = (await getCollection('projects')).sort(
             />
           )}
 
-          <div class="project-top">
-            <span class="project-icon" aria-hidden={!project.data.icon}>
-              {project.data.icon ? (
-                <img
-                  src={project.data.icon}
-                  alt={`Logo de ${project.data.name}`}
-                />
-              ) : (
-                project.data.name.charAt(0)
-              )}
-            </span>
-            <div class="project-id">
-              <h2 class="project-name">{project.data.name}</h2>
-              <p class="project-tagline">{project.data.tagline}</p>
+          <div class="project-body">
+            <div class="project-head">
+              <span class="project-icon" aria-hidden={!project.data.icon}>
+                {project.data.icon ? (
+                  <img
+                    src={project.data.icon}
+                    alt={`Logo de ${project.data.name}`}
+                  />
+                ) : (
+                  project.data.name.charAt(0)
+                )}
+              </span>
+              <div class="project-id">
+                <h2 class="project-name">{project.data.name}</h2>
+                <p class="project-tagline">{project.data.tagline}</p>
+              </div>
+              <a
+                href={project.data.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="project-github"
+                aria-label={`${project.data.name} en GitHub`}
+              >
+                GitHub ↗
+              </a>
             </div>
-            <a
-              href={project.data.repo}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="project-github"
-            >
-              GitHub ↗
-            </a>
+
+            <p class="project-desc">{project.data.product}</p>
+
+            <div class="project-pills">
+              {project.data.stack.map((item: string) => (
+                <TagPill label={item} />
+              ))}
+            </div>
+
+            <details class="project-more">
+              <summary>Ver detalles</summary>
+              <div class="project-more-body">
+                <p class="project-tech">{project.data.technical}</p>
+                {project.data.url && (
+                  <a
+                    href={project.data.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="project-cta"
+                  >
+                    Probar {project.data.name} →
+                  </a>
+                )}
+              </div>
+            </details>
           </div>
-
-          <p class="project-desc">{project.data.product}</p>
-
-          <div class="project-footer">
-            {project.data.stack.map((item: string) => (
-              <TagPill label={item} />
-            ))}
-          </div>
-
-          <details class="project-tech">
-            <summary>Cómo está construido</summary>
-            <p>{project.data.technical}</p>
-          </details>
-
-          {project.data.url && (
-            <a
-              href={project.data.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="project-cta"
-            >
-              Probar {project.data.name} →
-            </a>
-          )}
-        </li>
+        </article>
       ))
     }
-  </CardList>
+  </div>
 </BaseLayout>
 
 <style>
-  .project-item {
-    padding: 0;
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .project-card {
+    border: 1px solid var(--color-border);
+    border-radius: 0.85rem;
     overflow: hidden;
+    background-color: var(--color-bg);
     transition:
       border-color 180ms ease,
       transform 180ms ease,
       box-shadow 180ms ease;
   }
-  .project-item:hover {
+  .project-card:hover {
     border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px -12px
-      color-mix(in oklab, var(--accent) 50%, transparent);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px -14px
+      color-mix(in oklab, var(--accent) 55%, transparent);
   }
 
   .project-shot {
@@ -116,23 +128,26 @@ const projects = (await getCollection('projects')).sort(
     border-bottom: 1px solid var(--color-border);
   }
 
-  .project-top {
+  .project-body {
+    padding: 1.4rem;
+  }
+
+  .project-head {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
-    padding: 1.5rem 1.5rem 0;
+    gap: 0.75rem;
   }
 
   .project-icon {
     display: grid;
     place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.4rem;
+    height: 2.4rem;
     flex-shrink: 0;
     border-radius: 0.6rem;
     background-color: var(--accent);
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     overflow: hidden;
   }
@@ -161,7 +176,7 @@ const projects = (await getCollection('projects')).sort(
   }
 
   .project-tagline {
-    font-size: 0.85rem;
+    font-size: 0.83rem;
     color: var(--accent);
     font-weight: 500;
     margin: 0.15rem 0 0;
@@ -170,7 +185,8 @@ const projects = (await getCollection('projects')).sort(
 
   .project-github {
     flex-shrink: 0;
-    font-size: 0.78rem;
+    align-self: flex-start;
+    font-size: 0.75rem;
     color: var(--color-muted);
     text-decoration: none;
     transition: color 150ms ease;
@@ -180,63 +196,65 @@ const projects = (await getCollection('projects')).sort(
   }
 
   .project-desc {
-    font-size: 0.9rem;
-    color: var(--color-text);
-    line-height: 1.65;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    line-height: 1.6;
     margin: 0.9rem 0 0;
-    padding: 0 1.5rem;
   }
 
-  .project-footer {
+  .project-pills {
     display: flex;
     align-items: center;
     gap: 0.375rem;
     flex-wrap: wrap;
-    padding: 1rem 1.5rem 0;
+    margin-top: 1rem;
+  }
+
+  .project-more {
+    margin-top: 1.1rem;
+  }
+  .project-more summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent);
+    transition: opacity 150ms ease;
+  }
+  .project-more summary::-webkit-details-marker {
+    display: none;
+  }
+  .project-more summary::after {
+    content: '▸';
+    transition: transform 150ms ease;
+  }
+  .project-more[open] summary::after {
+    transform: rotate(90deg);
+  }
+  .project-more summary:hover {
+    opacity: 0.75;
+  }
+
+  .project-more-body {
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--color-border);
   }
 
   .project-tech {
-    margin: 1rem 0 0;
-    border-top: 1px solid var(--color-border);
-  }
-  .project-tech summary {
-    list-style: none;
-    cursor: pointer;
-    padding: 0.85rem 1.5rem;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--color-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    transition: color 150ms ease;
-  }
-  .project-tech summary::-webkit-details-marker {
-    display: none;
-  }
-  .project-tech summary::before {
-    content: '▸';
-    color: var(--accent);
-    transition: transform 150ms ease;
-  }
-  .project-tech[open] summary::before {
-    transform: rotate(90deg);
-  }
-  .project-tech summary:hover {
-    color: var(--color-text);
-  }
-  .project-tech p {
     font-size: 0.8125rem;
     color: var(--color-muted);
     line-height: 1.65;
     margin: 0;
-    padding: 0 1.5rem 0.25rem;
   }
 
   .project-cta {
     display: inline-flex;
     align-items: center;
-    margin: 0.5rem 1.5rem 1.5rem;
+    margin-top: 1rem;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     background-color: var(--accent);
