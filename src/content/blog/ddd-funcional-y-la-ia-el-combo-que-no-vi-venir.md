@@ -3,7 +3,7 @@ title: "DDD funcional + IA: el combo que no vi venir"
 description: "El principal contra del approach funcional + DDD siempre fue el boilerplate. Resulta que es justo el código que los LLMs escriben sin enredarse. Por qué DDD funcional con dry-rb es terreno fértil para trabajar con IA, código lado a lado vs ActiveRecord, y los costos que el approach sigue teniendo aunque la IA se haga cargo del andamio."
 pubDate: 2026-05-23
 tags: ["ddd", "architecture", "ruby", "functional", "ai"]
-draft: true
+draft: false
 series: "DDD funcional"
 seriesOrder: 2
 ---
@@ -188,6 +188,8 @@ Pongamos las dos versiones del cambio lado a lado:
 
 La diferencia se nota más cuando hay **veinte cambios como este por semana**. Que es donde estamos hoy.
 
+Un disclaimer antes de que me lo reclamen: escribí las dos versiones del código. Pude haber pintado al `Subscription` de AR más feo de lo necesario. Pero ese `after_update` que dispara un email cuando cambia el status no me lo saqué de la manga — es AR idiomático, lo tienes en prod ahorita mismo. El punto no es que AR sea basura. Es que su shape esconde justo lo que la IA (y tú en el code review) necesitan ver para no romper algo.
+
 ## Lo que la IA hace bien con este approach
 
 El boilerplate de dry-rb es exactamente lo que los LLMs escriben sin enredarse:
@@ -210,7 +212,11 @@ Esto es lo que sigue requiriendo tu cabeza. La IA no resuelve:
 - **Decidir dónde corta un action**. ¿`RenewSubscription` incluye enviar el email de renovación o eso es responsabilidad de un subscriber del evento `SubscriptionRenewed`? Decisión arquitectónica. La IA propone, tú decides.
 - **Cuándo NO aplicar la disciplina**. Un endpoint que solo lista cosas no necesita action + domain service + repository + DTO. La IA por default va a aplicar todo el patrón. Tú tienes que decir "para este caso no, esto es CRUD, un módulo con un método".
 
-La IA es buena escribiendo el patrón. Tú sigues siendo necesario para decidir cuándo aplicarlo, dónde aplicarlo, y cómo nombrarlo.
+Y esto no es teórico, me pasó. Cuando le solté a un LLM una base dry-rb sin suficientes ejemplos, se enredó justo donde no lo esperaba: en la consistencia. Un action lo resolvía con `yield` y la `do`-notation; el siguiente, para algo casi idéntico, me devolvía un `Maybe` armado a mano. Unos steps regresaban la entity, otros un hash, otros un símbolo suelto. Nombraba las cosas fuera del lenguaje del negocio — `ProcessData` en lugar del término que producto usaba — y metía dos responsabilidades en un mismo action sin pestañear.
+
+O sea: el shape ayuda, pero no te salva de ponerle ejemplos y revisar. La IA copia el patrón que le des; si el codebase carga tres patrones distintos, te regresa un cuarto. La consistencia no la pone el modelo, la pones tú.
+
+La IA es buena escribiendo el patrón. Lo que no hace es respetar el lenguaje del negocio al nombrar, ni mantener su propia consistencia entre archivos. Eso sigue siendo trabajo tuyo.
 
 ## Lo que cuesta el approach (sigue costando, aunque menos)
 
@@ -235,4 +241,4 @@ Y resulta que esa parte — la que la IA no puede absorber — es **justo lo que
 
 DDD funcional no fue diseñado para la IA. Wlaschin escribió "Domain Modeling Made Functional" en 2018, cuando los LLMs apenas balbuceaban código. Pero el shape del approach — funciones puras, types explícitos, dependencias inyectadas, results en vez de excepciones — resulta ser el shape que la IA necesita para no enredarse.
 
-Wlaschin no escribió esto pensando en LLMs. Yo no adopté dry-rb pensando en LLMs. Y aquí estamos.
+Wlaschin no escribió esto pensando en LLMs. Yo adopté dry-rb por mantenibilidad, no por la IA. Y aquí estamos: el shape que elegí por una razón terminó pagando por otra que nadie vio venir.
