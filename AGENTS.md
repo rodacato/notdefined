@@ -48,6 +48,23 @@ Guiado por [docs/editorial/ghostwriter.md](docs/editorial/ghostwriter.md): voz d
 
 ---
 
+## Consistencia con el repo de perfil (`rodacato/rodacato`)
+
+`notdefined.dev` es la **fuente de verdad** de proyectos y CV. El repo `rodacato/rodacato` (el GitHub profile README) **espeja** un slice curado. No hay sync automático — es un ritual manual corto, a propósito. El viejo sistema `.notdefined.yml` + `sync-projects.sh` fue eliminado; no lo reconstruyas.
+
+Cuando algo cambie aquí, recuerda espejarlo allá:
+
+| Qué cambió aquí (canónico) | Espejar en `rodacato/rodacato` |
+|---|---|
+| Un flagship en `src/content/projects/<slug>.md` | La fila de una línea en `README.md` → *What I'm Building* |
+| Carrera / experiencia en `src/data/cv.ts` (alimenta `/cv` y `/about`) | `linkedin/experience.md` si se sigue usando para tailoring |
+| Stack / infra en `src/pages/uses.astro` | `README.md` → *Tech Stack* / *How I Work* si es un cambio de cabecera |
+| Años de experiencia / lane en `src/data/cv.ts` + `src/data/site.ts` | Línea de cabecera del `README.md` + `PROFILE.md` |
+
+Reglas: la tabla de proyectos del README se mantiene en ~4 flagships; no dupliques descripciones completas (linkea a `/projects`); si corriges un hecho (años, fecha), busca el valor viejo en **ambos** repos. El `AGENTS.md` de `rodacato/rodacato` tiene el checklist completo desde el lado del perfil.
+
+---
+
 ## GitHub Project safety
 
 El workflow editorial corre en un **Project v2 privado** a nivel de usuario (`rodacato`) con **solo draft items**. Los items viven dentro del Project, **no como issues en ningún repo**. El repo público `rodacato/notdefined` debe tener **cero issues internos**.
