@@ -78,9 +78,7 @@ const icons: Record<string, string> = {
         ))
       }
     </ul>
-    <p class="uses-pointer">
-      Historial completo y descargable en <a href="/cv/">/cv</a>.
-    </p>
+    <a href="/cv/" class="cv-cta">Ver CV completo y descargable →</a>
   </section>
 </BaseLayout>
 
@@ -247,18 +245,32 @@ const icons: Record<string, string> = {
     color: var(--color-accent);
   }
 
-  .uses-pointer {
+  .cv-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.5rem;
+    padding: 0.6rem 1.15rem;
+    border-radius: 0.6rem;
     font-size: 0.85rem;
-    color: var(--color-muted);
-    margin: 0.85rem 0 0;
-  }
-
-  .uses-pointer a {
-    color: var(--color-accent);
+    font-weight: 500;
+    color: var(--color-text);
     text-decoration: none;
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
+      linear-gradient(135deg, var(--color-accent), var(--color-accent-dim))
+        border-box;
+    transition:
+      transform 150ms ease,
+      box-shadow 150ms ease,
+      color 150ms ease;
   }
-  .uses-pointer a:hover {
-    text-decoration: underline;
+  .cv-cta:hover {
+    color: var(--color-accent);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px -10px
+      color-mix(in oklab, var(--color-accent) 60%, transparent);
   }
 
   .social-pill {
