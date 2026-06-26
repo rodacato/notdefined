@@ -283,18 +283,22 @@ const topTags = Object.entries(tagCounts)
     color: var(--color-accent);
     background-color: var(--color-surface-2);
   }
+</style>
 
-  .post-link {
+<!-- Results are built with JS, so their styles must be global (scoped
+     styles only attach to template nodes). Namespaced under #results. -->
+<style is:global>
+  #results .post-link {
     display: block;
     padding: 1rem 1.25rem;
     text-decoration: none;
     transition: background-color 120ms ease;
   }
-  .post-link:hover {
+  #results .post-link:hover {
     background-color: var(--color-surface);
   }
 
-  .post-title {
+  #results .post-title {
     font-size: 0.9375rem;
     font-weight: 500;
     color: var(--color-text);
@@ -302,11 +306,11 @@ const topTags = Object.entries(tagCounts)
     margin: 0 0 0.25rem;
     transition: color 120ms ease;
   }
-  .post-link:hover .post-title {
+  #results .post-link:hover .post-title {
     color: var(--color-accent);
   }
 
-  .post-desc {
+  #results .post-desc {
     font-size: 0.8125rem;
     color: var(--color-muted);
     line-height: 1.5;
@@ -317,20 +321,20 @@ const topTags = Object.entries(tagCounts)
     overflow: hidden;
   }
 
-  .post-footer {
+  #results .post-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
   }
 
-  .tag-row {
+  #results .tag-row {
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
   }
 
-  .post-meta {
+  #results .post-meta {
     font-size: 0.72rem;
     color: var(--color-muted);
     white-space: nowrap;
