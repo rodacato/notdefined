@@ -42,6 +42,30 @@ const icons: Record<string, string> = {
         ))
       }
     </div>
+
+    <h2 class="section-title">En qué soy fuerte</h2>
+    <ul class="expertise">
+      {siteProfile.expertise.map((item) => <li>{item}</li>)}
+    </ul>
+    <p class="uses-pointer">
+      ¿Con qué construyo? Todo el stack está en <a href="/uses/">/uses</a>.
+    </p>
+
+    <h2 class="section-title">Trayectoria</h2>
+    <ul class="timeline">
+      {
+        siteProfile.experience.map((job) => (
+          <li class="timeline-item">
+            <div class="timeline-head">
+              <span class="timeline-company">{job.company}</span>
+              <span class="timeline-period">{job.period}</span>
+            </div>
+            <span class="timeline-role">{job.role}</span>
+            <p class="timeline-note">{job.note}</p>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 </BaseLayout>
 
@@ -100,6 +124,93 @@ const icons: Record<string, string> = {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
+  }
+
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 2.5rem 0 1rem;
+  }
+
+  .expertise {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .expertise li {
+    font-size: 0.85rem;
+    color: var(--color-text);
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background-color: var(--color-surface);
+  }
+
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .timeline-item {
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-border);
+  }
+
+  .timeline-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .timeline-company {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .timeline-period {
+    font-size: 0.78rem;
+    color: var(--color-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .timeline-role {
+    font-size: 0.82rem;
+    color: var(--color-accent);
+  }
+
+  .timeline-note {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    line-height: 1.6;
+    margin: 0.35rem 0 0;
+  }
+
+  .uses-pointer {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin: 0.85rem 0 0;
+  }
+
+  .uses-pointer a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  .uses-pointer a:hover {
+    text-decoration: underline;
   }
 
   .social-pill {
