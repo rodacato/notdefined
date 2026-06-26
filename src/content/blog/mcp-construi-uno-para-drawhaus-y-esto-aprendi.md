@@ -18,6 +18,8 @@ draft: true
 
 Aclaro de entrada: no soy experto en MCP. Esto es lo que aprendí usándolos y construyendo uno por mi cuenta, con sus tropiezos. Si buscas la especificación canónica, ve a la fuente; si quieres saber cómo se siente meterle mano, quédate.
 
+> Nota de caducidad: esto lo escribí a mediados de 2026. La IA se mueve a una velocidad absurda — nombres, versiones del SDK, hasta el transport recomendado cambian de un trimestre a otro. Si lees esto en un año, asume que algo ya cambió y verifica contra la fuente.
+
 ## Qué es MCP sin el hype
 
 MCP (Model Context Protocol) es un estándar para que un cliente LLM —Claude Code, Claude Desktop, el que sea— hable con un servidor que expone tres cosas: **tools** (acciones que el modelo puede ejecutar), **resources** (datos que puede leer) y **prompts** (plantillas reutilizables). Por debajo es JSON-RPC, nada exótico.
