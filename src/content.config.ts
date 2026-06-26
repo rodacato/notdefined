@@ -26,12 +26,12 @@ const projectsCollection = defineCollection({
   type: 'content',
   schema: z.object({
     name: z.string(),
-    description: z.string(),
+    tagline: z.string(),
+    product: z.string(),
+    technical: z.string(),
+    stack: z.array(z.string()).default([]),
     repo: z.string().url(),
     url: z.string().url().nullable().optional(),
-    lang: z.string(),
-    status: z.enum(['activo', 'mantenimiento', 'pausado']).default('activo'),
-    tags: z.array(z.string()).default([]),
     order: z.number().default(0),
   }),
 });

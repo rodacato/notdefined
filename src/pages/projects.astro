@@ -26,12 +26,7 @@ const projects = (await getCollection('projects')).sort(
       projects.map((project) => (
         <li class="card-list-item project-item fade-in-item">
           <div class="project-header">
-            <div class="project-name-row">
-              <h2 class="project-name">{project.data.name}</h2>
-              <span class={`status status-${project.data.status}`}>
-                {project.data.status}
-              </span>
-            </div>
+            <h2 class="project-name">{project.data.name}</h2>
             <div class="project-links">
               {project.data.url && (
                 <a
@@ -53,11 +48,12 @@ const projects = (await getCollection('projects')).sort(
               </a>
             </div>
           </div>
-          <p class="project-desc">{project.data.description}</p>
+          <p class="project-tagline">{project.data.tagline}</p>
+          <p class="project-desc">{project.data.product}</p>
+          <p class="project-tech">{project.data.technical}</p>
           <div class="project-footer">
-            <TagPill label={project.data.lang} />
-            {project.data.tags.map((tag: string) => (
-              <TagPill label={tag} />
+            {project.data.stack.map((item: string) => (
+              <TagPill label={item} />
             ))}
           </div>
         </li>
@@ -73,16 +69,10 @@ const projects = (await getCollection('projects')).sort(
 
   .project-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 0.625rem;
-  }
-
-  .project-name-row {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
+    margin-bottom: 0.5rem;
   }
 
   .project-name {
@@ -90,33 +80,6 @@ const projects = (await getCollection('projects')).sort(
     font-weight: 600;
     color: var(--color-text);
     margin: 0;
-  }
-
-  .status {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    padding: 0.15em 0.55em;
-    border-radius: 0.25rem;
-    text-transform: lowercase;
-  }
-
-  .status-activo {
-    background-color: oklch(92% 0.06 145);
-    color: oklch(38% 0.12 145);
-    border: 1px solid oklch(82% 0.09 145);
-  }
-
-  .status-mantenimiento {
-    background-color: oklch(94% 0.04 95);
-    color: oklch(40% 0.09 95);
-    border: 1px solid oklch(84% 0.06 95);
-  }
-
-  .status-pausado {
-    background-color: oklch(93% 0.01 250);
-    color: oklch(38% 0.01 250);
-    border: 1px solid oklch(84% 0.01 250);
   }
 
   .project-links {
@@ -135,11 +98,28 @@ const projects = (await getCollection('projects')).sort(
     color: var(--color-accent);
   }
 
+  .project-tagline {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.5;
+    margin: 0 0 0.75rem;
+  }
+
   .project-desc {
     font-size: 0.875rem;
     color: var(--color-muted);
     line-height: 1.6;
+    margin: 0 0 0.75rem;
+  }
+
+  .project-tech {
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+    line-height: 1.6;
     margin: 0 0 0.875rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--color-border);
   }
 
   .project-footer {
