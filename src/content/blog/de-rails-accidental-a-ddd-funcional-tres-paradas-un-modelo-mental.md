@@ -3,7 +3,7 @@ title: "De Rails accidental a DDD funcional: tres paradas, un modelo mental"
 description: "Diez años modelando dominio en tres empresas: Pay By Group, Invoy y Monato. Cómo pasé de Clean Architecture con chispitas de DDD en Rails, a DDD funcional con dry-rb. Y por qué el approach restrictivo es paradójicamente el más fácil de enseñar a un equipo inexperto."
 pubDate: 2026-05-22
 tags: ["ddd", "architecture", "ruby", "functional"]
-draft: true
+draft: false
 series: "DDD funcional"
 seriesOrder: 1
 ---
@@ -11,8 +11,8 @@ seriesOrder: 1
 ## TL;DR
 
 - **Pay By Group** fue donde aprendí que la arquitectura por capas no salva si el código no habla el lenguaje del negocio
-- **Invoy** fue donde encontré `dry-rb` y el approach funcional — sin Rails de por medio, todo encajó
-- **Monato** fue donde entendí que el approach funcional es **más fácil de enseñar** a un equipo inexperto que el OOP estilo Blue Book — al revés de lo intuitivo
+- En **Invoy**, sin Rails estorbando, `dry-rb` y el approach funcional por fin encajaron
+- **Monato** fue donde entendí que el approach funcional es **más fácil de enseñar** que el OOP estilo Blue Book — al revés de lo intuitivo, aunque "más fácil" no fue "rápido": me tomó el doble del tiempo que estimé
 - DDD ortodoxo te lleva a **análisis-parálisis**; el balance está en entender conceptos y boundaries, no aplicar el libro como dogma
 - El principal contra del approach funcional siempre fue el **boilerplate** — y resulta que es justo el tipo de código que la IA escupe sin enredarse
 
@@ -88,7 +88,7 @@ En DDD funcional con dry-rb, los lugares son explícitos y los nombres son discr
 | Event | `domain/events/` | Hechos pasados que otras partes escuchan |
 | Infrastructure | `infrastructure/` | Todo lo que toca el mundo externo (DB, APIs, queues) |
 
-Cuando le decía a un dev nuevo "esto es una regla de negocio reusable, va en un domain service", no había ambigüedad. El siguiente PR del mismo dev ponía la regla en el lugar correcto, sin que yo tuviera que revisar.
+Cuando le decía a un dev nuevo "esto es una regla de negocio reusable, va en un domain service", no había ambigüedad sobre dónde. Con un par de iteraciones, el siguiente PR del mismo dev ya ponía la regla en el lugar correcto sin que yo lo señalara. La ubicación dejó de ser la pelea — la pelea se mudó a los conceptos, y esa tardó más.
 
 Y aquí entró el libro de [Domain Modeling Made Functional](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/) de Scott Wlaschin. La palabra que mejor describe lo que sentí al leerlo es **alivio**. Tenía un lenguaje y una estructura para enseñar lo que en mi cabeza ya estaba pero que no podía articular tan limpio. El libro está en F#, pero el approach se traduce casi 1:1 a dry-rb en Ruby.
 
@@ -96,13 +96,17 @@ Lo más importante de Monato: **alejarme de ActiveRecord y DDD OOP fue lo que hi
 
 Hubo retos, y no eran técnicos: vender la visión, ganarme al equipo, demostrar las ventajas en código real sin sonar a vendedor de aceite de serpiente. Las primeras semanas fueron explicar lo mismo de tres formas distintas hasta que cayó la moneda con dos o tres devs. Después los demás siguieron — el código terminó siendo el mejor argumento, no yo.
 
+Pero seré honesto con el timeline, porque acá la cagué en el estimado. Mi plan era que a los tres meses el equipo estuviera cómodo creando sus propios actions. No pasó. Subestimé cuánto pesa venir del Rails Way: la resistencia fue baja, eso te lo concedo, pero la brecha de experiencia es real y hay conceptos que de plano confunden. El clásico es entities vs models — para alguien que lleva años con ActiveRecord son la misma cosa, hasta que dejan de serlo. No fue un deal breaker. Fue el learning que me llevo: el approach es más fácil de enseñar, pero "más fácil" no es "rápido".
+
+¿Cuándo cayó de verdad? Como al sexto mes. Ahí el equipo ya entendía el modelo, lo platicaba en los dailies con el vocabulario correcto, y armaba sus propios actions bajando el acoplamiento de cada feature nueva. El doble de lo que había prometido. Pero llegó.
+
 ## Por qué DDD ortodoxo es un mal consejo
 
 Una cosa que aprendí en estas tres paradas: **DDD aplicado de forma ortodoxa y dogmática te lleva a análisis-parálisis**.
 
 ¿Es esto un value object o una entity? ¿Esta operación es un domain service o un application service? ¿Mi aggregate root debería ser este o aquel? Si las respuestas requieren tres reuniones de arquitectura, ya perdiste.
 
-A mi forma de verlo, el balance está en entender los **conceptos** y los **boundaries** — pero usarlos como herramientas, no como check-list. Si el equipo entiende qué es un aggregate y por qué importa, ya tiene el 80% del valor. Si encima tiene un libro que les dice "los aggregates deben tener tal y tal propiedad y debes implementarlos así", perdiste el otro 20% peleando con el dogma.
+A mi forma de verlo, el balance está en entender los **conceptos** y los **boundaries** — pero usarlos como herramientas, no como check-list. Si el equipo entiende qué es un aggregate y por qué importa, ya tiene el 80% del valor. El otro 20% se va peleando con el dogma del libro que dice "los aggregates deben tener tal y tal propiedad y se implementan así".
 
 Controlar la deuda técnica del approach es parte del trabajo. Algunos lugares no necesitan toda la disciplina. Un endpoint que solo lista cosas no necesita action + domain service + repository + DTO. Un módulo con un método es suficiente. Decidir cuándo aplicar disciplina y cuándo dejarla pasar es la parte difícil — la que el dogma no te enseña.
 
