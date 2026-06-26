@@ -79,6 +79,7 @@ const icons: Record<string, string> = {
       }
     </ul>
     <div class="cv-cta-row">
+      <p class="cv-cta-lead">¿Quieres la versión completa?</p>
       <a href="/cv/" class="cv-cta">Ver CV completo y descargable →</a>
     </div>
   </section>
@@ -249,8 +250,18 @@ const icons: Record<string, string> = {
 
   .cv-cta-row {
     display: flex;
-    justify-content: center;
-    margin: 4rem 0 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    margin: 3.5rem 0 1rem;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .cv-cta-lead {
+    font-size: 0.95rem;
+    color: var(--color-muted);
+    margin: 0;
   }
 
   .cv-cta {
