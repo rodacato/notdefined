@@ -5,10 +5,15 @@ import { siteProfile } from '../data/site';
 interface Props {
   title: string;
   description?: string;
+  width?: 'default' | 'wide';
 }
 
-const { title, description = 'Sitio personal y blog de Adrian Castillo' } =
-  Astro.props;
+const {
+  title,
+  description = 'Sitio personal y blog de Adrian Castillo',
+  width = 'default',
+} = Astro.props;
+const maxWidth = width === 'wide' ? 'max-w-5xl' : 'max-w-3xl';
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL('/logo.png', Astro.site);
 ---
@@ -49,7 +54,10 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     <div class="cursor-glow" aria-hidden="true"></div>
     <header class="site-header">
       <div
-        class="mx-auto flex w-full max-w-3xl items-center justify-between px-6 py-4"
+        class:list={[
+          'mx-auto flex w-full items-center justify-between px-6 py-4',
+          maxWidth,
+        ]}
       >
         <a href="/" class="brand">
           <img src="/logo.png" alt="notdefined.dev logo" class="brand-logo" />
@@ -112,14 +120,14 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     </header>
 
     <main
-      class="mx-auto w-full max-w-3xl flex-1 px-6 py-12 md:py-16"
+      class:list={['mx-auto w-full flex-1 px-6 py-12 md:py-16', maxWidth]}
       style="position: relative; z-index: 1;"
     >
       <slot />
     </main>
 
     <footer class="site-footer" style="position: relative; z-index: 1;">
-      <div class="mx-auto w-full max-w-3xl px-6 py-6">
+      <div class:list={['mx-auto w-full px-6 py-6', maxWidth]}>
         <div class="footer-inner">
           <div class="footer-links">
             <p class="footer-text">

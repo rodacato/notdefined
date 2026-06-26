@@ -9,6 +9,7 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
 <BaseLayout
   title={`CV — ${cv.name}`}
   description="Curriculum de Adrian Castillo."
+  width="wide"
 >
   <article class="cv">
     <header class="cv-head">
@@ -128,8 +129,9 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
 </BaseLayout>
 
 <style>
-  .cv {
-    max-width: 44rem;
+  .cv-summary,
+  .cv-job {
+    max-width: 46rem;
   }
 
   .cv-head {

@@ -16,6 +16,7 @@ const icons: Record<string, string> = {
 <BaseLayout
   title="About — notdefined.dev"
   description="Quién está detrás de notdefined.dev."
+  width="wide"
 >
   <section class="about">
     <div class="about-header">
@@ -85,8 +86,12 @@ const icons: Record<string, string> = {
 
 <style>
   .about {
-    max-width: 36rem;
     padding-top: 1rem;
+  }
+
+  .about-tagline,
+  .about-bio {
+    max-width: 42rem;
   }
 
   .about-header {
