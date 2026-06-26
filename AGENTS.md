@@ -58,7 +58,7 @@ Cuando algo cambie aquí, recuerda espejarlo allá:
 |---|---|
 | Un flagship en `src/content/projects/<slug>.md` | La fila de una línea en `README.md` → *What I'm Building* |
 | Carrera / experiencia en `src/data/cv.ts` (alimenta `/cv` y `/about`) | `linkedin/experience.md` si se sigue usando para tailoring |
-| Stack / infra en `src/pages/uses.astro` | `README.md` → *Tech Stack* / *How I Work* si es un cambio de cabecera |
+| Stack / infra en la sección de stack de `src/pages/about.astro` | `README.md` → *Tech Stack* / *How I Work* si es un cambio de cabecera |
 | Años de experiencia / lane en `src/data/cv.ts` + `src/data/site.ts` | Línea de cabecera del `README.md` + `PROFILE.md` |
 
 Reglas: la tabla de proyectos del README se mantiene en ~4 flagships; no dupliques descripciones completas (linkea a `/projects`); si corriges un hecho (años, fecha), busca el valor viejo en **ambos** repos. El `AGENTS.md` de `rodacato/rodacato` tiene el checklist completo desde el lado del perfil.

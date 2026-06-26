@@ -36,19 +36,8 @@ const projectsCollection = defineCollection({
   }),
 });
 
-const nowCollection = defineCollection({
-  type: 'content',
-  schema: z.object({
-    updatedAt: z.coerce.date(),
-    building: z.array(z.string()).default([]),
-    exploring: z.array(z.string()).default([]),
-    writing: z.array(z.string()).default([]),
-  }),
-});
-
 export const collections = {
   blog: blogCollection,
   til: tilCollection,
   projects: projectsCollection,
-  now: nowCollection,
 };
