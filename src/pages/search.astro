@@ -1,44 +1,79 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHeader from '../components/PageHeader.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .map((post) => ({
-    slug: post.slug,
-    title: post.data.title,
-    description: post.data.description,
-    tags: post.data.tags,
-    date: post.data.pubDate.toLocaleDateString('es-MX', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    }),
-  }));
+const entries = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const posts = entries.map((post) => ({
+  slug: post.slug,
+  title: post.data.title,
+  description: post.data.description,
+  tags: post.data.tags,
+  date: post.data.pubDate.toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }),
+}));
+
+const tagCounts: Record<string, number> = {};
+for (const post of posts) {
+  for (const tag of post.tags) tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
+}
+const topTags = Object.entries(tagCounts)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 12)
+  .map(([tag]) => tag);
 ---
 
 <BaseLayout
   title="Buscar — notdefined.dev"
   description="Busca en todos los posts de notdefined.dev."
+  hideSearch
 >
-  <PageHeader label="Buscar" title="Buscar" />
+  <h1 class="visually-hidden">Buscar</h1>
 
   <div class="search-wrap">
+    <svg
+      class="search-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="7"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
     <input
       id="search-input"
       type="search"
       placeholder="Busca por título, descripción o tag…"
       class="search-input"
+      aria-label="Buscar en los posts"
+      autocomplete="off"
       autofocus
     />
   </div>
 
   <p id="search-count" class="search-count"></p>
   <ul id="results" class="card-list"></ul>
-  <p id="search-empty" class="search-empty hidden">
-    No hay resultados para esta búsqueda.
-  </p>
+
+  <div id="suggestions" class="suggestions">
+    <p id="suggestions-title" class="suggestions-title">Explora por tema</p>
+    <div class="suggestions-tags">
+      {
+        topTags.map((tag) => (
+          <button type="button" class="suggest-tag" data-tag={tag}>
+            {tag}
+          </button>
+        ))
+      }
+    </div>
+  </div>
 </BaseLayout>
 
 <script is:inline define:vars={{ posts }}>
@@ -46,7 +81,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   const input = document.getElementById('search-input');
   const list = document.getElementById('results');
   const count = document.getElementById('search-count');
-  const empty = document.getElementById('search-empty');
+  const suggestions = document.getElementById('suggestions');
+  const suggestionsTitle = document.getElementById('suggestions-title');
 
   function createTag(label) {
     const tag = document.createElement('span');
@@ -55,21 +91,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     return tag;
   }
 
-  function render(filtered) {
+  function showSuggestions(title) {
+    suggestionsTitle.textContent = title;
+    suggestions.style.display = '';
+  }
+
+  function renderResults(filtered) {
     list.innerHTML = '';
-    empty.classList.add('hidden');
-
-    const query = input.value.trim();
-    if (filtered.length === 0 && query) {
-      empty.classList.remove('hidden');
-      count.textContent = '';
-      return;
-    }
-
-    count.textContent = query
-      ? `${filtered.length} resultado${filtered.length !== 1 ? 's' : ''}`
-      : '';
-
     filtered.forEach((post) => {
       const item = document.createElement('li');
       item.className = 'card-list-item post-item';
@@ -108,20 +136,43 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   }
 
   function search(q) {
-    if (!q.trim()) {
-      render([]);
+    const query = q.trim();
+
+    if (!query) {
+      list.innerHTML = '';
+      count.textContent = '';
+      showSuggestions('Explora por tema');
       return;
     }
-    const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+
+    const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
     const results = posts.filter((post) => {
       const haystack =
         `${post.title} ${post.description} ${post.tags.join(' ')}`.toLowerCase();
       return terms.every((t) => haystack.includes(t));
     });
-    render(results);
+
+    if (results.length === 0) {
+      list.innerHTML = '';
+      count.textContent = `Nada para «${query}».`;
+      showSuggestions('Prueba con estos temas');
+      return;
+    }
+
+    suggestions.style.display = 'none';
+    count.textContent = `${results.length} resultado${results.length !== 1 ? 's' : ''}`;
+    renderResults(results);
   }
 
   input.addEventListener('input', (e) => search(e.target.value));
+
+  document.querySelectorAll('.suggest-tag').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      input.value = btn.dataset.tag;
+      input.focus();
+      search(btn.dataset.tag);
+    });
+  });
 
   const initialQuery = new URLSearchParams(window.location.search).get('q');
   if (initialQuery) {
@@ -131,49 +182,106 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 </script>
 
 <style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .search-wrap {
-    margin-bottom: 1rem;
+    position: relative;
+    margin-bottom: 1.25rem;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--color-muted);
+    pointer-events: none;
   }
 
   .search-input {
     width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 0.9375rem;
+    padding: 0.9rem 1rem 0.9rem 2.7rem;
+    font-size: 1rem;
     font-family: inherit;
     color: var(--color-text);
     background-color: var(--color-bg);
     border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
+    border-radius: 0.7rem;
     outline: none;
-    transition: border-color 150ms ease;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
   }
   .search-input:focus {
     border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px
+      color-mix(in oklab, var(--color-accent) 15%, transparent);
   }
   .search-input::placeholder {
     color: var(--color-muted);
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
   .search-count {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     color: var(--color-muted);
     margin-bottom: 0.75rem;
     min-height: 1.2em;
   }
 
-  .search-empty {
-    font-size: 0.9rem;
-    color: var(--color-muted);
-    padding: 2rem 0;
-    text-align: center;
-  }
-
-  .hidden {
-    display: none;
-  }
   .card-list:empty {
     display: none;
+  }
+
+  .suggestions {
+    margin-top: 1.5rem;
+  }
+
+  .suggestions-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 0 0 0.85rem;
+  }
+
+  .suggestions-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .suggest-tag {
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease,
+      background-color 150ms ease;
+  }
+  .suggest-tag:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background-color: var(--color-surface-2);
   }
 
   .post-link {

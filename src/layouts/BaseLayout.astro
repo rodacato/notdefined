@@ -6,12 +6,14 @@ interface Props {
   title: string;
   description?: string;
   width?: 'default' | 'wide';
+  hideSearch?: boolean;
 }
 
 const {
   title,
   description = 'Sitio personal y blog de Adrian Castillo',
   width = 'default',
+  hideSearch = false,
 } = Astro.props;
 const maxWidth = width === 'wide' ? 'max-w-5xl' : 'max-w-3xl';
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -65,55 +67,63 @@ const ogImageURL = new URL('/logo.png', Astro.site);
             >notdefined<span class="cursor-blink">_</span></span
           >
         </a>
-        <form
-          action="/search/"
-          method="get"
-          role="search"
-          class="header-search"
-        >
-          <svg
-            class="header-search-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="7"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input
-            type="search"
-            name="q"
-            class="header-search-input"
-            placeholder="Buscar…"
-            aria-label="Buscar en el sitio"
-            autocomplete="off"
-          />
-        </form>
+        {
+          !hideSearch && (
+            <form
+              action="/search/"
+              method="get"
+              role="search"
+              class="header-search"
+            >
+              <svg
+                class="header-search-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="search"
+                name="q"
+                class="header-search-input"
+                placeholder="Buscar…"
+                aria-label="Buscar en el sitio"
+                autocomplete="off"
+              />
+            </form>
+          )
+        }
         <nav class="flex items-center gap-5">
           <a href="/blog/" class="nav-link">Blog</a>
           <a href="/til/" class="nav-link">TIL</a>
           <a href="/projects/" class="nav-link">Proyectos</a>
           <a href="/about/" class="nav-link">About</a>
-          <a
-            href="/search/"
-            class="nav-link nav-search-mobile"
-            aria-label="Buscar"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              aria-hidden="true"
-            >
-              <circle cx="11" cy="11" r="7"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </a>
+          {
+            !hideSearch && (
+              <a
+                href="/search/"
+                class="nav-link nav-search-mobile"
+                aria-label="Buscar"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="7" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </a>
+            )
+          }
         </nav>
       </div>
       <div class="header-accent-line" aria-hidden="true"></div>
