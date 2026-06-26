@@ -21,5 +21,7 @@ stack:
   - Sentry
 repo: https://github.com/rodacato/mi-feria
 url: https://mi-feria.notdefined.dev
+accent: '#f59e0b'
+icon: /projects/icons/mi-feria.svg
 order: 4
 ---

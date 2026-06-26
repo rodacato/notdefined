@@ -22,5 +22,7 @@ stack:
   - LLM
 repo: https://github.com/rodacato/dojo
 url: https://dojo.notdefined.dev
+accent: '#6366f1'
+icon: /projects/icons/dojo.svg
 order: 1
 ---
