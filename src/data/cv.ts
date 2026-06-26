@@ -17,7 +17,7 @@ export const cv = {
     { label: 'notdefined.dev', href: 'https://notdefined.dev' },
   ],
   summary:
-    'Backend-heavy engineer with 17+ years shipping production systems — fintech payments, HIPAA healthcare, crypto exchanges, eCommerce, and AI/LLM infrastructure. Core stack Ruby/Rails and Node.js/TypeScript, with growing Rust and Python. Designs around Domain-Driven Design, hexagonal architecture, and event-driven patterns; builds AI tooling rather than just consuming it. Prefers boring infrastructure that works over clever infrastructure that doesn’t.',
+    'Backend-heavy engineer with 17+ years shipping production systems — fintech payments, HIPAA healthcare, crypto exchanges, eCommerce, IoT/telematics, and AI/LLM infrastructure. Core stack Ruby/Rails and Node.js/TypeScript, with Rust in production for real-time device communications. Designs around Domain-Driven Design, hexagonal architecture, and event-driven patterns; builds AI tooling rather than just consuming it. Prefers boring infrastructure that works over clever infrastructure that doesn’t.',
 
   // Curated skills taxonomy — professional/proven first. LinkedIn's dated
   // endorsements (jQuery, CoffeeScript, ActionScript, etc.) are intentionally
@@ -30,6 +30,7 @@ export const cv = {
         'Ruby on Rails',
         'Sinatra',
         'Node.js',
+        'Rust',
         'API design (REST & GraphQL)',
         'Event-driven systems',
       ],
@@ -46,7 +47,7 @@ export const cv = {
     },
     {
       group: 'Frontend',
-      items: ['JavaScript', 'TypeScript', 'React'],
+      items: ['JavaScript', 'TypeScript', 'React', 'React Native'],
     },
     {
       group: 'Data & messaging',
@@ -73,6 +74,20 @@ export const cv = {
   ],
 
   experience: [
+    {
+      company: 'Encontrack',
+      role: 'Senior Software Engineer (Consultant)',
+      period: 'Jun 2025 – Present',
+      location: 'Remote',
+      highlights: [
+        'Core software team for a vehicle-tracking platform covering 200,000+ vehicles across México — maintaining the device-communications and message-processing systems.',
+        'iotHub — the Rust processing layer that ingests and handles real-time device communications.',
+        'DeviceManager (Rails) — equipment inventory and command dispatch; led the team building it.',
+        'Encontrol — React Native apps with a Node/Express backend; lead engineer.',
+        'DeviceManager and Encontrol both started as prototypes and consolidated into production internal systems and products by proving their value in daily operations.',
+      ],
+      stack: ['Rust', 'Ruby on Rails', 'Node.js', 'Express', 'React Native'],
+    },
     {
       company: 'Monato',
       role: 'Senior Engineer (Consultant)',
