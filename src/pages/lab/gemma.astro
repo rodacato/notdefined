@@ -1,0 +1,566 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Lab — Gemma 3n E2B en el navegador"
+  description="Experimento: correr Gemma 3n E2B 100% en tu navegador con WebGPU. Opt-in, descarga consciente de ~3 GB, sin servidor."
+  width="wide"
+  hideSearch
+>
+  <article class="lab">
+    <p class="lab-eyebrow">Lab</p>
+    <h1 class="lab-title">Gemma 3n E2B en tu navegador</h1>
+
+    <aside class="lab-note">
+      <span class="lab-note-tag">Nota de caducidad</span>
+      Medido a mediados de 2026. La IA va a pasos acelerados — peso, velocidad y soporte
+      cambian rápido. Si lees esto mucho después, los números ya no aplican.
+    </aside>
+
+    <p class="lab-intro">
+      Un experimento: correr un modelo de ~2B de parámetros (≈3 GB de descarga) <strong
+        >100% en tu navegador</strong
+      >, con WebGPU, sin servidor. Nada se descarga hasta que tú lo pidas.
+    </p>
+
+    <div id="env" class="lab-env">
+      <span class="env-item" data-env="webgpu">WebGPU: <b>—</b></span>
+      <span class="env-item" data-env="coi"
+        >Cross-origin isolated: <b>—</b></span
+      >
+    </div>
+
+    <div id="gate" class="lab-gate hidden"></div>
+
+    <section id="panel" class="lab-panel hidden">
+      <div class="lab-actions">
+        <button id="load" class="lab-btn lab-btn-primary" type="button">
+          Cargar Gemma <span class="lab-size"
+            >(descarga ~3 GB la primera vez)</span
+          >
+        </button>
+        <button id="free" class="lab-btn lab-btn-manage" type="button" disabled>
+          Liberar memoria
+        </button>
+      </div>
+      <p class="lab-hint">
+        La descarga la cachea tu navegador (HTTP cache): al recargar no se
+        vuelve a bajar. Para borrar los ~3 GB, limpia los datos del sitio desde
+        el navegador — un modelo así no se puede borrar de forma programática
+        confiable.
+      </p>
+
+      <div id="progress" class="lab-progress hidden">
+        <div class="lab-bar"><div id="bar" class="lab-bar-fill"></div></div>
+        <p id="progress-text" class="lab-progress-text"></p>
+      </div>
+
+      <div id="chat" class="lab-chat hidden">
+        <details class="lab-system">
+          <summary class="lab-system-summary">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+              ></path>
+            </svg>
+            Instrucciones del sistema
+          </summary>
+          <textarea
+            id="system"
+            class="lab-prompt lab-system-input"
+            rows="3"
+            placeholder="Opcional. Ej.: Eres un asistente conciso que responde en español, directo y sin rodeos."
+          ></textarea>
+          <div class="lab-system-foot">
+            <button id="save-system" class="lab-btn" type="button" disabled>
+              Guardar y reiniciar chat
+            </button>
+            <span id="system-status" class="lab-system-hint"></span>
+          </div>
+        </details>
+
+        <div id="messages" class="lab-messages"></div>
+        <form id="chat-form" class="lab-composer">
+          <textarea
+            id="prompt"
+            class="lab-prompt"
+            rows="1"
+            placeholder="Escribe un mensaje… (Enter para enviar)"></textarea>
+          <button id="generate" class="lab-btn lab-btn-primary" type="submit">
+            Enviar
+          </button>
+        </form>
+        <p id="stats" class="lab-stats"></p>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<script>
+  // Modelo gated (Gemma) hosteado en Cloudflare R2 con CORS. MediaPipe lo
+  // descarga e inicializa él mismo vía modelAssetPath: es la única vía que
+  // funciona para 3 GB. El self-fetch (para mostrar % y borrar a mano) revienta
+  // porque modelAssetBuffer exige los 3 GB completos en RAM y luego MediaPipe
+  // los copia → pico de memoria que el navegador no aguanta. Consecuencias
+  // honestas: la barra es indeterminada (la descarga ocurre dentro del WASM) y
+  // la caché la administra el navegador (HTTP cache; persiste entre recargas si
+  // R2 manda Cache-Control). No hay "borrar" programático confiable.
+  const MODEL_URL =
+    'https://models.notdefined.dev/gemma-3n-E2B-it-int4-Web.litertlm'; // 3.04 GB
+  const WASM_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai/wasm';
+  const MP_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai';
+
+  const $ = (id: string) => document.getElementById(id)!;
+  const setEnv = (key: string, ok: boolean, label: string) => {
+    const el = document.querySelector(`[data-env="${key}"] b`)!;
+    el.textContent = label;
+    (el as HTMLElement).style.color = ok ? 'var(--color-accent)' : 'crimson';
+  };
+
+  let llm: any = null;
+
+  const hasWebGPU = 'gpu' in navigator;
+  const isolated = window.crossOriginIsolated;
+  setEnv('webgpu', hasWebGPU, hasWebGPU ? 'disponible' : 'no soportado');
+  setEnv('coi', isolated, isolated ? 'sí' : 'no');
+
+  if (!hasWebGPU || !isolated) {
+    const gate = $('gate');
+    gate.classList.remove('hidden');
+    gate.innerHTML = !hasWebGPU
+      ? 'Tu navegador no expone <b>WebGPU</b>. Necesitas Chrome/Edge/Firefox/Safari recientes en desktop para correr el modelo aquí.'
+      : 'La página no está <b>cross-origin isolated</b> (faltan los headers COOP/COEP). Sin eso, MediaPipe no arranca bien. Si eres yo: revisar la Transform Rule de Cloudflare.';
+  } else {
+    $('panel').classList.remove('hidden');
+  }
+
+  $('load').addEventListener('click', async () => {
+    const load = $('load') as HTMLButtonElement;
+    load.disabled = true;
+    $('progress').classList.remove('hidden');
+    const bar = $('bar');
+    const txt = $('progress-text');
+    bar.classList.add('indeterminate');
+    const t0 = performance.now();
+    let step = 'runtime de MediaPipe (jsdelivr)';
+    try {
+      txt.textContent = 'Cargando runtime…';
+      const { FilesetResolver, LlmInference } = await import(
+        /* @vite-ignore */ MP_URL
+      );
+
+      step = 'WASM de MediaPipe (jsdelivr)';
+      const genai = await FilesetResolver.forGenAiTasks(WASM_URL);
+
+      step = 'descarga + init del modelo';
+      txt.textContent =
+        'Descargando e inicializando en WebGPU… (la primera vez baja ~3 GB; sin %: la descarga ocurre dentro del WASM)';
+      llm = await LlmInference.createFromOptions(genai, {
+        baseOptions: { modelAssetPath: MODEL_URL },
+        maxTokens: 1024,
+        topK: 40,
+        temperature: 0.8,
+      });
+
+      const secs = ((performance.now() - t0) / 1000).toFixed(1);
+      bar.classList.remove('indeterminate');
+      bar.style.width = '100%';
+      txt.textContent = `✅ Listo en ${secs}s.`;
+      $('chat').classList.remove('hidden');
+      ($('prompt') as HTMLTextAreaElement).focus();
+      ($('free') as HTMLButtonElement).disabled = false;
+    } catch (e) {
+      console.error('[lab/gemma]', step, e);
+      bar.classList.remove('indeterminate');
+      txt.textContent = `Error en: ${step} — ${(e as Error).message}`;
+      load.disabled = false;
+    }
+  });
+
+  function addMessage(role: 'user' | 'assistant', text: string) {
+    const el = document.createElement('div');
+    el.className = `lab-msg ${role}`;
+    el.textContent = text;
+    const messages = $('messages');
+    messages.appendChild(el);
+    messages.scrollTop = messages.scrollHeight;
+    return el;
+  }
+
+  // No hay API de sesión en MediaPipe web (modo mantenimiento): mantenemos el
+  // historial a mano y lo pasamos con el formato de turnos de Gemma. El system
+  // prompt va como prefijo del primer turno (Gemma no tiene rol "system").
+  type Turn = { role: 'user' | 'model'; text: string };
+  let history: Turn[] = [];
+  let appliedSystem = ''; // las instrucciones realmente en uso (tras Guardar)
+
+  function buildPrompt(userMsg: string) {
+    const sys = appliedSystem;
+    const turns: Turn[] = [...history, { role: 'user', text: userMsg }];
+    let p = '';
+    turns.forEach((t, i) => {
+      const content = i === 0 && sys ? `${sys}\n\n${t.text}` : t.text;
+      p += `<start_of_turn>${t.role}\n${content}<end_of_turn>\n`;
+    });
+    return p + '<start_of_turn>model\n';
+  }
+
+  function resetChat() {
+    history = [];
+    $('messages').innerHTML = '';
+    $('stats').textContent = '';
+  }
+
+  function send() {
+    if (!llm) return;
+    const promptEl = $('prompt') as HTMLTextAreaElement;
+    const userMsg = promptEl.value.trim();
+    if (!userMsg) return;
+
+    addMessage('user', userMsg);
+    const fullPrompt = buildPrompt(userMsg);
+    history.push({ role: 'user', text: userMsg });
+    promptEl.value = '';
+    promptEl.style.height = 'auto';
+    const bubble = addMessage('assistant', '…');
+    const gen = $('generate') as HTMLButtonElement;
+    gen.disabled = true;
+
+    let acc = '';
+    let chunks = 0;
+    const t0 = performance.now();
+    llm.generateResponse(fullPrompt, (partial: string, done: boolean) => {
+      acc += partial;
+      chunks++;
+      bubble.textContent = acc;
+      $('messages').scrollTop = $('messages').scrollHeight;
+      if (done) {
+        const s = (performance.now() - t0) / 1000;
+        history.push({ role: 'model', text: acc });
+        $('stats').textContent =
+          `~${(chunks / s).toFixed(1)} tok/s · ${s.toFixed(1)}s`;
+        gen.disabled = false;
+      }
+    });
+  }
+
+  $('chat-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    send();
+  });
+
+  const promptEl = $('prompt') as HTMLTextAreaElement;
+  promptEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  });
+  promptEl.addEventListener('input', () => {
+    promptEl.style.height = 'auto';
+    promptEl.style.height = `${Math.min(promptEl.scrollHeight, 160)}px`;
+  });
+
+  // El system prompt se aplica con "Guardar" (explícito), no en cada tecla.
+  const systemEl = $('system') as HTMLTextAreaElement;
+  const saveBtn = $('save-system') as HTMLButtonElement;
+  systemEl.addEventListener('input', () => {
+    const dirty = systemEl.value.trim() !== appliedSystem;
+    saveBtn.disabled = !dirty;
+    $('system-status').textContent = dirty ? 'cambios sin guardar' : '';
+  });
+  saveBtn.addEventListener('click', () => {
+    appliedSystem = systemEl.value.trim();
+    resetChat();
+    saveBtn.disabled = true;
+    $('system-status').textContent = 'guardado · chat reiniciado';
+  });
+
+  $('free').addEventListener('click', () => {
+    llm?.close?.();
+    llm = null;
+    resetChat();
+    ($('free') as HTMLButtonElement).disabled = true;
+    $('chat').classList.add('hidden');
+    ($('load') as HTMLButtonElement).disabled = false;
+    $('progress-text').textContent = 'Memoria liberada.';
+  });
+</script>
+
+<style>
+  .lab {
+    max-width: 60rem;
+  }
+  .lab-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 0.4rem;
+  }
+  .lab-title {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+  }
+
+  .lab-note {
+    font-size: 0.82rem;
+    color: var(--color-text);
+    line-height: 1.6;
+    margin: 0.5rem 0 1.75rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: 0.7rem;
+    background: color-mix(in oklab, var(--color-accent) 8%, var(--color-bg));
+    border: 1px solid color-mix(in oklab, var(--color-accent) 22%, transparent);
+    box-shadow: 0 8px 24px -14px
+      color-mix(in oklab, var(--color-accent) 45%, transparent);
+  }
+  .lab-note-tag {
+    display: inline-block;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-right: 0.5rem;
+  }
+
+  .lab-intro {
+    color: var(--color-muted);
+    line-height: 1.7;
+    margin: 0 0 1rem;
+  }
+
+  .lab-env {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    color: var(--color-muted);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+  .lab-gate {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.6rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .lab-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .lab-btn-manage {
+    margin-left: auto;
+  }
+  .lab-btn-manage + .lab-btn-manage {
+    margin-left: 0;
+  }
+
+  .lab-hint {
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+    margin: 0.85rem 0 0;
+  }
+
+  .lab-btn {
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      opacity 150ms ease;
+  }
+  .lab-btn:hover:not(:disabled) {
+    border-color: var(--color-accent);
+  }
+  .lab-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .lab-btn-primary {
+    color: #fff;
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+  .lab-size {
+    font-weight: 400;
+    opacity: 0.85;
+  }
+
+  .lab-progress {
+    margin-top: 1rem;
+  }
+  .lab-bar {
+    height: 6px;
+    background-color: var(--color-surface-2);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .lab-bar-fill {
+    height: 100%;
+    width: 0%;
+    background-color: var(--color-accent);
+    transition: width 200ms ease;
+  }
+  .lab-bar-fill.indeterminate {
+    width: 40%;
+    animation: lab-indeterminate 1.2s ease-in-out infinite;
+  }
+  @keyframes lab-indeterminate {
+    0% {
+      margin-left: -40%;
+    }
+    100% {
+      margin-left: 100%;
+    }
+  }
+  .lab-progress-text {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    margin: 0.5rem 0 0;
+  }
+
+  /* Chat */
+  .lab-chat {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .lab-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    height: min(55vh, 32rem);
+    overflow-y: auto;
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    background-color: var(--color-surface);
+  }
+  .lab-system {
+    margin-bottom: 0.25rem;
+  }
+  .lab-system-summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    transition: color 150ms ease;
+  }
+  .lab-system-summary::-webkit-details-marker {
+    display: none;
+  }
+  .lab-system-summary svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+  .lab-system-summary:hover {
+    color: var(--color-text);
+  }
+  .lab-system-input {
+    width: 100%;
+    margin-top: 0.6rem;
+    resize: vertical;
+  }
+  .lab-system-hint {
+    font-size: 0.72rem;
+    color: var(--color-muted);
+    margin: 0;
+  }
+  .lab-system-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.6rem;
+  }
+
+  .lab-composer {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.6rem;
+  }
+  .lab-prompt {
+    flex: 1;
+    font-family: inherit;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.7rem;
+    padding: 0.7rem 0.9rem;
+    resize: none;
+    outline: none;
+    max-height: 10rem;
+  }
+  .lab-prompt:focus {
+    border-color: var(--color-accent);
+  }
+  .lab-stats {
+    font-size: 0.75rem;
+    color: var(--color-muted);
+    margin: 0;
+    min-height: 1em;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+
+<!-- Las burbujas se crean con JS; los estilos scoped no las alcanzan, así que
+     van globales acotadas a #messages. -->
+<style is:global>
+  #messages .lab-msg {
+    max-width: 80%;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    padding: 0.7rem 0.95rem;
+    border-radius: 0.85rem;
+  }
+  #messages .lab-msg.user {
+    align-self: flex-end;
+    background-color: var(--color-accent);
+    color: #fff;
+    border-bottom-right-radius: 0.25rem;
+  }
+  #messages .lab-msg.assistant {
+    align-self: flex-start;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    border-bottom-left-radius: 0.25rem;
+  }
+</style>
