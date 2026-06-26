@@ -16,3 +16,5 @@ dist/
 .aider*
 .kwik-e/
 logo.png
+CLAUDE.local.md
+.mcp.json
