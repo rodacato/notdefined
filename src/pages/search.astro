@@ -122,6 +122,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   }
 
   input.addEventListener('input', (e) => search(e.target.value));
+
+  const initialQuery = new URLSearchParams(window.location.search).get('q');
+  if (initialQuery) {
+    input.value = initialQuery;
+    search(initialQuery);
+  }
 </script>
 
 <style>
