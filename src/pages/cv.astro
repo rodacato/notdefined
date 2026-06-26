@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { cv } from '../data/cv';
+import { testimonials } from '../data/testimonials';
+
+const featuredTestimonials = testimonials.filter((t) => t.featured);
 ---
 
 <BaseLayout
@@ -33,6 +36,20 @@ import { cv } from '../data/cv';
     </p>
 
     <p class="cv-summary">{cv.summary}</p>
+
+    <section class="cv-section">
+      <h2 class="cv-section-title">Skills</h2>
+      <dl class="cv-skills">
+        {
+          cv.skills.map((group) => (
+            <div class="cv-skill-group">
+              <dt class="cv-skill-label">{group.group}</dt>
+              <dd class="cv-skill-items">{group.items.join(' · ')}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
 
     <section class="cv-section">
       <h2 class="cv-section-title">Experience</h2>
@@ -88,6 +105,25 @@ import { cv } from '../data/cv';
         }
       </section>
     </div>
+
+    <section class="cv-section">
+      <h2 class="cv-section-title">Recommendations</h2>
+      <div class="cv-recs">
+        {
+          featuredTestimonials.map((t) => (
+            <figure class="cv-rec">
+              <blockquote class="cv-rec-quote">{t.quote}</blockquote>
+              <figcaption class="cv-rec-by">
+                <span class="cv-rec-name">{t.name}</span>
+                <span class="cv-rec-role">
+                  {t.role} — {t.relationship}
+                </span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </section>
   </article>
 </BaseLayout>
 
@@ -255,6 +291,82 @@ import { cv } from '../data/cv';
     color: var(--color-text);
     line-height: 1.6;
     margin: 0 0 0.5rem;
+  }
+
+  .cv-skills {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .cv-skill-group {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+
+  .cv-skill-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .cv-skill-items {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text);
+    line-height: 1.55;
+  }
+
+  .cv-recs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1.25rem;
+  }
+
+  .cv-rec {
+    margin: 0;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.6rem;
+    background-color: var(--color-surface);
+    break-inside: avoid;
+  }
+
+  .cv-rec-quote {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+
+  .cv-rec-by {
+    margin-top: 0.7rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cv-rec-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .cv-rec-role {
+    font-size: 0.72rem;
+    color: var(--color-muted);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 30rem) {
+    .cv-skill-group {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
   }
 </style>
 

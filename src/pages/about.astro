@@ -51,6 +51,18 @@ const icons: Record<string, string> = {
       {siteProfile.expertise.map((item) => <li>{item}</li>)}
     </ul>
 
+    <h2 class="section-title">Stack</h2>
+    <dl class="stack">
+      {
+        cv.skills.map((group) => (
+          <div class="stack-group">
+            <dt class="stack-label">{group.group}</dt>
+            <dd class="stack-items">{group.items.join(' · ')}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
     <h2 class="section-title">Trayectoria</h2>
     <ul class="timeline">
       {
@@ -153,6 +165,42 @@ const icons: Record<string, string> = {
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     background-color: var(--color-surface);
+  }
+
+  .stack {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .stack-group {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+
+  .stack-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .stack-items {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 30rem) {
+    .stack-group {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
   }
 
   .timeline {
