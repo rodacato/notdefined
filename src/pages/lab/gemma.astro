@@ -125,7 +125,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     (el as HTMLElement).style.color = ok ? 'var(--color-accent)' : 'crimson';
   };
 
-  let llm: any = null;
+  type LlmSession = {
+    generateResponse(
+      prompt: string,
+      cb: (partial: string, done: boolean) => void,
+    ): void;
+    close?(): void;
+  };
+  let llm: LlmSession | null = null;
 
   const hasWebGPU = 'gpu' in navigator;
   const isolated = window.crossOriginIsolated;
