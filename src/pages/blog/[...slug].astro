@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import LabCard from '../../components/LabCard.astro';
 import { readingTime } from '../../utils/reading-time';
 
 export async function getStaticPaths() {
@@ -136,6 +137,8 @@ function formatDateShort(date: Date) {
     <div class="prose prose-lg max-w-none">
       <Content />
     </div>
+
+    {post.data.lab && <LabCard {...post.data.lab} />}
   </article>
 
   <!-- Series prev/next -->
