@@ -1,9 +1,15 @@
 ---
 title: 'Corrí Gemma 3n en el navegador: brutal como experimento, malo como feature'
 description: 'Metí Gemma 3n E2B a correr 100% en el navegador de un blog estático: WebGPU, 3 GB de modelo, cero servidor. Lo que parecía un demo de una tarde se volvió headers que GitHub Pages no deja poner, un modelo gated en R2, un progress bar imposible y un chat armado a mano. Los números reales en una M2 Max, y por qué hoy esto vive mejor en backend o mobile que en la web.'
-pubDate: 2026-06-26
+pubDate: 2026-06-29
 tags: ['gemma', 'webgpu', 'llm', 'ai', 'mediapipe', 'cloudflare']
-draft: true
+draft: false
+lab:
+  href: /lab/gemma
+  title: Córrelo tú en tu navegador
+  blurb: 100% local, opt-in, sin servidor. El botón te dice los GB antes de bajar nada — mide el cold start y los tok/s en tu propia máquina.
+  meta: '~3 GB de descarga · WebGPU · tus prompts no salen de tu equipo'
+  cta: Abrir el lab →
 ---
 
 ## TL;DR
@@ -18,7 +24,7 @@ draft: true
 
 > Nota de caducidad: esto lo medí a mediados de 2026. Casi todo lo que toco aquí —WebGPU, MediaPipe, la cobertura de navegadores, el peso del modelo— es **experimental y se mueve rápido**. Si lees esto en un año, asume que los números cambiaron y que alguna API que aquí sufro ya se arregló (o se murió). Verifica contra la fuente.
 
-La idea era boba de lo simple: este blog ya tiene un post de [MCP](/blog/mcp-construi-uno-para-drawhaus-y-esto-aprendi) y uno de [por qué tu feature de IA es más lento de lo que necesita](/blog/llm-context-windows-por-que-tu-feature-de-ia-es-mas-lento-de-lo-que-necesita). Quería algo más: un modelo corriendo **aquí mismo**, en tu pestaña, sin mandar nada a ningún lado. ¿Se puede correr un LLM de verdad en el navegador de un sitio estático? Spoiler: sí. Pero el camino no fue el modelo. Fue todo lo de alrededor.
+La idea era boba de lo simple: este blog ya tiene un post sobre [por qué tu feature de IA es más lento de lo que necesita](/blog/llm-context-windows-por-que-tu-feature-de-ia-es-mas-lento-de-lo-que-necesita). Quería algo más: un modelo corriendo **aquí mismo**, en tu pestaña, sin mandar nada a ningún lado. ¿Se puede correr un LLM de verdad en el navegador de un sitio estático? Spoiler: sí. Pero el camino no fue el modelo. Fue todo lo de alrededor.
 
 A mi forma de verlo, los demos bonitos de "IA en el browser" esconden la cuenta. Este post es la cuenta.
 
@@ -32,7 +38,7 @@ Vamos por partes.
 
 ## GitHub Pages no te deja poner headers (y MediaPipe los exige)
 
-Para correr Gemma elegí **MediaPipe LLM Inference (Web)**. Es el runtime de Google, optimizado justo para Gemma 3n; hay un archivo web-específico (`int4`, con el KV cache acomodado para WebGPU). Comparado con transformers.js puro, vuela.
+Para correr Gemma elegí **MediaPipe LLM Inference (Web)**. Es el runtime de Google, optimizado justo para Gemma 3n; hay un archivo web-específico (`int4`, con el KV cache acomodado para WebGPU). ¿Por qué no transformers.js o WebLLM, que también corren en el browser? Porque para Gemma específico, MediaPipe vuela: medí ~12 tok/s contra ~2 de transformers.js puro — como 6x. Para otros modelos la cuenta cambia; para este, no había vuelta.
 
 El pedo es que MediaPipe necesita que la página esté **cross-origin isolated**. Eso significa dos headers HTTP:
 
@@ -126,6 +132,8 @@ Todo lo de arriba no sirve si no aterriza en datos. Medido en una **MacBook Pro 
 | Cold start (descarga + init en WebGPU) | ~65s |
 | Generación | ~12 tok/s |
 
+Ese ~65s es **corrida fresca**: caché del navegador limpio, bajando los 3 GB de cero. Cuadra con el número — a 500 Mb solo la descarga son ~48s, el resto es el init en WebGPU. Al recargar con el modelo ya cacheado, el arranque baja a segundos.
+
 Y ojo con un detalle que mata la tesis de "córrelo en el browser para ahorrar": el almacenamiento del navegador está **aislado por origen** y el caché está **particionado por sitio**. Lo que cachea `notdefined.dev` solo lo lee `notdefined.dev`. Si mañana otro sitio quiere correr el mismo Gemma, baja **su propia copia** de 3 GB. No hay caché global de modelos en la web. El costo no se amortiza entre sitios: es **por sitio**, cada quien sus 3 GB.
 
 ## ¿Entonces vale la pena?
@@ -149,9 +157,6 @@ No. Una vez que el modelo se descargó, todo corre local en tu GPU vía WebGPU. 
 **¿Por qué 3 GB si es un modelo "de 2B"?**
 Es la versión web `int4` (cuantizada a 4 bits) con el KV cache optimizado. Aun cuantizado, un 2B-3n ocupa eso. Las variantes sin cuantizar pesan más.
 
-**¿Por qué no hay barra de progreso?**
-Porque la vía que no revienta (`modelAssetPath`) baja el modelo dentro del WASM, fuera del alcance de JavaScript. La alternativa que sí da progreso exige cargar los 3 GB en el heap de JS y truena por memoria. Lo explico a detalle arriba.
-
 **¿Se queda descargado o lo baja cada vez?**
 Se queda, vía HTTP cache del navegador (le puse `Cache-Control: immutable` en R2). Si recargas, no re-baja. Para borrarlo hay que limpiar los datos del sitio a mano — no hay un botón confiable para eso.
 
@@ -161,9 +166,6 @@ Probablemente mal. WebGPU en móvil es disparejo y 3 GB en RAM es muchísimo par
 **¿Safari? ¿Firefox?**
 WebGPU ya es mainstream (Chrome, Firefox, Edge y Safari lo traen por default desde finales de 2025, ~83% de cobertura). Aun así, hay equipos y configuraciones donde no está. El lab te avisa si tu navegador no lo expone.
 
-**¿Lo meto a mi producto?**
-En la web, hoy, no. En backend o en una app móvil, es otra historia y sí lo consideraría.
-
 ---
 
-Si quieres ver cuánto tarda en **tu** máquina, ándale: [/lab/gemma](/lab/gemma). El botón te dice los GB antes de bajar nada. Y cuando lo cierres, ya sabes por qué tu navegador no te deja borrarlo de un click.
+Ya tienes el veredicto y ya tienes el costo. Lo que falta es el número en **tu** máquina — y cuando lo abras y lo cierres, vas a saber en carne propia por qué tu navegador no te deja borrar esos 3 GB de un solo click.
