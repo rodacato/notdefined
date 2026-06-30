@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import TagPill from '../../components/TagPill.astro';
+import { labs, statusLabel } from '../../data/labs';
+
+const sorted = [...labs].sort((a, b) => b.date.localeCompare(a.date));
+---
+
+<BaseLayout
+  title="Labs — notdefined.dev"
+  description="Experimentos interactivos: cosas que se corren, no que se leen. Visualizaciones, catálogos y juguetes técnicos."
+>
+  <PageHeader
+    label="Laboratorio"
+    title="Labs"
+    description="La parte experimental y visual. Cosas que se corren, no que se leen — algunas acompañan un post, otras existen solo por curiosidad."
+  />
+
+  <ul class="lab-grid">
+    {
+      sorted.map((lab) => (
+        <li class="lab-grid-item fade-in-item">
+          <a href={`/lab/${lab.slug}`} class="lab-link">
+            <span class={`lab-status lab-status-${lab.status}`}>
+              <span class="lab-dot" />
+              {statusLabel[lab.status]}
+            </span>
+            <h3 class="lab-name">{lab.title}</h3>
+            <p class="lab-blurb">{lab.blurb}</p>
+            {lab.tags.length > 0 && (
+              <div class="lab-tags">
+                {lab.tags.map((t) => (
+                  <TagPill label={t} />
+                ))}
+              </div>
+            )}
+            {(lab.requirements || lab.metric) && (
+              <p class="lab-specs">
+                {lab.requirements && <span>{lab.requirements}</span>}
+                {lab.metric && <span class="lab-metric">{lab.metric}</span>}
+              </p>
+            )}
+            <span class="lab-cta">Córrelo →</span>
+          </a>
+          {lab.post && (
+            <a href={lab.post.href} class="lab-post-link">
+              {lab.post.label} →
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
+
+<style>
+  .lab-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 1rem;
+  }
+  .lab-grid-item {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-radius: 0.9rem;
+    overflow: hidden;
+    background-color: var(--color-bg);
+    transition: border-color 150ms ease;
+  }
+  .lab-grid-item:hover {
+    border-color: color-mix(
+      in oklab,
+      var(--color-accent) 40%,
+      var(--color-border)
+    );
+  }
+
+  .lab-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+    padding: 1.3rem 1.4rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .lab-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .lab-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background-color: currentColor;
+  }
+  .lab-status-live {
+    color: var(--color-accent);
+  }
+  .lab-status-experimental {
+    color: var(--color-accent-dim);
+  }
+  .lab-status-archived {
+    color: var(--color-muted);
+  }
+
+  .lab-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-text);
+    margin: 0;
+    transition: color 120ms ease;
+  }
+  .lab-link:hover .lab-name {
+    color: var(--color-accent);
+  }
+  .lab-blurb {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-muted);
+    margin: 0;
+  }
+  .lab-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .lab-specs {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-size: 0.72rem;
+    color: var(--color-muted);
+    margin: 0.15rem 0 0;
+  }
+  .lab-metric {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  .lab-cta {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .lab-post-link {
+    display: block;
+    padding: 0.7rem 1.4rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.78rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+  .lab-post-link:hover {
+    color: var(--color-accent);
+  }
+</style>
