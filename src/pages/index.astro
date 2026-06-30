@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { labs, statusLabel } from '../data/labs';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort(
@@ -14,6 +15,10 @@ const tils = (await getCollection('til'))
     (a: CollectionEntry<'til'>, b: CollectionEntry<'til'>) =>
       b.data.date.valueOf() - a.data.date.valueOf(),
   )
+  .slice(0, 3);
+
+const recentLabs = [...labs]
+  .sort((a, b) => b.date.localeCompare(a.date))
   .slice(0, 3);
 
 function formatDate(date: Date) {
@@ -84,6 +89,27 @@ function formatDate(date: Date) {
             <a href={`/til/${entry.slug}/`} class="post-link">
               <span class="post-title">{entry.data.title}</span>
               <span class="post-date">{formatDate(entry.data.date)}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Recent labs -->
+  <section class="labs-section" data-parallax="0.05">
+    <div class="section-header">
+      <h2 class="section-label">Labs</h2>
+      <a href="/lab/" class="section-link">Ver todos →</a>
+    </div>
+
+    <ul class="post-list">
+      {
+        recentLabs.map((lab, i) => (
+          <li class={`post-list-item fade-in-item${i > 0 ? ' bordered' : ''}`}>
+            <a href={`/lab/${lab.slug}`} class="post-link">
+              <span class="post-title">{lab.title}</span>
+              <span class="post-date">{statusLabel[lab.status]}</span>
             </a>
           </li>
         ))
@@ -223,7 +249,8 @@ function formatDate(date: Date) {
   .section-link:hover {
     opacity: 0.7;
   }
-  .til-section {
+  .til-section,
+  .labs-section {
     margin-top: 3rem;
   }
 
