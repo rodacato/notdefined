@@ -4,11 +4,13 @@ import { analytics } from '../data/site';
 const gaId = analytics.gaId;
 const enabled = Boolean(gaId) && import.meta.env.PROD;
 
-// Consent Mode v2 default-denied: sin banner, GA4 corre en modo pings modelados.
+// Consent Mode v2: default denied, o granted si el visitante ya aceptó antes.
 const gtagInit = `
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'});
+  var c = 'denied';
+  try { if (localStorage.getItem('nd-consent') === 'granted') c = 'granted'; } catch (e) {}
+  gtag('consent','default',{ad_storage:c,ad_user_data:c,ad_personalization:c,analytics_storage:c});
   gtag('js', new Date());
   gtag('config', '${gaId}');
 `;

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { siteProfile } from '../data/site';
 import Analytics from '../components/Analytics.astro';
+import ConsentBanner from '../components/ConsentBanner.astro';
 
 interface Props {
   title: string;
@@ -152,6 +153,8 @@ const ogImageURL = new URL('/logo.png', Astro.site);
         </div>
       </div>
     </footer>
+
+    <ConsentBanner />
   </body>
 </html>
 
