@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { siteProfile } from '../data/site';
+import Analytics from '../components/Analytics.astro';
 
 interface Props {
   title: string;
@@ -51,6 +52,7 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
+    <Analytics />
   </head>
   <body class="flex min-h-full flex-col">
     <div class="cursor-glow" aria-hidden="true"></div>

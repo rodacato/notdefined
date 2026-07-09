@@ -23,3 +23,8 @@ export const siteProfile = {
     'Infra self-hosted (Kamal, Hetzner, Cloudflare, Tailscale)',
   ],
 };
+
+// GA4 Measurement ID (G-XXXXXXX). Public value, safe to commit. Empty = analytics off.
+export const analytics = {
+  gaId: 'G-ZJV4DZ8H3B',
+};

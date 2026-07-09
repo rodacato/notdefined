@@ -1,0 +1,71 @@
+---
+import { analytics } from '../data/site';
+
+const gaId = analytics.gaId;
+const enabled = Boolean(gaId) && import.meta.env.PROD;
+
+// Consent Mode v2 default-denied: sin banner, GA4 corre en modo pings modelados.
+const gtagInit = `
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'});
+  gtag('js', new Date());
+  gtag('config', '${gaId}');
+`;
+---
+
+{
+  enabled && (
+    <>
+      <script is:inline set:html={gtagInit} />
+      <script
+        is:inline
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+      />
+    </>
+  )
+}
+
+<script>
+  // Funnel de lector: read_complete (leyó el post) + cta_click (acción).
+  // No-op sin gtag (dev o consent sin librería cargada).
+  function track(event: string, params: Record<string, unknown>) {
+    const gtag = (window as Window & { gtag?: (...args: unknown[]) => void })
+      .gtag;
+    if (typeof gtag === 'function') gtag('event', event, params);
+  }
+
+  const article = document.querySelector('article');
+  if (article) {
+    let fired = false;
+    const onScroll = () => {
+      if (fired) return;
+      const top = article.getBoundingClientRect().top + window.scrollY;
+      const seen = window.scrollY + window.innerHeight - top;
+      if (seen / article.offsetHeight >= 0.9) {
+        fired = true;
+        track('read_complete', { post: location.pathname });
+        window.removeEventListener('scroll', onScroll);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  function ctaType(href: string): string | null {
+    if (href.includes('github.com')) return 'github';
+    if (href.includes('linkedin.com')) return 'linkedin';
+    if (href.includes('/rss.xml')) return 'rss';
+    if (href.includes('/projects')) return 'projects';
+    if (href.includes('/cv')) return 'cv';
+    return null;
+  }
+
+  document.addEventListener('click', (e) => {
+    const link = (e.target as HTMLElement).closest('a');
+    if (!link) return;
+    const type = ctaType(link.getAttribute('href') ?? '');
+    if (type) track('cta_click', { cta_type: type, cta_href: link.href });
+  });
+</script>
