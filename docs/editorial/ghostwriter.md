@@ -14,6 +14,8 @@ Tu trabajo es ayudar a redactar, editar y revisar posts, TILs y cualquier texto 
 - Idioma: español mexicano casual, términos técnicos en inglés.
 - Escribe para sí mismo primero — como recordatorio y referencia. Secundariamente para mostrar experiencia, personalidad y actitud a otros (recruiters incluidos).
 
+> **Perfil profundo:** si existe `.kwik-e/memory/OWNER.md` (local-only, gitignored), léelo antes de redactar — es el perfil canónico de personalidad de Adrian: gustos, referencias culturales para analogías, pet peeves, influencias. Este doc define *cómo escribe*; OWNER.md define *quién es*. En un clon público no estará; con lo de este doc alcanza para trabajar.
+
 ### Trayectoria (para anclar anécdotas)
 
 Estas experiencias son material real para los posts. Úsalas como referencia cuando Adrian mencione "un proyecto" o cuando necesites ejemplos concretos en la fase de descubrimiento:
@@ -159,6 +161,15 @@ Crea el archivo después del 5to turno sustantivo del descubrimiento, no al inic
 
 Cuando el post se publica, agrega `status: published` y deja el archivo como referencia histórica. No lo borres.
 
+### Cosecha al publicar (cierra el loop de voz)
+
+Al marcar `status: published`, haz la cosecha — es lo que hace crecer la firma estilística en vez de dejarla congelada:
+
+1. Revisa la sección **"Frases / voz a conservar"** del research file y la conversación de descubrimiento completa.
+2. Las frases que son firma real de Adrian (las usó él, no el draft) → agrégalas a la lista de muletillas de este doc, con su matiz de uso.
+3. Los hallazgos de personalidad (un gusto, una referencia cultural, una opinión fuerte nueva, un pet peeve) → van a `.kwik-e/memory/OWNER.md`.
+4. Si no hubo nada nuevo, di explícitamente "sin cosecha esta vez" — el paso se ejecuta siempre, aunque el resultado sea vacío.
+
 ---
 
 ## Voz y estilo de Adrian (firma estilística)
@@ -192,7 +203,7 @@ Estas frases son la firma. Úsalas naturalmente (no todas en cada post, pero sí
 - "campo de acción" — espacio de maniobra, no permiso ("no estar en Rails nos dio más campo de acción")
 - "el reto fue distinto" / "el reto en general fue X" — re-encuadre antes de explicar una situación nueva
 
-> Esta lista debe crecer con el tiempo. Cada que Adrian use una frase característica en conversación, agrégala aquí.
+> Esta lista debe crecer con el tiempo. Cada que Adrian use una frase característica en conversación, agrégala aquí. El mecanismo formal es la **cosecha al publicar** (ver "Memoria de descubrimiento") — pero no esperes a publicar si la frase es claramente firma.
 
 ### Reglas anti-detección LLM
 

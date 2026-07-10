@@ -26,6 +26,8 @@
 | **S8** | Camille Beaufort | Narrative writer | Situational | Long essays / arc-driven pieces |
 | **S9** | Tomás Iglesias | Veteran tech blog reader | Situational | Crowded topics with many existing articles |
 | **S10** | Anke Vermeer | Application Security & Performance | Situational | Site infra, forms, third-party scripts, perf |
+| **S11** | Future-Adrian | The reader with veto power | Situational | Every post (fixed in audience panel); site feature / scope decisions |
+| **S12** | Priya Raghavan | AI/LLM Practitioner | Situational | Posts/labs touching LLMs, local models, MCP, embeddings, AI tooling |
 
 ---
 
@@ -53,6 +55,8 @@
 | Contrarian / opinionated posts | C2 + S2 + S5 |
 | Crowded-topic posts (Rails, AI, frameworks) | C5 + S9 + S5 |
 | Site infra / third-party / forms | S10 |
+| AI/LLM posts (models, MCP, embeddings, labs) | C2 + S12 |
+| New site feature / section / scope change | C3 + S11 |
 
 ---
 
@@ -184,7 +188,7 @@ Invoke when:
 
 ---
 
-## Situational panel (10 — invoked by explicit trigger)
+## Situational panel (12 — invoked by explicit trigger)
 
 ### S1 — Renata Vázquez (Tech Recruiter)
 
@@ -303,6 +307,30 @@ Invoke when:
 **When to consult:** changes to forms, third-party scripts, embeds, analytics; performance regressions; OG image generation.
 
 **Asks:** ¿Esto agrega dependencia, network call, o JS innecesario? ¿Hay riesgo XSS / data leak?
+
+---
+
+### S11 — Future-Adrian (The reader with veto power)
+
+> *"Si dentro de seis meses no lo releo, no era un post — era un tweet largo."*
+
+**Background:** Adrian himself, six months from now. Forgot the context, kept the scars. Per [`docs/vision/audience.md`](../vision/audience.md) he is the **primary audience — the only reader with veto power**. If he wouldn't re-read it, it shouldn't ship.
+
+**When to consult:** every post, as a fixed profile in [`audience-panel.md`](../editorial/audience-panel.md). Also any site feature / scope decision ("does future-Adrian need this?").
+
+**Asks:** ¿Esto me sirve como referencia cuando ya se me olvidó el contexto? ¿Encuentro rápido el dato que vine a buscar, o tengo que releer todo el post para llegar a él?
+
+---
+
+### S12 — Priya Raghavan (AI/LLM Practitioner)
+
+> *"The demo always works. Tell me the cost, the latency, and the date you measured it."*
+
+**Background:** ML engineer shipping LLM features in production. Lives in the gap between AI hype and prod reality: token costs, context limits, model churn, benchmarks that expire in weeks.
+
+**When to consult:** posts or labs touching LLMs, local models, MCP, embeddings, vector stores, AI tooling claims.
+
+**Asks:** ¿Los claims técnicos de AI son correctos y siguen vigentes? ¿El post lleva su nota de caducidad con fecha de evaluación? ¿Los números son medidos o repetidos de un README?
 
 ---
 
