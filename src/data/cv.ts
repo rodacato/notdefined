@@ -154,7 +154,7 @@ export const cv = {
         'Led a Rails version upgrade for security and maintainability; designed the hiring eval and hired 2 senior Rails engineers.',
         'Built a Rails Engine generating email templates from marketing pages (MJML + Inkscape), tuned for Outlook.',
       ],
-      stack: ['Ruby on Rails', 'MJML', 'AWS Lambda'],
+      stack: ['Ruby on Rails', 'React', 'Elasticsearch', 'MJML', 'AWS Lambda'],
     },
     {
       company: 'eFORMance',
@@ -188,7 +188,7 @@ export const cv = {
         'Maintained and improved cross-border payment APIs; private network links with providers in El Salvador & Costa Rica.',
         'AWS VPC setup for secure provider communication.',
       ],
-      stack: ['Ruby', 'AWS (VPC)'],
+      stack: ['Ruby on Rails', 'AWS (VPC)'],
     },
     {
       company: 'MagmaLabs (formerly Crowd Interactive)',
@@ -210,7 +210,7 @@ export const cv = {
         'Built a Sinatra & Angular API for Red Bull’s photo-sharing media system.',
         'Balanced Heroku & Engine Yard; direct client engagement on product and feasibility.',
       ],
-      stack: ['Ruby', 'Sinatra', 'AngularJS', 'Heroku', 'Engine Yard'],
+      stack: ['Ruby on Rails', 'Sinatra', 'AngularJS', 'Heroku', 'Engine Yard'],
     },
     {
       company: 'Freshout',
@@ -221,7 +221,7 @@ export const cv = {
         'Built Rails backends for eCommerce, marketing, and social platforms.',
         'Managed Engine Yard / Rackspace infra; CI pipelines with RSpec.',
       ],
-      stack: ['Ruby on Rails', 'Engine Yard', 'Rackspace', 'RSpec'],
+      stack: ['Ruby on Rails', 'Chef', 'Engine Yard', 'Rackspace', 'RSpec'],
     },
     {
       company: 'Crowd Interactive',
