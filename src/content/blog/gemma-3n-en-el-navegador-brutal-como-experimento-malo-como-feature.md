@@ -4,6 +4,7 @@ description: 'Metí Gemma 3n E2B a correr 100% en el navegador de un blog estát
 pubDate: 2026-06-29
 tags: ['gemma', 'webgpu', 'llm', 'ai', 'mediapipe', 'cloudflare']
 draft: false
+featured: true
 lab:
   href: /lab/gemma
   title: Córrelo tú en tu navegador

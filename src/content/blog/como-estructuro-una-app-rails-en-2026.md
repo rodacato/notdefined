@@ -4,6 +4,7 @@ description: "No es 'el Rails way' y tampoco DDD desde cero. Un approach pragmá
 pubDate: 2026-01-27
 tags: ["ruby", "rails", "architecture"]
 draft: false
+featured: true
 ---
 
 ## TL;DR

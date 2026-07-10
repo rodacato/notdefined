@@ -4,6 +4,7 @@ description: 'No soy experto en MCP, pero construí uno para Drawhaus — que un
 pubDate: 2026-06-19
 tags: ['mcp', 'llm', 'ai', 'drawhaus', 'architecture']
 draft: true
+featured: true
 ---
 
 ## TL;DR

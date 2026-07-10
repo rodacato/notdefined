@@ -4,6 +4,7 @@ description: "Diez años modelando dominio en tres empresas: Pay By Group, Invoy
 pubDate: 2026-05-22
 tags: ["ddd", "architecture", "ruby", "functional"]
 draft: false
+featured: true
 series: "DDD funcional"
 seriesOrder: 1
 ---

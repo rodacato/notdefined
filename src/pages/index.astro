@@ -10,6 +10,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   )
   .slice(0, 5);
 
+const featuredPosts = (
+  await getCollection('blog', ({ data }) => !data.draft && data.featured)
+).sort(
+  (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
 const tils = (await getCollection('til'))
   .sort(
     (a: CollectionEntry<'til'>, b: CollectionEntry<'til'>) =>
@@ -51,6 +58,29 @@ function formatDate(date: Date) {
       <span class="hero-sep">·</span>
       <a href="/projects/" class="hero-meta-link">Proyectos →</a>
     </div>
+    <p class="hero-note">
+      Don't read Spanish? <a href="/cv/" class="hero-link">My CV speaks English →</a>
+    </p>
+  </section>
+
+  <!-- Featured posts -->
+  <section data-parallax="0.015">
+    <div class="section-header">
+      <h2 class="section-label">Empieza por aquí</h2>
+    </div>
+
+    <ul class="post-list">
+      {
+        featuredPosts.map((post, i) => (
+          <li class={`post-list-item fade-in-item${i > 0 ? ' bordered' : ''}`}>
+            <a href={`/blog/${post.slug}/`} class="post-link featured-link">
+              <span class="post-title">{post.data.title}</span>
+              <span class="featured-desc">{post.data.description}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
   <!-- Recent posts -->
@@ -192,6 +222,25 @@ function formatDate(date: Date) {
     line-height: 1.7;
     font-size: 0.9375rem;
     margin-bottom: 1.25rem;
+  }
+  .hero-note {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    margin-top: 1rem;
+  }
+  .featured-link {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.3rem;
+  }
+  .featured-desc {
+    font-size: 0.82rem;
+    color: var(--color-muted);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .hero-link {
     color: var(--color-accent);

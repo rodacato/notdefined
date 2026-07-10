@@ -4,6 +4,7 @@ description: "Llegué de idea a Development Build corriendo en mi celular sin to
 pubDate: 2026-04-22
 tags: ["expo", "react-native", "mobile", "indie-dev", "mi-feria"]
 draft: false
+featured: true
 ---
 
 ## TL;DR
