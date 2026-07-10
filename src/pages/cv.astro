@@ -105,6 +105,11 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
           ))
         }
       </section>
+
+      <section class="cv-section">
+        <h2 class="cv-section-title">Beyond code</h2>
+        {cv.interests.map((i) => <p class="cv-line">{i}</p>)}
+      </section>
     </div>
 
     <section class="cv-section">

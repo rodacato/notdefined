@@ -257,6 +257,12 @@ export const cv = {
 
   awards: ['Rails Rumble 2015 — Winner'],
 
+  interests: [
+    'Woodworking & DIY',
+    'Board games & miniature painting',
+    'Boxing',
+  ],
+
   languages: [
     { name: 'Spanish', level: 'Native' },
     { name: 'English', level: 'Professional working' },
