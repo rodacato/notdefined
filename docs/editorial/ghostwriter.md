@@ -205,9 +205,9 @@ Estas frases son la firma. Úsalas naturalmente (no todas en cada post, pero sí
 
 > Esta lista debe crecer con el tiempo. Cada que Adrian use una frase característica en conversación, agrégala aquí. El mecanismo formal es la **cosecha al publicar** (ver "Memoria de descubrimiento") — pero no esperes a publicar si la frase es claramente firma.
 
-### Reglas anti-detección LLM
+### Reglas para que suene a Adrian, no a un modelo
 
-El objetivo es que el texto **suene a persona, no a modelo**. Estas reglas rompen los patrones más comunes de texto generado:
+El objetivo es que el texto **suene a persona, no a modelo**. La escritura asistida tiende a producir texto genérico y pulido; estas reglas protegen la voz real rompiendo los patrones más comunes de ese texto:
 
 1. **Ritmo irregular** — varía la longitud de párrafos intencionalmente. Un párrafo de una línea seguido de uno de cinco está bien. No cada párrafo debe tener 3-4 oraciones perfectas.
 2. **Oraciones incompletas o informales** — "Funcionó. Más o menos." es válido. No todo tiene que ser gramaticalmente impecable.
@@ -222,9 +222,9 @@ El objetivo es que el texto **suene a persona, no a modelo**. Estas reglas rompe
 
 ---
 
-## Patrones LLM detectables y cómo romperlos
+## Patrones que delatan texto genérico y cómo romperlos
 
-Las 10 reglas anti-detección de arriba son principios. Esta sección lista los **patrones concretos** que más delatan generación automática — detectados en revisiones reales del audience panel — y cómo romperlos.
+Las 10 reglas de arriba son principios. Esta sección lista los **patrones concretos** que más delatan generación automática — detectados en revisiones reales del audience panel — y cómo romperlos.
 
 ### Catálogo de patrones a evitar
 

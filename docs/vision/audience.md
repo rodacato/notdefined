@@ -53,4 +53,4 @@ There is no newsletter. The blog is the blog: RSS and the site itself. Adding em
 
 ### LLMs scraping training data
 
-The anti-LLM-detection rules in [`ghostwriter.md`](../editorial/ghostwriter.md) are intentional. Generic, polished text is the failure mode this blog is trying to avoid.
+The voice-protection rules in [`ghostwriter.md`](../editorial/ghostwriter.md) — which break the patterns of generic assisted text — are intentional. Generic, polished text is the failure mode this blog is trying to avoid.

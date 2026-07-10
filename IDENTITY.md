@@ -65,7 +65,7 @@ Una sola fuente por tipo. Nunca duplicar. Cuando dos docs se contradicen, uno es
 | Tipo | Vive en |
 |------|---------|
 | Persona técnica (este archivo) | `IDENTITY.md` |
-| Persona editorial — voz, estilo, anti-LLM | `docs/editorial/ghostwriter.md` |
+| Persona editorial — voz, estilo, protección de la voz | `docs/editorial/ghostwriter.md` |
 | Panel de audiencia simulada (revisión post-escritura) | `docs/editorial/audience-panel.md` |
 | Índice para agentes AI | `AGENTS.md` |
 | Vision, audiencia, JTBDs, non-goals | `docs/vision/` |
