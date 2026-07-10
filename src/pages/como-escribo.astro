@@ -1,0 +1,305 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const steps = [
+  {
+    title: 'La idea',
+    body: 'Sale de lo que estoy construyendo o rompiendo. Si no tiene un proyecto o una cicatriz detrás, no avanza.',
+  },
+  {
+    title: 'La entrevista',
+    body: 'La AI me pregunta por MI experiencia: qué proyecto, qué salió mal, qué opino sin filtro. Si no tengo experiencia directa con el tema, el post lo dice tal cual.',
+  },
+  {
+    title: 'El borrador',
+    body: 'Se arma con ese material — mis anécdotas, mis números, mis opiniones. La asistencia es de gramática, redacción y estructura.',
+  },
+  {
+    title: 'El panel',
+    body: 'Un panel de lectores simulados lo rompe: el senior escéptico, el recruiter, el detector de texto genérico. Itero hasta que aguanta.',
+  },
+  {
+    title: 'Yo decido',
+    body: 'Leo todo, corto lo que no suena a mí, y publico. La última palabra siempre es mía.',
+  },
+];
+---
+
+<BaseLayout
+  title="Cómo escribo — notdefined.dev"
+  description="El proceso detrás de los posts: la entrevista, el borrador, el panel que lo rompe, y por qué la última palabra siempre es mía."
+>
+  <section class="how">
+    <h1 class="how-title">Cómo escribo</h1>
+
+    <p>
+      Hacer blog posts es difícil. Lo intenté varias veces y siempre me pasaba
+      lo mismo: la cadencia que no aguanta, el sentimiento de que no es bueno,
+      el "¿qué va a pensar la gente de mí?", el "¿esto es real o es una
+      tontería?". Eso te paraliza. Así estuve años — con el blog en la cabeza y
+      cero posts publicados.
+    </p>
+
+    <p>
+      La AI me liberó. Y no por hacer el contenido por mí — me liberó por los
+      roles que puede cubrir: el editor que no tenía, el corrector de gramática,
+      el lector escéptico que pregunta "¿y tu evidencia?", el panel que rompe el
+      borrador antes de que lo rompa un lector real. Carencias que ahora puedo
+      fortalecer sin esperar a tener un equipo editorial.
+    </p>
+
+    <p>
+      Por eso hice este sitio y este flujo. Se enfoca en mis aprendizajes, mis
+      ideas, mi conocimiento — la AI me ayuda a extraerlo, moldearlo y darle
+      forma. Ya me dejé de preocupar por los demás: esto es contenido para mí,
+      para mi yo futuro. Explicándolo lo fortalezco; investigándolo lo
+      enriquezco.
+    </p>
+
+    <h2 class="how-section">El proceso</h2>
+
+    <ol class="chain">
+      {
+        steps.map((step, i) => (
+          <li class="chain-step fade-in-item">
+            <span class="chain-node" aria-hidden="true">
+              {i + 1}
+            </span>
+            <div class="chain-body">
+              <strong>{step.title}.</strong> {step.body}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <h2 class="how-section">Qué es mío y qué es asistido</h2>
+
+    <p>
+      Mío: las ideas, las opiniones, las anécdotas, las cagadas en producción y
+      la última palabra. Asistido: la gramática, la redacción, la estructura y
+      la revisión. Las cicatrices no se pueden delegar.
+    </p>
+
+    <h2 class="how-section">Learnings</h2>
+
+    <div class="learnings">
+      <div class="learning fade-in-item">
+        <h3 class="learning-label">Qué no hacer</h3>
+        <ul>
+          <li>
+            Pedirle a la AI que escriba el post desde cero. Sale texto genérico
+            y pulido que no es tuyo — y se nota.
+          </li>
+          <li>
+            Esperar a sentirte listo. Yo esperé años; la parálisis no se quita
+            sola, se quita publicando.
+          </li>
+        </ul>
+      </div>
+
+      <div class="learning fade-in-item">
+        <h3 class="learning-label">Qué no sirve de nada</h3>
+        <ul>
+          <li>
+            Escribir para impresionar extraños. Si el post no te sirve a ti en
+            seis meses, no era un post.
+          </li>
+          <li>
+            Pulir de más. Cada pasada extra lo acerca a sonar a modelo y lo
+            aleja de sonar a ti.
+          </li>
+        </ul>
+      </div>
+
+      <div class="learning fade-in-item">
+        <h3 class="learning-label">Qué buscar si lo haces tú</h3>
+        <ul>
+          <li>
+            Un flujo que te entreviste y extraiga TU experiencia — no uno que
+            genere contenido.
+          </li>
+          <li>
+            Los roles que te faltan: editor, corrector, lector escéptico. Esas
+            son las carencias que la AI sí cubre bien.
+          </li>
+          <li>
+            Una audiencia de uno: tu yo futuro. Con eso, el miedo a la opinión
+            ajena pierde el juego.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="how-repo">
+      El sistema completo es público — vive en
+      <a
+        href="https://github.com/rodacato/notdefined/blob/master/docs/editorial/ghostwriter.md"
+        target="_blank"
+        rel="noopener noreferrer">el repo del sitio</a
+      >. Si te sirve para armar el tuyo, agarra lo que necesites.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .how {
+    padding-top: 1rem;
+    max-width: 42rem;
+  }
+
+  .how-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin-bottom: 1.5rem;
+  }
+
+  .how p {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+  }
+
+  .how-section {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 2.5rem 0 1.25rem;
+  }
+
+  /* ── Process chain ─────────────────────────────────────── */
+  .chain {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .chain-step {
+    position: relative;
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 1.9rem;
+  }
+
+  .chain-step:last-child {
+    padding-bottom: 0;
+  }
+
+  .chain-step::before {
+    content: '';
+    position: absolute;
+    left: 0.875rem;
+    top: 2rem;
+    bottom: 0.15rem;
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      var(--color-accent),
+      var(--color-accent-dim)
+    );
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.6s ease 0.35s;
+  }
+
+  .chain-step:last-child::before {
+    display: none;
+  }
+
+  .chain-step:global(.is-visible)::before {
+    transform: scaleY(1);
+  }
+
+  .chain-node {
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-accent);
+    background-color: var(--color-surface);
+    color: var(--color-accent);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .chain-step:hover .chain-node {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+    transform: scale(1.1);
+  }
+
+  .chain-body {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.7;
+    padding-top: 0.15rem;
+  }
+
+  .chain-body strong {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  /* ── Learnings ─────────────────────────────────────────── */
+  .learnings {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .learning {
+    border: 1px solid var(--color-border);
+    border-radius: 0.6rem;
+    background-color: var(--color-surface);
+    padding: 1rem 1.25rem;
+  }
+
+  .learning-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .learning ul {
+    list-style: disc;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .learning li {
+    font-size: 0.9rem;
+    color: var(--color-text);
+    line-height: 1.65;
+  }
+
+  .how-repo a {
+    color: var(--color-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chain-step::before {
+      transform: scaleY(1);
+      transition: none;
+    }
+    .chain-step:hover .chain-node {
+      transform: none;
+    }
+  }
+</style>
