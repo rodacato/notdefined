@@ -8,38 +8,51 @@
    ========================================================================== */
 
 /* ============================================================================
+   0. FUENTES — Google Fonts self-hosteadas (subset latin, woff2). Sin request
+   externo: los archivos viven en ./fonts/, sigue funcionando offline.
+   ========================================================================== */
+@font-face { font-family: "Chakra Petch"; font-style: normal; font-weight: 600; font-display: swap; src: url("./fonts/chakra-petch-600.woff2") format("woff2"); }
+@font-face { font-family: "Chakra Petch"; font-style: normal; font-weight: 700; font-display: swap; src: url("./fonts/chakra-petch-700.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ibm-plex-sans-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: italic; font-weight: 400; font-display: swap; src: url("./fonts/ibm-plex-sans-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("./fonts/ibm-plex-sans-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("./fonts/ibm-plex-sans-600.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 600; font-display: swap; src: url("./fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+/* ============================================================================
    1. TOKENS — Claro (papel de dibujo · por defecto)
    ========================================================================== */
 :root {
-  --color-primary:        #2E6494;
-  --color-primary-hover:  #24507A;
-  --color-primary-muted:  #DCE7F0;
+  --color-primary:        #1D5C94;
+  --color-primary-hover:  #174A78;
+  --color-primary-muted:  #D2E2F0;
 
-  --color-bg-canvas:      #EBF0F4;
-  --color-bg-surface:     #F8FAFC;
-  --color-bg-muted:       #DFE7ED;
+  --color-bg-canvas:      #E2EAF2;
+  --color-bg-surface:     #F5F8FB;
+  --color-bg-muted:       #D3DFEA;
 
-  --color-fg-default:     #1F2A36;
-  --color-fg-subtle:      #5A6B7A;
-  --color-fg-inverse:     #F8FAFC;
+  --color-fg-default:     #16283A;
+  --color-fg-subtle:      #47617A;
+  --color-fg-inverse:     #F5F8FB;
 
-  --color-border-default: #C6D2DC;
-  --color-border-strong:  #AFC0CD;
+  --color-border-default: #B8C9D9;
+  --color-border-strong:  #9DB4C9;
 
-  --color-positive:       #2C7A57;
-  --color-positive-bg:    #DFEEE6;
-  --color-positive-fg:    #226248;
+  --color-positive:       #24734F;
+  --color-positive-bg:    #D9EBDF;
+  --color-positive-fg:    #1D5F41;
 
-  --color-negative:       #BF4B41;
-  --color-negative-bg:    #F4E1DE;
-  --color-negative-fg:    #A5382F;
+  --color-negative:       #B5433A;
+  --color-negative-bg:    #F2DDD9;
+  --color-negative-fg:    #9C352C;
 
-  --color-warning:        #C58317;
-  --color-warning-bg:     #F3EAD3;
-  --color-warning-fg:     #8F6008;
+  --color-warning:        #B87A12;
+  --color-warning-bg:     #EFE5CB;
+  --color-warning-fg:     #7E5A0A;
 
   /* Retícula del plano (solo textura de fondo, nunca codifica datos) */
-  --grid-line: rgba(46, 100, 148, 0.055);
+  --grid-line: rgba(29, 92, 148, 0.09);
 
   /* Familias del catálogo — tintas terrosas (contrato de datos, no cromo) */
   --fam-1: #A4552E;  --fam-2: #2F6A6B;  --fam-3: #79415F;
@@ -49,10 +62,10 @@
   --role-actor:   #64748B;  --role-gateway: #5B6CFF;  --role-service: #10B981;
   --role-store:   #F59E0B;  --role-msg:     #0D9488;  --role-fail:    #C2554D;
 
-  /* Tipografía — solo familias del sistema */
-  --font-display: Georgia, "Iowan Old Style", "Times New Roman", serif;
-  --font-sans:    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono:    ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  /* Tipografía — Google Fonts self-hosteadas con fallback del sistema */
+  --font-display: "Chakra Petch", "Avenir Next Condensed", "Arial Narrow", sans-serif;
+  --font-sans:    "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 
   --fs-body: 15px; --lh-body: 1.55;
 
@@ -67,20 +80,20 @@
    2. TOKENS — Oscuro (cianotipo · blueprint clásico)
    ========================================================================== */
 html.dark {
-  --color-primary:        #7FB2DE;
-  --color-primary-hover:  #9CC5E8;
-  --color-primary-muted:  #1E3D5C;
+  --color-primary:        #82B6E4;
+  --color-primary-hover:  #9FC9EC;
+  --color-primary-muted:  #1E4166;
 
-  --color-bg-canvas:      #10263C;
-  --color-bg-surface:     #16324C;
-  --color-bg-muted:       #1C3A57;
+  --color-bg-canvas:      #0E2440;
+  --color-bg-surface:     #143252;
+  --color-bg-muted:       #1A3C60;
 
   --color-fg-default:     #E4EEF6;
   --color-fg-subtle:      #9DB4C8;
-  --color-fg-inverse:     #10263C;
+  --color-fg-inverse:     #0E2440;
 
-  --color-border-default: #28496B;
-  --color-border-strong:  #35597F;
+  --color-border-default: #2A4E74;
+  --color-border-strong:  #38608C;
 
   --color-positive:       #5FBE8E;
   --color-positive-bg:    #15382F;
@@ -174,19 +187,24 @@ svg.icon {
    ========================================================================== */
 .shell { max-width: 1320px; margin: 0 auto; padding: 0 28px 40px; }
 
+/* Hero normalizado — misma estructura en las 3 guías:
+   fila de marca (glifo + eyebrow | edición) → título grande → lede. */
 .masthead { padding: 22px 0 18px; }
 .mast-top { display: flex; align-items: center; gap: 16px; }
-.mark { display: flex; align-items: center; gap: 12px; }
-.mark-glyph { width: 34px; height: 34px; color: var(--color-fg-default); flex-shrink: 0; }
+.mark { display: flex; align-items: center; gap: 10px; }
+.mark-glyph { width: 26px; height: 26px; color: var(--color-fg-default); flex-shrink: 0; }
 .mark-glyph .dotfill { fill: var(--color-primary); }
-.mast-title { font-family: var(--font-display); font-weight: 700; font-size: 31px; letter-spacing: -0.02em; line-height: 1.1; }
-.mast-title .num { color: var(--color-primary); }
-.mast-eyebrow { font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-fg-subtle); margin-bottom: 4px; }
+.mast-title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(34px, 4.5vw, 50px); letter-spacing: -0.01em;
+  line-height: 1.05; margin: 12px 0 0; max-width: 22ch;
+}
+.mast-eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-fg-subtle); }
 .edition { margin-left: auto; text-align: right; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; color: var(--color-fg-subtle); text-transform: uppercase; line-height: 1.7; }
 .edition b { color: var(--color-fg-default); font-weight: 500; }
 
-.mast-thesis { margin-top: 16px; max-width: 720px; font-family: var(--font-display); font-weight: 500; font-size: 17px; line-height: 1.45; letter-spacing: -0.01em; color: var(--color-fg-default); }
-.mast-thesis b { color: var(--color-primary); font-weight: 700; }
+.mast-thesis { margin-top: 12px; max-width: 66ch; font-family: var(--font-sans); font-size: 16px; line-height: 1.5; color: var(--color-fg-subtle); }
+.mast-thesis b { color: var(--color-primary); font-weight: 600; }
 
 .rule-double { margin-top: 20px; height: 4px; border: 0; border-top: 1px solid var(--color-border-strong); border-bottom: 1px solid var(--color-border-strong); }
 

@@ -18,7 +18,7 @@
   // --- Metadatos de portada -------------------------------------------------
   const META = {
     titulo: "Arquitecturas de software",
-    edicion: "Edición 2026 · Tomo I",
+    edicion: "Tomo II · Edición 2026",
     conteo: "21 estilos · 5 familias",
     tesis:
       "Un almanaque de estilos. Cada uno nació de una PRESIÓN y cobra un PRECIO — " +
