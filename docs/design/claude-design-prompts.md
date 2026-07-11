@@ -232,13 +232,28 @@ Prepara el proyecto para ser exportado como "Project archive" e integrado
 a un sitio estático, donde el dueño seguirá editándolo a mano sin tu ayuda.
 
 ### Estructura de archivos
-- Archivos separados, NUNCA todo inline: `index.html` + `styles.css` + `data.js` + `app.js`.
+- Archivos separados, NUNCA todo inline: `index.html` + `styles.css` +
+  `data.js` + la mecánica en `js/`.
 - Sin build step, sin frameworks, sin npm: vanilla HTML/CSS/JS.
+- Sin ES modules (`import`/`export`): `file://` no los carga y la guía debe
+  abrir con doble click. Usa scripts clásicos en orden explícito, todos
+  colgados de un namespace `window.GUIA`:
+  - `js/core.js` — tokens/constantes, helpers DOM, montaje. Carga primero y
+    publica todo en `window.GUIA`.
+  - `js/components.js` — piezas compartidas entre páginas (diagramas, bloques
+    de código, players, cromo del sitio).
+  - `js/page-<ruta>.js` — un archivo por página/vista; cada uno publica su
+    función `render*` en el namespace.
+  - `js/router.js` — enrutamiento por hash y arranque. Carga al final.
+  - Cada archivo: un IIFE `(function (G) { ... })(window.GUIA = window.GUIA || {})`
+    que lee sus dependencias de `G` al inicio y publica lo suyo al final.
+  - Si la mecánica completa cabe en <400 líneas, un solo `js/app.js` es
+    aceptable — no fragmentes por ceremonia.
 - Regla clave — separa el guión del motor:
   - `data.js` exporta SOLO el contenido: pasos de la simulación, textos,
     definiciones, ejemplos, escenarios. Estructura de datos plana y comentada
     con un ejemplo de cómo agregar una entrada nueva.
-  - `app.js` contiene SOLO la mecánica: estado, render, controles, animaciones.
+  - `js/` contiene SOLO la mecánica: estado, render, controles, animaciones.
   - Criterio de éxito: agregar o corregir contenido debe requerir tocar
     únicamente `data.js`.
 
@@ -270,8 +285,9 @@ a un sitio estático, donde el dueño seguirá editándolo a mano sin tu ayuda.
 
 ### Entrega
 - La entrega final son EXACTAMENTE estos archivos: `index.html`,
-  `styles.css`, `data.js`, `app.js`. Elimina páginas HTML de versiones
-  anteriores del proyecto.
+  `styles.css`, `data.js`, y la carpeta `js/` (o `js/app.js` único si la
+  mecánica es chica). Elimina páginas HTML de versiones anteriores del
+  proyecto.
 - No generes exports alternativos (Astro, React, Vite) — solo la versión
   vanilla.
 - No incluyas design systems externos ni bundles de otros proyectos.
