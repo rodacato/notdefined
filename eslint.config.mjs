@@ -17,6 +17,8 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['dist/**', '.astro/**', 'node_modules/**'],
+    // public/guias holds self-contained artifacts exported from Claude Design
+    // — vendored code with its own contract, not the site's toolchain.
+    ignores: ['dist/**', '.astro/**', 'node_modules/**', 'public/guias/**'],
   },
 );

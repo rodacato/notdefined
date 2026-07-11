@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import TagPill from '../../components/TagPill.astro';
+import { guias } from '../../data/guias';
+
+const sorted = [...guias].sort((a, b) => b.date.localeCompare(a.date));
+
+function formatDate(iso: string) {
+  return new Date(`${iso}T00:00:00`).toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'short',
+  });
+}
+---
+
+<BaseLayout
+  title="Guías — notdefined.dev"
+  description="Guías interactivas para aprender y recordar: catálogos, visualizaciones y referencias que se consultan, no que se leen de corrido."
+>
+  <PageHeader
+    label="Referencia"
+    title="Guías"
+    description="Referencias interactivas para aprender y recordar. Las genero con Claude Design y las curo yo — cada una es su propia página, con su propio diseño."
+  />
+
+  <ul class="guia-grid">
+    {
+      sorted.map((guia) => (
+        <li class="guia-grid-item fade-in-item">
+          <a href={`/guias/${guia.slug}/`} class="guia-link">
+            <span class="guia-date">{formatDate(guia.date)}</span>
+            <h3 class="guia-name">{guia.title}</h3>
+            <p class="guia-blurb">{guia.blurb}</p>
+            {guia.tags.length > 0 && (
+              <div class="guia-tags">
+                {guia.tags.map((t) => (
+                  <TagPill label={t} />
+                ))}
+              </div>
+            )}
+            <span class="guia-cta">Ábrela →</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
+
+<style>
+  .guia-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 1rem;
+  }
+  .guia-grid-item {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-radius: 0.9rem;
+    overflow: hidden;
+    background-color: var(--color-bg);
+    transition: border-color 150ms ease;
+  }
+  .guia-grid-item:hover {
+    border-color: color-mix(
+      in oklab,
+      var(--color-accent) 40%,
+      var(--color-border)
+    );
+  }
+
+  .guia-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+    padding: 1.3rem 1.4rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .guia-date {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .guia-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-text);
+    margin: 0;
+    transition: color 120ms ease;
+  }
+  .guia-link:hover .guia-name {
+    color: var(--color-accent);
+  }
+  .guia-blurb {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-muted);
+    margin: 0;
+  }
+  .guia-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .guia-cta {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+</style>
