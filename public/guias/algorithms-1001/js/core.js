@@ -142,13 +142,13 @@
   function cellStyle(state) {
     var st = STATES[state] || STATES.neutral;
     switch (state) {
-      case "active": return { border: "2px solid " + st.hex, background: "rgba(224,169,59,0.16)", color: "var(--ink)" };
-      case "cand":   return { border: "2px solid " + st.hex, background: "rgba(62,124,177,0.10)", color: "var(--ink)" };
-      case "goal":   return { border: "2px solid " + st.hex, background: "rgba(123,94,167,0.10)", color: "var(--ink)" };
-      case "done":   return { border: "2px solid " + st.hex, background: "rgba(76,154,106,0.18)", color: "var(--ink)" };
-      case "out":    return { border: "1.5px dashed " + st.hex, background: "var(--paper-deep)", color: "var(--ink-faint)", textDecoration: "line-through" };
-      case "path":   return { border: "2px solid " + st.hex, background: "rgba(46,139,139,0.10)", color: "var(--ink)" };
-      default:       return { border: "1.5px solid var(--line-strong)", background: "var(--card)", color: "var(--ink)" };
+      case "active": return { border: "2px solid " + st.hex, background: "rgba(224,169,59,0.16)", color: "var(--color-fg-default)" };
+      case "cand":   return { border: "2px solid " + st.hex, background: "rgba(62,124,177,0.10)", color: "var(--color-fg-default)" };
+      case "goal":   return { border: "2px solid " + st.hex, background: "rgba(123,94,167,0.10)", color: "var(--color-fg-default)" };
+      case "done":   return { border: "2px solid " + st.hex, background: "rgba(76,154,106,0.18)", color: "var(--color-fg-default)" };
+      case "out":    return { border: "1.5px dashed " + st.hex, background: "var(--color-bg-muted)", color: "var(--color-fg-faint)", textDecoration: "line-through" };
+      case "path":   return { border: "2px solid " + st.hex, background: "rgba(46,139,139,0.10)", color: "var(--color-fg-default)" };
+      default:       return { border: "1.5px solid var(--color-border-strong)", background: "var(--color-bg-surface)", color: "var(--color-fg-default)" };
     }
   }
 
@@ -168,6 +168,38 @@
   /* --- Aplica la clase de movimiento reducido al cargar --- */
   if (REDUCED) document.documentElement.classList.add("no-motion");
 
+  /* =========================================================================
+     Tema: system (default) / light / dark, persistido. Mismo contrato que el
+     resto de las guías 1001: clave "guia-tema", clase html.dark y evento
+     "guia:theme".
+     ========================================================================= */
+  var THEME_KEY = "guia-tema";
+  var themeMq = null;
+
+  function getTheme() {
+    try { return localStorage.getItem(THEME_KEY) || "system"; }
+    catch (e) { return "system"; }
+  }
+
+  function applyTheme(theme) {
+    var dark = theme === "dark" ||
+      (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.classList.toggle("dark", dark);
+  }
+
+  function setTheme(theme) {
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+    applyTheme(theme);
+    if (themeMq) { themeMq.onchange = null; themeMq = null; }
+    if (theme === "system") {
+      themeMq = window.matchMedia("(prefers-color-scheme: dark)");
+      themeMq.onchange = function () { applyTheme("system"); };
+    }
+    document.dispatchEvent(new CustomEvent("guia:theme", { detail: theme }));
+  }
+
+  function initTheme() { setTheme(getTheme()); }
+
   /* --- Publicar todo en el namespace --- */
   G.REDUCED = REDUCED;
   G.fmt = fmt;
@@ -178,5 +210,8 @@
   G.STATES = STATES;
   G.cellStyle = cellStyle;
   G.mulberry32 = mulberry32;
+  G.getTheme = getTheme;
+  G.setTheme = setTheme;
+  G.initTheme = initTheme;
 
 })(window.GUIA = window.GUIA || {});

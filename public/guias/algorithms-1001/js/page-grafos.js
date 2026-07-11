@@ -60,7 +60,7 @@
         var tr = h("tr", h("th.mx-h", rId));
         IDS.forEach(function (cId) {
           var e = has(rId, cId), isSel = stx.sel && ((stx.sel.u === rId && stx.sel.v === cId) || (!stx.directed && stx.sel.u === cId && stx.sel.v === rId)), diag = rId === cId;
-          tr.appendChild(h("td.mx-cell", { style: { background: diag ? "var(--paper-deep)" : isSel ? "rgba(224,169,59,0.25)" : e ? "rgba(62,124,177,0.12)" : "var(--card)", color: e ? "var(--ink)" : "var(--ink-faint)", fontWeight: e ? "600" : "400" }, onClick: function () { toggle(rId, cId); } }, diag ? "\u00b7" : e ? (stx.weighted ? e.w : 1) : 0));
+          tr.appendChild(h("td.mx-cell", { style: { background: diag ? "var(--color-bg-muted)" : isSel ? "rgba(224,169,59,0.25)" : e ? "rgba(62,124,177,0.12)" : "var(--color-bg-surface)", color: e ? "var(--color-fg-default)" : "var(--color-fg-faint)", fontWeight: e ? "600" : "400" }, onClick: function () { toggle(rId, cId); } }, diag ? "\u00b7" : e ? (stx.weighted ? e.w : 1) : 0));
         });
         tb.appendChild(tr);
       });
@@ -73,8 +73,8 @@
         var nbrs = stx.edges.filter(function (e) { return e.u === id || (!stx.directed && e.v === id); }).map(function (e) { return { to: e.u === id ? e.v : e.u, w: e.w }; });
         var chips = h("div", { style: { display: "flex", gap: "5px", flexWrap: "wrap" } });
         if (!nbrs.length) chips.appendChild(h("span.faint", "\u2205"));
-        else nbrs.forEach(function (nb) { var isSel = stx.sel && ((stx.sel.u === id && stx.sel.v === nb.to) || (stx.sel.v === id && stx.sel.u === nb.to)); chips.appendChild(h("span.adj-chip", { style: { border: "1px solid " + (isSel ? "var(--st-active)" : "var(--line)"), background: isSel ? "rgba(224,169,59,0.18)" : "var(--card)" } }, nb.to + (stx.weighted ? "\u00b7" + nb.w : ""))); });
-        listBody.appendChild(h("div.adj-row", h("span.adj-id", id), h("span", { style: { color: "var(--ink-faint)" } }, "\u2192"), chips));
+        else nbrs.forEach(function (nb) { var isSel = stx.sel && ((stx.sel.u === id && stx.sel.v === nb.to) || (stx.sel.v === id && stx.sel.u === nb.to)); chips.appendChild(h("span.adj-chip", { style: { border: "1px solid " + (isSel ? "var(--st-active)" : "var(--color-border-default)"), background: isSel ? "rgba(224,169,59,0.18)" : "var(--color-bg-surface)" } }, nb.to + (stx.weighted ? "\u00b7" + nb.w : ""))); });
+        listBody.appendChild(h("div.adj-row", h("span.adj-id", id), h("span", { style: { color: "var(--color-fg-faint)" } }, "\u2192"), chips));
       });
       listHost.appendChild(listBody);
       // quiz
@@ -182,7 +182,7 @@
       C: C,
       needAsk: function (i, f) { return stx.practice && f && f.decision && f.queue.length > 1 && !stx.answered[i]; },
       askPanel: function (i, f, done) {
-        var btns = h("div.ask-btns"); f.queue.forEach(function (q) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--mono)", fontWeight: "600" }, onClick: function () { stx.answered[i] = true; done(q === f.answer, q === f.answer ? ["Correcto: sale ", h("b.mono", f.answer), "."] : ["Sal\u00eda ", h("b.mono", f.answer), ": la cola es FIFO, sale el que est\u00e1 al frente."]); } }, q)); });
+        var btns = h("div.ask-btns"); f.queue.forEach(function (q) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--font-mono)", fontWeight: "600" }, onClick: function () { stx.answered[i] = true; done(q === f.answer, q === f.answer ? ["Correcto: sale ", h("b.mono", f.answer), "."] : ["Sal\u00eda ", h("b.mono", f.answer), ": la cola es FIFO, sale el que est\u00e1 al frente."]); } }, q)); });
         return h("div.well.ask-panel", h("div.eyebrow", { style: { color: "var(--st-goal)", marginBottom: "8px" } }, "\u25CE Predice antes de revelar"), h("p.ask-q", "\u00bfQu\u00e9 nodo sale ahora de la cola?"), btns);
       },
       renderStage: function (f, graphHost, sideHost) {
@@ -193,7 +193,7 @@
       inputRow: function (api) {
         function reload() { stx.answered = {}; api.reload(build(stx.src, stx.dst)); }
         var srcSeg = h("div.seg"), dstSeg = h("div.seg"), srcB = {}, dstB = {};
-        IDS.forEach(function (id) { srcB[id] = h("button", { type: "button", "aria-pressed": stx.src === id ? "true" : "false", style: { fontFamily: "var(--mono)", fontSize: "12px", fontWeight: "600", padding: "0 10px" }, onClick: function () { stx.src = id; sync(); reload(); } }, id); srcSeg.appendChild(srcB[id]); dstB[id] = h("button", { type: "button", "aria-pressed": stx.dst === id ? "true" : "false", style: { fontFamily: "var(--mono)", fontSize: "12px", fontWeight: "600", padding: "0 10px" }, onClick: function () { stx.dst = id; sync(); reload(); } }, id); dstSeg.appendChild(dstB[id]); });
+        IDS.forEach(function (id) { srcB[id] = h("button", { type: "button", "aria-pressed": stx.src === id ? "true" : "false", style: { fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "600", padding: "0 10px" }, onClick: function () { stx.src = id; sync(); reload(); } }, id); srcSeg.appendChild(srcB[id]); dstB[id] = h("button", { type: "button", "aria-pressed": stx.dst === id ? "true" : "false", style: { fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "600", padding: "0 10px" }, onClick: function () { stx.dst = id; sync(); reload(); } }, id); dstSeg.appendChild(dstB[id]); });
         var pBtn = G.togglePill({ pressed: true, icon: "\u25CE", label: "pr\u00e1ctica", onClick: function () { stx.practice = !stx.practice; api.timeline.setDisabled(false); pBtn.setAttribute("aria-pressed", stx.practice ? "true" : "false"); } });
         function sync() { IDS.forEach(function (id) { srcB[id].setAttribute("aria-pressed", stx.src === id ? "true" : "false"); dstB[id].setAttribute("aria-pressed", stx.dst === id ? "true" : "false"); }); }
         setTimeout(reload, 0);
@@ -230,7 +230,7 @@
       C: C,
       needAsk: function (i, f) { return stx.practice && f && f.decision && f.options.length > 1 && !stx.answered[i]; },
       askPanel: function (i, f, done) {
-        var btns = h("div.ask-btns"); f.options.forEach(function (o) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--mono)", fontWeight: "600" }, onClick: function () { stx.answered[i] = true; done(o === f.active, o === f.active ? ["Correcto: baja a ", h("b.mono", f.active), "."] : ["Bajaba a ", h("b.mono", f.active), " (el primer vecino sin visitar)."]); } }, o)); });
+        var btns = h("div.ask-btns"); f.options.forEach(function (o) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--font-mono)", fontWeight: "600" }, onClick: function () { stx.answered[i] = true; done(o === f.active, o === f.active ? ["Correcto: baja a ", h("b.mono", f.active), "."] : ["Bajaba a ", h("b.mono", f.active), " (el primer vecino sin visitar)."]); } }, o)); });
         return h("div.well.ask-panel", h("div.eyebrow", { style: { color: "var(--st-goal)", marginBottom: "8px" } }, "\u25CE Predice antes de revelar"), h("p.ask-q", "\u00bfHacia qu\u00e9 vecino baja DFS ahora?"), btns);
       },
       renderStage: function (f, graphHost, sideHost) {
@@ -246,7 +246,7 @@
       inputRow: function (api) {
         function reload() { stx.answered = {}; api.reload(build(stx.src)); }
         var srcSeg = h("div.seg"), srcB = {};
-        IDS.forEach(function (id) { srcB[id] = h("button", { type: "button", "aria-pressed": stx.src === id ? "true" : "false", style: { fontFamily: "var(--mono)", fontSize: "12px", fontWeight: "600", padding: "0 10px" }, onClick: function () { stx.src = id; IDS.forEach(function (x) { srcB[x].setAttribute("aria-pressed", stx.src === x ? "true" : "false"); }); reload(); } }, id); srcSeg.appendChild(srcB[id]); });
+        IDS.forEach(function (id) { srcB[id] = h("button", { type: "button", "aria-pressed": stx.src === id ? "true" : "false", style: { fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "600", padding: "0 10px" }, onClick: function () { stx.src = id; IDS.forEach(function (x) { srcB[x].setAttribute("aria-pressed", stx.src === x ? "true" : "false"); }); reload(); } }, id); srcSeg.appendChild(srcB[id]); });
         var pBtn = G.togglePill({ pressed: true, icon: "\u25CE", label: "pr\u00e1ctica", onClick: function () { stx.practice = !stx.practice; api.timeline.setDisabled(false); pBtn.setAttribute("aria-pressed", stx.practice ? "true" : "false"); } });
         var cmpBtn = G.togglePill({ pressed: false, label: "comparar con BFS", onClick: function () { stx.cmp = !stx.cmp; cmpBtn.setAttribute("aria-pressed", stx.cmp ? "true" : "false"); api.timeline.seek(api.timeline.index()); } });
         setTimeout(reload, 0);
@@ -286,7 +286,7 @@
       C: C,
       needAsk: function (i, f) { return stx.practice && f && f.decision && f.ready.length > 1 && !stx.answered[i]; },
       askPanel: function (i, f, done) {
-        var btns = h("div.ask-btns"); f.ready.forEach(function (o) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--mono)", fontWeight: "600" }, onClick: function () { stx.answered[i] = true; done(true, [(o === f.ready[0] ? ["Tomamos ", h("b.mono", f.ready[0]), ". "] : ["Tu elecci\u00f3n ", h("b.mono", o), " tambi\u00e9n ser\u00eda v\u00e1lida \u2014 "]), "cualquiera con indegree 0 da un orden topol\u00f3gico correcto. Ac\u00e1 se elige el primero alfab\u00e9tico."]); } }, o)); });
+        var btns = h("div.ask-btns"); f.ready.forEach(function (o) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--font-mono)", fontWeight: "600" }, onClick: function () { stx.answered[i] = true; done(true, [(o === f.ready[0] ? ["Tomamos ", h("b.mono", f.ready[0]), ". "] : ["Tu elecci\u00f3n ", h("b.mono", o), " tambi\u00e9n ser\u00eda v\u00e1lida \u2014 "]), "cualquiera con indegree 0 da un orden topol\u00f3gico correcto. Ac\u00e1 se elige el primero alfab\u00e9tico."]); } }, o)); });
         return h("div.well.ask-panel", h("div.eyebrow", { style: { color: "var(--st-goal)", marginBottom: "8px" } }, "\u25CE Predice antes de revelar"), h("p.ask-q", ["Hay varios con indegree 0 (" + f.ready.join(", ") + "). El orden v\u00e1lido no es \u00fanico \u2014 \u00bfcu\u00e1l tomar\u00edas? (este algoritmo toma el primero alfab\u00e9tico)"]), btns);
       },
       renderStage: function (f, graphHost, sideHost) {
@@ -295,11 +295,11 @@
         var outBox = h("div.well", { style: { padding: "12px 14px" } }, h("div.eyebrow", { style: { fontSize: "10px", marginBottom: "8px" } }, "orden de salida"));
         var outRow = h("div", { style: { display: "flex", gap: "5px", flexWrap: "wrap", minHeight: "34px", alignItems: "center" } });
         if (!f.out.length) outRow.appendChild(h("span.faint", { style: { fontSize: "12px" } }, "\u2014"));
-        else f.out.forEach(function (id, i) { outRow.appendChild(h("span.mono.topo-chip", id)); if (i < f.out.length - 1) outRow.appendChild(h("span", { style: { color: "var(--ink-faint)" } }, "\u2192")); });
+        else f.out.forEach(function (id, i) { outRow.appendChild(h("span.mono.topo-chip", id)); if (i < f.out.length - 1) outRow.appendChild(h("span", { style: { color: "var(--color-fg-faint)" } }, "\u2192")); });
         outBox.appendChild(outRow);
         G.mount(sideHost, h("div", { style: { display: "flex", flexDirection: "column", gap: "12px" } }, outBox, G.stateLegend(["neutral", "cand", "active", "done", "out"])));
       },
-      stats: function (f) { return [{ label: "en el orden", value: f.out.length + " / " + IDS.length, color: "var(--st-done)" }, { label: "estado", value: f.phase === "stuck" ? "ciclo \u00b7 sin orden" : f.phase === "done" ? "completo" : "en curso", color: f.phase === "stuck" ? "var(--st-out)" : "var(--ink-faint)" }, { spacer: true }, { label: "Kahn", value: "O(V + E)", color: "var(--st-cand)" }]; },
+      stats: function (f) { return [{ label: "en el orden", value: f.out.length + " / " + IDS.length, color: "var(--st-done)" }, { label: "estado", value: f.phase === "stuck" ? "ciclo \u00b7 sin orden" : f.phase === "done" ? "completo" : "en curso", color: f.phase === "stuck" ? "var(--st-out)" : "var(--color-fg-faint)" }, { spacer: true }, { label: "Kahn", value: "O(V + E)", color: "var(--st-cand)" }]; },
       inputRow: function (api) {
         function reload() { stx.answered = {}; api.reload(build(stx.cycle ? DAG.edges.concat([{ u: "F", v: "A" }]) : DAG.edges)); }
         var pBtn = G.togglePill({ pressed: true, icon: "\u25CE", label: "pr\u00e1ctica", onClick: function () { stx.practice = !stx.practice; api.timeline.setDisabled(false); pBtn.setAttribute("aria-pressed", stx.practice ? "true" : "false"); } });
@@ -341,14 +341,14 @@
       C: C,
       needAsk: function (i, f) { return stx.practice && f && f.decision && f.pq.length > 1 && !stx.answered[i]; },
       askPanel: function (i, f, done) {
-        var btns = h("div.ask-btns"); f.pq.forEach(function (o) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--mono)", fontWeight: "600" }, onClick: function () { stx.answered[i] = true; done(o === f.pq[0], o === f.pq[0] ? ["Correcto: ", h("b.mono", f.pq[0]), ", el de menor distancia."] : ["Se visita ", h("b.mono", f.pq[0]), ": siempre el no-visitado m\u00e1s cercano."]); } }, o)); });
+        var btns = h("div.ask-btns"); f.pq.forEach(function (o) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--font-mono)", fontWeight: "600" }, onClick: function () { stx.answered[i] = true; done(o === f.pq[0], o === f.pq[0] ? ["Correcto: ", h("b.mono", f.pq[0]), ", el de menor distancia."] : ["Se visita ", h("b.mono", f.pq[0]), ": siempre el no-visitado m\u00e1s cercano."]); } }, o)); });
         return h("div.well.ask-panel", h("div.eyebrow", { style: { color: "var(--st-goal)", marginBottom: "8px" } }, "\u25CE Predice antes de revelar"), h("p.ask-q", "\u00bfQu\u00e9 nodo se visita ahora (el no-visitado de menor distancia)?"), btns);
       },
       renderStage: function (f, graphHost, sideHost) {
         G.mount(graphHost, G.graphView({ graph: GR, weighted: true, nodeStates: f.states, badges: f.badges, activeId: f.active, height: 250 }));
         var tbl = h("table.pq-table", h("thead", h("tr", h("th", { style: { textAlign: "left" } }, "nodo"), h("th", { style: { textAlign: "right" } }, "dist"), h("th", { style: { textAlign: "right" } }, "estado"))));
         var tb = h("tbody");
-        f.table.forEach(function (r) { tb.appendChild(h("tr", { style: { background: f.active === r.id ? "rgba(224,169,59,0.14)" : "transparent" } }, h("td", { style: { fontWeight: "600" } }, r.id), h("td", { style: { textAlign: "right" } }, r.d), h("td", { style: { textAlign: "right", color: r.vis ? "var(--st-path)" : "var(--ink-faint)" } }, r.vis ? "\u2713 visitado" : "\u2014"))); });
+        f.table.forEach(function (r) { tb.appendChild(h("tr", { style: { background: f.active === r.id ? "rgba(224,169,59,0.14)" : "transparent" } }, h("td", { style: { fontWeight: "600" } }, r.id), h("td", { style: { textAlign: "right" } }, r.d), h("td", { style: { textAlign: "right", color: r.vis ? "var(--st-path)" : "var(--color-fg-faint)" } }, r.vis ? "\u2713 visitado" : "\u2014"))); });
         tbl.appendChild(tb);
         G.mount(sideHost, h("div", { style: { display: "flex", flexDirection: "column", gap: "12px" } }, h("div.well", { style: { padding: "12px 14px" } }, h("div.eyebrow", { style: { fontSize: "10px", marginBottom: "8px" } }, "cola de prioridad \u00b7 por distancia"), tbl), G.stateLegend(["neutral", "cand", "active", "path"])));
       },
@@ -356,7 +356,7 @@
       inputRow: function (api) {
         function reload() { stx.answered = {}; api.reload(build(stx.src)); }
         var srcSeg = h("div.seg"), srcB = {};
-        IDS.forEach(function (id) { srcB[id] = h("button", { type: "button", "aria-pressed": stx.src === id ? "true" : "false", style: { fontFamily: "var(--mono)", fontSize: "12px", fontWeight: "600", padding: "0 10px" }, onClick: function () { stx.src = id; IDS.forEach(function (x) { srcB[x].setAttribute("aria-pressed", stx.src === x ? "true" : "false"); }); reload(); } }, id); srcSeg.appendChild(srcB[id]); });
+        IDS.forEach(function (id) { srcB[id] = h("button", { type: "button", "aria-pressed": stx.src === id ? "true" : "false", style: { fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "600", padding: "0 10px" }, onClick: function () { stx.src = id; IDS.forEach(function (x) { srcB[x].setAttribute("aria-pressed", stx.src === x ? "true" : "false"); }); reload(); } }, id); srcSeg.appendChild(srcB[id]); });
         var pBtn = G.togglePill({ pressed: true, icon: "\u25CE", label: "pr\u00e1ctica", onClick: function () { stx.practice = !stx.practice; api.timeline.setDisabled(false); pBtn.setAttribute("aria-pressed", stx.practice ? "true" : "false"); } });
         setTimeout(reload, 0);
         return h("section.card.input-card", h("span.eyebrow", { style: { fontSize: "10px" } }, "origen"), srcSeg, pBtn);
@@ -411,11 +411,11 @@
       function gv() { return f.g[k] != null ? f.g[k] + f.h[k] : null; }
       if (stx.walls[k]) return { bg: "#4b4034", border: "#3a3026" };
       if (isStart || isGoal) return { bg: "rgba(123,94,167,0.18)", border: "var(--st-goal)", mark: "\u25CE", markColor: "var(--st-goal)" };
-      if (pathSet[k]) return { bg: "rgba(46,139,139,0.28)", border: "var(--st-path)", fg: "var(--ink)", f: gv(), g: f.g[k], h: f.h[k] };
-      if (f.current === k) return { bg: "rgba(224,169,59,0.30)", border: "var(--st-active)", fg: "var(--ink)", f: gv(), g: f.g[k], h: f.h[k] };
-      if (closedSet[k]) return { bg: "rgba(46,139,139,0.13)", border: "var(--line)", fg: "var(--ink-soft)", f: gv(), g: f.g[k], h: f.h[k] };
-      if (openSet[k]) return { bg: "rgba(62,124,177,0.13)", border: "var(--st-cand)", fg: "var(--ink)", f: gv(), g: f.g[k], h: f.h[k] };
-      return { bg: "var(--card)", border: "var(--line)" };
+      if (pathSet[k]) return { bg: "rgba(46,139,139,0.28)", border: "var(--st-path)", fg: "var(--color-fg-default)", f: gv(), g: f.g[k], h: f.h[k] };
+      if (f.current === k) return { bg: "rgba(224,169,59,0.30)", border: "var(--st-active)", fg: "var(--color-fg-default)", f: gv(), g: f.g[k], h: f.h[k] };
+      if (closedSet[k]) return { bg: "rgba(46,139,139,0.13)", border: "var(--color-border-default)", fg: "var(--color-fg-subtle)", f: gv(), g: f.g[k], h: f.h[k] };
+      if (openSet[k]) return { bg: "rgba(62,124,177,0.13)", border: "var(--st-cand)", fg: "var(--color-fg-default)", f: gv(), g: f.g[k], h: f.h[k] };
+      return { bg: "var(--color-bg-surface)", border: "var(--color-border-default)" };
     }
     function renderGrid(f) {
       var grid = h("div.astar-grid", { style: { gridTemplateColumns: "repeat(" + COLS + ", 30px)" } });
@@ -423,7 +423,7 @@
       grid.addEventListener("mouseleave", function () { painting = false; });
       for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) (function (r, c) {
         var cd = cellData(f, r, c);
-        var cell = h("div.astar-cell", { style: { border: "1px solid " + (cd.border || "var(--line)"), background: cd.bg, color: cd.fg || "var(--ink-soft)", cursor: "crosshair" },
+        var cell = h("div.astar-cell", { style: { border: "1px solid " + (cd.border || "var(--color-border-default)"), background: cd.bg, color: cd.fg || "var(--color-fg-subtle)", cursor: "crosshair" },
           onMousedown: function () { painting = true; paint(r, c); }, onMouseenter: function () { if (painting) paint(r, c); } });
         if (cd.mark) cell.appendChild(h("span", { style: { fontSize: "15px", color: cd.markColor } }, cd.mark));
         else if (cd.f != null) { cell.appendChild(h("span", { style: { fontWeight: "700", fontSize: "11px", color: cd.fg } }, String(cd.f))); cell.appendChild(h("span", { style: { fontSize: "7.5px" } }, cd.g + "+" + cd.h)); }
@@ -441,8 +441,8 @@
       nh.stats.appendChild(G.stat("heur\u00edstica", stx.heur === "zero" ? "cero" : "Manhattan"));
     } });
     function reload() { timeline.load(build(stx.walls, stx.start, stx.goal, stx.heur)); syncInputs(); }
-    var modeSeg = h("div.seg"), modeBtns = {}; [["wall", "pared"], ["start", "origen"], ["goal", "meta"]].forEach(function (m) { modeBtns[m[0]] = h("button", { type: "button", style: { fontFamily: "var(--sans)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.mode = m[0]; syncInputs(); } }, m[1]); modeSeg.appendChild(modeBtns[m[0]]); });
-    var heurSeg = h("div.seg"), heurBtns = {}; [["manhattan", "Manhattan (A*)"], ["zero", "cero (= Dijkstra)"]].forEach(function (m) { heurBtns[m[0]] = h("button", { type: "button", style: { fontFamily: "var(--sans)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.heur = m[0]; reload(); } }, m[1]); heurSeg.appendChild(heurBtns[m[0]]); });
+    var modeSeg = h("div.seg"), modeBtns = {}; [["wall", "pared"], ["start", "origen"], ["goal", "meta"]].forEach(function (m) { modeBtns[m[0]] = h("button", { type: "button", style: { fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.mode = m[0]; syncInputs(); } }, m[1]); modeSeg.appendChild(modeBtns[m[0]]); });
+    var heurSeg = h("div.seg"), heurBtns = {}; [["manhattan", "Manhattan (A*)"], ["zero", "cero (= Dijkstra)"]].forEach(function (m) { heurBtns[m[0]] = h("button", { type: "button", style: { fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.heur = m[0]; reload(); } }, m[1]); heurSeg.appendChild(heurBtns[m[0]]); });
     function syncInputs() { Object.keys(modeBtns).forEach(function (k) { modeBtns[k].setAttribute("aria-pressed", stx.mode === k ? "true" : "false"); }); Object.keys(heurBtns).forEach(function (k) { heurBtns[k].setAttribute("aria-pressed", stx.heur === k ? "true" : "false"); }); }
 
     var view = h("div.sim",
@@ -521,7 +521,7 @@
               h("button.ctrl.ask-btn", { type: "button", onClick: function () { ansK("accept"); } }, "se acepta"),
               h("button.ctrl.ask-btn", { type: "button", onClick: function () { ansK("cycle"); } }, "forma ciclo")));
         }
-        var btns = h("div.ask-btns"); f.frontier.forEach(function (e) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--mono)", fontWeight: "600" }, onClick: function () { var cheapest = f.frontier[0]; stx.answered[i] = true; done(e.w === cheapest.w, e.w === cheapest.w ? "Correcto: la m\u00e1s barata." : ["La m\u00e1s barata era ", h("b.mono", cheapest.u + "\u2013" + cheapest.v), "."]); } }, e.u + "\u2013" + e.v + " (" + e.w + ")")); });
+        var btns = h("div.ask-btns"); f.frontier.forEach(function (e) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--font-mono)", fontWeight: "600" }, onClick: function () { var cheapest = f.frontier[0]; stx.answered[i] = true; done(e.w === cheapest.w, e.w === cheapest.w ? "Correcto: la m\u00e1s barata." : ["La m\u00e1s barata era ", h("b.mono", cheapest.u + "\u2013" + cheapest.v), "."]); } }, e.u + "\u2013" + e.v + " (" + e.w + ")")); });
         return h("div.well.ask-panel", h("div.eyebrow", { style: { color: "var(--st-goal)", marginBottom: "8px" } }, "\u25CE Predice antes de revelar"), h("p.ask-q", "\u00bfCu\u00e1l es la arista m\u00e1s barata de la frontera?"), btns);
       },
       renderStage: function (f, graphHost, sideHost) {
@@ -536,9 +536,9 @@
       stats: function (f) { return [{ label: "peso total", value: f.total, color: "var(--st-done)" }, { label: "aristas", value: f.accepted + "/" + (IDS.length - 1) }, { spacer: true }, { label: stx.algo === "kruskal" ? "Kruskal" : "Prim", value: stx.algo === "kruskal" ? "O(E log E)" : "O((V+E) log V)", color: "var(--st-cand)" }]; },
       inputRow: function (api) {
         function reload() { stx.answered = {}; api.reload(stx.algo === "kruskal" ? buildKruskal() : buildPrim(stx.start)); }
-        var algoSeg = h("div.seg"), algoBtns = {}; [["kruskal", "Kruskal"], ["prim", "Prim"]].forEach(function (m) { algoBtns[m[0]] = h("button", { type: "button", style: { fontFamily: "var(--sans)", fontSize: "12.5px", fontWeight: "600", padding: "0 14px" }, onClick: function () { stx.algo = m[0]; sync(); reload(); } }, m[1]); algoSeg.appendChild(algoBtns[m[0]]); });
+        var algoSeg = h("div.seg"), algoBtns = {}; [["kruskal", "Kruskal"], ["prim", "Prim"]].forEach(function (m) { algoBtns[m[0]] = h("button", { type: "button", style: { fontFamily: "var(--font-sans)", fontSize: "12.5px", fontWeight: "600", padding: "0 14px" }, onClick: function () { stx.algo = m[0]; sync(); reload(); } }, m[1]); algoSeg.appendChild(algoBtns[m[0]]); });
         var startWrap = h("span.prim-start", { style: { display: "none" } });
-        var startSeg = h("div.seg"), startB = {}; IDS.forEach(function (id) { startB[id] = h("button", { type: "button", "aria-pressed": stx.start === id ? "true" : "false", style: { fontFamily: "var(--mono)", fontSize: "12px", fontWeight: "600", padding: "0 9px" }, onClick: function () { stx.start = id; IDS.forEach(function (x) { startB[x].setAttribute("aria-pressed", stx.start === x ? "true" : "false"); }); reload(); } }, id); startSeg.appendChild(startB[id]); });
+        var startSeg = h("div.seg"), startB = {}; IDS.forEach(function (id) { startB[id] = h("button", { type: "button", "aria-pressed": stx.start === id ? "true" : "false", style: { fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "600", padding: "0 9px" }, onClick: function () { stx.start = id; IDS.forEach(function (x) { startB[x].setAttribute("aria-pressed", stx.start === x ? "true" : "false"); }); reload(); } }, id); startSeg.appendChild(startB[id]); });
         startWrap.appendChild(h("span.eyebrow", { style: { fontSize: "10px" } }, "inicio")); startWrap.appendChild(startSeg);
         var pBtn = G.togglePill({ pressed: true, icon: "\u25CE", label: "pr\u00e1ctica", onClick: function () { stx.practice = !stx.practice; api.timeline.setDisabled(false); pBtn.setAttribute("aria-pressed", stx.practice ? "true" : "false"); } });
         function sync() { Object.keys(algoBtns).forEach(function (k) { algoBtns[k].setAttribute("aria-pressed", stx.algo === k ? "true" : "false"); }); startWrap.style.display = stx.algo === "prim" ? "inline-flex" : "none"; }

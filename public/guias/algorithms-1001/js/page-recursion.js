@@ -53,13 +53,13 @@
   }
   var STACK_TONE = {
     active: { bd: "var(--st-active)", bg: "rgba(224,169,59,0.14)" },
-    waiting: { bd: "var(--line-strong)", bg: "var(--card)" },
+    waiting: { bd: "var(--color-border-strong)", bg: "var(--color-bg-surface)" },
     base: { bd: "var(--st-done)", bg: "rgba(76,154,106,0.16)" },
     returning: { bd: "var(--st-done)", bg: "rgba(76,154,106,0.12)" },
     overflow: { bd: "var(--st-out)", bg: "rgba(176,91,77,0.12)" },
   };
   function stackFrameEl(fr, idx) {
-    var tone = STACK_TONE[fr.state] || { bd: "var(--line)", bg: "var(--card)" };
+    var tone = STACK_TONE[fr.state] || { bd: "var(--color-border-default)", bg: "var(--color-bg-surface)" };
     var right = fr.state === "base" ? "= 1  \u25CE" : fr.state === "returning" ? "= " + fr.value + " \u2191" : fr.state === "overflow" ? "\u2715" : fr.value != null ? "= " + fr.value : "espera\u2026";
     return h("div.stack-frame", { style: { marginLeft: (idx * 16) + "px", border: (fr.state === "overflow" ? "1.5px dashed " : "1.5px solid ") + tone.bd, background: tone.bg } },
       h("span.mono.sf-name", fr.state === "overflow" ? "\u2715 overflow\u2026" : "factorial(" + fr.k + ")"),
@@ -125,7 +125,7 @@
         // distractores: el valor real, la suma (error típico) y el que subió; en orden ascendente
         var opts = uniq([f.value, f.k + f.ret, f.ret]).slice(0, 3).sort(function (a, b) { return a - b; });
         var btns2 = h("div.ask-btns");
-        opts.forEach(function (v) { btns2.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--mono)", fontWeight: "600" }, onClick: function () { answerRet(v, i, f); } }, String(v))); });
+        opts.forEach(function (v) { btns2.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--font-mono)", fontWeight: "600" }, onClick: function () { answerRet(v, i, f); } }, String(v))); });
         G.mount(askHost, h("div.well.ask-panel",
           h("div.eyebrow", { style: { color: "var(--st-goal)", marginBottom: "8px" } }, "\u25CE Predice antes de revelar"),
           h("p.ask-q", ["factorial(" + f.k + ") recibi\u00f3 ", h("b.mono", String(f.ret)), " de abajo. \u00bfQu\u00e9 va a devolver?"]), btns2));
@@ -164,7 +164,7 @@
     }
     nSeg = h("div.seg", { role: "group", "aria-label": "Elegir n" });
     var nBtns = {};
-    [1, 2, 3, 4, 5, 6].forEach(function (v) { var b = h("button", { type: "button", style: { fontFamily: "var(--mono)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.n = v; load(); } }, String(v)); nBtns[v] = b; nSeg.appendChild(b); });
+    [1, 2, 3, 4, 5, 6].forEach(function (v) { var b = h("button", { type: "button", style: { fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.n = v; load(); } }, String(v)); nBtns[v] = b; nSeg.appendChild(b); });
     practiceBtn = G.togglePill({ pressed: true, icon: "\u25CE", label: "modo pr\u00e1ctica", onClick: function () { stx.practice = !stx.practice; G.clear(askHost); timeline.setDisabled(false); sync(); } });
     noBaseBtn = h("button.pill", { type: "button", onClick: function () { stx.noBase = !stx.noBase; load(); } });
 
@@ -240,13 +240,13 @@
     data.nodes.forEach(function (nd) {
       [nd.left, nd.right].filter(function (c) { return c >= 0; }).forEach(function (cId) {
         var c = data.nodes[cId];
-        svg.appendChild(s("line", { x1: cx(nd), y1: cy(nd), x2: cx(c), y2: cy(c), stroke: "var(--line-strong)", "stroke-width": "1" }));
+        svg.appendChild(s("line", { x1: cx(nd), y1: cy(nd), x2: cx(c), y2: cy(c), stroke: "var(--color-border-strong)", "stroke-width": "1" }));
       });
     });
     data.nodes.forEach(function (nd) {
       var stt = nodeStates[nd.id] || "pending", on = nd.id === activeId;
-      svg.appendChild(s("circle", { cx: cx(nd), cy: cy(nd), r: on ? r + 2 : r, fill: NCOL[stt], stroke: on ? "var(--ink)" : "var(--line-strong)", "stroke-width": on ? "2" : "1" }));
-      svg.appendChild(s("text", { x: cx(nd), y: cy(nd) + 3.5, "text-anchor": "middle", "font-family": "var(--mono)", "font-size": r >= 14 ? "11" : "9.5", "font-weight": "600", fill: stt === "pending" ? "var(--ink-soft)" : "var(--paper)" }, String(nd.n)));
+      svg.appendChild(s("circle", { cx: cx(nd), cy: cy(nd), r: on ? r + 2 : r, fill: NCOL[stt], stroke: on ? "var(--color-fg-default)" : "var(--color-border-strong)", "stroke-width": on ? "2" : "1" }));
+      svg.appendChild(s("text", { x: cx(nd), y: cy(nd) + 3.5, "text-anchor": "middle", "font-family": "var(--font-mono)", "font-size": r >= 14 ? "11" : "9.5", "font-weight": "600", fill: stt === "pending" ? "var(--color-fg-subtle)" : "var(--color-bg-canvas)" }, String(nd.n)));
     });
     return h("div.rectree-scroll", svg);
   }
@@ -289,7 +289,7 @@
     function showAsk(i) {
       var f = timeline.frame(); timeline.setDisabled(true);
       var btns = h("div.ask-btns");
-      [0, 1, 2].forEach(function (p) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--mono)", fontWeight: "600" }, onClick: function () { answer(p, i, f); } }, P[p])); });
+      [0, 1, 2].forEach(function (p) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--font-mono)", fontWeight: "600" }, onClick: function () { answer(p, i, f); } }, P[p])); });
       G.mount(askHost, h("div.well.ask-panel",
         h("div.eyebrow", { style: { color: "var(--st-goal)", marginBottom: "8px" } }, "\u25CE Predice antes de revelar"),
         h("p.ask-q", ["Se va a mover el disco ", h("b.mono", String(f.move.disc)), " desde ", h("b.mono", P[f.move.from]), ". \u00bfA qu\u00e9 poste va?"]), btns));
@@ -307,7 +307,7 @@
     function load() { data = buildHanoi(stx.n); stx.decided = {}; G.clear(fbHost); timeline.load(data.frames); sync(); }
     function sync() { [3, 4, 5].forEach(function (v) { nBtns[v].setAttribute("aria-pressed", stx.n === v ? "true" : "false"); }); practiceBtn.setAttribute("aria-pressed", stx.practice ? "true" : "false"); }
     nSeg = h("div.seg", { role: "group", "aria-label": "Elegir n" });
-    [3, 4, 5].forEach(function (v) { var b = h("button", { type: "button", style: { fontFamily: "var(--mono)", fontSize: "12px", fontWeight: "600", padding: "0 13px" }, onClick: function () { stx.n = v; load(); } }, String(v)); nBtns[v] = b; nSeg.appendChild(b); });
+    [3, 4, 5].forEach(function (v) { var b = h("button", { type: "button", style: { fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "600", padding: "0 13px" }, onClick: function () { stx.n = v; load(); } }, String(v)); nBtns[v] = b; nSeg.appendChild(b); });
     practiceBtn = G.togglePill({ pressed: true, icon: "\u25CE", label: "modo pr\u00e1ctica", onClick: function () { stx.practice = !stx.practice; G.clear(askHost); timeline.setDisabled(false); sync(); } });
     trustBtn = h("button.pill", { type: "button", disabled: "", title: "Asume resuelto este sub\u00e1rbol y salta a su final", onClick: trust }, "\u2933 conf\u00eda en la recursi\u00f3n");
 

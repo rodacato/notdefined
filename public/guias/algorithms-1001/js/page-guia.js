@@ -7,7 +7,7 @@
   "use strict";
   var h = G.h;
 
-  function modColor(mod) { return (G.DATA.MODS[mod] || {}).color || "var(--ink)"; }
+  function modColor(mod) { return (G.DATA.MODS[mod] || {}).color || "var(--color-fg-default)"; }
   function modRoute(mod) { return "#/modulo-" + ("0" + mod).slice(-2); }
 
   // `texto` entre backticks → mono (.cx)

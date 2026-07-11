@@ -52,12 +52,17 @@
     }
   }
 
+  function boot() {
+    G.initTheme();
+    navigate();
+  }
+
   window.addEventListener("hashchange", navigate);
   // arranque
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", navigate);
+    document.addEventListener("DOMContentLoaded", boot);
   } else {
-    navigate();
+    boot();
   }
 
   G.navigate = navigate;

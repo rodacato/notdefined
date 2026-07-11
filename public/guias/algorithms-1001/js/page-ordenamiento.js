@@ -155,7 +155,7 @@
       var f = timeline.frame();
       timeline.setDisabled(true);
       var btns = h("div.ask-btns");
-      PRED.forEach(function (p) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--mono)", fontWeight: "600" }, onClick: function () { answer(p, i, f); } }, p)); });
+      PRED.forEach(function (p) { btns.appendChild(h("button.ctrl.ask-btn", { type: "button", style: { fontFamily: "var(--font-mono)", fontWeight: "600" }, onClick: function () { answer(p, i, f); } }, p)); });
       G.mount(askHost, h("div.well.ask-panel",
         h("div.eyebrow", { style: { color: "var(--st-goal)", marginBottom: "8px" } }, "\u25CE Predice antes de revelar"),
         h("p.ask-q", ["La carta en mano es ", h("b.mono", String(f.keyVal)), ". \u00bfCu\u00e1ntas posiciones va a retroceder hasta encajar?"]), btns));
@@ -173,7 +173,7 @@
     function load() { _init = genValues(stx.seed, sc.len, stx.mode); stx.decided = {}; G.clear(fbHost); bt.reset(); timeline.load(framesInsertion(_init)); syncModes(); }
     var modeSeg = h("div.seg", { role: "group", "aria-label": "Tipo de arreglo" });
     var modeBtns = {};
-    MODES.forEach(function (m) { var b = h("button", { type: "button", style: { fontFamily: "var(--sans)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.mode = m.id; load(); } }, m.label); modeBtns[m.id] = b; modeSeg.appendChild(b); });
+    MODES.forEach(function (m) { var b = h("button", { type: "button", style: { fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.mode = m.id; load(); } }, m.label); modeBtns[m.id] = b; modeSeg.appendChild(b); });
     function syncModes() { MODES.forEach(function (m) { modeBtns[m.id].setAttribute("aria-pressed", stx.mode === m.id ? "true" : "false"); }); practiceBtn.setAttribute("aria-pressed", stx.practice ? "true" : "false"); }
     var practiceBtn = G.togglePill({ pressed: true, icon: "\u25CE", label: "modo pr\u00e1ctica", onClick: function () { stx.practice = !stx.practice; G.clear(askHost); timeline.setDisabled(false); syncModes(); } });
 
@@ -243,7 +243,7 @@
       noteEl.textContent = f.note;
       G.clear(stackHost);
       stackHost.appendChild(h("span.eyebrow", { style: { fontSize: "10px" } }, "Pila de llamadas pendientes"));
-      if (f.stack.length === 0) stackHost.appendChild(h("span.mono", { style: { fontSize: "12px", color: "var(--ink-faint)" } }, "vac\u00eda \u2014 terminado"));
+      if (f.stack.length === 0) stackHost.appendChild(h("span.mono", { style: { fontSize: "12px", color: "var(--color-fg-faint)" } }, "vac\u00eda \u2014 terminado"));
       else f.stack.slice().reverse().forEach(function (r) { stackHost.appendChild(h("span.chip", { style: { borderColor: "var(--st-goal)", color: "var(--st-goal)" } }, "[" + r[0] + ".." + r[1] + "]")); });
       G.clear(statsHost);
       statsHost.appendChild(G.stat("comparaciones", G.fmt(f.comps), "var(--st-cand)"));
@@ -254,7 +254,7 @@
     } });
     function load() { _init = genValues(stx.seed, sc.len, stx.worst ? "sorted" : "random"); bt.reset(); timeline.load(framesQuick(_init, stx.strategy, stx.seed)); syncInputs(); }
     var stratSeg = h("div.seg", { role: "group", "aria-label": "Estrategia de pivote" }); var stratBtns = {};
-    STRATS.forEach(function (m) { var b = h("button", { type: "button", style: { fontFamily: "var(--sans)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.strategy = m.id; load(); } }, m.label); stratBtns[m.id] = b; stratSeg.appendChild(b); });
+    STRATS.forEach(function (m) { var b = h("button", { type: "button", style: { fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.strategy = m.id; load(); } }, m.label); stratBtns[m.id] = b; stratSeg.appendChild(b); });
     var worstBtn = G.togglePill({ pressed: false, label: "peor caso (ya ordenado)", onClick: function () { stx.worst = !stx.worst; load(); } });
     function syncInputs() { STRATS.forEach(function (m) { stratBtns[m.id].setAttribute("aria-pressed", stx.strategy === m.id ? "true" : "false"); }); worstBtn.setAttribute("aria-pressed", stx.worst ? "true" : "false"); worstBtn.lastChild.textContent = " " + (stx.worst ? "peor caso: activo" : "peor caso (ya ordenado)"); }
 
@@ -279,7 +279,7 @@
   /* ===================================================================== */
   /* MERGE SORT                                                            */
   /* ===================================================================== */
-  function levelBrackets(n, width) { var br = []; for (var lo = 0; lo < n; lo += width) br.push({ lo: lo, hi: Math.min(lo + width, n), label: "", color: "var(--ink-faint)" }); return br; }
+  function levelBrackets(n, width) { var br = []; for (var lo = 0; lo < n; lo += width) br.push({ lo: lo, hi: Math.min(lo + width, n), label: "", color: "var(--color-fg-faint)" }); return br; }
   function framesMerge(init) {
     var arr = clone(init), n = arr.length, F = [], comps = 0;
     var cls = new Array(n).fill("neutral");
@@ -319,9 +319,9 @@
   }
   function trayView(tray) {
     function box(v, head, kind, dim) {
-      var border = head ? (kind === "out" ? "var(--st-done)" : kind === "left" ? "var(--st-path)" : "var(--st-cand)") : "var(--line-strong)";
-      var bg = head ? (kind === "left" ? "rgba(46,139,139,0.14)" : "rgba(62,124,177,0.12)") : "var(--card)";
-      return h("div.tray-box", { style: { border: (head ? "2px solid " : "1px solid ") + border, background: bg, color: dim ? "var(--ink-faint)" : "var(--ink)", opacity: dim ? 0.5 : 1 } }, String(v));
+      var border = head ? (kind === "out" ? "var(--st-done)" : kind === "left" ? "var(--st-path)" : "var(--st-cand)") : "var(--color-border-strong)";
+      var bg = head ? (kind === "left" ? "rgba(46,139,139,0.14)" : "rgba(62,124,177,0.12)") : "var(--color-bg-surface)";
+      return h("div.tray-box", { style: { border: (head ? "2px solid " : "1px solid ") + border, background: bg, color: dim ? "var(--color-fg-faint)" : "var(--color-fg-default)", opacity: dim ? 0.5 : 1 } }, String(v));
     }
     function row(label, items, headIdx, kind) {
       var boxes = h("div.tray-boxes");

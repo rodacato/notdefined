@@ -114,10 +114,10 @@
     function buildPos() {
       var maxP = stx.op === "access" ? N - 1 : stx.op === "insert" ? N : N - 1;
       G.clear(posSeg);
-      for (var i = 0; i <= maxP; i++) (function (i) { posSeg.appendChild(h("button", { type: "button", "aria-pressed": stx.p === i ? "true" : "false", style: { fontFamily: "var(--mono)", fontSize: "12px", fontWeight: "600", padding: "0 10px" }, onClick: function () { stx.p = i; load(); } }, String(i))); })(i);
+      for (var i = 0; i <= maxP; i++) (function (i) { posSeg.appendChild(h("button", { type: "button", "aria-pressed": stx.p === i ? "true" : "false", style: { fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "600", padding: "0 10px" }, onClick: function () { stx.p = i; load(); } }, String(i))); })(i);
     }
     var opSeg = h("div.seg", { role: "group", "aria-label": "Operaci\u00f3n" }); var opBtns = {};
-    OPS.forEach(function (o) { var b = h("button", { type: "button", style: { fontFamily: "var(--sans)", fontSize: "12px", fontWeight: "600", padding: "0 13px" }, onClick: function () { stx.op = o.id; stx.p = Math.min(stx.p, o.id === "insert" ? N : N - 1); load(); } }, o.label); opBtns[o.id] = b; opSeg.appendChild(b); });
+    OPS.forEach(function (o) { var b = h("button", { type: "button", style: { fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: "600", padding: "0 13px" }, onClick: function () { stx.op = o.id; stx.p = Math.min(stx.p, o.id === "insert" ? N : N - 1); load(); } }, o.label); opBtns[o.id] = b; opSeg.appendChild(b); });
     var practiceBtn = G.togglePill({ pressed: true, icon: "\u25CE", label: "modo pr\u00e1ctica", onClick: function () { stx.practice = !stx.practice; G.clear(askHost); timeline.setDisabled(false); sync(); } });
     var posLabel = h("span.eyebrow", { style: { fontSize: "10px", whiteSpace: "nowrap" } });
     function sync() { OPS.forEach(function (o) { opBtns[o.id].setAttribute("aria-pressed", stx.op === o.id ? "true" : "false"); }); practiceBtn.setAttribute("aria-pressed", stx.practice ? "true" : "false"); posLabel.textContent = stx.op === "access" ? "\u00edndice k" : "posici\u00f3n p"; }
@@ -177,7 +177,7 @@
         h("div.hashbox" + (active ? ".on" : ""),
           h("div", { style: { fontWeight: "600" } }, "hash( clave )"),
           h("div.faint", { style: { fontSize: "10.5px", marginTop: "2px" } }, mode === "bad" ? "return 0" : "\u03a3 c\u00f3digos % 7")));
-      if (sum != null) box.appendChild(h("div.mono", { style: { fontSize: "11.5px", color: "var(--ink-soft)" } }, mode === "bad" ? "\u2192 0" : sum + " % " + B + " \u2192 " + idx));
+      if (sum != null) box.appendChild(h("div.mono", { style: { fontSize: "11.5px", color: "var(--color-fg-subtle)" } }, mode === "bad" ? "\u2192 0" : sum + " % " + B + " \u2192 " + idx));
       return box;
     }
     function bucketEl(i, chain, active, frame) {
@@ -202,7 +202,7 @@
       G.clear(hashHost);
       if (f.key) hashHost.appendChild(h("div.hash-key", "\"" + f.key + "\""));
       else hashHost.appendChild(h("span.faint", { style: { fontSize: "12px" } }, "sin operaci\u00f3n activa"));
-      hashHost.appendChild(h("span", { style: { color: "var(--ink-faint)" } }, "\u2193"));
+      hashHost.appendChild(h("span", { style: { color: "var(--color-fg-faint)" } }, "\u2193"));
       hashHost.appendChild(hashBoxEl(f.hashState === "active", (f.phase === "hash" || f.phase === "place" || f.phase === "scan") ? f.sum : null, f.idx, stx.mode));
       G.clear(bucketsHost);
       bucketsHost.appendChild(h("div.eyebrow", { style: { fontSize: "10px", marginBottom: "2px" } }, "Buckets (" + B + ")"));
@@ -212,7 +212,7 @@
       G.clear(nh.stats);
       nh.stats.appendChild(G.stat("claves", stx.entries.length, "var(--st-cand)"));
       nh.stats.appendChild(G.stat("buckets", B));
-      nh.stats.appendChild(G.stat("factor de carga", (stx.entries.length / B).toFixed(2), loadPct > 100 ? "var(--st-out)" : "var(--ink-faint)"));
+      nh.stats.appendChild(G.stat("factor de carga", (stx.entries.length / B).toFixed(2), loadPct > 100 ? "var(--st-out)" : "var(--color-fg-faint)"));
       nh.stats.appendChild(h("span", { style: { flex: "1" } }));
       nh.stats.appendChild(G.stat("prom \u00b7 peor", "O(1) \u00b7 O(n)"));
     } });

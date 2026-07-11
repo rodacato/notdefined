@@ -9,10 +9,41 @@
   var h = G.h, s = G.s, STATES = G.STATES, cellStyle = G.cellStyle, REDUCED = G.REDUCED;
 
   /* =========================================================================
-     Cromo del sitio: enlace discreto de regreso + pie de página.
+     Cromo del sitio: barra con enlace de regreso + toggle de tema + pie.
      ========================================================================= */
+  var THEME_ICONS = {
+    light: "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4",
+    dark: "M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z",
+    system: "M3 5.5A1.5 1.5 0 0 1 4.5 4h15A1.5 1.5 0 0 1 21 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 14.5zM9 20h6M12 16v4",
+  };
+
+  function themeToggle() {
+    var box = h("div.theme-toggle", { role: "group", "aria-label": "Tema" });
+    function paint() {
+      var cur = G.getTheme();
+      Array.prototype.forEach.call(box.children, function (b) {
+        var on = b.getAttribute("data-theme") === cur;
+        b.classList.toggle("active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+    }
+    ["light", "dark", "system"].forEach(function (v) {
+      var icon = s("svg.ticon", { viewBox: "0 0 24 24", "aria-hidden": "true" },
+        s("path", { d: THEME_ICONS[v] }));
+      box.appendChild(h("button", {
+        type: "button", title: v, "data-theme": v,
+        onclick: function () { G.setTheme(v); paint(); },
+      }, icon));
+    });
+    document.addEventListener("guia:theme", paint);
+    paint();
+    return box;
+  }
+
   function siteHome() {
-    return h("a.site-home", { href: "/", title: "Volver a notdefined.dev" }, "\u2190 notdefined.dev");
+    return h("div.site-bar",
+      h("a.site-home", { href: "/guias/", title: "Volver al \u00edndice de gu\u00edas" }, "\u2190 notdefined.dev/guias"),
+      themeToggle());
   }
   function siteFooter() {
     return h("footer.site-foot", h("span", "Algoritmos 1001 \u00b7 almanaque t\u00e9cnico"));
@@ -101,7 +132,7 @@
     var top = h("div.cell-marker");
     if (marker) {
       top.appendChild(h("span.mono.cell-marker-tag", {
-        style: { background: MARKER_HEX[marker] || "var(--ink)" },
+        style: { background: MARKER_HEX[marker] || "var(--color-fg-default)" },
       }, marker));
     }
 
@@ -137,7 +168,7 @@
       var sw = h("span.sl-swatch", {
         style: {
           border: (dashed ? "1.5px dashed " : "2px solid ") + meta.hex,
-          background: k === "neutral" ? "var(--card)" : meta.hex + "22",
+          background: k === "neutral" ? "var(--color-bg-surface)" : meta.hex + "22",
         },
       });
       wrap.appendChild(h("span.sl-item", sw,
@@ -151,7 +182,7 @@
      ========================================================================= */
   function stat(label, value, color) {
     return h("span.stat",
-      h("span.mono.stat-label", { style: { color: color || "var(--ink-faint)" } }, label),
+      h("span.mono.stat-label", { style: { color: color || "var(--color-fg-faint)" } }, label),
       h("span.mono.stat-value", String(value)));
   }
   function statRow() {
@@ -405,8 +436,8 @@
       (frame.brackets || []).forEach(function (br) {
         var el = h("div.bar-bracket", { style: {
           left: (br.lo * slot + 2) + "px", width: ((br.hi - br.lo) * slot - 4) + "px",
-          bottom: (BOT - 14) + "px", borderTopColor: br.color || "var(--ink-soft)" } });
-        if (br.label) el.appendChild(h("span.mono.bar-bracket-lab", { style: { color: br.color || "var(--ink-soft)" } }, br.label));
+          bottom: (BOT - 14) + "px", borderTopColor: br.color || "var(--color-fg-subtle)" } });
+        if (br.label) el.appendChild(h("span.mono.bar-bracket-lab", { style: { color: br.color || "var(--color-fg-subtle)" } }, br.label));
         overlay.appendChild(el);
       });
     }
@@ -432,13 +463,13 @@
     var byId = {}; nodes.forEach(function (n) { byId[n.id] = n; });
     var svg = s("svg", { width: Math.max(W, 160), height: H, style: { display: "block", margin: "0 auto" } });
     nodes.forEach(function (n) {
-      if (n.parent != null && byId[n.parent]) svg.appendChild(s("line", { x1: px(byId[n.parent]), y1: py(byId[n.parent]), x2: px(n), y2: py(n), stroke: "var(--line-strong)", "stroke-width": "1.2" }));
+      if (n.parent != null && byId[n.parent]) svg.appendChild(s("line", { x1: px(byId[n.parent]), y1: py(byId[n.parent]), x2: px(n), y2: py(n), stroke: "var(--color-border-strong)", "stroke-width": "1.2" }));
     });
     nodes.forEach(function (n) {
       var b = BAR[n.state] || BAR.neutral, on = n.id === activeId;
-      if (n.sub) svg.appendChild(s("text", { x: px(n), y: py(n) - r - 5, "text-anchor": "middle", "font-family": "var(--mono)", "font-size": "9.5", fill: "var(--ink-faint)" }, n.sub));
-      svg.appendChild(s("circle", { cx: px(n), cy: py(n), r: on ? r + 2 : r, fill: b.bg, stroke: on ? "var(--ink)" : b.bd, "stroke-width": on ? "2.5" : "1.4", "stroke-dasharray": n.state === "out" ? "3 2" : "0" }));
-      svg.appendChild(s("text", { x: px(n), y: py(n) + 4.5, "text-anchor": "middle", "font-family": "var(--mono)", "font-size": "12.5", "font-weight": "600", fill: (n.state === "neutral" || n.state === "out") ? "var(--ink)" : "var(--paper)" }, String(n.label)));
+      if (n.sub) svg.appendChild(s("text", { x: px(n), y: py(n) - r - 5, "text-anchor": "middle", "font-family": "var(--font-mono)", "font-size": "9.5", fill: "var(--color-fg-faint)" }, n.sub));
+      svg.appendChild(s("circle", { cx: px(n), cy: py(n), r: on ? r + 2 : r, fill: b.bg, stroke: on ? "var(--color-fg-default)" : b.bd, "stroke-width": on ? "2.5" : "1.4", "stroke-dasharray": n.state === "out" ? "3 2" : "0" }));
+      svg.appendChild(s("text", { x: px(n), y: py(n) + 4.5, "text-anchor": "middle", "font-family": "var(--font-mono)", "font-size": "12.5", "font-weight": "600", fill: (n.state === "neutral" || n.state === "out") ? "var(--color-fg-default)" : "var(--color-bg-canvas)" }, String(n.label)));
     });
     return h("div.tree-scroll", svg);
   }
@@ -456,7 +487,7 @@
       var b = BAR[st] || BAR.neutral;
       var hot = rewire.indexOf(i) >= 0;
       row.appendChild(h("div.lv-node", { style: { minWidth: sz + "px", height: sz + "px", border: "1.5px solid " + b.bd, background: b.bg } }, String(nd.value)));
-      row.appendChild(h("span.lv-arrow", { style: { color: hot ? "var(--st-active)" : "var(--ink-faint)", fontWeight: hot ? "700" : "400" } }, i === nodes.length - 1 ? "\u2192 \u2300" : "\u2192"));
+      row.appendChild(h("span.lv-arrow", { style: { color: hot ? "var(--st-active)" : "var(--color-fg-faint)", fontWeight: hot ? "700" : "400" } }, i === nodes.length - 1 ? "\u2192 \u2300" : "\u2192"));
     });
     return row;
   }
@@ -473,7 +504,7 @@
       case "done":   return { stroke: "#4C9A6A", w: 3.6, dash: "0" };
       case "path":   return { stroke: "#2E8B8B", w: 5, dash: "0" };
       case "out":    return { stroke: "#B05B4D", w: 2, dash: "5 3" };
-      default:       return { stroke: "var(--line-strong)", w: 1.6, dash: "0" };
+      default:       return { stroke: "var(--color-border-strong)", w: 1.6, dash: "0" };
     }
   }
   function graphView(opts) {
@@ -484,7 +515,7 @@
     var pos = {}; graph.nodes.forEach(function (n) { pos[n.id] = n; });
     function eState(u, v) { return edgeStates[u + "-" + v] || edgeStates[v + "-" + u] || "neutral"; }
     var svg = s("svg", { viewBox: "0 0 " + width + " " + height, width: "100%", style: { display: "block", maxHeight: (height + 10) + "px" } });
-    var defs = s("defs"); var marker = s("marker", { id: "ah", markerWidth: "9", markerHeight: "9", refX: "7", refY: "3", orient: "auto" }, s("path", { d: "M0,0 L7,3 L0,6 Z", fill: "var(--ink-soft)" })); defs.appendChild(marker); svg.appendChild(defs);
+    var defs = s("defs"); var marker = s("marker", { id: "ah", markerWidth: "9", markerHeight: "9", refX: "7", refY: "3", orient: "auto" }, s("path", { d: "M0,0 L7,3 L0,6 Z", fill: "var(--color-fg-subtle)" })); defs.appendChild(marker); svg.appendChild(defs);
     graph.edges.forEach(function (e) {
       var a = pos[e.u], b = pos[e.v], st = eState(e.u, e.v), sty = edgeStyle(st);
       var dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1, ux = dx / len, uy = dy / len;
@@ -492,7 +523,7 @@
       var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
       var g = s("g", opts.onEdgeClick ? { style: { cursor: "pointer" }, onClick: function () { opts.onEdgeClick(e); } } : {});
       g.appendChild(s("line", { x1: x1, y1: y1, x2: x2, y2: y2, stroke: sty.stroke, "stroke-width": sty.w, "stroke-dasharray": sty.dash, "marker-end": directed ? "url(#ah)" : null, "stroke-linecap": "round" }));
-      if (weighted) { g.appendChild(s("rect", { x: mx - 11, y: my - 9, width: "22", height: "17", rx: "4", fill: "var(--paper)", stroke: "var(--line)", "stroke-width": "1" })); g.appendChild(s("text", { x: mx, y: my + 3.5, "text-anchor": "middle", "font-family": "var(--mono)", "font-size": "11", "font-weight": "600", fill: "var(--ink)" }, String(e.w))); }
+      if (weighted) { g.appendChild(s("rect", { x: mx - 11, y: my - 9, width: "22", height: "17", rx: "4", fill: "var(--color-bg-canvas)", stroke: "var(--color-border-default)", "stroke-width": "1" })); g.appendChild(s("text", { x: mx, y: my + 3.5, "text-anchor": "middle", "font-family": "var(--font-mono)", "font-size": "11", "font-weight": "600", fill: "var(--color-fg-default)" }, String(e.w))); }
       svg.appendChild(g);
     });
     graph.nodes.forEach(function (n) {
@@ -500,11 +531,11 @@
       var g = s("g", opts.onNodeClick ? { style: { cursor: "pointer" }, onClick: function () { opts.onNodeClick(n); } } : {});
       if (badges[n.id] != null) {
         var bw = String(badges[n.id]).length * 7 + 10;
-        g.appendChild(s("rect", { x: n.x + r - 6, y: n.y - r - 9, width: bw, height: "16", rx: "8", fill: "var(--ink)" }));
-        g.appendChild(s("text", { x: n.x + r - 6 + bw / 2, y: n.y - r + 2.5, "text-anchor": "middle", "font-family": "var(--mono)", "font-size": "10", "font-weight": "600", fill: "var(--paper)" }, String(badges[n.id])));
+        g.appendChild(s("rect", { x: n.x + r - 6, y: n.y - r - 9, width: bw, height: "16", rx: "8", fill: "var(--color-fg-default)" }));
+        g.appendChild(s("text", { x: n.x + r - 6 + bw / 2, y: n.y - r + 2.5, "text-anchor": "middle", "font-family": "var(--font-mono)", "font-size": "10", "font-weight": "600", fill: "var(--color-bg-canvas)" }, String(badges[n.id])));
       }
-      g.appendChild(s("circle", { cx: n.x, cy: n.y, r: on ? r + 2 : r, fill: f.bg, stroke: on ? "var(--ink)" : f.bd, "stroke-width": on ? "2.6" : "1.6", "stroke-dasharray": st === "out" ? "3 2" : "0" }));
-      g.appendChild(s("text", { x: n.x, y: n.y + 5, "text-anchor": "middle", "font-family": "var(--mono)", "font-size": "14", "font-weight": "600", fill: (st === "neutral" || st === "out") ? "var(--ink)" : "var(--paper)" }, n.label || n.id));
+      g.appendChild(s("circle", { cx: n.x, cy: n.y, r: on ? r + 2 : r, fill: f.bg, stroke: on ? "var(--color-fg-default)" : f.bd, "stroke-width": on ? "2.6" : "1.6", "stroke-dasharray": st === "out" ? "3 2" : "0" }));
+      g.appendChild(s("text", { x: n.x, y: n.y + 5, "text-anchor": "middle", "font-family": "var(--font-mono)", "font-size": "14", "font-weight": "600", fill: (st === "neutral" || st === "out") ? "var(--color-fg-default)" : "var(--color-bg-canvas)" }, n.label || n.id));
       svg.appendChild(g);
     });
     return h("div.graph-scroll", svg);
@@ -515,7 +546,7 @@
     opts = opts || {};
     var wrap = h("div.well.qv", h("div.eyebrow", { style: { fontSize: "10px", marginBottom: "8px" } }, opts.label || "cola (FIFO)"));
     var row = h("div.qv-row");
-    if (opts.note) row.appendChild(h("span.mono", { style: { fontSize: "9.5px", color: "var(--ink-faint)" } }, opts.note));
+    if (opts.note) row.appendChild(h("span.mono", { style: { fontSize: "9.5px", color: "var(--color-fg-faint)" } }, opts.note));
     if (!items.length) row.appendChild(h("span.faint", { style: { fontSize: "12px" } }, "vac\u00eda"));
     else items.forEach(function (it, i) { row.appendChild(h("div.qv-item" + (i === 0 ? ".head" : ""), String(it))); });
     wrap.appendChild(row); return wrap;

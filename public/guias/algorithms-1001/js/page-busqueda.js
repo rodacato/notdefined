@@ -87,7 +87,7 @@
         var s = frame.kind === "found" ? { t: "Encontrado en la posici\u00f3n " + frame.pointer, c: "var(--st-done)" }
           : frame.kind === "notfound" ? { t: "No est\u00e1 en el arreglo", c: "var(--st-out)" }
           : frame.kind === "compare" ? { t: "Revisando posici\u00f3n " + frame.pointer + "\u2026", c: "var(--st-active)" }
-          : { t: "Listo para empezar", c: "var(--ink-soft)" };
+          : { t: "Listo para empezar", c: "var(--color-fg-subtle)" };
         statusEl.textContent = s.t; statusEl.style.color = s.c;
         noteEl.textContent = frame.note;
         G.clear(statsHost);
@@ -291,7 +291,7 @@
         var s = frame.kind === "found" ? { t: "Encontrado en la posici\u00f3n " + frame.mid, c: "var(--st-done)" }
           : frame.kind === "notfound" ? { t: st.sorted ? "No est\u00e1 en el arreglo" : "Fall\u00f3: precondici\u00f3n rota", c: "var(--st-out)" }
           : frame.kind === "probe" ? { t: "Evaluando el medio (pos " + frame.mid + ")\u2026", c: "var(--st-active)" }
-          : { t: "Rango " + frame.lo + "\u2013" + frame.hi, c: "var(--ink-soft)" };
+          : { t: "Rango " + frame.lo + "\u2013" + frame.hi, c: "var(--color-fg-subtle)" };
         statusEl.textContent = s.t; statusEl.style.color = s.c;
         noteEl.textContent = frame.note;
         G.clear(statsHost);

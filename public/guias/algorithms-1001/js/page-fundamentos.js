@@ -89,26 +89,26 @@
         style: { display: "block", maxHeight: "440px" } });
       var ticks = [0, 25, 50, 75, 100];
       ticks.forEach(function (t) {
-        svg.appendChild(s("line", { x1: X0, x2: X1, y1: sy(t), y2: sy(t), stroke: "var(--line)", "stroke-width": "1",
+        svg.appendChild(s("line", { x1: X0, x2: X1, y1: sy(t), y2: sy(t), stroke: "var(--color-border-default)", "stroke-width": "1",
           "stroke-dasharray": t === 0 ? "0" : "2 4", opacity: t === 0 ? 1 : 0.7 }));
         svg.appendChild(s("text", { x: X0 - 9, y: sy(t) + 4, "text-anchor": "end",
-          "font-family": "var(--mono)", "font-size": "10.5", fill: "var(--ink-faint)" }, String(t)));
-        svg.appendChild(s("line", { x1: sx(t), x2: sx(t), y1: Y0, y2: Y0 + 5, stroke: "var(--line-strong)", "stroke-width": "1" }));
+          "font-family": "var(--font-mono)", "font-size": "10.5", fill: "var(--color-fg-faint)" }, String(t)));
+        svg.appendChild(s("line", { x1: sx(t), x2: sx(t), y1: Y0, y2: Y0 + 5, stroke: "var(--color-border-strong)", "stroke-width": "1" }));
         svg.appendChild(s("text", { x: sx(t), y: Y0 + 19, "text-anchor": "middle",
-          "font-family": "var(--mono)", "font-size": "10.5", fill: "var(--ink-faint)" }, String(t)));
+          "font-family": "var(--font-mono)", "font-size": "10.5", fill: "var(--color-fg-faint)" }, String(t)));
       });
-      svg.appendChild(s("line", { x1: X0, x2: X0, y1: Y1 - 4, y2: Y0, stroke: "var(--ink)", "stroke-width": "1.4" }));
-      svg.appendChild(s("line", { x1: X0, x2: X1 + 4, y1: Y0, y2: Y0, stroke: "var(--ink)", "stroke-width": "1.4" }));
+      svg.appendChild(s("line", { x1: X0, x2: X0, y1: Y1 - 4, y2: Y0, stroke: "var(--color-fg-default)", "stroke-width": "1.4" }));
+      svg.appendChild(s("line", { x1: X0, x2: X1 + 4, y1: Y0, y2: Y0, stroke: "var(--color-fg-default)", "stroke-width": "1.4" }));
       svg.appendChild(s("text", { x: X0 - 38, y: (Y0 + Y1) / 2, "text-anchor": "middle",
         transform: "rotate(-90 " + (X0 - 38) + " " + ((Y0 + Y1) / 2) + ")",
-        "font-family": "var(--mono)", "font-size": "10.5", "letter-spacing": "0.14em", fill: "var(--ink-soft)" }, "OPERACIONES \u2192"));
+        "font-family": "var(--font-mono)", "font-size": "10.5", "letter-spacing": "0.14em", fill: "var(--color-fg-subtle)" }, "OPERACIONES \u2192"));
       svg.appendChild(s("text", { x: (X0 + X1) / 2, y: PH - 6, "text-anchor": "middle",
-        "font-family": "var(--mono)", "font-size": "10.5", "letter-spacing": "0.14em", fill: "var(--ink-soft)" }, "n \u2014 TAMA\u00d1O DE LA ENTRADA \u2192"));
+        "font-family": "var(--font-mono)", "font-size": "10.5", "letter-spacing": "0.14em", fill: "var(--color-fg-subtle)" }, "n \u2014 TAMA\u00d1O DE LA ENTRADA \u2192"));
 
       if (!reveal) { G.mount(plotHost, svg); return; }
 
       // marcador n
-      svg.appendChild(s("line", { x1: markerX, x2: markerX, y1: Y1 - 2, y2: Y0, stroke: "var(--ink)", "stroke-width": "1", "stroke-dasharray": "3 3", opacity: "0.55" }));
+      svg.appendChild(s("line", { x1: markerX, x2: markerX, y1: Y1 - 2, y2: Y0, stroke: "var(--color-fg-default)", "stroke-width": "1", "stroke-dasharray": "3 3", opacity: "0.55" }));
       // curvas
       PATHS.forEach(function (p) {
         var dim = hl && hl !== p.c.key;
@@ -121,10 +121,10 @@
         var dim = hl && hl !== p.c.key;
         if (p.exit) {
           svg.appendChild(s("path", { d: "M" + p.exit.x + "," + (Y1 + 8) + " l-4,7 l8,0 z", fill: p.c.hex, opacity: dim ? 0.2 : 1 }));
-          svg.appendChild(s("text", { x: p.exit.x + 8, y: Y1 + 12, "font-family": "var(--mono)", "font-size": "11", "font-weight": "600", fill: p.c.hex, opacity: dim ? 0.2 : 1 }, p.c.label));
+          svg.appendChild(s("text", { x: p.exit.x + 8, y: Y1 + 12, "font-family": "var(--font-mono)", "font-size": "11", "font-weight": "600", fill: p.c.hex, opacity: dim ? 0.2 : 1 }, p.c.label));
         } else {
           var endY = sy(FN[p.c.key](N_MAX));
-          svg.appendChild(s("text", { x: X1 + 8, y: endY + 4, "font-family": "var(--mono)", "font-size": "11", "font-weight": "600", fill: p.c.hex, opacity: dim ? 0.2 : 1 }, p.c.label));
+          svg.appendChild(s("text", { x: X1 + 8, y: endY + 4, "font-family": "var(--font-mono)", "font-size": "11", "font-weight": "600", fill: p.c.hex, opacity: dim ? 0.2 : 1 }, p.c.label));
         }
       });
       // puntos en n
@@ -132,12 +132,12 @@
         var o = FN[p.c.key](n), dim = hl && hl !== p.c.key, off = o > Y_MAX;
         var cy = off ? Y1 + 2 : sy(o);
         svg.appendChild(s("circle", { cx: markerX, cy: cy, r: hl === p.c.key ? "5" : "3.6",
-          fill: "var(--paper)", stroke: p.c.hex, "stroke-width": "2", opacity: dim ? 0.18 : 1 }));
-        if (off) svg.appendChild(s("text", { x: markerX + 7, y: Y1 + 6, "font-family": "var(--mono)", "font-size": "10", fill: p.c.hex, "font-weight": "600", opacity: dim ? 0.18 : 1 }, "\u2191"));
+          fill: "var(--color-bg-canvas)", stroke: p.c.hex, "stroke-width": "2", opacity: dim ? 0.18 : 1 }));
+        if (off) svg.appendChild(s("text", { x: markerX + 7, y: Y1 + 6, "font-family": "var(--font-mono)", "font-size": "10", fill: p.c.hex, "font-weight": "600", opacity: dim ? 0.18 : 1 }, "\u2191"));
       });
       // etiqueta n
-      svg.appendChild(s("rect", { x: markerX - 19, y: Y0 + 1, width: "38", height: "16", rx: "3", fill: "var(--ink)" }));
-      svg.appendChild(s("text", { x: markerX, y: Y0 + 12.5, "text-anchor": "middle", "font-family": "var(--mono)", "font-size": "10.5", "font-weight": "600", fill: "var(--paper)" }, "n=" + n));
+      svg.appendChild(s("rect", { x: markerX - 19, y: Y0 + 1, width: "38", height: "16", rx: "3", fill: "var(--color-fg-default)" }));
+      svg.appendChild(s("text", { x: markerX, y: Y0 + 12.5, "text-anchor": "middle", "font-family": "var(--font-mono)", "font-size": "10.5", "font-weight": "600", fill: "var(--color-bg-canvas)" }, "n=" + n));
       G.mount(plotHost, svg);
     }
 
@@ -147,7 +147,7 @@
       var hl = st.highlight;
       var head = h("div.boxes-head",
         h("span.eyebrow", "Cajas de trabajo"),
-        h("span.mono", { style: { fontSize: "12px", color: "var(--ink-soft)" } }, "para n = " + frame.n));
+        h("span.mono", { style: { fontSize: "12px", color: "var(--color-fg-subtle)" } }, "para n = " + frame.n));
       var desc = h("p.subtle", { style: { fontSize: "12.5px", margin: "0 0 14px", lineHeight: "1.4" } },
         "Cu\u00e1ntas operaciones apila cada complejidad con esta entrada. Conteos ilustrativos.");
       var cols = h("div.boxes-cols");
@@ -162,7 +162,7 @@
           var lit = i < filled;
           stack.appendChild(h("div.box-seg", { style: {
             background: lit ? c.hex : "transparent",
-            border: lit ? "none" : "1px solid var(--line)",
+            border: lit ? "none" : "1px solid var(--color-border-default)",
             opacity: lit ? (overflow && i >= NSEG - 2 ? 0.55 : 0.92) : 0.6,
           } }));
         }

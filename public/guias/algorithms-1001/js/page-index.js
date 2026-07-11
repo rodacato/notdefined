@@ -79,7 +79,7 @@
               h("div.folio-sub", "Almanaque t\u00e9cnico"))),
           h("div.edition",
             h("div.ed-eyebrow", "Cat\u00e1logo \u00b7 \u00edndice"),
-            h("div.ed-eyebrow", { style: { marginTop: "4px", color: "var(--ink-soft)" } },
+            h("div.ed-eyebrow", { style: { marginTop: "4px", color: "var(--color-fg-subtle)" } },
               D.ALGOS.length + " temas \u00b7 " + D.MODULES.length + " m\u00f3dulos"))),
         h("h1.title.display", D.index.title),
         h("p.lede", { html: D.index.lede }),
@@ -112,7 +112,7 @@
         statusEl.appendChild(h("button.reset", { type: "button",
           onClick: function () { state.problemId = null; repaint(); } }, "limpiar filtro"));
       } else {
-        statusEl.appendChild(h("span", { style: { color: "var(--ink-faint)" } },
+        statusEl.appendChild(h("span", { style: { color: "var(--color-fg-faint)" } },
           "Sin filtro: el cat\u00e1logo completo, ordenado por m\u00f3dulo."));
       }
       // catálogo

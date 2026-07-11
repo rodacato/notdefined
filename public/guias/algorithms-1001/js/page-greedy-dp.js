@@ -88,7 +88,7 @@
     }
     function load() { stx.answered = {}; G.clear(fbHost); timeline.load(build(stx.strat)); sync(); }
     var stratSeg = h("div.seg"), stratBtns = {};
-    STRATS.forEach(function (m) { stratBtns[m.id] = h("button", { type: "button", style: { fontFamily: "var(--sans)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.strat = m.id; load(); } }, m.label); stratSeg.appendChild(stratBtns[m.id]); });
+    STRATS.forEach(function (m) { stratBtns[m.id] = h("button", { type: "button", style: { fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: "600", padding: "0 12px" }, onClick: function () { stx.strat = m.id; load(); } }, m.label); stratSeg.appendChild(stratBtns[m.id]); });
     var pBtn = G.togglePill({ pressed: true, icon: "\u25CE", label: "pr\u00e1ctica", onClick: function () { stx.practice = !stx.practice; timeline.setDisabled(false); pBtn.setAttribute("aria-pressed", stx.practice ? "true" : "false"); } });
     function sync() { STRATS.forEach(function (m) { stratBtns[m.id].setAttribute("aria-pressed", stx.strat === m.id ? "true" : "false"); }); }
 
@@ -134,12 +134,12 @@
       var W = tree.maxX * xStep + pad * 2, H = tree.maxD * yStep + pad * 2 + 10;
       function px(n) { return pad + n.x * xStep; } function py(n) { return pad + n.y * yStep + 5; }
       var svg = s("svg", { width: Math.max(W, 180), height: H, style: { display: "block", margin: "0 auto" } });
-      tree.nodes.forEach(function (n) { if (n.parent >= 0) svg.appendChild(s("line", { x1: px(tree.nodes[n.parent]), y1: py(tree.nodes[n.parent]), x2: px(n), y2: py(n), stroke: "var(--line-strong)", "stroke-width": "1" })); });
+      tree.nodes.forEach(function (n) { if (n.parent >= 0) svg.appendChild(s("line", { x1: px(tree.nodes[n.parent]), y1: py(tree.nodes[n.parent]), x2: px(n), y2: py(n), stroke: "var(--color-border-strong)", "stroke-width": "1" })); });
       tree.nodes.forEach(function (n) {
         var c = vcolor(n.k), m = mark === n.id;
-        svg.appendChild(s("circle", { cx: px(n), cy: py(n), r: m ? r + 2 : r, fill: n.hit ? "var(--paper)" : c + "33", stroke: m ? "var(--ink)" : c, "stroke-width": m ? "2.6" : "1.8", "stroke-dasharray": n.hit ? "3 2" : "0" }));
-        svg.appendChild(s("text", { x: px(n), y: py(n) + 4, "text-anchor": "middle", "font-family": "var(--mono)", "font-size": r >= 13 ? "11.5" : "9.5", "font-weight": "600", fill: "var(--ink)" }, String(n.k)));
-        if (n.hit) svg.appendChild(s("text", { x: px(n), y: py(n) - r - 3, "text-anchor": "middle", "font-family": "var(--mono)", "font-size": "8", fill: "var(--st-done)" }, "hit"));
+        svg.appendChild(s("circle", { cx: px(n), cy: py(n), r: m ? r + 2 : r, fill: n.hit ? "var(--color-bg-canvas)" : c + "33", stroke: m ? "var(--color-fg-default)" : c, "stroke-width": m ? "2.6" : "1.8", "stroke-dasharray": n.hit ? "3 2" : "0" }));
+        svg.appendChild(s("text", { x: px(n), y: py(n) + 4, "text-anchor": "middle", "font-family": "var(--font-mono)", "font-size": r >= 13 ? "11.5" : "9.5", "font-weight": "600", fill: "var(--color-fg-default)" }, String(n.k)));
+        if (n.hit) svg.appendChild(s("text", { x: px(n), y: py(n) - r - 3, "text-anchor": "middle", "font-family": "var(--font-mono)", "font-size": "8", fill: "var(--st-done)" }, "hit"));
       });
       return h("div.tree-scroll", svg);
     }
@@ -252,8 +252,8 @@
       var W2 = tree.maxX * xStep + pad * 2, H = tree.maxD * yStep + pad * 2 + 10;
       function px(n) { return pad + n.x * xStep; } function py(n) { return pad + n.y * yStep + 5; }
       var svg = s("svg", { width: Math.max(W2, 200), height: H, style: { display: "block", margin: "0 auto" } });
-      tree.nodes.forEach(function (n) { if (n.parent >= 0) svg.appendChild(s("line", { x1: px(tree.nodes[n.parent]), y1: py(tree.nodes[n.parent]), x2: px(n), y2: py(n), stroke: "var(--line-strong)", "stroke-width": "0.8" })); });
-      tree.nodes.forEach(function (n) { var c = naiveCol(n.i, n.w); svg.appendChild(s("circle", { cx: px(n), cy: py(n), r: r, fill: c + "30", stroke: c, "stroke-width": "1.4" })); svg.appendChild(s("text", { x: px(n), y: py(n) + 3.5, "text-anchor": "middle", "font-family": "var(--mono)", "font-size": "8.5", "font-weight": "600", fill: "var(--ink)" }, n.i + "," + n.w)); });
+      tree.nodes.forEach(function (n) { if (n.parent >= 0) svg.appendChild(s("line", { x1: px(tree.nodes[n.parent]), y1: py(tree.nodes[n.parent]), x2: px(n), y2: py(n), stroke: "var(--color-border-strong)", "stroke-width": "0.8" })); });
+      tree.nodes.forEach(function (n) { var c = naiveCol(n.i, n.w); svg.appendChild(s("circle", { cx: px(n), cy: py(n), r: r, fill: c + "30", stroke: c, "stroke-width": "1.4" })); svg.appendChild(s("text", { x: px(n), y: py(n) + 3.5, "text-anchor": "middle", "font-family": "var(--font-mono)", "font-size": "8.5", "font-weight": "600", fill: "var(--color-fg-default)" }, n.i + "," + n.w)); });
       return h("div.tree-scroll", svg);
     }
 
@@ -271,8 +271,8 @@
       if (f.path && f.path[k]) return { bg: "rgba(76,154,106,0.20)", bd: "var(--st-done)" };
       if (f.cur && f.cur.i === i && f.cur.w === w) return { bg: "rgba(224,169,59,0.22)", bd: "var(--st-active)" };
       if (srcSet[k]) return { bg: "rgba(62,124,177,0.16)", bd: "var(--st-cand)" };
-      if (f.filled[k]) return { bg: "var(--card)", bd: "var(--line)" };
-      return { bg: "var(--paper-deep)", bd: "var(--line)" };
+      if (f.filled[k]) return { bg: "var(--color-bg-surface)", bd: "var(--color-border-default)" };
+      return { bg: "var(--color-bg-muted)", bd: "var(--color-border-default)" };
     }
     function tableEl(f) {
       var srcSet = {}; f.srcs.forEach(function (sc) { srcSet[key(sc.i, sc.w)] = true; });
