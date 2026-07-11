@@ -1,17 +1,24 @@
 /* ============================================================================
-   Fuentes del sistema — CERO peticiones externas (sin Google Fonts).
-   Sustituyen a Spectral / Hanken Grotesk / JetBrains Mono del diseño original,
-   conservando el rol: serif para títulos, sans para texto, mono para código y números.
+   Fuentes — Google Fonts self-hosteadas (subset latin, woff2, en ./fonts/).
+   Cero peticiones externas: sigue funcionando offline con doble clic.
+   Bitter (slab, robusta como un ensamble) para títulos, Cabin para texto,
+   Courier Prime (máquina de escribir del taller) para código y números.
    ========================================================================== */
+@font-face { font-family: 'Bitter'; font-style: normal; font-weight: 500; font-display: swap; src: url('./fonts/bitter-500.woff2') format('woff2'); }
+@font-face { font-family: 'Bitter'; font-style: normal; font-weight: 600; font-display: swap; src: url('./fonts/bitter-600.woff2') format('woff2'); }
+@font-face { font-family: 'Bitter'; font-style: normal; font-weight: 700; font-display: swap; src: url('./fonts/bitter-700.woff2') format('woff2'); }
+@font-face { font-family: 'Bitter'; font-style: italic; font-weight: 400; font-display: swap; src: url('./fonts/bitter-400-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Bitter'; font-style: italic; font-weight: 500; font-display: swap; src: url('./fonts/bitter-500-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Cabin'; font-style: normal; font-weight: 400; font-display: swap; src: url('./fonts/cabin-400.woff2') format('woff2'); }
+@font-face { font-family: 'Cabin'; font-style: normal; font-weight: 500; font-display: swap; src: url('./fonts/cabin-500.woff2') format('woff2'); }
+@font-face { font-family: 'Cabin'; font-style: normal; font-weight: 600; font-display: swap; src: url('./fonts/cabin-600.woff2') format('woff2'); }
+@font-face { font-family: 'Courier Prime'; font-style: normal; font-weight: 400; font-display: swap; src: url('./fonts/courier-prime-400.woff2') format('woff2'); }
+@font-face { font-family: 'Courier Prime'; font-style: normal; font-weight: 700; font-display: swap; src: url('./fonts/courier-prime-700.woff2') format('woff2'); }
+
 :root {
-  --font-display:
-    Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua',
-    'Times New Roman', serif;
-  --font-sans:
-    system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-mono:
-    ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Menlo, Consolas,
-    'Liberation Mono', monospace;
+  --font-display: 'Bitter', Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+  --font-sans: 'Cabin', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'Courier Prime', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, 'Liberation Mono', monospace;
 }
 
 /* ============================================================================
@@ -22,24 +29,24 @@
    Contrato de color de roles fijo, idéntico en ambos modos.
    ========================================================================== */
 :root {
-  --color-primary: #7e4e22; /* nogal ensillado */
-  --color-primary-hover: #653c17;
-  --color-primary-muted: #ecdcc0;
+  --color-primary: #8a4b1f; /* nogal ensillado */
+  --color-primary-hover: #6f3a15;
+  --color-primary-muted: #e7d3ac;
 
   /* papel kraft / madera clara */
-  --color-bg-canvas: #eee0c9;
-  --color-bg-muted: #e4d2b3;
-  --color-bg-surface: #faf3e3;
-  --color-bg-lit: #fffbef;
-  --color-bg-code: #f6ecd8;
-  --color-fg-default: #2e2418;
-  --color-fg-subtle: #6b5a45;
-  --color-fg-faint: #98866c;
-  --color-border-default: #d5c29e;
-  --color-border-soft: #e0d0b1;
+  --color-bg-canvas: #e8d7b9;
+  --color-bg-muted: #dcc79e;
+  --color-bg-surface: #f7edd8;
+  --color-bg-lit: #fcf6e7;
+  --color-bg-code: #f0e3c6;
+  --color-fg-default: #322512;
+  --color-fg-subtle: #6e5a3c;
+  --color-fg-faint: #9a8562;
+  --color-border-default: #cdb283;
+  --color-border-soft: #dbc69b;
 
   /* veta de la madera (solo textura de fondo, nunca codifica datos) */
-  --grain-line: rgba(126, 78, 34, 0.045);
+  --grain-line: rgba(126, 78, 34, 0.06);
 
   /* categorías — tintas terrosas (contrato de datos, no cromo) */
   --cat-crea: #a4552e; /* creacional — terracota  */
@@ -63,22 +70,22 @@
 }
 
 html.dark {
-  --color-primary: #d99c4e; /* ámbar de lámpara */
-  --color-primary-hover: #e4af6b;
-  --color-primary-muted: #3d2e1b;
+  --color-primary: #dfa050; /* ámbar de lámpara */
+  --color-primary-hover: #e9b36c;
+  --color-primary-muted: #40301a;
 
-  --color-bg-canvas: #201810;
-  --color-bg-muted: #191209;
-  --color-bg-surface: #2a2117;
-  --color-bg-lit: #322818;
-  --color-bg-code: #241c12;
-  --color-fg-default: #f2e7d5;
-  --color-fg-subtle: #bca98d;
-  --color-fg-faint: #8f7d63;
-  --color-border-default: #453623;
-  --color-border-soft: #3a2d1e;
+  --color-bg-canvas: #231a0e;
+  --color-bg-muted: #1b1409;
+  --color-bg-surface: #2d2314;
+  --color-bg-lit: #352a18;
+  --color-bg-code: #261d0f;
+  --color-fg-default: #f3e8d2;
+  --color-fg-subtle: #c4ae8a;
+  --color-fg-faint: #937f5e;
+  --color-border-default: #4a3a1f;
+  --color-border-soft: #3d2f19;
 
-  --grain-line: rgba(217, 156, 78, 0.05);
+  --grain-line: rgba(223, 160, 80, 0.06);
 
   --cat-crea: #d98a5a;
   --cat-estr: #5fa9aa;
@@ -461,19 +468,19 @@ code {
    con alfa que arma el JS (hex + '14') asumen fondo claro. */
 html.dark .diagram-wrap,
 html.dark .comp-diagram {
-  --color-fg-default: #2e2418;
-  --color-fg-subtle: #6b5a45;
-  --color-fg-faint: #98866c;
-  --color-bg-surface: #faf3e3;
-  --color-border-default: #d5c29e;
-  --color-border-soft: #e0d0b1;
+  --color-fg-default: #322512;
+  --color-fg-subtle: #6e5a3c;
+  --color-fg-faint: #9a8562;
+  --color-bg-surface: #f7edd8;
+  --color-border-default: #cdb283;
+  --color-border-soft: #dbc69b;
   --cat-crea: #a4552e;
   --cat-estr: #2f6a6b;
   --cat-comp: #79415f;
   --color-positive: #2e7d55;
   --color-negative: #c0473f;
   --color-warning: #d98a0b;
-  background: #faf3e3;
+  background: #f7edd8;
 }
 html.dark .diagram-wrap {
   padding: 12px 14px;
@@ -975,46 +982,47 @@ html.dark .diagram-wrap {
   gap: 14px;
 }
 .mark {
-  width: 38px;
-  height: 38px;
+  width: 26px;
+  height: 26px;
   color: var(--color-fg-default);
   flex: none;
 }
 .folio-meta {
   line-height: 1.25;
 }
-.folio-no {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  color: var(--color-fg-default);
-}
 .folio-sub {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-fg-faint);
+  color: var(--color-fg-subtle);
 }
 .edition {
   text-align: right;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-fg-subtle);
+  line-height: 1.7;
 }
 
 h1.title {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(38px, 5.6vw, 64px);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-  margin: 22px 0 0;
-  max-width: 18ch;
+  font-weight: 700;
+  font-size: clamp(34px, 4.5vw, 50px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 12px 0 0;
+  max-width: 22ch;
 }
 .lede {
-  margin: 18px 0 0;
+  margin: 12px 0 0;
   font-size: 16px;
   line-height: 1.5;
   color: var(--color-fg-subtle);
-  max-width: 64ch;
+  max-width: 66ch;
 }
 .lede em {
   font-family: var(--font-display);

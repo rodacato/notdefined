@@ -50,14 +50,13 @@
           h(
             'div',
             { class: 'folio-meta' },
-            h('div', { class: 'folio-no' }, '1001'),
-            h('div', { class: 'folio-sub' }, 'Almanaque t\u00e9cnico'),
+            h('div', { class: 'folio-sub' }, 'Almanaque t\u00e9cnico \u00b7 1001'),
           ),
         ),
         h(
           'div',
           { class: 'edition' },
-          h('div', { class: 'eyebrow' }, 'Cat\u00e1logo \u00b7 \u00edndice'),
+          h('div', { class: 'eyebrow' }, 'Tomo I \u00b7 Edici\u00f3n 2026'),
           h(
             'div',
             {

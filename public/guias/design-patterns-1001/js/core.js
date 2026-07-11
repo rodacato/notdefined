@@ -133,9 +133,9 @@
 
   function getTheme() {
     try {
-      return localStorage.getItem(THEME_KEY) || 'system';
+      return localStorage.getItem(THEME_KEY) || 'dark';
     } catch (e) {
-      return 'system';
+      return 'dark';
     }
   }
 
