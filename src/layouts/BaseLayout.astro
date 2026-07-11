@@ -417,6 +417,48 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     '(prefers-reduced-motion: reduce)',
   ).matches;
 
+  // Pill de progreso: una fuga sutil de la "otra capa" mientras tecleas el
+  // código. Aparece a partir del segundo acierto (una flecha suelta es
+  // navegación normal, no intento de código).
+  const KONAMI_GLYPHS: Record<string, string> = {
+    ArrowUp: '↑',
+    ArrowDown: '↓',
+    ArrowLeft: '←',
+    ArrowRight: '→',
+    b: 'B',
+    a: 'A',
+  };
+  let konamiPill: HTMLElement | null = null;
+  let konamiPillTimer: number | undefined;
+
+  function paintKonamiProgress(pos: number) {
+    if (pos < 2) {
+      if (konamiPill) konamiPill.style.opacity = '0';
+      return;
+    }
+    if (!konamiPill) {
+      konamiPill = document.createElement('div');
+      konamiPill.setAttribute('aria-hidden', 'true');
+      konamiPill.style.cssText =
+        'position:fixed;right:1rem;bottom:1rem;z-index:9998;' +
+        "font-family:'JetBrains Mono',ui-monospace,monospace;" +
+        'font-size:0.7rem;letter-spacing:0.18em;color:#7fd8a6;' +
+        'background:#0a0e10;border:1px solid #1e2a2c;border-radius:999px;' +
+        'padding:0.35rem 0.75rem 0.35rem 0.9rem;pointer-events:none;' +
+        'opacity:0;' +
+        (reduceMotion ? '' : 'transition:opacity 180ms ease;');
+      document.body.appendChild(konamiPill);
+    }
+    konamiPill.textContent = KONAMI.slice(0, pos)
+      .map((k) => KONAMI_GLYPHS[k] ?? k)
+      .join(' ');
+    konamiPill.style.opacity = '0.92';
+    window.clearTimeout(konamiPillTimer);
+    konamiPillTimer = window.setTimeout(() => {
+      if (konamiPill) konamiPill.style.opacity = '0';
+    }, 1800);
+  }
+
   function enterRealm() {
     if (window.location.pathname.startsWith('/guias')) return;
     if (reduceMotion) {
@@ -450,12 +492,14 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     if (key === KONAMI[konamiPos]) {
       konamiPos += 1;
+      paintKonamiProgress(konamiPos);
       if (konamiPos === KONAMI.length) {
         konamiPos = 0;
         enterRealm();
       }
     } else {
       konamiPos = key === KONAMI[0] ? 1 : 0;
+      paintKonamiProgress(konamiPos);
     }
   });
 
