@@ -205,6 +205,84 @@ Output viewport: 800×600. Single-color background (the page bg with dot grid).
 
 ---
 
+## Prompt 7 — Interactive guide export contract (for `/guias/`)
+
+Guides are standalone artifacts served from `public/guias/<slug>/` (see
+[ADR 0005](../architecture/adr/0005-interactive-guides-collection.md)). They
+do NOT use the site's design system — full visual freedom per guide. Append
+this block to any guide prompt in Claude Design; on an existing project,
+prefix it with "Reestructura este proyecto para cumplir este contrato".
+Export as **Project archive** (free) — never Standalone HTML (costs tokens,
+produces an uneditable blob). Kept in Spanish because that's how it's pasted
+and how it was validated.
+
+Calibrated against a real export (design-patterns-101, 2026-07-10): the
+contract was followed almost verbatim — exact file split, data/mechanics
+separation with self-documenting comments, vanilla hash-router SPA, origin
+footer. The last three rules below exist because the export ALSO shipped
+noise: the pre-contract multi-page version, an unrequested `astro-export/`
+project, and an unused design-system bundle (`_ds/`). On import, delete
+`screenshots/` and `.thumbnail` (Claude Design export cruft — not
+prompt-preventable).
+
+```text
+## Contrato técnico del proyecto (obligatorio)
+
+Prepara el proyecto para ser exportado como "Project archive" e integrado
+a un sitio estático, donde el dueño seguirá editándolo a mano sin tu ayuda.
+
+### Estructura de archivos
+- Archivos separados, NUNCA todo inline: `index.html` + `styles.css` + `data.js` + `app.js`.
+- Sin build step, sin frameworks, sin npm: vanilla HTML/CSS/JS.
+- Regla clave — separa el guión del motor:
+  - `data.js` exporta SOLO el contenido: pasos de la simulación, textos,
+    definiciones, ejemplos, escenarios. Estructura de datos plana y comentada
+    con un ejemplo de cómo agregar una entrada nueva.
+  - `app.js` contiene SOLO la mecánica: estado, render, controles, animaciones.
+  - Criterio de éxito: agregar o corregir contenido debe requerir tocar
+    únicamente `data.js`.
+
+### Portabilidad
+- Rutas relativas siempre (`./styles.css`, `./app.js`) — el proyecto vivirá
+  bajo un subdirectorio (`/guias/<slug>/`).
+- Cero requests externos: nada de CDNs, sin Google Fonts (usa `system-ui`),
+  imágenes como SVG inline. Prueba de fuego: debe funcionar offline
+  abriendo `index.html` con doble click.
+- Sin analytics, sin trackers, sin service workers.
+
+### Metadata y navegación
+- `<html lang="es">`, `<title>` descriptivo y `<meta name="description">`.
+- Arriba a la izquierda, discreto: `<a href="/">← notdefined.dev</a>`.
+- Al pie: "Generada con Claude Design · {mes año}".
+
+### Interacción y accesibilidad
+- Responsive real — se consultará desde el celular.
+- Si hay animación o simulación: controles de play/pausa/paso operables con
+  teclado, y respetar `prefers-reduced-motion` (mostrar el estado final sin
+  animar).
+- Cada paso de una simulación cambia UNA sola cosa visible, con una línea de
+  narración de qué acaba de pasar.
+
+### Código
+- JavaScript claro y editable a mano: nombres descriptivos, funciones cortas,
+  sin minificar, sin abstracciones genéricas "por si acaso".
+- Comentarios solo donde el porqué no es obvio, en español.
+
+### Entrega
+- La entrega final son EXACTAMENTE estos archivos: `index.html`,
+  `styles.css`, `data.js`, `app.js`. Elimina páginas HTML de versiones
+  anteriores del proyecto.
+- No generes exports alternativos (Astro, React, Vite) — solo la versión
+  vanilla.
+- No incluyas design systems externos ni bundles de otros proyectos.
+```
+
+Import checklist (manual, per guide): copy the four files to
+`public/guias/<slug>/`, add the entry to `src/data/guias.ts`, delete export
+cruft, verify offline double-click + the `←  notdefined.dev` link.
+
+---
+
 ## Iteration loop
 
 After Claude Design returns a mockup:
