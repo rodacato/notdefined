@@ -971,7 +971,7 @@ html.dark .diagram-wrap {
 /* ---- masthead ---- */
 .masthead {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 28px;
   flex-wrap: wrap;

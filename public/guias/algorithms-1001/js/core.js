@@ -177,8 +177,8 @@
   var themeMq = null;
 
   function getTheme() {
-    try { return localStorage.getItem(THEME_KEY) || "system"; }
-    catch (e) { return "system"; }
+    try { return localStorage.getItem(THEME_KEY) || "dark"; }
+    catch (e) { return "dark"; }
   }
 
   function applyTheme(theme) {
