@@ -608,6 +608,25 @@
       DiagramLegend(),
     );
   }
+  /* Barra de memoria del beforeAfter.meter (hoy solo Flyweight lo trae) */
+  function meterRow(tag, m, roleClass) {
+    return h(
+      'div',
+      { class: 'meter-row' },
+      h('span', { class: 'meter-tag' }, tag),
+      h(
+        'div',
+        { class: 'meter-track' },
+        h('div', {
+          class: 'meter-fill ' + roleClass,
+          style: { width: m.pct + '%' },
+        }),
+      ),
+      h('span', { class: 'meter-total ' + roleClass }, m.total),
+      h('span', { class: 'meter-note' }, m.label),
+    );
+  }
+
   function AntesDespuesView(pattern) {
     var ba = pattern.beforeAfter;
     return h(
@@ -643,6 +662,15 @@
           CodeBlock(ba.after.code, null, ba.after.good),
         ),
       ),
+      ba.meter
+        ? h(
+            'div',
+            { class: 'ba-meter' },
+            h('span', { class: 'lbl' }, 'La memoria, medida'),
+            meterRow('Antes', ba.meter.before, 'is-dolor'),
+            meterRow('Después', ba.meter.after, 'is-mejora'),
+          )
+        : null,
       h(
         'div',
         { class: 'why' },
@@ -798,7 +826,7 @@
       pattern.name +
       ' \u00b7 ' +
       cat.name +
-      ' \u00b7 Patrones de dise\u00f1o 101';
+      ' \u00b7 Patrones de dise\u00f1o 1001';
 
     var root = h('div', { class: 'wrap', style: { '--cat': catColor } });
 
@@ -820,7 +848,7 @@
             pattern.name,
           ),
         ),
-        h('div', { class: 'topmeta' }, 'Almanaque t\u00e9cnico \u00b7 101'),
+        h('div', { class: 'topmeta' }, 'Almanaque t\u00e9cnico \u00b7 1001'),
       ),
     );
 
@@ -1058,7 +1086,7 @@
      ========================================================================== */
   function renderHome() {
     document.title =
-      'Patrones de dise\u00f1o 101 \u00b7 \u00edndice del cat\u00e1logo';
+      'Patrones de dise\u00f1o 1001 \u00b7 \u00edndice del cat\u00e1logo';
     var C = DATA.catalogo;
     var activeProblem = null;
 
@@ -1078,7 +1106,7 @@
           h(
             'div',
             { class: 'folio-meta' },
-            h('div', { class: 'folio-no' }, '101'),
+            h('div', { class: 'folio-no' }, '1001'),
             h('div', { class: 'folio-sub' }, 'Almanaque t\u00e9cnico'),
           ),
         ),
@@ -1801,7 +1829,7 @@
 
   function renderDisambig() {
     document.title =
-      'Desambiguaci\u00f3n de parecidos \u00b7 Patrones de dise\u00f1o 101';
+      'Desambiguaci\u00f3n de parecidos \u00b7 Patrones de dise\u00f1o 1001';
     var comparisons = DATA.desambiguacion;
     var focus = 'all';
     var root = h('div', { class: 'wrap' });
@@ -1817,7 +1845,7 @@
           h('span', { class: 'sep' }, '/'),
           h('span', { class: 'here' }, 'Desambiguaci\u00f3n'),
         ),
-        h('div', { class: 'topmeta' }, 'Almanaque t\u00e9cnico \u00b7 101'),
+        h('div', { class: 'topmeta' }, 'Almanaque t\u00e9cnico \u00b7 1001'),
       ),
     );
 

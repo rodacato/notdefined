@@ -43,7 +43,7 @@ window.PATRONES = {
       key: 'creacional',
       name: 'Creacional',
       blurb:
-        'Mecanismos de creación de objetos que aumentan la flexibilidad y desacoplan al cliente de las clases concretas.',
+        'Cómo nacen los objetos sin que el cliente se case con clases concretas al instanciar.',
       primaryNote:
         'Vista primaria de la categoría: Antes → Después (cómo cambia la creación).',
       color: '#A4552E',
@@ -64,7 +64,7 @@ window.PATRONES = {
       key: 'comportamiento',
       name: 'De comportamiento',
       color: '#79415F',
-      blurb: 'Asignación de responsabilidades y comunicación entre objetos.',
+      blurb: 'Quién hace qué y cómo se hablan los objetos en runtime.',
       primaryNote:
         'Vista primaria de la categoría: En acción (el flujo de mensajes en runtime).',
       varc: '--cat-comp',
@@ -207,13 +207,13 @@ window.PATRONES = {
         'Definir una operación para crear objetos, dejando que las subclases decidan qué clase instanciar.',
       star: 'El método fábrica — la costura donde el «new» se vuelve un punto de extensión.',
       smell:
-        'El código está sembrado de new ConcreteX(), atado a clases concretas; agregar un tipo nuevo obliga a tocar muchos sitios.',
+        'El código está sembrado de new ConcreteX(), atado a clases concretas; agregar un tipo nuevo significa cazar todos esos sitios uno por uno.',
       realWorld:
         'Una app de logística que crea Camión o Barco según la subclase; un toolkit de UI que crea el botón propio de cada sistema operativo.',
       whenNot:
         'Si no prevés variación de producto, es sobre-diseño: una jerarquía extra para crear un solo tipo no paga su costo.',
       relatives:
-        'Pieza base de Abstract Factory. Suele evolucionar desde un Factory simple; se confunde con él (un disparo vs. costura extensible).',
+        'Pieza base de Abstract Factory. Suele evolucionar desde un factory simple, y ahí está la confusión: el simple es una función que elige; este es una costura que las subclases sobrescriben.',
       paradigm:
         'En lenguajes dinámicos suele ser solo una función que devuelve el objeto correcto, sin jerarquía de creadores.',
       diagram: {
@@ -814,7 +814,7 @@ window.PATRONES = {
       code: {
         ts: 'class Shape {\n  constructor(public x = 0, public color = "black") {}\n  clone(): Shape {\n    return Object.assign(new Shape(), this);\n  }\n}\nconst copy = base.clone();   // sin conocer la clase concreta',
         py: 'import copy\n\n# Clonado idiomático en Python\nduplicado = copy.deepcopy(original)',
-        rb: 'original.dup     # copia superficial\noriginal.clone   # copia + estado congelado (frozen)',
+        rb: 'original.dup     # copia superficial\noriginal.clone   # igual, pero conserva frozen y singleton class',
         go: '// Go no tiene clone: copia el struct (valor)\n// y duplica a mano lo que sea puntero/slice\ndup := *original\ndup.Tags = append([]string(nil), original.Tags...)',
       },
       category: 'creacional',
@@ -835,7 +835,7 @@ window.PATRONES = {
         'Un recurso que debe ser único (configuración, pool de conexiones) termina instanciado varias veces.',
       realWorld: 'Configuración global, logger, pool de conexiones.',
       whenNot:
-        'Es un global encubierto: lastima la testabilidad y esconde dependencias. Casi siempre es mejor crear UNA instancia e inyectarla (DI). Trátalo como patrón con advertencia, no como default.',
+        'Es un global encubierto: esconde dependencias, y el pedo es que lo notas hasta que intentas testear. Casi siempre es mejor crear UNA instancia e inyectarla (DI). Trátalo como patrón con advertencia, no como default.',
       relatives:
         'Suele combinarse (mal) con todo. Su mejor sustituto no es otro patrón, sino la inyección de dependencias.',
       paradigm:
@@ -907,7 +907,7 @@ window.PATRONES = {
         },
         after: {
           label: 'Una única instancia compartida',
-          code: 'const a = Config.get();\nconst b = Config.get();   // a === b\na.set("theme", "dark");\nb.get("theme");           // "dark"\n// ⚠ pero es estado global: prueba con DI',
+          code: 'const a = Config.get();\nconst b = Config.get();   // a === b\na.set("theme", "dark");\nb.get("theme");           // "dark"\n// ⚠ sigue siendo estado global: mejor inyéctala (DI)',
           good: [0, 1, 3],
         },
         why: [
@@ -958,7 +958,7 @@ window.PATRONES = {
       realWorld:
         'Un adaptador de enchufe; envolver una API de terceros o legacy a tu interfaz; un adaptador XML→JSON.',
       whenNot:
-        'Si controlas ambos lados, mejor arregla la interfaz de raíz. El adaptador es para lo que no puedes tocar.',
+        'Si controlas ambos lados, arregla la interfaz de raíz y ya. El adaptador es para lo que no puedes tocar.',
       relatives:
         'vs Decorator (Adapter CAMBIA la interfaz; Decorator la mantiene y añade comportamiento); vs Facade (Facade simplifica un subsistema entero).',
       paradigm:
@@ -1094,7 +1094,7 @@ window.PATRONES = {
         'Separar una abstracción de su implementación para que ambas evolucionen por separado.',
       star: 'El puente — la composición que une dos jerarquías en vez de cruzarlas por herencia.',
       smell:
-        'Una jerarquía que se multiplica en producto cartesiano (Figura × Color → CírculoRojo, CuadradoAzul…), explotando en clases.',
+        'Una jerarquía que se multiplica en producto cartesiano (Figura × Color → CírculoRojo, CuadradoAzul…): seis clases hoy, doce en cuanto agregues un color.',
       realWorld:
         'Un toolkit gráfico sobre varios SO; un control remoto (abstracción) sobre dispositivos (implementación); figuras × APIs de render.',
       whenNot:
@@ -1417,7 +1417,7 @@ window.PATRONES = {
       realWorld:
         'Streams de I/O (un buffer que envuelve un lector de archivo), middleware, café + condimentos que suman precio, bordes/scroll sobre un widget.',
       whenNot:
-        'Muchas capas finas dificultan depurar (¿qué envuelve a qué?). Si el orden no importa y son pocas opciones, basta un flag.',
+        'Muchas capas finas se vuelven un dolor de depurar: ¿qué envuelve a qué? Si el orden no importa y son dos opciones, un flag y ya.',
       relatives:
         'vs Proxy (misma estructura: Proxy CONTROLA acceso, Decorator AÑADE comportamiento); vs Adapter (cambia vs mantiene interfaz); pariente de Composite.',
       paradigm:
@@ -1556,12 +1556,12 @@ window.PATRONES = {
             from: 'milk',
             to: 'client',
             label: '2.50',
-            note: 'Al volver, cada capa suma su parte (Milk +0.50).',
+            note: 'Al volver, cada capa suma su parte (Milk +0.50). Con más capas apiladas (Sugar, etc.) el truco se repite: delegar hacia adentro, sumar al salir.',
           },
         ],
       },
       code: {
-        ts: 'interface Coffee { cost(): number }\nclass Espresso implements Coffee { cost() { return 2; } }\n\nclass Milk implements Coffee {\n  constructor(private inner: Coffee) {}      // envuelve\n  cost() { return this.inner.cost() + 0.5; } // delega + añade\n}\nnew Milk(new Sugar(new Espresso())).cost();  // apilable',
+        ts: 'interface Coffee { cost(): number }\nclass Espresso implements Coffee { cost() { return 2; } }\n\nclass Milk implements Coffee {\n  constructor(private inner: Coffee) {}      // envuelve\n  cost() { return this.inner.cost() + 0.5; } // delega + añade\n}\nnew Milk(new Espresso()).cost();             // 2.50\nnew Milk(new Sugar(new Espresso())).cost();  // apilable: cada capa suma',
         py: '# En Python: funciones de orden superior\ndef with_milk(coffee):\n    return lambda: coffee() + 0.5\n\nwith_milk(with_sugar(espresso))()',
         rb: 'require "delegate"\n\nclass Milk < SimpleDelegator\n  def cost = __getobj__.cost + 0.5   # delega + añade\nend',
         go: 'type Coffee interface{ Cost() float64 }\n\ntype Milk struct{ inner Coffee }       // envuelve\nfunc (m Milk) Cost() float64 {\n    return m.inner.Cost() + 0.5\n}',
@@ -1755,7 +1755,7 @@ window.PATRONES = {
       realWorld:
         'Los caracteres de un editor (el glifo se comparte, la posición se pasa), partículas o árboles en un juego, marcadores de un mapa.',
       whenNot:
-        'Optimización tardía: solo cuando la memoria es el cuello real. Complica el código separando estado intrínseco y extrínseco. Avanzado.',
+        'Solo cuando mediste que la memoria es el cuello real — es optimización, no arquitectura. Complica el código separando estado intrínseco y extrínseco.',
       relatives:
         'Suele apoyarse en una fábrica (como Factory) para el pool. El estado extrínseco a veces lo gestiona un contexto.',
       paradigm:
@@ -2000,7 +2000,7 @@ window.PATRONES = {
         },
         why: [
           'El proxy intercepta display() y carga solo cuando hace falta.',
-          'Mismo interfaz: el cliente no nota que habla con un sustituto.',
+          'Misma interfaz: el cliente no nota que habla con un sustituto.',
           'El objeto real no sabe nada de caché ni permisos.',
         ],
       },
@@ -2058,7 +2058,7 @@ window.PATRONES = {
       realWorld:
         'Pipelines de middleware (Rack, Express), burbujeo de eventos, flujos de aprobación, niveles de logging.',
       whenNot:
-        'Si solo hay un manejador, sobra. Riesgo: una petición puede llegar al final sin que nadie la atienda.',
+        'Si solo hay un manejador, sobra. Y ojo: una petición puede recorrer toda la cadena sin que nadie la atienda — falla en silencio si no pones un eslabón final.',
       relatives:
         'vs Decorator (ambos encadenan; CoR puede DETENER la petición, Decorator siempre la pasa).',
       paradigm:
@@ -2375,7 +2375,7 @@ window.PATRONES = {
         'El cliente acoplado a la estructura interna de la colección (índices, nodos…).',
       realWorld: 'Cada for...of, each, generador. Está en todas partes.',
       whenNot:
-        'Casi nunca lo escribes a mano: tu lenguaje ya lo trae. Hacerlo manual solo para una lista es reinventar la rueda.',
+        'Casi nunca lo escribes a mano: tu lenguaje ya lo trae y ya te la sabes (for...of, each). Implementarlo manual para una lista es reinventar la rueda.',
       relatives:
         'Pariente de Composite (iterar árboles). Más concepto integrado que código que vayas a teclear.',
       paradigm:
@@ -2594,6 +2594,16 @@ window.PATRONES = {
       },
       beforeAfter: {
         viz: 'mesh-star',
+        before: {
+          label: 'Telaraña de referencias N×N',
+          code: 'checkbox.onChange = () => {\n  input.enable();\n  button.disable();   // cada widget conoce a los demás\n};\ninput.onType = () => button.enable();  // N×N referencias\n// mover un widget = reescribir a todos sus vecinos',
+          pain: [1, 2, 4, 5],
+        },
+        after: {
+          label: 'Todos hablan con el mediador',
+          code: 'checkbox.onChange = () => dialog.notify(checkbox, "change");\ninput.onType     = () => dialog.notify(input, "type");\n// el diálogo decide a quién tocar; los widgets no se conocen',
+          good: [0, 1, 2],
+        },
         why: [
           'La maraña de N×N conexiones colapsa en N enlaces a un centro.',
           'Cada objeto solo conoce al mediador, no a sus pares.',
@@ -2782,7 +2792,7 @@ window.PATRONES = {
       smell:
         'Objetos que necesitan reaccionar a los cambios de otro sin acoplarse ni hacer polling.',
       realWorld:
-        'Listeners de eventos, data-binding de UI, actualizaciones modelo→vista (websockets), estado reactivo, newsletters.',
+        'Listeners de eventos, data-binding de UI, actualizaciones modelo→vista (websockets), estado reactivo, webhooks.',
       whenNot:
         'Cuidado con cascadas de notificaciones difíciles de depurar (A notifica a B que notifica a C…).',
       relatives:
@@ -3095,7 +3105,7 @@ window.PATRONES = {
       relatives:
         'vs State (misma estructura; State dispara transiciones internas), vs Command (acción vs algoritmo), vs Template Method (composición vs herencia).',
       paradigm:
-        'En Ruby/Python/JS una estrategia es solo una función/bloque que pasas — la jerarquía de clases suele ser sobre-diseño.',
+        'En Ruby/Python/JS una estrategia es solo una función/bloque que pasas — a mi forma de verlo, la jerarquía de clases ahí es sobre-diseño.',
       diagram: {
         vb: [820, 340],
         nodes: [
@@ -3362,7 +3372,7 @@ window.PATRONES = {
         'Separar un algoritmo de la estructura de objetos sobre la que opera; añadir operaciones nuevas sin tocar las clases.',
       star: 'El visitante — reúne una operación nueva para toda la jerarquía en una sola clase.',
       smell:
-        'Cada operación nueva te obliga a editar todas las clases de una jerarquía.',
+        'Cada operación nueva te obliga a editar todas las clases de una jerarquía. Todas. Otra vez.',
       realWorld:
         'Recorrer un AST en un compilador (visitante de tipos, de generación de código), exportar un documento (a PDF/HTML), reportes sobre una jerarquía.',
       whenNot:
@@ -3536,7 +3546,7 @@ window.PATRONES = {
       realWorld:
         'Motores de reglas/expresiones simples, calculadoras, (conceptualmente) SQL/regex.',
       whenNot:
-        'Casi siempre conviene un generador de parsers; rara vez se escribe a mano. El más académico de todos.',
+        'Casi nunca lo escribes a mano: para una gramática real usa un generador de parsers. El más académico de los 23.',
       relatives:
         'Construye un árbol como Composite; lo recorre como Visitor. Para gramáticas reales, usa herramientas de parsing.',
       paradigm:
@@ -3691,7 +3701,7 @@ window.PATRONES = {
       id: 'wrappers',
       title: ['Decorator', 'Proxy', 'Adapter', 'Facade'],
       tagline:
-        'Los cuatro envuelven algo. La estructura es casi idéntica — lo que cambia es para qué envuelven.',
+        'Los cuatro envuelven algo y el diagrama se ve igual. Lo que cambia es para qué envuelves — y eso decide cuál usas.',
       same: 'Client → Envoltorio → Envuelto',
       patterns: [
         {
@@ -3721,7 +3731,7 @@ window.PATRONES = {
                 h: 82,
                 role: 'estrella',
                 label: 'AddOn',
-                sub: 'mismo interfaz',
+                sub: 'misma interfaz',
                 hot: true,
               },
               {
@@ -3782,7 +3792,7 @@ window.PATRONES = {
                 h: 82,
                 role: 'estrella',
                 label: 'ProxyImage',
-                sub: 'mismo interfaz',
+                sub: 'misma interfaz',
                 hot: true,
               },
               {
