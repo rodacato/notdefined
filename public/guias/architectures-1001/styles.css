@@ -1,43 +1,47 @@
 /* ============================================================================
    101 — Arquitecturas · styles.css (único)
    ----------------------------------------------------------------------------
-   Tema "Almanaque técnico": paleta cálida de papel, tipografía del sistema
-   (sin fuentes externas), claro por defecto + oscuro cálido. Consolida tokens,
+   Tema "Mesa de dibujo": papel de dibujo técnico con retícula, tinta azul de
+   ingeniero, tipografía del sistema (sin fuentes externas). Claro = plano
+   sobre la mesa; oscuro = cianotipo (blueprint clásico). Consolida tokens,
    índice del catálogo, ficha de familia y la vista de comparaciones.
    ========================================================================== */
 
 /* ============================================================================
-   1. TOKENS — Claro (papel · por defecto)
+   1. TOKENS — Claro (papel de dibujo · por defecto)
    ========================================================================== */
 :root {
-  --color-primary:        #A4552E;
-  --color-primary-hover:  #8C4525;
-  --color-primary-muted:  #F0E1D5;
+  --color-primary:        #2E6494;
+  --color-primary-hover:  #24507A;
+  --color-primary-muted:  #DCE7F0;
 
-  --color-bg-canvas:      #F1E9D9;
-  --color-bg-surface:     #FBF6EA;
-  --color-bg-muted:       #E9DFC9;
+  --color-bg-canvas:      #EBF0F4;
+  --color-bg-surface:     #F8FAFC;
+  --color-bg-muted:       #DFE7ED;
 
-  --color-fg-default:     #2B2620;
-  --color-fg-subtle:      #6A6353;
-  --color-fg-inverse:     #FBF6EA;
+  --color-fg-default:     #1F2A36;
+  --color-fg-subtle:      #5A6B7A;
+  --color-fg-inverse:     #F8FAFC;
 
-  --color-border-default: #D8CDB4;
-  --color-border-strong:  #C4B896;
+  --color-border-default: #C6D2DC;
+  --color-border-strong:  #AFC0CD;
 
-  --color-positive:       #2E7D55;
-  --color-positive-bg:    #E4EFE4;
-  --color-positive-fg:    #256B48;
+  --color-positive:       #2C7A57;
+  --color-positive-bg:    #DFEEE6;
+  --color-positive-fg:    #226248;
 
-  --color-negative:       #C0473F;
-  --color-negative-bg:    #F4E3DE;
-  --color-negative-fg:    #A83A32;
+  --color-negative:       #BF4B41;
+  --color-negative-bg:    #F4E1DE;
+  --color-negative-fg:    #A5382F;
 
-  --color-warning:        #D98A0B;
-  --color-warning-bg:     #F6EAD1;
-  --color-warning-fg:     #9A6408;
+  --color-warning:        #C58317;
+  --color-warning-bg:     #F3EAD3;
+  --color-warning-fg:     #8F6008;
 
-  /* Familias del catálogo — tintas terrosas */
+  /* Retícula del plano (solo textura de fondo, nunca codifica datos) */
+  --grid-line: rgba(46, 100, 148, 0.055);
+
+  /* Familias del catálogo — tintas terrosas (contrato de datos, no cromo) */
   --fam-1: #A4552E;  --fam-2: #2F6A6B;  --fam-3: #79415F;
   --fam-4: #4A5A7A;  --fam-5: #6B6A2E;
 
@@ -54,41 +58,43 @@
 
   --radius-sm: 5px; --radius-md: 9px; --radius-lg: 12px; --radius-xl: 16px; --radius-full: 9999px;
 
-  --shadow-sm: 0 1px 2px rgba(43, 38, 32, 0.06);
-  --shadow-md: 0 2px 4px rgba(43, 38, 32, 0.06), 0 14px 30px rgba(43, 38, 32, 0.10);
-  --shadow-lg: 0 4px 12px rgba(43, 38, 32, 0.08), 0 24px 48px rgba(43, 38, 32, 0.12);
+  --shadow-sm: 0 1px 2px rgba(31, 42, 54, 0.06);
+  --shadow-md: 0 2px 4px rgba(31, 42, 54, 0.06), 0 14px 30px rgba(31, 42, 54, 0.10);
+  --shadow-lg: 0 4px 12px rgba(31, 42, 54, 0.08), 0 24px 48px rgba(31, 42, 54, 0.12);
 }
 
 /* ============================================================================
-   2. TOKENS — Oscuro (papel de noche · marrón cálido)
+   2. TOKENS — Oscuro (cianotipo · blueprint clásico)
    ========================================================================== */
 html.dark {
-  --color-primary:        #D98A5A;
-  --color-primary-hover:  #E6A074;
-  --color-primary-muted:  #3A2C22;
+  --color-primary:        #7FB2DE;
+  --color-primary-hover:  #9CC5E8;
+  --color-primary-muted:  #1E3D5C;
 
-  --color-bg-canvas:      #241F1A;
-  --color-bg-surface:     #2E2822;
-  --color-bg-muted:       #37302A;
+  --color-bg-canvas:      #10263C;
+  --color-bg-surface:     #16324C;
+  --color-bg-muted:       #1C3A57;
 
-  --color-fg-default:     #F1E9D9;
-  --color-fg-subtle:      #B3A991;
-  --color-fg-inverse:     #241F1A;
+  --color-fg-default:     #E4EEF6;
+  --color-fg-subtle:      #9DB4C8;
+  --color-fg-inverse:     #10263C;
 
-  --color-border-default: #403830;
-  --color-border-strong:  #4E453B;
+  --color-border-default: #28496B;
+  --color-border-strong:  #35597F;
 
-  --color-positive:       #5FB98A;
-  --color-positive-bg:    #1E3226;
-  --color-positive-fg:    #7FCBA1;
+  --color-positive:       #5FBE8E;
+  --color-positive-bg:    #15382F;
+  --color-positive-fg:    #82CFA6;
 
-  --color-negative:       #E0857D;
-  --color-negative-bg:    #3A211D;
-  --color-negative-fg:    #E8998F;
+  --color-negative:       #E8897E;
+  --color-negative-bg:    #402028;
+  --color-negative-fg:    #EF9E93;
 
-  --color-warning:        #E6A83A;
-  --color-warning-bg:     #3A2C12;
-  --color-warning-fg:     #EBB85A;
+  --color-warning:        #E9B04A;
+  --color-warning-bg:     #3A331C;
+  --color-warning-fg:     #EFC06A;
+
+  --grid-line: rgba(127, 178, 222, 0.07);
 
   --fam-1: #D98A5A;  --fam-2: #5FA9AA;  --fam-3: #C08099;
   --fam-4: #8A96C0;  --fam-5: #B0AE5E;
@@ -96,9 +102,9 @@ html.dark {
   --role-actor:   #94A3B8;  --role-gateway: #7B89FF;  --role-service: #34D399;
   --role-store:   #FBBF24;  --role-msg:     #2DD4BF;  --role-fail:    #FB7185;
 
-  --shadow-sm: 0 0 0 1px rgba(255, 245, 230, 0.03), 0 2px 6px rgba(0, 0, 0, 0.40);
-  --shadow-md: inset 0 1px 0 rgba(255, 245, 230, 0.04), 0 12px 32px rgba(0, 0, 0, 0.45);
-  --shadow-lg: inset 0 1px 0 rgba(255, 245, 230, 0.05), 0 24px 60px rgba(0, 0, 0, 0.55);
+  --shadow-sm: 0 0 0 1px rgba(220, 235, 250, 0.04), 0 2px 6px rgba(2, 12, 24, 0.40);
+  --shadow-md: inset 0 1px 0 rgba(220, 235, 250, 0.05), 0 12px 32px rgba(2, 12, 24, 0.45);
+  --shadow-lg: inset 0 1px 0 rgba(220, 235, 250, 0.06), 0 24px 60px rgba(2, 12, 24, 0.55);
 }
 
 /* ============================================================================
@@ -107,7 +113,11 @@ html.dark {
 * { box-sizing: border-box; }
 html, body { margin: 0; }
 body {
-  background: var(--color-bg-canvas);
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    var(--color-bg-canvas);
+  background-size: 26px 26px, 26px 26px, auto;
   color: var(--color-fg-default);
   font-family: var(--font-sans);
   font-size: var(--fs-body);
