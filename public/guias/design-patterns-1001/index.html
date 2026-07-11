@@ -20,11 +20,18 @@
   </div>
 </nav>
 
-<main id="app" role="main"><!-- app.js pinta aquí según la ruta (#/, #/patron/<id>, #/desambiguacion) --></main>
+<main id="app" role="main"><!-- js/ pinta aquí según la ruta (#/, #/patron/<id>, #/desambiguacion) --></main>
 
-<!-- Scripts clásicos (sin build, sin CDN): funcionan abriendo index.html con doble clic.
-     data.js define el contenido (window.PATRONES); app.js la mecánica. -->
+<!-- Scripts clásicos (sin build, sin CDN, sin ES modules): funcionan abriendo
+     index.html con doble clic. data.js define el contenido (window.PATRONES);
+     js/ es la mecánica. EL ORDEN IMPORTA: core → components → páginas → router,
+     todos colgados del namespace window.GUIA. -->
 <script src="./data.js"></script>
-<script src="./app.js"></script>
+<script src="./js/core.js"></script>
+<script src="./js/components.js"></script>
+<script src="./js/page-ficha.js"></script>
+<script src="./js/page-catalogo.js"></script>
+<script src="./js/page-desambiguacion.js"></script>
+<script src="./js/router.js"></script>
 </body>
 </html>
