@@ -1,7 +1,6 @@
 /* ============================================================================
    fichas-comunicacion.js — Fichas profundas · Familia 3 (Comunicación)
    Formato de datos: ver el encabezado de fichas-despliegue.js.
-   Pendiente en esta familia: eda (13) trae solo la semilla de catálogo.
    ========================================================================== */
 (function (G) {
   const F = (G.fichas = G.fichas || {});
@@ -71,6 +70,31 @@
       { t: "edge", x1: 292, y1: 140, x2: 336, y2: 140, arrow: true, msg: true },
       { t: "edge", x1: 292, y1: 154, x2: 336, y2: 220, arrow: true, msg: true },
       { t: "label", x: 118, y: 196, text: "no sabe quién escucha" },
+    ],
+  };
+
+  F["eda"] = {
+    n: "13", id: "eda", nombre: "Dirigida por eventos · EDA", prominencia: "esencial", vistaPrimaria: "flujo",
+    queEs: "Los componentes publican hechos que ya ocurrieron y otros reaccionan; nadie llama a nadie directo.",
+    fuerza: "Reaccionar a hechos ya ocurridos, no orquestar llamadas.",
+    gana: "El verdadero separador de lógicas y dependencias: el emisor no conoce a sus consumidores, y una reacción nueva se suma sin tocar lo existente. Al principio se siente boilerplate; el cambio mental llega después.",
+    paga: "Flujos que ya no se leen de corrido: debugging distribuido, duplicados e idempotencia a tu cargo. Y la tentación de que TODO sea un evento — un gran poder, una gran responsabilidad.",
+    cuandoNo: "Si no sabes qué acciones tiene tu sistema ni qué side-effects producen, no sabes qué eventos tener: empezar aquí es sobreingeniería. Los eventos se descubren de las acciones, no se diseñan primero — y antes de agregar uno pregunta quién lo usa, para qué, y si no hay ya un evento que lo resuelva. Para pedir-y-responder, con requests te alcanza.",
+    parientes: "Pub/sub es el transporte; EDA es el estilo que se construye encima, coordinando por coreografía. Event sourcing persiste eventos como fuente de verdad — reaccionar a ellos es otra decisión. Las sagas coordinan pasos largos usando estos mismos eventos.",
+    ratings: { indep: 4, ops: 4, lat: 2, team: 4, cons: 1, scale: 4, change: 3 },
+    diagrama: [
+      { t: "node", x: 60, y: 24, w: 110, h: 52, role: "service", star: true, label: "Pedidos", sub: "publica y olvida" },
+      { t: "node", x: 36, y: 128, w: 392, h: 34, role: "msg", label: "Bus de eventos" },
+      { t: "node", x: 40, y: 210, w: 110, h: 48, role: "service", label: "Facturación" },
+      { t: "node", x: 180, y: 210, w: 120, h: 48, role: "service", label: "Notificaciones" },
+      { t: "node", x: 330, y: 210, w: 100, h: 48, role: "store", label: "Analítica" },
+      { t: "edge", x1: 115, y1: 76, x2: 115, y2: 128, arrow: true },
+      { t: "label", x: 152, y: 104, text: "pedido-creado" },
+      { t: "edge", x1: 95, y1: 162, x2: 95, y2: 210, arrow: true },
+      { t: "edge", x1: 240, y1: 162, x2: 240, y2: 210, arrow: true },
+      { t: "edge", x1: 380, y1: 162, x2: 380, y2: 210, arrow: true },
+      { t: "path", d: "M 150 214 C 178 194, 196 180, 206 162", msg: true },
+      { t: "label", x: 236, y: 190, text: "factura-emitida", cls: "tedge-label msg-label" },
     ],
   };
 

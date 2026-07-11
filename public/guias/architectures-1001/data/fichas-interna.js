@@ -1,10 +1,32 @@
 /* ============================================================================
    fichas-interna.js — Fichas profundas · Familia 2 (Organización interna)
    Formato de datos: ver el encabezado de fichas-despliegue.js.
-   Pendiente en esta familia: hexagonal (06) trae solo la semilla de catálogo.
    ========================================================================== */
 (function (G) {
   const F = (G.fichas = G.fichas || {});
+
+  F["hexagonal"] = {
+    n: "06", id: "hexagonal", nombre: "Hexagonal · Puertos y adaptadores", prominencia: "esencial", vistaPrimaria: "limites",
+    queEs: "El dominio al centro hablando solo con contratos (puertos); la infraestructura llega por adaptadores intercambiables.",
+    fuerza: "Aislar el dominio de la infraestructura que cambia debajo — y de quién lo consume.",
+    gana: "El código queda libre de dependencias y transparente para las interfaces: controlas qué se expone, cómo y a quién por cada puerto — con datos sensibles eso es la diferencia — y cambiar de proveedor es escribir otro adapter, sin tocar el negocio. El test entra por el mismo puerto que producción.",
+    paga: "Puertos, adapters y mapeos que en un CRUD se sienten pura burocracia. Y la disciplina hay que enseñarla: el patrón no se sostiene solo, y venderlo al equipo es parte del trabajo.",
+    cuandoNo: "Servicios de una sola responsabilidad: un reverse geocoder, un API proxy, cualquier PoC. Ahí el traje completo estorba.",
+    parientes: "Capas, clean y hexagonal son el mismo instinto con distinta disciplina. Y aunque no vayas full hexagonal, sus «chispitas» — código coherente con el negocio, responsabilidades separadas — siempre valen: esa base sobrevive aunque no seas estricto con la arquitectura.",
+    ratings: { indep: 1, ops: 1, lat: 4, team: 2, cons: 4, scale: 2, change: 4 },
+    diagrama: [
+      { t: "node", x: 168, y: 106, w: 124, h: 66, role: "gateway", star: true, label: "Dominio", sub: "no sabe quién lo llama" },
+      { t: "node", x: 186, y: 20, w: 88, h: 40, role: "service", label: "Adapter HTTP" },
+      { t: "node", x: 340, y: 116, w: 92, h: 46, role: "service", label: "Adapter", sub: "proveedor" },
+      { t: "node", x: 186, y: 218, w: 88, h: 40, role: "store", label: "Adapter DB" },
+      { t: "node", x: 28, y: 116, w: 92, h: 46, role: "service", label: "Tests", sub: "otro adapter más" },
+      { t: "edge", x1: 230, y1: 60, x2: 230, y2: 106, arrow: true },
+      { t: "edge", x1: 340, y1: 139, x2: 292, y2: 139, arrow: true },
+      { t: "edge", x1: 230, y1: 172, x2: 230, y2: 218, arrow: true },
+      { t: "edge", x1: 120, y1: 139, x2: 168, y2: 139, arrow: true },
+      { t: "label", x: 230, y: 190, text: "puertos = contratos" },
+    ],
+  };
 
   F["capas"] = {
     n: "05", id: "capas", nombre: "Capas (N-capas)", prominencia: "esencial", vistaPrimaria: "limites",

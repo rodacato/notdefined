@@ -118,7 +118,7 @@
       fit: { team: "any", scaleParts: false, domain: "any", consistency: "strong" } },
 
     { n: "06", id: "hexagonal", name: "Hexagonal", family: "interna", scale: "mid",
-      primary: "limites", star: true,
+      primary: "limites", star: true, hasFicha: true, hasDiagrama: true,
       force: "Aislar el dominio de la infraestructura que cambia debajo.",
       avoid: "CRUD simple donde los puertos y adaptadores son pura ceremonia.",
       fit: { team: ["mid", "large"], scaleParts: false, domain: "stable", consistency: "strong" } },
@@ -161,7 +161,7 @@
       fit: { team: ["mid", "large"], scaleParts: true, domain: "any", consistency: "eventual" } },
 
     { n: "13", id: "eda", name: "Dirigida por eventos", family: "comunicacion", scale: "large",
-      primary: "flujo", star: true,
+      primary: "flujo", star: true, hasFicha: true, hasDiagrama: true,
       force: "Reaccionar a hechos ya ocurridos, no orquestar llamadas.",
       avoid: "Equipo sin tooling para depurar flujos asíncronos y reintentos.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
