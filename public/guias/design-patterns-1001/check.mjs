@@ -1,13 +1,14 @@
-// Verifies every code snippet in the design-patterns-1001 guide by EXECUTION:
-// extracts code.{ts,py,rb,go} from the guide data, runs each with its
-// toolchain, and requires exit 0 plus stdout matching every "=>" comment in
-// order. Usage:
-//   node scripts/check-guias-snippets.mjs            # all 92
-//   node scripts/check-guias-snippets.mjs go         # one language
-//   node scripts/check-guias-snippets.mjs builder    # one pattern
-// Needs local toolchains: python3, ruby, go, npx (tsx). Not part of `npm run
-// ci` on purpose — CI runners don't carry go/ruby; run it after editing any
-// snippet in data/patrones-*.js.
+// Check de la guía (convención: cada guía puede traer su check.mjs junto a
+// sus datos; `npm run check:guias` los descubre y corre todos).
+//
+// Este verifica cada snippet de código por EJECUCIÓN: extrae code.{ts,py,rb,go}
+// de data/, corre cada uno con su toolchain, y exige exit 0 más stdout
+// coincidiendo con cada comentario "=>" en orden. Uso directo:
+//   node public/guias/design-patterns-1001/check.mjs           # los 92
+//   node public/guias/design-patterns-1001/check.mjs go        # un lenguaje
+//   node public/guias/design-patterns-1001/check.mjs builder   # un patrón
+// Necesita toolchains locales: python3, ruby, go, npx (tsx). Fuera de
+// `npm run ci` a propósito — los runners de CI no traen go/ruby.
 import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
@@ -15,10 +16,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
-const GUIDE = join(
-  dirname(fileURLToPath(import.meta.url)),
-  '../public/guias/design-patterns-1001',
-);
+const GUIDE = dirname(fileURLToPath(import.meta.url));
 const DATA_FILES = [
   'data/catalogo.js',
   'data/patrones-creacional.js',

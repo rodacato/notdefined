@@ -300,6 +300,11 @@ the classes used in `js/` against the selectors in `styles.css` — the 1001
 export shipped a fully unstyled sibling switcher because the CSS was
 incomplete.
 
+If the guide carries runnable code samples, colocate a `check.mjs` in its
+folder that verifies them by execution (see `design-patterns-1001/check.mjs`
+as the reference). `npm run check:guias` auto-discovers and runs every
+guide's `check.mjs`; guides without one are skipped.
+
 ---
 
 ## Iteration loop
