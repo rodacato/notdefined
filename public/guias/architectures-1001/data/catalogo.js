@@ -112,7 +112,7 @@
 
     // ---- 2 · ORGANIZACIÓN INTERNA -----------------------------------------
     { n: "05", id: "capas", name: "Capas (N-capas)", family: "interna", scale: "small",
-      primary: "limites",
+      primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Separar presentación, lógica y datos sin ceremonia.",
       avoid: "La lógica se filtra entre capas y todo termina dependiendo de la DB.",
       fit: { team: "any", scaleParts: false, domain: "any", consistency: "strong" } },
@@ -124,13 +124,13 @@
       fit: { team: ["mid", "large"], scaleParts: false, domain: "stable", consistency: "strong" } },
 
     { n: "07", id: "clean", name: "Clean · Cebolla", family: "interna", scale: "mid",
-      primary: "limites",
+      primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Reglas de negocio que sobreviven a frameworks y bases de datos.",
       avoid: "Equipo sin disciplina para sostener la regla de dependencias.",
       fit: { team: ["mid", "large"], scaleParts: false, domain: "stable", consistency: "strong" } },
 
     { n: "08", id: "vertical-slices", name: "Vertical Slices", family: "interna", scale: "mid",
-      primary: "flujo",
+      primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Organizar por caso de uso completo, no por capa técnica.",
       avoid: "Mucha lógica compartida que la división por feature termina duplicando.",
       fit: { team: ["mid", "large"], scaleParts: false, domain: "exploring", consistency: "any" } },
@@ -143,19 +143,19 @@
 
     // ---- 3 · COMUNICACIÓN --------------------------------------------------
     { n: "10", id: "cliente-servidor", name: "Cliente-Servidor", family: "comunicacion", scale: "small",
-      primary: "flujo",
+      primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Pedir y responder: el contrato más directo entre dos partes.",
       avoid: "Muchos consumidores acoplados al mismo servicio síncrono.",
       fit: { team: "any", scaleParts: false, domain: "any", consistency: "strong" } },
 
     { n: "11", id: "api-gateway", name: "API Gateway · BFF", family: "comunicacion", scale: "mid",
-      primary: "flujo",
+      primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Una puerta única ante muchos servicios y muchos clientes.",
       avoid: "Un solo cliente y dos servicios: el gateway sobra.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "stable", consistency: "any" } },
 
     { n: "12", id: "pub-sub", name: "Publicación-Suscripción", family: "comunicacion", scale: "mid",
-      primary: "topologia",
+      primary: "topologia", hasFicha: true, hasDiagrama: true,
       force: "Desacoplar emisor y receptor: que no necesiten conocerse.",
       avoid: "Flujo que exige respuesta inmediata y orden estricto.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "any", consistency: "eventual" } },
@@ -167,7 +167,7 @@
       fit: { team: ["mid", "large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
     { n: "14", id: "pipes-filters", name: "Tubería y filtros", family: "comunicacion", scale: "small",
-      primary: "flujo",
+      primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Procesar un flujo en etapas componibles e independientes.",
       avoid: "Pasos con mucho ir y venir de estado entre etapas.",
       fit: { team: "any", scaleParts: false, domain: "any", consistency: "any" } },
@@ -180,19 +180,19 @@
       fit: { team: ["large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
     { n: "16", id: "cqrs", name: "CQRS", family: "distribuidos", scale: "mid",
-      primary: "flujo",
+      primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Leer y escribir tienen cargas y formas muy distintas.",
       avoid: "CRUD parejo donde separar comando y consulta solo agrega piezas.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
     { n: "17", id: "event-sourcing", name: "Event Sourcing", family: "distribuidos", scale: "mid",
-      primary: "evolucion",
+      primary: "evolucion", hasFicha: true, hasDiagrama: true,
       force: "El historial de cambios ES la fuente de verdad, no el estado actual.",
       avoid: "No se necesita auditoría ni rebobinar: basta el último estado.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
     { n: "18", id: "saga", name: "Saga", family: "distribuidos", scale: "mid",
-      primary: "flujo",
+      primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Transacciones que cruzan servicios sin un commit de dos fases.",
       avoid: "Todo cabe en una sola base: una transacción ACID basta.",
       fit: { team: ["large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
@@ -205,13 +205,13 @@
 
     // ---- 5 · ORGANIZACIÓN DEL CÓDIGO --------------------------------------
     { n: "20", id: "monorepo", name: "Monorepo", family: "codigo", scale: "mid",
-      primary: "limites",
+      primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Un cambio atómico que cruza muchos módulos a la vez.",
       avoid: "Sin tooling de build incremental, todo se vuelve lento.",
       fit: { team: "any", scaleParts: false, domain: "any", consistency: "any" } },
 
     { n: "21", id: "polyrepo", name: "Polyrepo", family: "codigo", scale: "mid",
-      primary: "limites",
+      primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Equipos que liberan en su propio calendario, sin pedir permiso.",
       avoid: "Cambios que cruzan repos y exigen coordinar muchos PRs.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "stable", consistency: "any" } },
