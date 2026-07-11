@@ -535,16 +535,7 @@
       },
       extras.length ? extras : null,
     );
-    return h(
-      'div',
-      { class: 'foot' },
-      left,
-      h(
-        'span',
-        { class: 'colofon' },
-        'Generada con Claude Design \u00b7 julio 2026',
-      ),
-    );
+    return h('div', { class: 'foot' }, left);
   }
 
   G.Diagram = Diagram;

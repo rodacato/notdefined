@@ -50,3 +50,10 @@ claude.ai, generated-content optics next to a hand-written blog, and the
   section isn't consulted after a quarter, it goes.
 - `check:links` crawls the artifacts; they must remain self-contained (no
   external requests) to keep CI honest.
+
+## Amendment — 2026-07-10
+
+Decision 5's per-guide origin footer is replaced by a single disclosure on
+the `/guias/` index page ("las genero con Claude Design y las curo yo").
+Inside a guide consulted repeatedly, the footer read as noise; the
+transparency obligation is satisfied at the entry point instead.

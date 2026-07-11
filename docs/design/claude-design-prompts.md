@@ -293,9 +293,12 @@ a un sitio estático, donde el dueño seguirá editándolo a mano sin tu ayuda.
 - No incluyas design systems externos ni bundles de otros proyectos.
 ```
 
-Import checklist (manual, per guide): copy the four files to
+Import checklist (manual, per guide): copy the files to
 `public/guias/<slug>/`, add the entry to `src/data/guias.ts`, delete export
-cruft, verify offline double-click + the `←  notdefined.dev` link.
+cruft, verify offline double-click + the `← notdefined.dev` link, and diff
+the classes used in `js/` against the selectors in `styles.css` — the 1001
+export shipped a fully unstyled sibling switcher because the CSS was
+incomplete.
 
 ---
 

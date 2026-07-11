@@ -198,10 +198,10 @@
       ),
     );
 
-    // contrato de roles (pie)
-    root.appendChild(
-      h(
-        'footer',
+    // contrato de roles \u2014 bajo demanda: bot\u00f3n de ayuda que abre un modal
+    function contractBlock() {
+      return h(
+        'div',
         { class: 'contract' },
         h(
           'div',
@@ -236,10 +236,62 @@
           { class: 'colophon' },
           'Cada pantalla de patr\u00f3n ancla la soluci\u00f3n a su dolor: estructura de participantes, la transformaci\u00f3n \u00abantes \u2192 despu\u00e9s\u00bb y el flujo de mensajes en acci\u00f3n. Esta portada es solo el mapa. Panel \u00abcu\u00e1ndo no usarlo\u00bb y \u00abparientes / alternativas\u00bb viven dentro de cada ficha.',
         ),
-      ),
+      );
+    }
+
+    var helpBtn = h(
+      'button',
+      { class: 'help-btn', type: 'button', 'aria-haspopup': 'dialog' },
+      h('span', { class: 'help-q', 'aria-hidden': 'true' }, '?'),
+      'Colores y roles',
     );
 
-    root.appendChild(siteFooter());
+    function openHelp() {
+      var overlay;
+      function close() {
+        document.removeEventListener('keydown', onKey);
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        helpBtn.focus();
+      }
+      function onKey(e) {
+        if (e.key === 'Escape') close();
+      }
+      overlay = h(
+        'div',
+        { class: 'help-overlay' },
+        h(
+          'div',
+          {
+            class: 'help-modal',
+            role: 'dialog',
+            'aria-modal': 'true',
+            'aria-label': 'Contrato de color de roles',
+            tabindex: '-1',
+          },
+          h(
+            'button',
+            {
+              class: 'help-close',
+              type: 'button',
+              'aria-label': 'Cerrar',
+              onclick: close,
+            },
+            '\u00d7',
+          ),
+          contractBlock(),
+        ),
+      );
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) close();
+      });
+      document.addEventListener('keydown', onKey);
+      onLeave(close);
+      document.body.appendChild(overlay);
+      overlay.firstChild.focus();
+    }
+    helpBtn.addEventListener('click', openHelp);
+
+    root.appendChild(siteFooter(helpBtn));
 
     // ---- render dependiente del filtro ----
     function byCat(k) {
