@@ -1,121 +1,314 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PageHeader from '../../components/PageHeader.astro';
 import TagPill from '../../components/TagPill.astro';
 import { guias } from '../../data/guias';
 
-const sorted = [...guias].sort((a, b) => b.date.localeCompare(a.date));
+const ordered = [...guias].sort((a, b) => a.tomo - b.tomo);
 
-function formatDate(iso: string) {
-  return new Date(`${iso}T00:00:00`).toLocaleDateString('es-MX', {
-    year: 'numeric',
-    month: 'short',
-  });
-}
+const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 ---
 
 <BaseLayout
   title="Guías — notdefined.dev"
-  description="Guías interactivas para aprender y recordar: catálogos, visualizaciones y referencias que se consultan, no que se leen de corrido."
+  description="Nivel desbloqueado. Referencias interactivas para aprender y recordar: cada guía es su propia página, con su propio diseño y paleta."
+  width="wide"
 >
-  <PageHeader
-    label="Referencia"
-    title="Guías"
-    description="Referencias interactivas para aprender y recordar. Las genero con Claude Design y las curo yo — cada una es su propia página, con su propio diseño."
-  />
+  <section class="realm" aria-label="Guías">
+    <header class="realm-head">
+      <p class="realm-tag">
+        REFERENCIA <span class="sep">//</span> NIVEL DESBLOQUEADO<span
+          class="cur">_</span
+        >
+      </p>
+      <h1 class="realm-title">Guías</h1>
+      <p class="realm-lede">
+        La colección. Referencias interactivas que se consultan, no que se leen
+        de corrido — cada tomo es su propia página, con su paleta y su
+        tipografía. Entraste por la puerta de siempre; también hay una secreta.
+      </p>
+    </header>
 
-  <ul class="guia-grid">
-    {
-      sorted.map((guia) => (
-        <li class="guia-grid-item fade-in-item">
-          <a href={`/guias/${guia.slug}/`} class="guia-link">
-            <span class="guia-date">{formatDate(guia.date)}</span>
-            <h3 class="guia-name">{guia.title}</h3>
-            <p class="guia-blurb">{guia.blurb}</p>
-            {guia.tags.length > 0 && (
-              <div class="guia-tags">
-                {guia.tags.map((t) => (
-                  <TagPill label={t} />
-                ))}
+    <ol class="shelf">
+      {
+        ordered.map((guia) => (
+          <li
+            class:list={['spine fade-in-item', `texture-${guia.theme.texture}`]}
+            style={`--g-canvas:${guia.theme.canvas};--g-ink:${guia.theme.ink};--g-soft:${guia.theme.inkSoft};--g-accent:${guia.theme.accent};--g-border:${guia.theme.border};--g-display:'${guia.theme.displayFamily}';`}
+          >
+            <a href={`/guias/${guia.slug}/`} class="spine-link">
+              <div class="spine-rail">
+                <span class="spine-tomo">{ROMAN[guia.tomo]}</span>
+                <span class="spine-tomo-label">Tomo</span>
               </div>
-            )}
-            <span class="guia-cta">Ábrela →</span>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+              <div class="spine-body">
+                <h2 class="spine-title">{guia.title}</h2>
+                <p class="spine-blurb">{guia.blurb}</p>
+                <div class="spine-foot">
+                  <div class="spine-tags">
+                    {guia.tags.map((t) => (
+                      <TagPill label={t} />
+                    ))}
+                  </div>
+                  <span class="spine-cta">Ábrela →</span>
+                </div>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
 </BaseLayout>
 
 <style>
-  .guia-grid {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-    gap: 1rem;
+  /* Fuentes display de cada guía, self-hosteadas desde su carpeta (peso 700).
+     Renombradas con prefijo "Guia " para no chocar si el sitio adopta alguna. */
+  @font-face {
+    font-family: 'Guia Bitter';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/guias/design-patterns-1001/fonts/bitter-700.woff2')
+      format('woff2');
   }
-  .guia-grid-item {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--color-border);
-    border-radius: 0.9rem;
-    overflow: hidden;
-    background-color: var(--color-bg);
-    transition: border-color 150ms ease;
+  @font-face {
+    font-family: 'Guia Chakra Petch';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/guias/architectures-1001/fonts/chakra-petch-700.woff2')
+      format('woff2');
   }
-  .guia-grid-item:hover {
-    border-color: color-mix(
-      in oklab,
-      var(--color-accent) 40%,
-      var(--color-border)
-    );
+  @font-face {
+    font-family: 'Guia Space Grotesk';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/guias/algorithms-1001/fonts/space-grotesk-700.woff2')
+      format('woff2');
   }
 
-  .guia-link {
+  /* ---- El realm: el reverso oscuro del sitio (siempre en negativo) ---- */
+  .realm {
+    --realm-bg: #0a0e10;
+    --realm-panel: #10161a;
+    --realm-ink: #eef3f2;
+    --realm-soft: #8fa39d;
+    --realm-line: #1e2a2c;
+    --realm-phosphor: #7fd8a6;
+
+    margin: -1rem 0 0;
+    padding: 2.4rem clamp(1.1rem, 4vw, 2.6rem) 2.8rem;
+    border: 1px solid var(--realm-line);
+    border-radius: 1.1rem;
+    background:
+      radial-gradient(
+        120% 80% at 50% -10%,
+        rgba(127, 216, 166, 0.05),
+        transparent 60%
+      ),
+      var(--realm-bg);
+    background-color: var(--realm-bg);
+    color: var(--realm-ink);
+  }
+
+  .realm-head {
+    margin-bottom: 1.8rem;
+  }
+  .realm-tag {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    color: var(--realm-phosphor);
+    margin: 0 0 0.7rem;
+    text-transform: uppercase;
+  }
+  .realm-tag .sep {
+    color: var(--realm-soft);
+    opacity: 0.7;
+  }
+  .realm-tag .cur {
+    animation: realm-blink 1.1s steps(1) infinite;
+  }
+  @keyframes realm-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  .realm-title {
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin: 0;
+    color: var(--realm-ink);
+  }
+  .realm-lede {
+    margin: 0.9rem 0 0;
+    max-width: 62ch;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--realm-soft);
+  }
+
+  /* ---- El estante: rows lomo-de-libro ---- */
+  .shelf {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
-    flex: 1;
-    padding: 1.3rem 1.4rem;
+    gap: 1rem;
+  }
+
+  /* Cada spine adopta la paleta oscura + textura + fuente display de su guía. */
+  .spine {
+    border: 1px solid var(--g-border);
+    border-radius: 0.9rem;
+    background-color: var(--g-canvas);
+    overflow: hidden;
+    transition:
+      transform 160ms ease,
+      box-shadow 160ms ease,
+      border-color 160ms ease;
+  }
+  .spine.texture-grid {
+    background-image:
+      linear-gradient(
+        color-mix(in srgb, var(--g-accent) 8%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--g-accent) 8%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 22px 22px;
+  }
+  .spine.texture-grain {
+    background-image: repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--g-accent) 7%, transparent) 0 1px,
+      transparent 1px 46px
+    );
+  }
+  .spine:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--g-accent) 55%, var(--g-border));
+    box-shadow: 0 16px 40px -20px rgba(0, 0, 0, 0.7);
+  }
+
+  .spine-link {
+    display: flex;
+    gap: clamp(0.9rem, 3vw, 1.6rem);
+    align-items: stretch;
+    padding: clamp(1.1rem, 3vw, 1.5rem) clamp(1.2rem, 3.5vw, 1.7rem);
     text-decoration: none;
-    color: inherit;
+    color: var(--g-ink);
   }
-  .guia-date {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+
+  .spine-rail {
+    flex: none;
+    width: 3.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    border-right: 1px solid color-mix(in srgb, var(--g-border) 70%, transparent);
+    padding-right: clamp(0.6rem, 2vw, 1rem);
+  }
+  .spine-tomo {
+    font-family: var(--g-display), Georgia, serif;
+    font-weight: 700;
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--g-accent);
+  }
+  .spine-tomo-label {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--color-muted);
+    color: var(--g-soft);
   }
-  .guia-name {
-    font-size: 1.05rem;
-    font-weight: 600;
-    line-height: 1.3;
-    color: var(--color-text);
+
+  .spine-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .spine-title {
+    font-family: var(--g-display), Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(1.3rem, 3.4vw, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
     margin: 0;
-    transition: color 120ms ease;
+    color: var(--g-ink);
   }
-  .guia-link:hover .guia-name {
-    color: var(--color-accent);
-  }
-  .guia-blurb {
-    font-size: 0.85rem;
+  .spine-blurb {
+    margin: 0.55rem 0 0;
+    font-size: 0.86rem;
     line-height: 1.55;
-    color: var(--color-muted);
-    margin: 0;
+    color: var(--g-soft);
   }
-  .guia-tags {
+  .spine-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-top: 0.95rem;
+  }
+  .spine-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
   }
-  .guia-cta {
-    margin-top: auto;
-    padding-top: 0.5rem;
-    font-size: 0.85rem;
+  .spine-cta {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.8rem;
     font-weight: 600;
-    color: var(--color-accent);
+    color: var(--g-accent);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 560px) {
+    .spine-link {
+      flex-direction: column;
+    }
+    .spine-rail {
+      flex-direction: row;
+      width: auto;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      border-right: 0;
+      border-bottom: 1px solid
+        color-mix(in srgb, var(--g-border) 70%, transparent);
+      padding: 0 0 0.6rem;
+    }
+    .spine-tomo {
+      font-size: 1.4rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .realm-tag .cur {
+      animation: none;
+    }
+    .spine {
+      transition: none;
+    }
+    .spine:hover {
+      transform: none;
+    }
+  }
+
+  /* El tag-pill del sitio hereda tokens claros; dentro del spine lo re-tiño
+     a la paleta de la guía para que no rompa el negativo. */
+  .spine :global(.tag-pill) {
+    background: color-mix(in srgb, var(--g-accent) 14%, transparent);
+    border-color: color-mix(in srgb, var(--g-accent) 32%, transparent);
+    color: var(--g-ink);
   }
 </style>

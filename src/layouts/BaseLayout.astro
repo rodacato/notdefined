@@ -151,7 +151,14 @@ const ogImageURL = new URL('/logo.png', Astro.site);
             <a href="/cv/" class="footer-nav-link">CV</a>
             <a href="/como-escribo/" class="footer-nav-link">Cómo escribo</a>
           </div>
-          <a href="/rss.xml" class="rss-link" title="Feed RSS">RSS</a>
+          <div class="footer-right">
+            <span
+              class="footer-konami"
+              title="↑ ↑ ↓ ↓ ← → ← → B A"
+              aria-label="Konami code soportado">konami code supported</span
+            >
+            <a href="/rss.xml" class="rss-link" title="Feed RSS">RSS</a>
+          </div>
         </div>
       </div>
     </footer>
@@ -285,6 +292,30 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     gap: 1rem;
   }
 
+  .footer-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .footer-konami {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+    opacity: 0.55;
+    cursor: help;
+    transition: opacity 150ms ease;
+  }
+  .footer-konami:hover {
+    opacity: 0.9;
+  }
+  @media (max-width: 640px) {
+    .footer-konami {
+      display: none;
+    }
+  }
+
   .footer-text {
     font-size: 0.8rem;
     color: var(--color-muted);
@@ -366,6 +397,67 @@ const ogImageURL = new URL('/logo.png', Astro.site);
       (pill as HTMLElement).style.animationDelay = `${i * 60}ms`;
       pill.classList.add('is-landed');
     });
+
+  // Konami code → nivel secreto (/guias). Puerta dramática, no la única:
+  // /guias también está en el pie y es públicamente descubrible.
+  const KONAMI = [
+    'ArrowUp',
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'ArrowLeft',
+    'ArrowRight',
+    'b',
+    'a',
+  ];
+  let konamiPos = 0;
+  const reduceMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)',
+  ).matches;
+
+  function enterRealm() {
+    if (window.location.pathname.startsWith('/guias')) return;
+    if (reduceMotion) {
+      window.location.href = '/guias/';
+      return;
+    }
+    const veil = document.createElement('div');
+    veil.setAttribute('aria-hidden', 'true');
+    veil.style.cssText =
+      'position:fixed;inset:0;z-index:9999;background:#0a0e10;opacity:0;' +
+      'transition:opacity 420ms ease;pointer-events:none;';
+    document.body.appendChild(veil);
+    requestAnimationFrame(() => {
+      veil.style.opacity = '1';
+    });
+    window.setTimeout(() => {
+      window.location.href = '/guias/';
+    }, 440);
+  }
+
+  window.addEventListener('keydown', (e) => {
+    const target = e.target as HTMLElement | null;
+    if (
+      target &&
+      (target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable)
+    ) {
+      return;
+    }
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (key === KONAMI[konamiPos]) {
+      konamiPos += 1;
+      if (konamiPos === KONAMI.length) {
+        konamiPos = 0;
+        enterRealm();
+      }
+    } else {
+      konamiPos = key === KONAMI[0] ? 1 : 0;
+    }
+  });
 
   // Parallax sections (landing page only)
   const parallaxSections = document.querySelectorAll('[data-parallax]');
