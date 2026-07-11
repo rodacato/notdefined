@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1001 — Arquitecturas · almanaque técnico</title>
+<meta name="description" content="Almanaque visual de 21 estilos de arquitectura de software en 5 familias, en es-MX. El 101 ya te lo sabías; este es el 1001: directo a criterios y trade-offs. Cada estilo nació de una presión y cobra un precio; empieza por el problema, no por el nombre. Filtro por problema, fichas con topología y trade-offs, y una guía para elegir entre estilos que sirven para lo mismo.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%232B2620' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 22V10h12'/%3E%3Cpath d='M42 10h12v12'/%3E%3Cpath d='M10 42v12h12'/%3E%3Cpath d='M42 54h12v-12'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='6' fill='%23A4552E'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <!-- Cromo del sitio -->
+  <div class="site-bar">
+    <a class="site-home" href="/">← notdefined.dev</a>
+    <div id="theme-slot"></div>
+  </div>
+
+  <!-- La vista activa se monta aquí según la ruta (#/…) -->
+  <main id="app"></main>
+
+  <!-- Scripts clásicos (sin build, sin CDN, sin ES modules): funcionan abriendo
+       index.html con doble clic. data/ define el contenido (window.GUIA,
+       catálogo + fichas por familia); js/ es la mecánica. EL ORDEN IMPORTA en
+       ambos: catálogo → fichas, y core → components → páginas → router. -->
+  <script src="./data/catalogo.js"></script>
+  <script src="./data/fichas-despliegue.js"></script>
+  <script src="./data/fichas-interna.js"></script>
+  <script src="./data/fichas-comunicacion.js"></script>
+  <script src="./data/fichas-distribuidos.js"></script>
+  <script src="./data/fichas-codigo.js"></script>
+  <script src="./js/core.js"></script>
+  <script src="./js/components.js"></script>
+  <script src="./js/page-catalogo.js"></script>
+  <script src="./js/page-cual-usar.js"></script>
+  <script src="./js/page-familia.js"></script>
+  <script src="./js/router.js"></script>
+</body>
+</html>
