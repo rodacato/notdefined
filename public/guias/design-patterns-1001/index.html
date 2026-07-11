@@ -23,10 +23,14 @@
 <main id="app" role="main"><!-- js/ pinta aquí según la ruta (#/, #/patron/<id>, #/desambiguacion) --></main>
 
 <!-- Scripts clásicos (sin build, sin CDN, sin ES modules): funcionan abriendo
-     index.html con doble clic. data.js define el contenido (window.PATRONES);
-     js/ es la mecánica. EL ORDEN IMPORTA: core → components → páginas → router,
-     todos colgados del namespace window.GUIA. -->
-<script src="./data.js"></script>
+     index.html con doble clic. data/ define el contenido (window.PATRONES,
+     armado por familia); js/ es la mecánica. EL ORDEN IMPORTA en ambos:
+     catálogo → patrones → desambiguación, y core → components → páginas → router. -->
+<script src="./data/catalogo.js"></script>
+<script src="./data/patrones-creacional.js"></script>
+<script src="./data/patrones-estructural.js"></script>
+<script src="./data/patrones-comportamiento.js"></script>
+<script src="./data/desambiguacion.js"></script>
 <script src="./js/core.js"></script>
 <script src="./js/components.js"></script>
 <script src="./js/page-ficha.js"></script>

@@ -17,6 +17,7 @@
     "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#dist\"",
     "check:links": "start-server-and-test \"npm run preview:ci\" http://127.0.0.1:4173 \"linkinator http://127.0.0.1:4173 --recurse --skip '^https?://(?!127\\\\.0\\\\.0\\\\.1:4173)'\"",
     "check:project": "bash scripts/check-project-leak.sh",
+    "check:guias": "node scripts/check-guias-snippets.mjs",
     "ci": "npm run check && npm run lint && npm run format:check && npm run lint:md && npm run build && npm run check:links",
     "astro": "astro"
   },
