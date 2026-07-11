@@ -125,6 +125,50 @@
   }
   var skipScroll = false;
 
+  /* ---- tema: system (default) / light / dark, persistido -------------------
+     Mismo contrato que el resto de las guías 1001: clave "guia-tema",
+     clase html.dark y evento "guia:theme". */
+  var THEME_KEY = 'guia-tema';
+  var themeMq = null;
+
+  function getTheme() {
+    try {
+      return localStorage.getItem(THEME_KEY) || 'system';
+    } catch (e) {
+      return 'system';
+    }
+  }
+
+  function applyTheme(theme) {
+    var dark =
+      theme === 'dark' ||
+      (theme === 'system' &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.classList.toggle('dark', dark);
+  }
+
+  function setTheme(theme) {
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch (e) {}
+    applyTheme(theme);
+    if (themeMq) {
+      themeMq.onchange = null;
+      themeMq = null;
+    }
+    if (theme === 'system') {
+      themeMq = window.matchMedia('(prefers-color-scheme: dark)');
+      themeMq.onchange = function () {
+        applyTheme('system');
+      };
+    }
+    document.dispatchEvent(new CustomEvent('guia:theme', { detail: theme }));
+  }
+
+  function initTheme() {
+    setTheme(getTheme());
+  }
+
   G.DATA = DATA;
   G.ROLE_HEX = ROLE_HEX;
   G.ROLE_ES = ROLE_ES;
@@ -134,6 +178,9 @@
   G.reduceMotion = reduceMotion;
   G.onLeave = onLeave;
   G.runCleanups = runCleanups;
+  G.getTheme = getTheme;
+  G.setTheme = setTheme;
+  G.initTheme = initTheme;
   G.h = h;
   G.svg = svg;
   G.withCode = withCode;

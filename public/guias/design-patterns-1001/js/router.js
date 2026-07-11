@@ -32,8 +32,15 @@
     currentNav();
   }
 
+  function boot() {
+    G.initTheme();
+    var slot = document.getElementById('theme-slot');
+    if (slot) slot.appendChild(G.themeToggle());
+    route();
+  }
+
   window.addEventListener('hashchange', route);
-  window.addEventListener('DOMContentLoaded', route);
+  window.addEventListener('DOMContentLoaded', boot);
   // por si el script carga después de DOMContentLoaded
-  if (document.readyState !== 'loading') route();
+  if (document.readyState !== 'loading') boot();
 })((window.GUIA = window.GUIA || {}));

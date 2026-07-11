@@ -538,6 +538,60 @@
     return h('div', { class: 'foot' }, left);
   }
 
+  /* ---- toggle de tema: light / dark / system (mismo cromo en las 3 guías) -- */
+  var THEME_ICONS = {
+    light:
+      'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+    dark: 'M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z',
+    system:
+      'M3 5.5A1.5 1.5 0 0 1 4.5 4h15A1.5 1.5 0 0 1 21 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 14.5zM9 20h6M12 16v4',
+  };
+
+  function themeIcon(name) {
+    return svg(
+      'svg',
+      { class: 'ticon', viewBox: '0 0 24 24', 'aria-hidden': 'true' },
+      svg('path', { d: THEME_ICONS[name] }),
+    );
+  }
+
+  function themeToggle() {
+    var box = h('div', {
+      class: 'theme-toggle',
+      role: 'group',
+      'aria-label': 'Tema',
+    });
+    function paint() {
+      var cur = G.getTheme();
+      Array.prototype.forEach.call(box.children, function (b) {
+        var on = b.getAttribute('data-theme') === cur;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+    ['light', 'dark', 'system'].forEach(function (v) {
+      box.appendChild(
+        h(
+          'button',
+          {
+            type: 'button',
+            title: v,
+            'data-theme': v,
+            onclick: function () {
+              G.setTheme(v);
+              paint();
+            },
+          },
+          themeIcon(v),
+        ),
+      );
+    });
+    document.addEventListener('guia:theme', paint);
+    paint();
+    return box;
+  }
+
+  G.themeToggle = themeToggle;
   G.Diagram = Diagram;
   G.DiagramLegend = DiagramLegend;
   G.CodeBlock = CodeBlock;

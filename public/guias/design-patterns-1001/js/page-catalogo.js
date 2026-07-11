@@ -62,7 +62,7 @@
             'div',
             {
               class: 'eyebrow',
-              style: { 'margin-top': '4px', color: 'var(--ink-soft)' },
+              style: { 'margin-top': '4px', color: 'var(--color-fg-subtle)' },
             },
             '23 patrones \u00b7 3 categor\u00edas',
           ),
@@ -342,7 +342,7 @@
         status.appendChild(
           h(
             'span',
-            { style: { color: 'var(--ink-faint)' } },
+            { style: { color: 'var(--color-fg-faint)' } },
             'Sin filtro: el cat\u00e1logo completo, ordenado por categor\u00eda.',
           ),
         );
