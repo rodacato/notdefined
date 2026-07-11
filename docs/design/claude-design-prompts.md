@@ -268,7 +268,8 @@ a un sitio estático, donde el dueño seguirá editándolo a mano sin tu ayuda.
 ### Metadata y navegación
 - `<html lang="es">`, `<title>` descriptivo y `<meta name="description">`.
 - Arriba a la izquierda, discreto: `<a href="/">← notdefined.dev</a>`.
-- Al pie: "Generada con Claude Design · {mes año}".
+- SIN colofón de "Generada con Claude Design" — la disclosure de origen vive
+  una sola vez en el índice `/guias/` del sitio (ADR 0005, enmienda).
 
 ### Interacción y accesibilidad
 - Responsive real — se consultará desde el celular.
@@ -293,17 +294,95 @@ a un sitio estático, donde el dueño seguirá editándolo a mano sin tu ayuda.
 - No incluyas design systems externos ni bundles de otros proyectos.
 ```
 
-Import checklist (manual, per guide): copy the files to
-`public/guias/<slug>/`, add the entry to `src/data/guias.ts`, delete export
-cruft, verify offline double-click + the `← notdefined.dev` link, and diff
-the classes used in `js/` against the selectors in `styles.css` — the 1001
-export shipped a fully unstyled sibling switcher because the CSS was
-incomplete.
+Once exported, the integration and review runs through **Prompt 8** below.
 
-If the guide carries runnable code samples, colocate a `check.mjs` in its
-folder that verifies them by execution (see `design-patterns-1001/check.mjs`
-as the reference). `npm run check:guias` auto-discovers and runs every
-guide's `check.mjs`; guides without one are skipped.
+---
+
+## Prompt 8 — Guide integration & normalization (for Claude Code, NOT Claude Design)
+
+Unlike the rest of this doc, this prompt is pasted into **Claude Code** when a
+new guide export lands (typically delegated to one agent per guide). It
+encodes everything design-patterns-1001 needed to reach shippable quality —
+calibrated against the real bugs that import surfaced: a view that crashed on
+open, ten snippets that ran but didn't teach their concept, and a fully
+unstyled component because the exported CSS was incomplete.
+
+```text
+Integra y normaliza la guía nueva en public/guias/<slug>/ (export de Claude
+Design ya descomprimido). El estándar de referencia es design-patterns-1001.
+Checklist completo, en orden:
+
+0. Import básico — elimina cruft del export: screenshots/, .thumbnail, _ds/,
+   exports alternativos (astro/react), páginas HTML de versiones viejas.
+   Verifica que abre offline con doble click y que existe el back-link
+   `← notdefined.dev`.
+1. Parodia 1001 — todo "101" visible pasa a "1001": <title>, meta
+   description, document.title por vista, masthead, folio. El guiño ("el 101
+   ya te lo sabías; este es el 1001") va UNA sola vez, no repitas el chiste.
+2. Organización — mecánica en js/ como scripts clásicos sobre window.GUIA
+   (core → components → page-<ruta> → router; un solo app.js si cabe en
+   <400 líneas; NUNCA ES modules — file:// no los carga). Contenido en data/
+   fragmentado por dominio y NOMBRADO por dominio (patrones-creacional.js,
+   fichas-comunicacion.js) — nunca por número. Orden de carga comentado en
+   index.html.
+   Valida: node --check por archivo, pasada ESLint no-undef para referencias
+   cruzadas, y si partiste un monolito, deep-compare del objeto armado contra
+   el original — debe ser idéntico al byte.
+3. Snippets de código (si la guía trae) — cada uno es un programa
+   autocontenido con demo final que imprime, y el output esperado como
+   comentario (`# =>` / `// =>`). FIDELIDAD AL CONCEPTO antes que
+   ejecutabilidad: código funcional que no implementa lo que la ficha enseña
+   se reescribe desde cero. Idiomático por lenguaje, nombres con significado,
+   comentarios en español del porqué, ≤35 líneas objetivo. En conceptos
+   confundibles, el movimiento distintivo va comentado en el código.
+   Valida POR EJECUCIÓN: exit 0 + stdout coincidiendo con cada "=>", en
+   todos los lenguajes de la guía.
+4. check.mjs propio — colocado en la carpeta de la guía, rutas resueltas
+   desde sí mismo, verificando lo verificable de ESA guía. `npm run
+   check:guias` debe descubrirlo y pasar.
+5. Auditoría de contenido — claridad, consistencia es-MX, precisión técnica
+   de los claims. Pasada de voz de Adrian (lee .kwik-e/memory/OWNER.md y
+   docs/editorial/ghostwriter.md) SOLO en superficies de prosa editorial —
+   blurbs, veredictos, narraciones — con densidad ≤1 frase firma por
+   pantalla; definiciones técnicas intactas. Abre TODAS las rutas y vistas
+   buscando crashes.
+6. Links — ids y rutas internas verificados programáticamente contra los
+   datos; cero requests externos (prueba de fuego: funciona sin red).
+7. Diff clases-JS vs selectores-CSS — toda clase usada en js/ debe tener sus
+   reglas o una justificación; lo que falte se estila con la paleta de la
+   propia guía.
+8. Sin colofón — nada de "Generada con Claude Design" dentro de la guía; la
+   disclosure vive en el índice /guias/ (ADR 0005, enmienda).
+9. Registro — entrada en src/data/guias.ts (slug, título, blurb con voz,
+   fecha, tags). Gates del repo en verde (check, lint, build). Commit local,
+   nunca push.
+
+Reporta con datos, no prosa: bugs/crashes encontrados por paso, snippets
+funcionales-pero-off-topic con una línea de qué tenían, 2-3 pares
+antes→después de la pasada de voz, números de validación (X/X por lenguaje,
+deep-compare, no-undef), y qué dejaste sin tocar por duda.
+```
+
+### Reviewer pass (independent, by a second session/agent)
+
+An integration is not done when the integrator reports done. The reviewer —
+with fresh eyes or more context — verifies WITHOUT trusting the report:
+
+1. **Re-run everything yourself**: `npm run check:guias`, `npm run check`,
+   `lint`, `build`. Reports summarize; gates don't lie.
+2. **Scope check**: `git diff --stat` (or status) — only the guide's folder
+   plus its `guias.ts` entry may be touched. Anything else is a finding.
+3. **Spot-read where errors hide**: the confusion-prone content pairs, every
+   `cuandoNo`-style verdict field (one shipped stating the when-YES), and
+   voice density (≤1 signature phrase per screen; too much voice is as wrong
+   as none).
+4. **Ask for the numbers the report skipped**: class-vs-CSS diff counts,
+   deep-compare result, routes smoke-tested.
+5. **Commit hygiene across sessions**: new commits only — never `--amend`
+   over another session's commit.
+6. **Owner sign-off surfaces**: anything written in Adrian's voice (blurbs,
+   editorial verdicts) gets quoted back to him for veto before or right
+   after the commit — his voice, his call.
 
 ---
 
