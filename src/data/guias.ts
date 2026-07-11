@@ -8,10 +8,18 @@ export interface Guia {
 
 export const guias: Guia[] = [
   {
+    slug: 'algorithms-1001',
+    title: 'Algoritmos 1001',
+    blurb:
+      'Curso interactivo de algoritmos: Big O, búsquedas, ordenamiento, recursión, estructuras de datos, grafos, greedy y DP. Se aprende moviendo — predices, animas y comparas: 23 simulaciones en 7 módulos.',
+    date: '2026-07-11',
+    tags: ['Algoritmos', 'Big O', 'Estructuras de datos'],
+  },
+  {
     slug: 'architectures-1001',
     title: 'Arquitecturas 1001',
     blurb:
-      'Almanaque de 21 estilos de arquitectura en 5 familias, problema-primero: cada estilo nació de una presión y cobra un precio. Filtro por dolor, comparaciones lado a lado y quiz para probar el ojo. Tomo I en progreso: 7 fichas profundas con topología y trade-offs; el resto trae su semilla de catálogo.',
+      'Almanaque de 21 estilos de arquitectura en 5 familias, problema-primero: cada estilo nació de una presión y cobra un precio. Las 21 fichas con topología y trade-offs, filtro por dolor, comparaciones lado a lado y quiz para probar el ojo.',
     date: '2026-07-11',
     tags: ['Arquitectura', 'Trade-offs', 'Sistemas distribuidos'],
   },
