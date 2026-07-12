@@ -7,7 +7,7 @@ export interface GuiaTheme {
   inkSoft: string;
   accent: string;
   border: string;
-  texture: 'grid' | 'grain';
+  texture: 'grid' | 'grain' | 'stripes' | 'arcs';
   displayFamily: string; // nombre de la @font-face declarada en index.astro
 }
 
@@ -56,6 +56,42 @@ export const guias: Guia[] = [
       border: '#2a4e74',
       texture: 'grid',
       displayFamily: 'Guia Chakra Petch',
+    },
+  },
+  {
+    slug: 'apis-1001',
+    title: 'APIs 1001',
+    blurb:
+      'Almanaque de 13 estilos de API en 5 familias: REST, gRPC, GraphQL, WebSockets, webhooks y compañía. Cada ficha con su contrato, su cuándo-no y su simulador de conversación; comparador de escenario con round-trips y bytes honestos, quiz y desambiguación de los que se confunden.',
+    date: '2026-07-11',
+    tags: ['APIs', 'REST', 'gRPC', 'Tiempo real'],
+    tomo: 4,
+    theme: {
+      canvas: '#221418',
+      ink: '#f4e9e4',
+      inkSoft: '#c2a8a4',
+      accent: '#e07856',
+      border: '#4a2e33',
+      texture: 'stripes',
+      displayFamily: 'Guia Fraunces',
+    },
+  },
+  {
+    slug: 'auth-1001',
+    title: 'Auth 1001',
+    blurb:
+      'Almanaque de 14 métodos de autenticación y autorización en 4 familias: sesiones, JWT, passkeys, OAuth 2.1, OIDC, mTLS y las tres caras de la autorización. Cada ficha dice quién guarda el secreto y cómo se revoca; simuladores de baile paso a paso y el simulador de logout corrido en tres mundos.',
+    date: '2026-07-11',
+    tags: ['Auth', 'OAuth', 'Passkeys', 'Seguridad'],
+    tomo: 5,
+    theme: {
+      canvas: '#191430',
+      ink: '#ede9f7',
+      inkSoft: '#aba3c4',
+      accent: '#a78bda',
+      border: '#383060',
+      texture: 'arcs',
+      displayFamily: 'Guia Playfair',
     },
   },
   {

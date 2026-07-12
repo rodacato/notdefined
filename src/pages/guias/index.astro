@@ -86,6 +86,21 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
     src: url('/guias/algorithms-1001/fonts/space-grotesk-700.woff2')
       format('woff2');
   }
+  @font-face {
+    font-family: 'Guia Fraunces';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/guias/apis-1001/fonts/Fraunces-Bold.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Guia Playfair';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/guias/auth-1001/fonts/playfair-display-700.woff2')
+      format('woff2');
+  }
 
   .realm-head {
     margin-bottom: 2rem;
@@ -163,6 +178,22 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
       transparent 1px 46px
     );
   }
+  /* par-avion postal (apis) */
+  .spine.texture-stripes {
+    background-image: repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--g-accent) 7%, transparent) 0 2px,
+      transparent 2px 26px
+    );
+  }
+  /* guilloché de documento de seguridad (auth) */
+  .spine.texture-arcs {
+    background-image: repeating-radial-gradient(
+      circle at 0 130%,
+      color-mix(in srgb, var(--g-accent) 7%, transparent) 0 1px,
+      transparent 1px 22px
+    );
+  }
   .spine:hover {
     transform: translateY(-2px);
     border-color: color-mix(in srgb, var(--g-accent) 55%, var(--g-border));
@@ -190,7 +221,8 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
     padding-right: clamp(0.6rem, 2vw, 1rem);
   }
   .spine-tomo {
-    font-family: var(--g-display), Georgia, serif;
+    /* Serif fija para el numeral: sin serifas, II/III se ven como barras. */
+    font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
     font-weight: 700;
     font-size: 1.9rem;
     line-height: 1;
