@@ -7,9 +7,35 @@ export interface GuiaTheme {
   inkSoft: string;
   accent: string;
   border: string;
-  texture: 'grid' | 'grain' | 'stripes' | 'arcs' | 'rules';
+  texture: 'grid' | 'grain' | 'stripes' | 'arcs' | 'rules' | 'morse';
   displayFamily: string; // nombre de la @font-face declarada en index.astro
 }
+
+export type GuiaCollectionId = 'almanaque-1001' | 'essentials';
+
+export interface GuiaCollection {
+  id: GuiaCollectionId;
+  name: string; // encabezado del estante en /guias
+  hook: string; // una línea bajo el encabezado
+  itemLabel: string; // "tomos" | "guías" — para el contador del estante
+}
+
+// El orden aquí es el orden de los estantes en /guias. Un estante sin guías
+// no se renderiza, así que registrar una colección futura no cuesta nada.
+export const collections: GuiaCollection[] = [
+  {
+    id: 'almanaque-1001',
+    name: 'Almanaque técnico · 1001',
+    hook: 'El 101 ya te lo sabías. Tomos numerados, cada uno con su tema, su paleta y su tipografía.',
+    itemLabel: 'tomos',
+  },
+  {
+    id: 'essentials',
+    name: 'Essentials',
+    hook: 'Lo esencial para moverte políglota entre lenguajes y herramientas — sin tomo, sin ceremonia.',
+    itemLabel: 'guías',
+  },
+];
 
 export interface Guia {
   slug: string;
@@ -17,7 +43,8 @@ export interface Guia {
   blurb: string;
   date: string;
   tags: string[];
-  tomo: number; // orden en la colección (I = primera publicada)
+  collection: GuiaCollectionId;
+  tomo?: number; // solo almanaque-1001: orden en la colección (I = primera publicada)
   theme: GuiaTheme;
 }
 
@@ -26,9 +53,10 @@ export const guias: Guia[] = [
     slug: 'design-patterns-1001',
     title: 'Patrones de diseño 1001',
     blurb:
-      'El 101 ya te lo sabías; este es el 1001. Almanaque interactivo de los 23 patrones del GoF por el problema que resuelven: catálogo problema-primero, fichas con diagrama, antes → después, y desambiguación de los que se parecen.',
+      'Almanaque interactivo de los 23 patrones del GoF por el problema que resuelven: catálogo problema-primero, fichas con diagrama, antes → después, y desambiguación de los que se parecen.',
     date: '2026-07-10',
     tags: ['Patterns', 'GoF', 'Arquitectura'],
+    collection: 'almanaque-1001',
     tomo: 1,
     theme: {
       canvas: '#231a0e',
@@ -47,6 +75,7 @@ export const guias: Guia[] = [
       'Almanaque de 21 estilos de arquitectura en 5 familias, problema-primero: cada estilo nació de una presión y cobra un precio. Las 21 fichas con topología y trade-offs, filtro por dolor, comparaciones lado a lado y quiz para probar el ojo.',
     date: '2026-07-11',
     tags: ['Arquitectura', 'Trade-offs', 'Sistemas distribuidos'],
+    collection: 'almanaque-1001',
     tomo: 2,
     theme: {
       canvas: '#0e2440',
@@ -65,6 +94,7 @@ export const guias: Guia[] = [
       'Almanaque de 13 estilos de API en 5 familias: REST, gRPC, GraphQL, WebSockets, webhooks y compañía. Cada ficha con su contrato, su cuándo-no y su simulador de conversación; comparador de escenario con round-trips y bytes honestos, quiz y desambiguación de los que se confunden.',
     date: '2026-07-11',
     tags: ['APIs', 'REST', 'gRPC', 'Tiempo real'],
+    collection: 'almanaque-1001',
     tomo: 4,
     theme: {
       canvas: '#221418',
@@ -83,6 +113,7 @@ export const guias: Guia[] = [
       'Almanaque de 14 métodos de autenticación y autorización en 4 familias: sesiones, JWT, passkeys, OAuth 2.1, OIDC, mTLS y las tres caras de la autorización. Cada ficha dice quién guarda el secreto y cómo se revoca; simuladores de baile paso a paso y el simulador de logout corrido en tres mundos.',
     date: '2026-07-11',
     tags: ['Auth', 'OAuth', 'Passkeys', 'Seguridad'],
+    collection: 'almanaque-1001',
     tomo: 5,
     theme: {
       canvas: '#191430',
@@ -101,6 +132,7 @@ export const guias: Guia[] = [
       'Almanaque de 12 tipos de bases de datos en 4 familias — el catálogo es de tipos, con productos como arquetipos: los productos caducan, los tipos no. El layout físico animado es el corazón: row vs columnar lado a lado, B-tree vs LSM, grafo vs JOINs; comparador de escenario y la tesis honesta de empezar en Postgres hasta que un número te duela.',
     date: '2026-07-11',
     tags: ['Bases de datos', 'Postgres', 'OLAP', 'Modelos de datos'],
+    collection: 'almanaque-1001',
     tomo: 6,
     theme: {
       canvas: '#0e241e',
@@ -113,12 +145,32 @@ export const guias: Guia[] = [
     },
   },
   {
+    slug: 'messaging-1001',
+    title: 'Mensajería 1001',
+    blurb:
+      'Almanaque de 11 sistemas de colas y mensajería en 4 familias: RabbitMQ, Kafka, SQS, NATS, MQTT y compañía. La división que manda es cola vs log; las sims enseñan el duplicado del at-least-once, el replay, la DLQ y el outbox — porque "exactly-once end-to-end" es marketing y lo real es idempotencia.',
+    date: '2026-07-11',
+    tags: ['Mensajería', 'Kafka', 'RabbitMQ', 'Eventos'],
+    collection: 'almanaque-1001',
+    tomo: 7,
+    theme: {
+      canvas: '#101822',
+      ink: '#e7eef4',
+      inkSoft: '#9fb1bf',
+      accent: '#56c4d6',
+      border: '#2a3a4a',
+      texture: 'morse',
+      displayFamily: 'Guia Barlow Condensed',
+    },
+  },
+  {
     slug: 'algorithms-1001',
     title: 'Algoritmos 1001',
     blurb:
       'Curso interactivo de algoritmos: Big O, búsquedas, ordenamiento, recursión, estructuras de datos, grafos, greedy y DP. Se aprende moviendo — predices, animas y comparas: 23 simulaciones en 7 módulos.',
     date: '2026-07-11',
     tags: ['Algoritmos', 'Big O', 'Estructuras de datos'],
+    collection: 'almanaque-1001',
     tomo: 3,
     theme: {
       canvas: '#17211a',

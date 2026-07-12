@@ -1,11 +1,27 @@
 ---
 import RealmLayout from '../../layouts/RealmLayout.astro';
 import TagPill from '../../components/TagPill.astro';
-import { guias } from '../../data/guias';
-
-const ordered = [...guias].sort((a, b) => a.tomo - b.tomo);
+import { guias, collections } from '../../data/guias';
 
 const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+
+// Un estante por colección, en el orden del registro; vacíos no se pintan.
+const shelves = collections
+  .map((col) => ({
+    col,
+    items: guias
+      .filter((g) => g.collection === col.id)
+      .sort((a, b) => (a.tomo ?? 99) - (b.tomo ?? 99)),
+  }))
+  .filter((s) => s.items.length > 0);
+
+// Dentro de su estante, el sufijo "1001" del lomo es redundante: lo carga
+// el encabezado de la colección. El título completo vive dentro de la guía.
+function spineTitle(title: string, collection: string) {
+  return collection === 'almanaque-1001'
+    ? title.replace(/\s*1001$/, '')
+    : title;
+}
 ---
 
 <RealmLayout
@@ -27,35 +43,53 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
       </p>
     </header>
 
-    <ol class="shelf">
-      {
-        ordered.map((guia) => (
-          <li
-            class:list={['spine', `texture-${guia.theme.texture}`]}
-            style={`--g-canvas:${guia.theme.canvas};--g-ink:${guia.theme.ink};--g-soft:${guia.theme.inkSoft};--g-accent:${guia.theme.accent};--g-border:${guia.theme.border};--g-display:'${guia.theme.displayFamily}';`}
-          >
-            <a href={`/guias/${guia.slug}/`} class="spine-link">
-              <div class="spine-rail">
-                <span class="spine-tomo">{ROMAN[guia.tomo]}</span>
-                <span class="spine-tomo-label">Tomo</span>
-              </div>
-              <div class="spine-body">
-                <h2 class="spine-title">{guia.title}</h2>
-                <p class="spine-blurb">{guia.blurb}</p>
-                <div class="spine-foot">
-                  <div class="spine-tags">
-                    {guia.tags.map((t) => (
-                      <TagPill label={t} />
-                    ))}
+    {
+      shelves.map((shelf, i) => (
+        <section class="shelf-section" aria-label={shelf.col.name}>
+          <header class="shelf-head">
+            <p class="shelf-name">
+              COLECCIÓN {String(i + 1).padStart(2, '0')}{' '}
+              <span class="sep">//</span> {shelf.col.name.toUpperCase()}
+              <span class="shelf-count">
+                {shelf.items.length} {shelf.col.itemLabel}
+              </span>
+            </p>
+            <p class="shelf-hook">{shelf.col.hook}</p>
+          </header>
+          <ol class="shelf">
+            {shelf.items.map((guia) => (
+              <li
+                class:list={['spine', `texture-${guia.theme.texture}`]}
+                style={`--g-canvas:${guia.theme.canvas};--g-ink:${guia.theme.ink};--g-soft:${guia.theme.inkSoft};--g-accent:${guia.theme.accent};--g-border:${guia.theme.border};--g-display:'${guia.theme.displayFamily}';`}
+              >
+                <a href={`/guias/${guia.slug}/`} class="spine-link">
+                  {guia.tomo && (
+                    <div class="spine-rail">
+                      <span class="spine-tomo">{ROMAN[guia.tomo]}</span>
+                      <span class="spine-tomo-label">Tomo</span>
+                    </div>
+                  )}
+                  <div class="spine-body">
+                    <h2 class="spine-title">
+                      {spineTitle(guia.title, guia.collection)}
+                    </h2>
+                    <p class="spine-blurb">{guia.blurb}</p>
+                    <div class="spine-foot">
+                      <div class="spine-tags">
+                        {guia.tags.map((t) => (
+                          <TagPill label={t} />
+                        ))}
+                      </div>
+                      <span class="spine-cta">Ábrela →</span>
+                    </div>
                   </div>
-                  <span class="spine-cta">Ábrela →</span>
-                </div>
-              </div>
-            </a>
-          </li>
-        ))
-      }
-    </ol>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))
+    }
   </section>
 </RealmLayout>
 
@@ -108,6 +142,14 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
     font-display: swap;
     src: url('/guias/databases-1001/fonts/lora-700.woff2') format('woff2');
   }
+  @font-face {
+    font-family: 'Guia Barlow Condensed';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/guias/messaging-1001/fonts/barlow-condensed-700.woff2')
+      format('woff2');
+  }
 
   .realm-head {
     margin-bottom: 2rem;
@@ -142,6 +184,47 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
     font-size: 0.95rem;
     line-height: 1.6;
     color: #8fa39d;
+  }
+
+  /* ---- Estantes por colección ---- */
+  .shelf-section {
+    margin-top: 2.2rem;
+  }
+  .shelf-section:first-of-type {
+    margin-top: 0;
+  }
+  .shelf-head {
+    margin-bottom: 1rem;
+  }
+  .shelf-name {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: #eef3f2;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .shelf-name .sep {
+    color: #8fa39d;
+    opacity: 0.7;
+  }
+  .shelf-count {
+    margin-left: auto;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: #7fd8a6;
+    opacity: 0.8;
+    text-transform: lowercase;
+  }
+  .shelf-hook {
+    margin: 0.35rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #8fa39d;
+    max-width: 62ch;
   }
 
   /* ---- El estante: rows lomo-de-libro ---- */
@@ -208,6 +291,23 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
       color-mix(in srgb, var(--g-accent) 8%, transparent) 0 1px,
       transparent 1px 26px
     );
+  }
+  /* raya-punto morse (messaging): la capa de canvas tapa todo salvo ranuras
+     de 1px cada 28px, por donde asoma el patrón de rayas y puntos. */
+  .spine.texture-morse {
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        var(--g-canvas) 0 27px,
+        transparent 27px 28px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--g-accent) 12%, transparent) 0 10px,
+        transparent 10px 18px,
+        color-mix(in srgb, var(--g-accent) 12%, transparent) 18px 21px,
+        transparent 21px 38px
+      );
   }
   .spine:hover {
     transform: translateY(-2px);
