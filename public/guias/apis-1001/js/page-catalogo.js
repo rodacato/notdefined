@@ -1,0 +1,94 @@
+/* ==========================================================================
+   js/page-catalogo.js — Portada / índice del almanaque
+   Masthead + filtro problema-primero + catálogo por familias.
+   ========================================================================== */
+(function (G) {
+  "use strict";
+  G.pages = G.pages || {};
+
+  G.pages.catalogo = function () {
+    var estado = { dolor: null };
+
+    /* --- Masthead --- */
+    var meta = G.el("div", { class: "masthead-meta" }, [
+      stat(G.catalogo.length, "estilos"),
+      stat(G.familias.length, "familias"),
+      stat(G.ejes.length, "ejes de comparación"),
+      stat(G.escenarios.length, "escenarios comparables")
+    ]);
+
+    var masthead = G.el("div", { class: "masthead" }, [
+      G.el("div", { class: "hero-top" }, [
+        G.el("div", { class: "hero-brand" }, [
+          G.icon("mark", "hero-mark"),
+          G.el("span", { class: "eyebrow", text: "Almanaque técnico · 1001" })
+        ]),
+        G.el("div", { class: "hero-ed" }, [
+          G.el("span", { text: "Tomo IV · Edición 2026" }),
+          G.el("span", { text: G.catalogo.length + " protocolos · " + G.familias.length + " familias" })
+        ])
+      ]),
+      G.el("h1", { class: "display title", text: "Estilos de API, catalogados" }),
+      G.el("p", { class: "hero-lede", html: "Un catálogo para recuperar el estilo por el <em>problema que resuelves</em>, no por su nombre. Sin tutoriales: criterios, diferencias y trade-offs — con la conversación de cada protocolo animada." }),
+      meta,
+      G.el("hr", { class: "rule-paravion", style: { marginTop: "var(--space-8)" } })
+    ]);
+
+    /* --- Filtro problema-primero --- */
+    var chipTodos = G.el("button", { class: "filter-chip active", text: "Todos", onclick: function () { setDolor(null); } });
+    var chips = [chipTodos].concat(G.dolores.map(function (d) {
+      return G.el("button", { class: "filter-chip", "data-dolor": d.id, text: d.label, onclick: function () { setDolor(d.id); } });
+    }));
+    var filterBar = G.el("div", { class: "filter-bar" }, chips);
+
+    var filterWrap = G.el("div", { class: "mt-8" }, [
+      G.el("div", { class: "section-title" }, [
+        G.el("span", { class: "eyebrow", text: "Empieza por el dolor" })
+      ]),
+      filterBar
+    ]);
+
+    /* --- Catálogo por familias --- */
+    var familyBlocks = G.familias.map(function (fam) {
+      var estilos = G.estilosDeFamilia(fam.id);
+      var grid = G.el("div", { class: "catalog-grid" }, estilos.map(function (e) { return G.buildCatCard(e); }));
+      return G.el("section", { class: "family-block", "data-familia": fam.id }, [
+        G.buildFamilyHead(fam, estilos.length),
+        G.el("p", { class: "caption", style: { marginBottom: "var(--space-4)", maxWidth: "70ch" }, text: fam.nota }),
+        grid
+      ]);
+    });
+
+    var root = G.el("div", {}, [
+      G.shell([
+        masthead,
+        filterWrap
+      ].concat(familyBlocks))
+    ]);
+
+    function setDolor(id) {
+      estado.dolor = (estado.dolor === id) ? null : id;
+      // Chips
+      chipTodos.classList.toggle("active", !estado.dolor);
+      G.$$(".filter-chip[data-dolor]", filterBar).forEach(function (c) {
+        c.classList.toggle("active", c.getAttribute("data-dolor") === estado.dolor);
+      });
+      // Cards
+      G.$$(".cat-card", root).forEach(function (card) {
+        var e = G.catalogoPorId[card.getAttribute("data-estilo")];
+        var match = !estado.dolor || (e.dolores.indexOf(estado.dolor) !== -1);
+        card.classList.toggle("dim", !match);
+      });
+    }
+
+    function stat(n, label) {
+      return G.el("div", { class: "stat" }, [
+        G.el("span", { class: "n", text: String(n).padStart(2, "0") }),
+        G.el("span", { class: "l", text: label })
+      ]);
+    }
+
+    return root;
+  };
+
+})(window.GUIA = window.GUIA || {});
