@@ -7,7 +7,7 @@ export interface GuiaTheme {
   inkSoft: string;
   accent: string;
   border: string;
-  texture: 'grid' | 'grain' | 'stripes' | 'arcs';
+  texture: 'grid' | 'grain' | 'stripes' | 'arcs' | 'rules';
   displayFamily: string; // nombre de la @font-face declarada en index.astro
 }
 
@@ -92,6 +92,24 @@ export const guias: Guia[] = [
       border: '#383060',
       texture: 'arcs',
       displayFamily: 'Guia Playfair',
+    },
+  },
+  {
+    slug: 'databases-1001',
+    title: 'Bases de datos 1001',
+    blurb:
+      'Almanaque de 12 tipos de bases de datos en 4 familias — el catálogo es de tipos, con productos como arquetipos: los productos caducan, los tipos no. El layout físico animado es el corazón: row vs columnar lado a lado, B-tree vs LSM, grafo vs JOINs; comparador de escenario y la tesis honesta de empezar en Postgres hasta que un número te duela.',
+    date: '2026-07-11',
+    tags: ['Bases de datos', 'Postgres', 'OLAP', 'Modelos de datos'],
+    tomo: 6,
+    theme: {
+      canvas: '#0e241e',
+      ink: '#e9f2ec',
+      inkSoft: '#a3bcaf',
+      accent: '#c9a45d',
+      border: '#26473c',
+      texture: 'rules',
+      displayFamily: 'Guia Lora',
     },
   },
   {

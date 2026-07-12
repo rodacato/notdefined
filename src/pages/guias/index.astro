@@ -101,6 +101,13 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
     src: url('/guias/auth-1001/fonts/playfair-display-700.woff2')
       format('woff2');
   }
+  @font-face {
+    font-family: 'Guia Lora';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/guias/databases-1001/fonts/lora-700.woff2') format('woff2');
+  }
 
   .realm-head {
     margin-bottom: 2rem;
@@ -192,6 +199,14 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
       circle at 0 130%,
       color-mix(in srgb, var(--g-accent) 7%, transparent) 0 1px,
       transparent 1px 22px
+    );
+  }
+  /* renglones de ficha de catálogo (databases) */
+  .spine.texture-rules {
+    background-image: repeating-linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--g-accent) 8%, transparent) 0 1px,
+      transparent 1px 26px
     );
   }
   .spine:hover {
