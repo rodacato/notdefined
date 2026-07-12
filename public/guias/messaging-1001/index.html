@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Mensajería 1001 · almanaque técnico — colas, logs y semánticas de entrega</title>
+  <meta name="description" content="Almanaque técnico de sistemas de mensajería en es-MX: colas, logs de eventos y pub/sub, comparados por el problema que resuelves. El 101 ya te lo sabías; este es el 1001.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 38' fill='none' stroke='%23187585' stroke-width='2.6' stroke-linecap='round'><path d='M5 13V5h8M33 13V5h-8M5 25v8h8M33 25v8h-8'/><circle cx='19' cy='19' r='3.4' fill='%2356C4D6' stroke='none'/></svg>">
+
+  <!-- Anti-FOUC de tema: corre ANTES del primer paint. Default dark. -->
+  <script>
+    (function () {
+      try {
+        var pref = localStorage.getItem("guia-tema") || "dark";
+        var dark = pref === "dark" ||
+          (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (dark) document.documentElement.classList.add("dark");
+      } catch (e) {
+        document.documentElement.classList.add("dark");
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="back" href="/guias/">← notdefined.dev/guias</a>
+    <div id="theme-mount"></div>
+  </header>
+
+  <main id="app"><!-- las vistas se montan aquí --></main>
+  <noscript style="display:block;max-width:640px;margin:80px auto;padding:0 24px;font-family:system-ui,sans-serif;">
+    Este almanaque necesita JavaScript para las simulaciones paso a paso. Actívalo para consultarlo.
+  </noscript>
+
+  <footer class="foot">
+    <div class="wrap">
+      <span>1001 · ALMANAQUE TÉCNICO · TOMO VII</span>
+      <span>Mensajería 1001 · edición 2026 · es-MX</span>
+    </div>
+  </footer>
+
+  <!-- Scripts clásicos sobre window.GUIA (sin build, sin CDN, sin ES modules):
+       funciona abriendo index.html con doble clic. EL ORDEN IMPORTA:
+       1) core (namespace + tema), 2) data (catálogo → fichas → sims →
+       escenarios), 3) components, 4) páginas, 5) router (arranque, al final). -->
+  <script src="./js/core.js"></script>
+
+  <script src="./data/catalogo.js"></script>
+  <script src="./data/fichas-colas.js"></script>
+  <script src="./data/fichas-logs.js"></script>
+  <script src="./data/fichas-pubsub.js"></script>
+  <script src="./data/fichas-gestionada.js"></script>
+  <script src="./data/simulaciones.js"></script>
+  <script src="./data/escenarios.js"></script>
+
+  <script src="./js/components.js"></script>
+  <script src="./js/page-catalogo.js"></script>
+  <script src="./js/page-ficha.js"></script>
+  <script src="./js/page-simulaciones.js"></script>
+  <script src="./js/page-cual-uso.js"></script>
+  <script src="./js/page-desambiguacion.js"></script>
+  <script src="./js/router.js"></script>
+</body>
+</html>
