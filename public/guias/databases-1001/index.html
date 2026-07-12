@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Bases de datos 1001 · almanaque técnico</title>
+  <meta name="description" content="Almanaque técnico de tipos de base de datos, en español: relacional, clave-valor, documento, columnar, time-series, grafo, búsqueda y vectorial. El 101 ya te lo sabías; este es el 1001. Recupera por el problema que resuelves, no por el nombre.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 38' fill='none' stroke='%2334604C' stroke-width='2.4' stroke-linecap='square'><path d='M3 11V3h8M35 11V3h-8M3 27v8h8M35 27v8h-8'/><circle cx='19' cy='19' r='3.3' fill='%23C9A45D' stroke='none'/></svg>">
+
+  <!-- Tema: fija la clase ANTES del primer paint para evitar parpadeo.
+       Lee guia-tema (light|dark|system); default dark. -->
+  <script>
+    (function () {
+      try {
+        var pref = localStorage.getItem('guia-tema');
+        if (pref !== 'light' && pref !== 'dark' && pref !== 'system') pref = 'dark';
+        var efectivo = pref;
+        if (pref === 'system') {
+          efectivo = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+        }
+        document.documentElement.classList.toggle('dark', efectivo === 'dark');
+      } catch (e) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main id="app"><!-- las vistas se montan aquí --></main>
+  <noscript style="display:block;max-width:640px;margin:80px auto;padding:0 24px;font-family:Georgia,serif;">
+    Este almanaque necesita JavaScript para los simuladores interactivos. Actívalo para consultarlo.
+  </noscript>
+
+  <!-- Scripts clásicos sobre window.GUIA (sin build, sin CDN, sin ES modules):
+       funciona abriendo index.html con doble clic. EL ORDEN IMPORTA:
+       1) core (namespace + tema), 2) data (catálogo → fichas → sims →
+       escenarios/quiz/desambiguación), 3) components, 4) páginas y motores
+       de simulación, 5) router (arranque, al final). -->
+  <script src="./js/core.js"></script>
+
+  <script src="./data/catalogo.js"></script>
+  <script src="./data/fichas-oltp.js"></script>
+  <script src="./data/fichas-escala.js"></script>
+  <script src="./data/fichas-analitica.js"></script>
+  <script src="./data/fichas-forma.js"></script>
+  <script src="./data/simulaciones.js"></script>
+  <script src="./data/escenarios.js"></script>
+  <script src="./data/quiz.js"></script>
+  <script src="./data/desambiguacion.js"></script>
+  <script src="./data/sims-extra.js"></script>
+
+  <script src="./js/components.js"></script>
+  <script src="./js/page-indice.js"></script>
+  <script src="./js/page-ficha.js"></script>
+  <script src="./js/page-comparador.js"></script>
+  <script src="./js/page-quiz.js"></script>
+  <script src="./js/page-desambiguacion.js"></script>
+  <script src="./js/sim-layout.js"></script>
+  <script src="./js/sim-player.js"></script>
+  <script src="./js/sim-renderers.js"></script>
+
+  <script src="./js/router.js"></script>
+</body>
+</html>
