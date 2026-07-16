@@ -3,7 +3,7 @@ title: 'Ver tu sitio con otros ojos'
 description: 'Construí un simulador de condiciones visuales para auditar mi propio blog. Pasó casi todo — y no por virtuoso. Lo único que reprobó fue el consejo que yo mismo di en otro post.'
 pubDate: 2026-07-15
 tags: ['a11y', 'accesibilidad', 'svg', 'css', 'astro']
-draft: true
+draft: false
 ---
 
 ## TL;DR
@@ -127,18 +127,9 @@ Y lo peor: ningún linter me lo iba a decir. `axe` le dio verde a ese contraste,
 
 De esas cuatro, tres ya estaban resueltas en mi código: `.prose a` subrayaba, el lab usaba `aria-live`, `BaseLayout` calculaba `reduceMotion`. Los patrones buenos ya estaban escritos; solo que nunca subieron a global.
 
-Y aquí es donde no quiero que se me malentienda: el framework hace muchísimo, pero no lo hace todo. Astro me dio los elementos nativos; el criterio para usarlos bien no lo da ninguna librería. Mis cuatro barreras son la punta de una lista más larga — las cosas que ningún framework resuelve por ti porque dependen de tu contenido y tus decisiones, no de la herramienta:
+Y aquí es donde no quiero que se me malentienda: el framework hace muchísimo, pero no lo hace todo. Astro me dio los elementos nativos; el criterio para usarlos bien no lo da ninguna librería. Mis cuatro barreras son solo la punta. La lista sigue con cosas que dependen de tu contenido, no de la herramienta: el alt text que de verdad describa una imagen (y "logo" no describe nada), el orden de tus headings, devolver el foco cuando cierras un modal, el contraste de tus propios tokens. Ninguna versión mejor de la librería te resuelve eso — lo resuelve la atención al detalle que pones encima.
 
-- **Alt text que signifique algo** — el framework te da el `<img>` vacío, el texto lo escribes tú, y "logo" no cuenta.
-- **El contraste de tus tokens**: la librería no elige tu paleta, ese cálculo es tuyo.
-- **El color como único canal** — un estado, un link o una gráfica que solo se distinguen por color, y nadie te lo marca.
-- **Orden de headings y un solo `h1`**, que para un lector es la navegación, no maquetación.
-- **Skip link y foco tras navegar**: saltar al contenido, devolver el foco al cerrar un modal. Trabajo manual.
-- **Regiones vivas** para todo lo que inyectas con JS y cambia en silencio.
-- **`prefers-reduced-motion` en tus animaciones** — el framework anima, el guard lo pones tú.
-- **`:focus-visible` que tu propio reset no destruya**: un `outline: none` sin reemplazo y rompiste lo que venía gratis.
-
-Ninguna de esas la agarra elegir mejor la librería. Las agarra la atención al detalle que pones encima. Mi blog pasó porque usé `<button>` cuando quería un botón, y el resto lo puso Astro. No por virtuoso.
+Mi blog pasó porque usé `<button>` cuando quería un botón, y el resto lo puso Astro. No por virtuoso.
 
 ---
 
