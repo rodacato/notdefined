@@ -17,14 +17,11 @@ draft: true
 
 ## Por qué me metí en esto
 
-<!-- Adrian: este párrafo es tuyo, yo solo dejo el andamio con lo que me diste.
-Corrígelo hasta que suene a ti — es la única parte que no puedo escribir.
-Lo que me contaste: la vista se desgasta de tanta pantalla, años acumulados,
-y eso te llevó a preguntarte cómo sería tu mundo con una condición así. -->
+Programo de noche, muchas veces con la luz que hay y no la que debería. Y de un tiempo para acá, cuando llevo horas pegado a la pantalla, la vista se me pone borrosa — como si trajera cataratas encima. Me pasa cada vez más seguido. No necesito un doctor para saber a dónde va la cosa: diecisiete años de pantalla no se devuelven.
 
-Llevo 17 años viendo pantallas. La vista se desgasta — eso no es noticia para nadie que haga esto. Lo que sí me movió el tapete fue la pregunta que vino después: **¿cómo sería mi mundo si esto no se corrige con lentes?**
+Eso me hizo pensar en mis papás. Para ellos, y para cualquier adulto mayor, moverse en un mundo donde todo está en línea —el banco, la cita del doctor, el recibo de la luz— ya es un pedo de todos los días. Y la mayoría de las páginas no están pensadas para unos ojos de setenta años.
 
-Así que en vez de leer otra checklist de WCAG, construí algo para **verlo**.
+Aquí la parte incómoda: la empatía es de las palabras más fáciles de decir y de las que menos se aplican de verdad. A mí tampoco me sale sola. Pero tengo una razón medio egoísta que la hace real — mis ojos van para el mismo lado. Así que en lugar de leerme otra checklist de WCAG, quise verlo. Literal.
 
 ---
 
@@ -32,7 +29,7 @@ Así que en vez de leer otra checklist de WCAG, construí algo para **verlo**.
 
 [`/lab/a11y`](/lab/a11y) carga un sitio en un iframe y le aplica una condición visual encima. Ocho modos: los tres tipos de daltonismo, visión baja, cataratas, visión de túnel, degeneración macular, y sin visión.
 
-El slider no dice "60%". Dice **"catarata madura"**, **"glaucoma severo"**, **"deuteranopia"** — porque un porcentaje abstracto no significa nada. Cada condición trae los estadios de una escala clínica publicada: LOCS III para cataratas, Hodapp-Parrish-Anderson para glaucoma, la clasificación de la OMS para visión baja, AREDS para mácula. Todas citadas en el lab.
+Cada punto del slider es un estadio clínico con nombre: **"catarata madura"**, **"glaucoma severo"**, **"deuteranopia"**. Un porcentaje abstracto no me decía nada. Cada condición trae los estadios de una escala clínica publicada: LOCS III para cataratas, Hodapp-Parrish-Anderson para glaucoma, la clasificación de la OMS para visión baja, AREDS para mácula. Todas citadas en el lab.
 
 Quise ir más lejos y poner percentiles —"de los que tienen cataratas, tal % está en este nivel"—. Ese dato no existe limpio: los estudios reportan prevalencia total, no distribución por estadio. Inventarlo habría sido justo el humo que este lab jura no vender. Donde no hay dato, el lab lo dice.
 
@@ -56,9 +53,7 @@ Dos cosas que confiesa en su propia cara. **Solo lee este sitio** — la Same-Or
 
 Construyéndolo me cayó el veinte de algo: la tecla `H` salta encabezados. Si tu página brinca de `h1` a `h3`, le rompes esa navegación a quien la usa para moverse. El orden de los headings es, literalmente, cómo alguien recorre tu página sin verla.
 
-<!-- Adrian: aquí va el cierre del arco — probar el blog con VoiceOver real
-(macOS, ya lo tienes) y documentar qué tan lejos quedó el lector casero.
-Sin ese dato la sección se queda a medias. -->
+Pero un lector casero no se juzga solo. Hasta no ponerlo al lado del de verdad, no sabía si había construido algo decente o un juguete. Eso lo dejo para el final, porque terminó siendo lo que más me marcó.
 
 ---
 
@@ -128,7 +123,9 @@ Porque en el [post de Google Stitch](/blog/google-stitch-diseno-para-devs-que-no
 
 Los links de mi hero eran índigo, sin subrayado, dentro de un párrafo gris. El detalle: el índigo del link y el gris del texto son casi igual de oscuros, lo único que cambia es el color. Si no distingues esos dos colores —por daltonismo, o en una pantalla en grises— el link se pierde en el párrafo como texto normal. Medido, el contraste entre link y texto es de **1.09:1**; la regla pide al menos 3:1. Di el consejo en mi propio blog y no lo seguí en mi portada.
 
-De esas cuatro, tres ya estaban resueltas en mi código: `.prose a` subrayaba, el lab usaba `aria-live`, `BaseLayout` calculaba `reduceMotion`. El sitio no era inaccesible; los patrones buenos simplemente nunca subieron a global.
+Y lo peor: ningún linter me lo iba a decir. `axe` le dio verde a ese contraste, Lighthouse también — contra el fondo estaba perfecto en 5.88:1. Lo agarré poniéndole protanopia encima y no encontrando mis propios links. Por eso construí un simulador y no otra checklist.
+
+De esas cuatro, tres ya estaban resueltas en mi código: `.prose a` subrayaba, el lab usaba `aria-live`, `BaseLayout` calculaba `reduceMotion`. Los patrones buenos ya estaban escritos; solo que nunca subieron a global.
 
 Y aquí es donde no quiero que se me malentienda: el framework hace muchísimo, pero no lo hace todo. Astro me dio los elementos nativos; el criterio para usarlos bien no lo da ninguna librería. Mis cuatro barreras son la punta de una lista más larga — las cosas que ningún framework resuelve por ti porque dependen de tu contenido y tus decisiones, no de la herramienta:
 
@@ -141,7 +138,7 @@ Y aquí es donde no quiero que se me malentienda: el framework hace muchísimo, 
 - **`prefers-reduced-motion` en tus animaciones** — el framework anima, el guard lo pones tú.
 - **`:focus-visible` que tu propio reset no destruya**: un `outline: none` sin reemplazo y rompiste lo que venía gratis.
 
-Ninguna de esas la agarra elegir mejor la librería. Las agarra la atención al detalle que pones encima.
+Ninguna de esas la agarra elegir mejor la librería. Las agarra la atención al detalle que pones encima. Mi blog pasó porque usé `<button>` cuando quería un botón, y el resto lo puso Astro. No por virtuoso.
 
 ---
 
@@ -164,13 +161,15 @@ Y para que no se degrade en tres meses, la accesibilidad quedó escrita como reg
 
 ---
 
-## Lo que me llevo
+## Escuché mi propio sitio
 
-Empecé pensando que iba a encontrar un desastre y contar la heroica de arreglarlo. Encontré lo contrario: el 90% estaba bien sin que yo hiciera nada especial, y el 10% que faltaba eran cuatro cosas que la plataforma no puede adivinar por ti.
+Todo lo de arriba lo medí en la pantalla. Pero el lab entero apuntaba a otra cosa, así que hice lo que llevaba semanas construyendo para otros: prendí VoiceOver —el lector de pantalla de verdad, el de macOS— y lo puse a leerme mi blog con los ojos cerrados.
 
-Mi blog no pasó porque yo sea accesible. Pasó porque usé `<button>` cuando quería un botón.
+Lo primero, incómodo y honesto: el español suena horrible. Una voz de robot masacrando los acentos, comiéndose palabras. Pero la voz robótica sale del text-to-speech del sistema, no de VoiceOver. Mi lector casero usa la misma API del navegador y suena igual de mal. El español masacrado lo compartimos los dos; ahí no hay diferencia entre mi juguete y la herramienta real.
 
-Y el único hallazgo con dientes —los links invisibles del hero— no lo agarró ningún linter. `axe` le dio verde a ese contraste, Lighthouse también: contra el fondo estaba perfecto. Lo agarró ponerle protanopia encima y no encontrar mis propios links. Por eso construí un simulador y no otra checklist.
+Lo que sí los separa es la navegación. VoiceOver hace mucho más que leer: te dice "enlace", "artículo", "encabezado nivel 2", en qué posición vas —"3 de 12"—, y con el rotor te abre la lista de todos los enlaces, o todos los landmarks, para saltar directo adonde quieras. Mi lector lee el texto de corrido y ya. Hace como cuatro de las cosas que hace VoiceOver; el rotor y los landmarks son una liga mayor que ni intenté tocar. Ahí está la distancia, y es grande.
+
+Y aquí va lo que no esperaba llevarme. Sé que quien de verdad necesita esto no es mi lector: escribo este blog para mí, para el Adrian de dentro de seis meses, y el público de mi industria no navega con lector de pantalla. Aun así creo que todos deberían oír su propio sitio una vez. No por WCAG, no por la multa del European Accessibility Act. Porque hasta que no oyes tu página leída por una voz que apenas pronuncia el español, tropezando en tu navegación, no tienes idea de qué construiste. Ponte los audífonos, cierra los ojos, y déjalo leer. Una vez.
 
 ---
 
