@@ -20,6 +20,17 @@ export const statusLabel: Record<LabStatus, string> = {
 
 export const labs: Lab[] = [
   {
+    slug: 'a11y',
+    title: 'Ver tu sitio con otros ojos',
+    blurb:
+      'Simulador de condiciones visuales: daltonismo con las matrices correctas (Machado 2009), visión baja, cataratas, glaucoma. Aplícalo a este blog o a la URL que quieras.',
+    status: 'experimental',
+    date: '2026-07-15',
+    tags: ['a11y', 'SVG', 'feColorMatrix'],
+    requirements: 'cualquier navegador',
+    metric: '7 condiciones',
+  },
+  {
     slug: 'gemma',
     title: 'Gemma 3n en el navegador',
     blurb:
