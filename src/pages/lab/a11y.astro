@@ -1,60 +1,164 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
+// Cada condición trae sus steps = estadios clínicos reales (no un % abstracto),
+// con la prevalencia SOLO donde hay data confiable y la cita de su escala.
 const conditions = [
   {
     id: 'none',
     label: 'Visión típica',
     blurb: 'Sin filtro. El sitio tal como lo diseñó su autor.',
+    steps: [],
   },
   {
     id: 'protan',
     label: 'Protanomalía',
     blurb:
-      'Deficiencia de conos L (rojo). ~1% de los hombres. Al 100% es protanopia: el rojo desaparece del mapa.',
+      'Deficiencia de conos L (rojo). ~1% de los hombres. En su forma completa (protanopia) el rojo se apaga.',
+    steps: [
+      { name: 'Leve', level: 0.3 },
+      { name: 'Moderado', level: 0.6 },
+      { name: 'Fuerte', level: 0.9 },
+      { name: 'Protanopia', level: 1.0 },
+    ],
+    prevalence:
+      '~8% de los hombres y ~0.4% de las mujeres tienen deficiencia rojo-verde (Birch, 2012). De ellos, ~2-3% son dicromáticos (el nivel completo).',
+    scale:
+      'Machado, Oliveira & Fernandes (2009) — parámetro de simulación, no medida clínica.',
   },
   {
     id: 'deutan',
     label: 'Deuteranomalía',
     blurb:
-      'Deficiencia de conos M (verde). La más común: ~5% de los hombres. Al 100% es deuteranopia — rojo y verde se confunden.',
+      'Deficiencia de conos M (verde). La más común: ~5% de los hombres. En su forma completa (deuteranopia) rojo y verde se confunden.',
+    steps: [
+      { name: 'Leve', level: 0.3 },
+      { name: 'Moderado', level: 0.6 },
+      { name: 'Fuerte', level: 0.9 },
+      { name: 'Deuteranopia', level: 1.0 },
+    ],
+    prevalence:
+      '~8% de los hombres y ~0.4% de las mujeres tienen deficiencia rojo-verde (Birch, 2012). De ellos, ~2-3% son dicromáticos (el nivel completo).',
+    scale:
+      'Machado, Oliveira & Fernandes (2009) — parámetro de simulación, no medida clínica.',
   },
   {
     id: 'tritan',
     label: 'Tritanomalía',
     blurb:
       'Deficiencia de conos S (azul). Muy rara (~0.01%) y no ligada al sexo. Azul y amarillo se mezclan.',
+    steps: [
+      { name: 'Leve', level: 0.3 },
+      { name: 'Moderado', level: 0.6 },
+      { name: 'Fuerte', level: 0.9 },
+      { name: 'Tritanopia', level: 1.0 },
+    ],
+    prevalence:
+      'Rara y poco estudiada: ~0.01% de la población, sin diferencia entre sexos. Sin distribución por severidad confiable.',
+    scale:
+      'Machado, Oliveira & Fernandes (2009) — parámetro de simulación, no medida clínica.',
   },
   {
     id: 'blur',
     label: 'Visión baja',
     blurb:
-      'Agudeza visual reducida no corregible con lentes. La vive ~1 de cada 30 personas — y el texto chico de 12px la castiga.',
+      'Agudeza visual reducida no corregible con lentes. Los estadios siguen la clasificación de agudeza de la OMS (ICD-11).',
+    steps: [
+      { name: 'Leve · 6/12', level: 0.28 },
+      { name: 'Moderada · 6/18', level: 0.55 },
+      { name: 'Severa · 6/60', level: 0.8 },
+      { name: 'Ceguera · <3/60', level: 1.0 },
+    ],
+    prevalence:
+      'A nivel global (OMS, 2020): 258M con impedimento leve, 295M moderado-severo, 43M con ceguera.',
+    scale: 'OMS — Informe mundial sobre la visión (2019) / ICD-11.',
   },
   {
     id: 'cataract',
     label: 'Cataratas',
     blurb:
-      'El cristalino se opaca y amarillea: menos contraste, más deslumbramiento. Primera causa de ceguera reversible en el mundo.',
+      'El cristalino se opaca y amarillea: menos contraste, más deslumbramiento. Estadios según LOCS III.',
+    steps: [
+      { name: 'Incipiente', level: 0.25 },
+      { name: 'Inmadura', level: 0.5 },
+      { name: 'Madura', level: 0.78 },
+      { name: 'Hipermadura', level: 1.0 },
+    ],
+    prevalence:
+      'Primera causa de ceguera reversible del mundo. La literatura reporta prevalencia total, no un reparto confiable por estadio.',
+    scale: 'Chylack et al. (1993) — Lens Opacities Classification System III.',
   },
   {
     id: 'tunnel',
-    label: 'Visión de túnel',
+    label: 'Visión de túnel (glaucoma)',
     blurb:
-      'Pérdida del campo periférico, típica del glaucoma avanzado. Lo que está fuera del centro simplemente no existe.',
+      'Pérdida del campo periférico. El centro puede seguir nítido — puedes leer 20/20 y aun así no poder caminar sin chocar. Estadios según Hodapp-Parrish-Anderson.',
+    steps: [
+      { name: 'Temprano', level: 0.3 },
+      { name: 'Moderado', level: 0.55 },
+      { name: 'Severo', level: 0.8 },
+      { name: 'Terminal', level: 1.0 },
+    ],
+    prevalence:
+      'El glaucoma real no se ve como un túnel negro nítido, sino difuso, "como vidrio sucio". Sin distribución por estadio confiable en la literatura.',
+    scale:
+      'Hodapp, Parrish & Anderson (1993) — Clinical Decisions in Glaucoma.',
   },
   {
     id: 'macular',
     label: 'Degeneración macular',
     blurb:
-      'Lo inverso al túnel: se pierde el centro, donde enfocas para leer. Primera causa de pérdida de visión después de los 60.',
+      'Se pierde el centro, donde enfocas para leer. Lo inverso al túnel. Estadios según AREDS.',
+    steps: [
+      { name: 'Temprana', level: 0.25 },
+      { name: 'Intermedia', level: 0.5 },
+      { name: 'Avanzada seca', level: 0.78 },
+      { name: 'Húmeda', level: 1.0 },
+    ],
+    prevalence:
+      'De las personas con AMD, ~66% está en estadio intermedio, ~27% temprano, ~21% húmeda (AREDS). Primera causa de pérdida de visión tras los 60.',
+    scale:
+      'Ferris et al. (2005) — AREDS Simplified Severity Scale (Report No. 18).',
+  },
+];
+
+const sources = [
+  {
+    label: 'Machado, Oliveira & Fernandes (2009)',
+    note: 'Matrices de simulación de daltonismo (IEEE TVCG).',
+    href: 'https://www.inf.ufrgs.br/~oliveira/pubs_files/CVD_Simulation/CVD_Simulation.html',
+  },
+  {
+    label: 'Birch (2012)',
+    note: 'Prevalencia mundial de la deficiencia de color (JOSA A 29-3).',
+    href: 'https://opg.optica.org/josaa/abstract.cfm?uri=josaa-29-3-313',
+  },
+  {
+    label: 'OMS — Informe mundial sobre la visión (2019)',
+    note: 'Clasificación de agudeza visual (ICD-11) y prevalencia global.',
+    href: 'https://www.who.int/publications/i/item/9789241516570',
+  },
+  {
+    label: 'Chylack et al. (1993)',
+    note: 'Lens Opacities Classification System III (LOCS III).',
+    href: 'https://pubmed.ncbi.nlm.nih.gov/8512486/',
+  },
+  {
+    label: 'Hodapp, Parrish & Anderson (1993)',
+    note: 'Estadificación del daño de campo visual en glaucoma.',
+    href: 'https://www.aao.org/eyenet/article/know-new-glaucoma-staging-codes',
+  },
+  {
+    label: 'Ferris et al. (2005) — AREDS Report No. 18',
+    note: 'Escala simplificada de severidad de la degeneración macular.',
+    href: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1473206/',
   },
 ];
 ---
 
 <BaseLayout
   title="Lab — a11y: ver tu sitio con otros ojos"
-  description="Simulador de condiciones visuales: daltonismo (matrices Machado et al. 2009), visión baja, cataratas, glaucoma y más — aplicado a este blog o a la URL que quieras."
+  description="Simulador de condiciones visuales con estadios clínicos reales: daltonismo (Machado 2009), visión baja (OMS ICD-11), cataratas (LOCS III), glaucoma (Hodapp-Parrish-Anderson), degeneración macular (AREDS)."
   bare
   hideSearch
 >
@@ -75,10 +179,9 @@ const conditions = [
       <aside class="start-note">
         <span class="start-note-tag">Nota honesta</span>
         Esto es una aproximación para videntes, no un diagnóstico ni un sustituto
-        de probar con personas reales. El daltonismo usa las matrices de Machado et
-        al. (2009) — las científicamente válidas, aplicadas en RGB lineal. Las demás
-        condiciones son recreaciones visuales simplificadas. Evaluado a mediados de
-        2026.
+        de probar con personas reales. Cada condición usa los estadios de una escala
+        clínica real (abajo, en Research y fuentes), pero el filtro es una recreación
+        visual, no una medición. Evaluado a mediados de 2026.
       </aside>
 
       <dl class="start-keys">
@@ -97,6 +200,30 @@ const conditions = [
         </button>
         <a href="/lab/" class="start-back">← Volver a labs</a>
       </div>
+
+      <details class="research">
+        <summary>Research y fuentes</summary>
+        <p class="research-intro">
+          Los estadios del slider no son porcentajes inventados: cada condición
+          sigue una escala clínica publicada. La prevalencia se muestra solo
+          donde hay data confiable; donde no existe reparto por estadio, se
+          dice. Un detalle honesto: la severidad de daltonismo (Machado) es un
+          parámetro de renderizado validado psicofísicamente, no una medida
+          clínica calibrada.
+        </p>
+        <ul class="research-list">
+          {
+            sources.map((s) => (
+              <li>
+                <a href={s.href} target="_blank" rel="noopener noreferrer">
+                  {s.label}
+                </a>
+                <span>{s.note}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </details>
     </div>
   </section>
 
@@ -165,6 +292,10 @@ const conditions = [
                 value={c.id}
                 data-label={c.label}
                 data-blurb={c.blurb}
+                data-steps={JSON.stringify(c.steps)}
+                data-type={c.id}
+                data-prevalence={c.prevalence ?? ''}
+                data-scale={c.scale ?? ''}
                 checked={i === 0}
               />
               <kbd>{i + 1}</kbd>
@@ -174,24 +305,20 @@ const conditions = [
         }
       </fieldset>
 
-      <div class="drawer-block">
+      <div id="stage-block" class="drawer-block" hidden>
         <label class="drawer-label" for="severity">
-          Severidad: <b id="severity-value">100%</b>
+          Estadio: <b id="stage-name">—</b>
         </label>
-        <input
-          id="severity"
-          type="range"
-          min="0"
-          max="100"
-          step="10"
-          value="100"
-          disabled
-        />
+        <input id="severity" type="range" min="1" max="4" step="1" value="4" />
+        <div class="stage-ticks" id="stage-ticks" aria-hidden="true"></div>
       </div>
 
       <p id="blurb" class="drawer-blurb" aria-live="polite">
         {conditions[0].blurb}
       </p>
+
+      <p id="prevalence" class="drawer-prevalence" hidden></p>
+      <p id="scale" class="drawer-scale" hidden></p>
 
       <p class="drawer-hint">
         ¿Se quedó en blanco? Ese sitio manda <code>X-Frame-Options</code> o
@@ -217,7 +344,7 @@ const conditions = [
 <script>
   // Matrices de simulación CVD de Machado, Oliveira & Fernandes (2009),
   // tomadas verbatim de la tabla oficial (inf.ufrgs.br/~oliveira). Índice =
-  // severidad * 10. Operan en RGB lineal — por eso el filtro declara
+  // nivel * 10. Operan en RGB lineal — por eso el filtro declara
   // color-interpolation-filters="linearRGB"; aplicarlas en sRGB es el error
   // clásico de los simuladores que circulan por ahí.
   const IDENTITY = [1, 0, 0, 0, 1, 0, 0, 0, 1];
@@ -357,6 +484,8 @@ const conditions = [
   // bajo cada condición — mejor demo que el home del blog.
   const POST_URL = '/blog/ver-tu-sitio-con-otros-ojos/';
 
+  type Step = { name: string; level: number };
+
   const $ = (id: string) => document.getElementById(id)!;
   const start = $('start');
   const sim = $('sim');
@@ -368,43 +497,70 @@ const conditions = [
   const drawerOpen = $('drawer-open') as HTMLButtonElement;
   const drawerClose = $('drawer-close') as HTMLButtonElement;
   const badge = $('badge');
+  const stageBlock = $('stage-block');
+  const stageName = $('stage-name');
+  const stageTicks = $('stage-ticks');
+  const prevalenceEl = $('prevalence');
+  const scaleEl = $('scale');
 
-  let condition = 'none';
-  let conditionLabel = 'Visión típica';
+  let type = 'none';
+  let label = 'Visión típica';
+  let steps: Step[] = [];
+
+  function renderMatrix(cvdKey: string, level: number) {
+    const m = MACHADO[cvdKey][Math.round(level * 10)];
+    matrixEl.setAttribute(
+      'values',
+      `${m[0]} ${m[1]} ${m[2]} 0 0 ` +
+        `${m[3]} ${m[4]} ${m[5]} 0 0 ` +
+        `${m[6]} ${m[7]} ${m[8]} 0 0 ` +
+        `0 0 0 1 0`,
+    );
+    frame.style.filter = 'url(#cvd)';
+  }
 
   function apply() {
-    const sev = Number(slider.value) / 100;
     frame.style.filter = '';
     overlay.style.background = '';
-    slider.disabled = condition === 'none';
 
-    if (condition in MACHADO) {
-      const m = MACHADO[condition][Math.round(sev * 10)];
-      matrixEl.setAttribute(
-        'values',
-        `${m[0]} ${m[1]} ${m[2]} 0 0 ` +
-          `${m[3]} ${m[4]} ${m[5]} 0 0 ` +
-          `${m[6]} ${m[7]} ${m[8]} 0 0 ` +
-          `0 0 0 1 0`,
-      );
-      frame.style.filter = 'url(#cvd)';
-    } else if (condition === 'blur') {
-      frame.style.filter = `blur(${(sev * 6).toFixed(1)}px)`;
-    } else if (condition === 'cataract') {
+    if (type === 'none' || steps.length === 0) {
+      badge.textContent = label;
+      return;
+    }
+
+    const step = steps[Number(slider.value) - 1];
+    const lvl = step.level;
+
+    if (MACHADO[type]) {
+      renderMatrix(type, lvl);
+    } else if (type === 'blur') {
+      frame.style.filter = `blur(${(lvl * 6).toFixed(1)}px)`;
+    } else if (type === 'cataract') {
       frame.style.filter =
-        `blur(${(sev * 2.5).toFixed(1)}px) sepia(${(sev * 0.45).toFixed(2)}) ` +
-        `brightness(${(1 + sev * 0.12).toFixed(2)}) contrast(${(1 - sev * 0.3).toFixed(2)})`;
-    } else if (condition === 'tunnel') {
-      const clear = 55 - sev * 45;
-      overlay.style.background = `radial-gradient(circle at 50% 45%, transparent ${clear}%, #000 ${clear + 18}%)`;
-    } else if (condition === 'macular') {
-      const spot = 5 + sev * 25;
+        `blur(${(lvl * 2.5).toFixed(1)}px) sepia(${(lvl * 0.45).toFixed(2)}) ` +
+        `brightness(${(1 + lvl * 0.12).toFixed(2)}) contrast(${(1 - lvl * 0.3).toFixed(2)})`;
+    } else if (type === 'tunnel') {
+      // El glaucoma no es un túnel negro nítido: borde difuso + leve blur.
+      const clear = 55 - lvl * 45;
+      overlay.style.background = `radial-gradient(circle at 50% 45%, transparent ${clear}%, rgba(0,0,0,0.75) ${clear + 12}%, #000 ${clear + 26}%)`;
+      frame.style.filter = `blur(${(lvl * 1.2).toFixed(1)}px)`;
+    } else if (type === 'macular') {
+      const spot = 5 + lvl * 25;
       overlay.style.background = `radial-gradient(circle at 50% 45%, #000 ${spot}%, transparent ${spot + 12}%)`;
     }
 
-    badge.textContent = slider.disabled
-      ? conditionLabel
-      : `${conditionLabel} · ${slider.value}%`;
+    stageName.textContent = step.name;
+    badge.textContent = `${label} · ${step.name}`;
+  }
+
+  function paintTicks() {
+    stageTicks.innerHTML = '';
+    steps.forEach((s, i) => {
+      const t = document.createElement('span');
+      t.textContent = String(i + 1);
+      t.title = s.name;
+      stageTicks.appendChild(t);
+    });
   }
 
   const radios = Array.from(
@@ -412,9 +568,26 @@ const conditions = [
   );
 
   function selectCondition(radio: HTMLInputElement) {
-    condition = radio.value;
-    conditionLabel = radio.dataset.label ?? '';
+    type = radio.dataset.type ?? 'none';
+    label = radio.dataset.label ?? '';
+    steps = JSON.parse(radio.dataset.steps || '[]');
     $('blurb').textContent = radio.dataset.blurb ?? '';
+
+    const hasSteps = steps.length > 0;
+    stageBlock.hidden = !hasSteps;
+    if (hasSteps) {
+      slider.max = String(steps.length);
+      slider.value = String(steps.length); // arranca en el estadio más severo
+      paintTicks();
+    }
+
+    const prev = radio.dataset.prevalence ?? '';
+    prevalenceEl.hidden = !prev;
+    prevalenceEl.textContent = prev;
+    const scale = radio.dataset.scale ?? '';
+    scaleEl.hidden = !scale;
+    scaleEl.textContent = scale;
+
     apply();
   }
 
@@ -422,10 +595,7 @@ const conditions = [
     radio.addEventListener('change', () => selectCondition(radio));
   });
 
-  slider.addEventListener('input', () => {
-    $('severity-value').textContent = `${slider.value}%`;
-    apply();
-  });
+  slider.addEventListener('input', apply);
 
   function setDrawer(open: boolean, moveFocus = true) {
     drawer.hidden = !open;
@@ -617,6 +787,54 @@ const conditions = [
     color: var(--color-text);
   }
 
+  .research {
+    margin-top: 2rem;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.25rem;
+  }
+  .research summary {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    cursor: pointer;
+  }
+  .research summary:hover {
+    color: var(--color-text);
+  }
+  .research-intro {
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: var(--color-muted);
+    margin: 0.9rem 0 1rem;
+  }
+  .research-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .research-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .research-list a {
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  .research-list a:hover {
+    text-decoration: underline;
+  }
+  .research-list span {
+    font-size: 0.78rem;
+    color: var(--color-muted);
+  }
+
   kbd {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 0.72rem;
@@ -763,6 +981,9 @@ const conditions = [
     padding: 0;
     margin: 0;
   }
+  .drawer-block[hidden] {
+    display: none;
+  }
   .drawer-label {
     font-size: 0.7rem;
     font-weight: 600;
@@ -773,7 +994,8 @@ const conditions = [
   }
   .drawer-label b {
     color: var(--color-accent);
-    font-variant-numeric: tabular-nums;
+    text-transform: none;
+    letter-spacing: 0;
   }
 
   .url-input {
@@ -839,8 +1061,13 @@ const conditions = [
   input[type='range'] {
     accent-color: var(--color-accent);
   }
-  input[type='range']:disabled {
-    opacity: 0.4;
+  .stage-ticks {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0.15rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.65rem;
+    color: var(--color-muted);
   }
 
   .drawer-blurb {
@@ -849,6 +1076,27 @@ const conditions = [
     color: var(--color-muted);
     margin: 0;
   }
+  .drawer-prevalence {
+    font-size: 0.76rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    margin: 0;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.5rem;
+    background-color: var(--color-surface);
+  }
+  .drawer-prevalence[hidden],
+  .drawer-scale[hidden] {
+    display: none;
+  }
+  .drawer-scale {
+    font-size: 0.72rem;
+    line-height: 1.55;
+    color: var(--color-muted);
+    margin: 0;
+    font-style: italic;
+  }
+
   .drawer-hint {
     font-size: 0.73rem;
     line-height: 1.6;
