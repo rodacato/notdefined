@@ -9,6 +9,7 @@ interface Props {
   description?: string;
   width?: 'default' | 'wide';
   hideSearch?: boolean;
+  bare?: boolean;
 }
 
 const {
@@ -16,6 +17,7 @@ const {
   description = 'Sitio personal y blog de Adrian Castillo',
   width = 'default',
   hideSearch = false,
+  bare = false,
 } = Astro.props;
 const maxWidth = width === 'wide' ? 'max-w-5xl' : 'max-w-3xl';
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -57,63 +59,34 @@ const ogImageURL = new URL('/logo.png', Astro.site);
   </head>
   <body class="flex min-h-full flex-col">
     <div class="cursor-glow" aria-hidden="true"></div>
-    <header class="site-header">
-      <div
-        class:list={[
-          'mx-auto flex w-full items-center justify-between px-6 py-4',
-          maxWidth,
-        ]}
-      >
-        <a href="/" class="brand">
-          <img src="/logo.png" alt="notdefined.dev logo" class="brand-logo" />
-          <span class="brand-name"
-            >notdefined<span class="cursor-blink">_</span></span
+    {
+      !bare && (
+        <header class="site-header">
+          <div
+            class:list={[
+              'mx-auto flex w-full items-center justify-between px-6 py-4',
+              maxWidth,
+            ]}
           >
-        </a>
-        {
-          !hideSearch && (
-            <form
-              action="/search/"
-              method="get"
-              role="search"
-              class="header-search"
-            >
-              <svg
-                class="header-search-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                aria-hidden="true"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <input
-                type="search"
-                name="q"
-                class="header-search-input"
-                placeholder="Buscar…"
-                aria-label="Buscar en el sitio"
-                autocomplete="off"
+            <a href="/" class="brand">
+              <img
+                src="/logo.png"
+                alt="notdefined.dev logo"
+                class="brand-logo"
               />
-            </form>
-          )
-        }
-        <nav class="flex items-center gap-5">
-          <a href="/blog/" class="nav-link">Blog</a>
-          <a href="/til/" class="nav-link">TIL</a>
-          <a href="/projects/" class="nav-link">Proyectos</a>
-          <a href="/about/" class="nav-link">About</a>
-          {
-            !hideSearch && (
-              <a
-                href="/search/"
-                class="nav-link nav-search-mobile"
-                aria-label="Buscar"
+              <span class="brand-name">
+                notdefined<span class="cursor-blink">_</span>
+              </span>
+            </a>
+            {!hideSearch && (
+              <form
+                action="/search/"
+                method="get"
+                role="search"
+                class="header-search"
               >
                 <svg
+                  class="header-search-icon"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -124,44 +97,101 @@ const ogImageURL = new URL('/logo.png', Astro.site);
                   <circle cx="11" cy="11" r="7" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
+                <input
+                  type="search"
+                  name="q"
+                  class="header-search-input"
+                  placeholder="Buscar…"
+                  aria-label="Buscar en el sitio"
+                  autocomplete="off"
+                />
+              </form>
+            )}
+            <nav class="flex items-center gap-5">
+              <a href="/blog/" class="nav-link">
+                Blog
               </a>
-            )
-          }
-        </nav>
-      </div>
-      <div class="header-accent-line" aria-hidden="true"></div>
-    </header>
+              <a href="/til/" class="nav-link">
+                TIL
+              </a>
+              <a href="/projects/" class="nav-link">
+                Proyectos
+              </a>
+              <a href="/about/" class="nav-link">
+                About
+              </a>
+              {!hideSearch && (
+                <a
+                  href="/search/"
+                  class="nav-link nav-search-mobile"
+                  aria-label="Buscar"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="11" cy="11" r="7" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                </a>
+              )}
+            </nav>
+          </div>
+          <div class="header-accent-line" aria-hidden="true" />
+        </header>
+      )
+    }
 
     <main
-      class:list={['mx-auto w-full flex-1 px-6 py-12 md:py-16', maxWidth]}
+      class:list={bare
+        ? ['w-full flex-1']
+        : ['mx-auto w-full flex-1 px-6 py-12 md:py-16', maxWidth]}
       style="position: relative; z-index: 1;"
     >
       <slot />
     </main>
 
-    <footer class="site-footer" style="position: relative; z-index: 1;">
-      <div class:list={['mx-auto w-full px-6 py-6', maxWidth]}>
-        <div class="footer-inner">
-          <div class="footer-links">
-            <p class="footer-text">
-              © {new Date().getFullYear()}
-              {siteProfile.name}
-            </p>
-            <a href="/about/" class="footer-nav-link">About</a>
-            <a href="/cv/" class="footer-nav-link">CV</a>
-            <a href="/como-escribo/" class="footer-nav-link">Cómo escribo</a>
+    {
+      !bare && (
+        <footer class="site-footer" style="position: relative; z-index: 1;">
+          <div class:list={['mx-auto w-full px-6 py-6', maxWidth]}>
+            <div class="footer-inner">
+              <div class="footer-links">
+                <p class="footer-text">
+                  © {new Date().getFullYear()}
+                  {siteProfile.name}
+                </p>
+                <a href="/about/" class="footer-nav-link">
+                  About
+                </a>
+                <a href="/cv/" class="footer-nav-link">
+                  CV
+                </a>
+                <a href="/como-escribo/" class="footer-nav-link">
+                  Cómo escribo
+                </a>
+              </div>
+              <div class="footer-right">
+                <span
+                  class="footer-konami"
+                  title="↑ ↑ ↓ ↓ ← → ← → B A"
+                  aria-label="Konami code soportado"
+                >
+                  konami code supported
+                </span>
+                <a href="/rss.xml" class="rss-link" title="Feed RSS">
+                  RSS
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="footer-right">
-            <span
-              class="footer-konami"
-              title="↑ ↑ ↓ ↓ ← → ← → B A"
-              aria-label="Konami code soportado">konami code supported</span
-            >
-            <a href="/rss.xml" class="rss-link" title="Feed RSS">RSS</a>
-          </div>
-        </div>
-      </div>
-    </footer>
+        </footer>
+      )
+    }
 
     <ConsentBanner />
   </body>

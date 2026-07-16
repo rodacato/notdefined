@@ -55,110 +55,146 @@ const conditions = [
 <BaseLayout
   title="Lab — a11y: ver tu sitio con otros ojos"
   description="Simulador de condiciones visuales: daltonismo (matrices Machado et al. 2009), visión baja, cataratas, glaucoma y más — aplicado a este blog o a la URL que quieras."
-  width="wide"
+  bare
   hideSearch
 >
-  <article class="lab">
-    <p class="lab-eyebrow">Lab</p>
-    <h1 class="lab-title">Ver tu sitio con otros ojos</h1>
+  <section id="start" class="start">
+    <div class="start-inner">
+      <p class="start-eyebrow">Lab</p>
+      <h1 class="start-title">Ver tu sitio con otros ojos</h1>
 
-    <aside class="lab-note">
-      <span class="lab-note-tag">Nota honesta</span>
-      Esto es una aproximación para videntes, no un diagnóstico ni un sustituto de
-      probar con personas reales. El daltonismo usa las matrices de Machado et al.
-      (2009) — las científicamente válidas, aplicadas en RGB lineal. Las demás condiciones
-      son recreaciones visuales simplificadas. Evaluado a mediados de 2026.
-    </aside>
+      <p class="start-intro">
+        Pasamos años frente a una pantalla desgastando la vista, y diseñamos
+        como si todos los ojos fueran los nuestros. Este experimento voltea la
+        cámara:
+        <strong>¿cómo se ve tu sitio con otra visión?</strong> Por default carga este
+        blog; puedes probar cualquier URL que se deje embeber.
+      </p>
 
-    <p class="lab-intro">
-      Pasamos años frente a una pantalla desgastando la vista, y diseñamos como
-      si todos los ojos fueran los nuestros. Este experimento voltea la cámara:
-      <strong>¿cómo se ve tu sitio con otra visión?</strong> Por default carga este
-      blog; puedes probar cualquier URL que se deje embeber.
-    </p>
+      <aside class="start-note">
+        <span class="start-note-tag">Nota honesta</span>
+        Esto es una aproximación para videntes, no un diagnóstico ni un sustituto
+        de probar con personas reales. El daltonismo usa las matrices de Machado et
+        al. (2009) — las científicamente válidas, aplicadas en RGB lineal. Las demás
+        condiciones son recreaciones visuales simplificadas. Evaluado a mediados de
+        2026.
+      </aside>
 
-    <form id="url-form" class="lab-url-form">
-      <label class="lab-url-label" for="url">URL a simular</label>
-      <div class="lab-url-row">
+      <dl class="start-keys">
+        <div><dt><kbd>1</kbd>–<kbd>8</kbd></dt><dd>cambiar condición</dd></div>
+        <div><dt><kbd>c</kbd></dt><dd>abrir / cerrar controles</dd></div>
+        <div><dt><kbd>Esc</kbd> / back</dt><dd>volver a esta pantalla</dd></div>
+      </dl>
+      <p class="start-focus-note">
+        Si los atajos dejan de responder, da click en la barra del lab — el
+        sitio embebido se queda con el teclado cuando tiene el foco.
+      </p>
+
+      <div class="start-actions">
+        <button id="begin" class="btn btn-primary btn-big" type="button">
+          Comenzar
+        </button>
+        <a href="/lab/" class="start-back">← Volver a labs</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="sim" class="sim" hidden>
+    <iframe
+      id="frame"
+      title="Sitio bajo simulación visual"
+      referrerpolicy="no-referrer"></iframe>
+    <div id="overlay" class="sim-overlay" aria-hidden="true"></div>
+
+    <div class="hud">
+      <button id="exit" class="hud-btn" type="button">← Salir</button>
+      <span id="badge" class="hud-badge" aria-live="polite">Visión típica</span>
+      <button
+        id="drawer-toggle"
+        class="hud-btn"
+        type="button"
+        aria-expanded="true"
+        aria-controls="drawer"
+      >
+        Controles <kbd>c</kbd>
+      </button>
+    </div>
+
+    <aside id="drawer" class="drawer" aria-label="Ajustes de la simulación">
+      <form id="url-form" class="drawer-block">
+        <label class="drawer-label" for="url">URL a simular</label>
         <input
           id="url"
-          class="lab-url-input"
+          class="url-input"
           type="text"
           inputmode="url"
           spellcheck="false"
           placeholder="https://notdefined.dev"
         />
-        <button class="lab-btn lab-btn-primary" type="submit">Cargar</button>
-        <button id="reset-url" class="lab-btn" type="button">Este blog</button>
-      </div>
-    </form>
+        <div class="url-actions">
+          <button class="btn btn-primary" type="submit">Cargar</button>
+          <button id="reset-url" class="btn" type="button">Este blog</button>
+        </div>
+      </form>
 
-    <fieldset class="lab-conditions">
-      <legend class="lab-legend">Condición visual</legend>
-      <div class="lab-pills" role="presentation">
+      <fieldset class="drawer-block conditions">
+        <legend class="drawer-label">Condición visual</legend>
         {
           conditions.map((c, i) => (
-            <label class="lab-pill">
+            <label class="condition">
               <input
                 type="radio"
                 name="condition"
                 value={c.id}
+                data-label={c.label}
                 data-blurb={c.blurb}
                 checked={i === 0}
               />
+              <kbd>{i + 1}</kbd>
               <span>{c.label}</span>
             </label>
           ))
         }
+      </fieldset>
+
+      <div class="drawer-block">
+        <label class="drawer-label" for="severity">
+          Severidad: <b id="severity-value">100%</b>
+        </label>
+        <input
+          id="severity"
+          type="range"
+          min="0"
+          max="100"
+          step="10"
+          value="100"
+          disabled
+        />
       </div>
-    </fieldset>
 
-    <div class="lab-severity">
-      <label class="lab-severity-label" for="severity">
-        Severidad: <b id="severity-value">100%</b>
-      </label>
-      <input
-        id="severity"
-        type="range"
-        min="0"
-        max="100"
-        step="10"
-        value="100"
-        disabled
-      />
-    </div>
+      <p id="blurb" class="drawer-blurb" aria-live="polite">
+        {conditions[0].blurb}
+      </p>
 
-    <p id="blurb" class="lab-blurb" aria-live="polite">
-      {conditions[0].blurb}
-    </p>
+      <p class="drawer-hint">
+        ¿Se quedó en blanco? Ese sitio manda <code>X-Frame-Options</code> o
+        <code>frame-ancestors</code>: prohíbe ser embebido, y es su derecho — es
+        una defensa contra clickjacking. La mayoría de los sitios grandes lo
+        hacen. Funciona mejor con blogs personales y sitios de documentación.
+      </p>
+    </aside>
+  </div>
 
-    <div class="lab-viewport">
-      <iframe
-        id="frame"
-        src="/"
-        title="Sitio bajo simulación visual"
-        referrerpolicy="no-referrer"></iframe>
-      <div id="overlay" class="lab-overlay" aria-hidden="true"></div>
-    </div>
-
-    <p class="lab-hint">
-      ¿Se quedó en blanco? Ese sitio manda <code>X-Frame-Options</code> o
-      <code>frame-ancestors</code>: prohíbe ser embebido, y es su derecho — es
-      una defensa contra clickjacking. La mayoría de los sitios grandes lo
-      hacen. Funciona mejor con blogs personales y sitios de documentación.
-    </p>
-
-    <svg class="lab-svg-defs" aria-hidden="true" focusable="false">
-      <defs>
-        <filter id="cvd" color-interpolation-filters="linearRGB">
-          <feColorMatrix
-            id="cvd-matrix"
-            type="matrix"
-            values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0"></feColorMatrix>
-        </filter>
-      </defs>
-    </svg>
-  </article>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="cvd" color-interpolation-filters="linearRGB">
+        <feColorMatrix
+          id="cvd-matrix"
+          type="matrix"
+          values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0"></feColorMatrix>
+      </filter>
+    </defs>
+  </svg>
 </BaseLayout>
 
 <script>
@@ -301,19 +337,21 @@ const conditions = [
   };
 
   const $ = (id: string) => document.getElementById(id)!;
+  const start = $('start');
+  const sim = $('sim');
   const frame = $('frame') as HTMLIFrameElement;
   const overlay = $('overlay');
   const slider = $('severity') as HTMLInputElement;
   const matrixEl = $('cvd-matrix');
+  const drawer = $('drawer');
+  const drawerToggle = $('drawer-toggle') as HTMLButtonElement;
+  const badge = $('badge');
 
   let condition = 'none';
-
-  function severity() {
-    return Number(slider.value) / 100;
-  }
+  let conditionLabel = 'Visión típica';
 
   function apply() {
-    const sev = severity();
+    const sev = Number(slider.value) / 100;
     frame.style.filter = '';
     overlay.style.background = '';
     slider.disabled = condition === 'none';
@@ -341,22 +379,82 @@ const conditions = [
       const spot = 5 + sev * 25;
       overlay.style.background = `radial-gradient(circle at 50% 45%, #000 ${spot}%, transparent ${spot + 12}%)`;
     }
+
+    badge.textContent = slider.disabled
+      ? conditionLabel
+      : `${conditionLabel} · ${slider.value}%`;
   }
 
-  document
-    .querySelectorAll<HTMLInputElement>('input[name="condition"]')
-    .forEach((radio) => {
-      radio.addEventListener('change', () => {
-        condition = radio.value;
-        $('blurb').textContent = radio.dataset.blurb ?? '';
-        apply();
-      });
-    });
+  const radios = Array.from(
+    document.querySelectorAll<HTMLInputElement>('input[name="condition"]'),
+  );
+
+  function selectCondition(radio: HTMLInputElement) {
+    condition = radio.value;
+    conditionLabel = radio.dataset.label ?? '';
+    $('blurb').textContent = radio.dataset.blurb ?? '';
+    apply();
+  }
+
+  radios.forEach((radio) => {
+    radio.addEventListener('change', () => selectCondition(radio));
+  });
 
   slider.addEventListener('input', () => {
     $('severity-value').textContent = `${slider.value}%`;
     apply();
   });
+
+  function setDrawer(open: boolean) {
+    drawer.hidden = !open;
+    drawerToggle.setAttribute('aria-expanded', String(open));
+  }
+
+  drawerToggle.addEventListener('click', () => setDrawer(drawer.hidden));
+
+  let frameLoaded = false;
+
+  function showSim() {
+    if (!frameLoaded) {
+      frame.src = '/';
+      frameLoaded = true;
+    }
+    start.hidden = true;
+    sim.hidden = false;
+    setDrawer(true);
+    drawerToggle.focus();
+  }
+
+  function showStart() {
+    sim.hidden = true;
+    start.hidden = false;
+    $('begin').focus();
+  }
+
+  // Entrar empuja un estado al historial para que el botón back del navegador
+  // regrese a la portada en vez de abandonar la página.
+  $('begin').addEventListener('click', () => {
+    history.pushState({ sim: true }, '', '#sim');
+    showSim();
+  });
+
+  function exitSim() {
+    if (history.state?.sim) {
+      history.back();
+    } else {
+      showStart();
+    }
+  }
+
+  $('exit').addEventListener('click', exitSim);
+
+  window.addEventListener('popstate', () => {
+    if (!history.state?.sim) showStart();
+  });
+
+  if (location.hash === '#sim') {
+    history.replaceState(null, '', location.pathname);
+  }
 
   $('url-form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -373,14 +471,53 @@ const conditions = [
     frame.src = '/';
   });
 
+  window.addEventListener('keydown', (e) => {
+    if (sim.hidden) return;
+    const target = e.target as HTMLElement | null;
+    const typing =
+      target &&
+      (target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable);
+
+    if (e.key === 'Escape') {
+      if (!drawer.hidden) {
+        setDrawer(false);
+        drawerToggle.focus();
+      } else {
+        exitSim();
+      }
+      return;
+    }
+    if (typing) return;
+    if (e.key === 'c') {
+      setDrawer(drawer.hidden);
+      return;
+    }
+    const n = Number(e.key);
+    if (n >= 1 && n <= radios.length) {
+      const radio = radios[n - 1];
+      radio.checked = true;
+      selectCondition(radio);
+    }
+  });
+
   apply();
 </script>
 
 <style>
-  .lab {
-    max-width: 60rem;
+  /* Portada */
+  .start {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
   }
-  .lab-eyebrow {
+  .start-inner {
+    max-width: 40rem;
+  }
+  .start-eyebrow {
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.1em;
@@ -388,26 +525,29 @@ const conditions = [
     color: var(--color-accent);
     margin: 0 0 0.4rem;
   }
-  .lab-title {
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
+  .start-title {
+    font-size: clamp(1.7rem, 4.5vw, 2.4rem);
     font-weight: 600;
     letter-spacing: -0.02em;
-    margin: 0 0 0.75rem;
+    margin: 0 0 1rem;
+  }
+  .start-intro {
+    color: var(--color-muted);
+    line-height: 1.7;
+    margin: 0 0 1.25rem;
   }
 
-  .lab-note {
+  .start-note {
     font-size: 0.82rem;
     color: var(--color-text);
     line-height: 1.6;
-    margin: 0.5rem 0 1.75rem;
+    margin: 0 0 1.5rem;
     padding: 0.85rem 1.1rem;
     border-radius: 0.7rem;
     background: color-mix(in oklab, var(--color-accent) 8%, var(--color-bg));
     border: 1px solid color-mix(in oklab, var(--color-accent) 22%, transparent);
-    box-shadow: 0 8px 24px -14px
-      color-mix(in oklab, var(--color-accent) 45%, transparent);
   }
-  .lab-note-tag {
+  .start-note-tag {
     display: inline-block;
     font-size: 0.66rem;
     font-weight: 600;
@@ -417,46 +557,58 @@ const conditions = [
     margin-right: 0.5rem;
   }
 
-  .lab-intro {
-    color: var(--color-muted);
-    line-height: 1.7;
-    margin: 0 0 1.25rem;
-  }
-
-  .lab-url-form {
-    margin-bottom: 1.25rem;
-  }
-  .lab-url-label {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-    margin-bottom: 0.4rem;
-  }
-  .lab-url-row {
+  .start-keys {
     display: flex;
-    gap: 0.6rem;
     flex-wrap: wrap;
+    gap: 0.4rem 1.75rem;
+    margin: 0 0 0.5rem;
   }
-  .lab-url-input {
-    flex: 1;
-    min-width: 14rem;
-    font-family: inherit;
-    font-size: 0.9rem;
+  .start-keys div {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .start-keys dt {
     color: var(--color-text);
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-    padding: 0.55rem 0.9rem;
-    outline: none;
   }
-  .lab-url-input:focus {
-    border-color: var(--color-accent);
+  .start-keys dd {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--color-muted);
+  }
+  .start-focus-note {
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+    margin: 0 0 1.75rem;
   }
 
-  .lab-btn {
+  .start-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .start-back {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    text-decoration: none;
+  }
+  .start-back:hover {
+    color: var(--color-text);
+  }
+
+  kbd {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-bottom-width: 2px;
+    border-radius: 0.3rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  .btn {
     font-family: inherit;
     font-size: 0.85rem;
     font-weight: 500;
@@ -468,129 +620,214 @@ const conditions = [
     cursor: pointer;
     transition: border-color 150ms ease;
   }
-  .lab-btn:hover {
+  .btn:hover {
     border-color: var(--color-accent);
   }
-  .lab-btn-primary {
+  .btn-primary {
     color: #fff;
     background-color: var(--color-accent);
     border-color: var(--color-accent);
   }
-
-  .lab-conditions {
-    border: none;
-    padding: 0;
-    margin: 0 0 1rem;
-  }
-  .lab-legend {
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-    padding: 0;
-    margin-bottom: 0.5rem;
-  }
-  .lab-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-  }
-  .lab-pill input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .lab-pill span {
-    display: inline-block;
-    font-size: 0.82rem;
-    color: var(--color-muted);
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    padding: 0.35rem 0.85rem;
-    cursor: pointer;
-    transition:
-      color 120ms ease,
-      border-color 120ms ease,
-      background-color 120ms ease;
-  }
-  .lab-pill:hover span {
-    border-color: var(--color-accent);
-    color: var(--color-text);
-  }
-  .lab-pill input:checked + span {
-    color: var(--color-bg);
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-    font-weight: 600;
-  }
-  .lab-pill input:focus-visible + span {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+  .btn-big {
+    font-size: 1rem;
+    padding: 0.75rem 1.75rem;
   }
 
-  .lab-severity {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    margin-bottom: 0.75rem;
-  }
-  .lab-severity-label {
-    font-size: 0.82rem;
-    color: var(--color-muted);
-    white-space: nowrap;
-  }
-  .lab-severity-label b {
-    color: var(--color-accent);
-    font-variant-numeric: tabular-nums;
-  }
-  .lab-severity input[type='range'] {
-    flex: 1;
-    max-width: 18rem;
-    accent-color: var(--color-accent);
-  }
-  .lab-severity input[type='range']:disabled {
-    opacity: 0.4;
-  }
-
-  .lab-blurb {
-    font-size: 0.82rem;
-    line-height: 1.6;
-    color: var(--color-muted);
-    margin: 0 0 1rem;
-    min-height: 2.6em;
-  }
-
-  .lab-viewport {
-    position: relative;
-    border: 1px solid var(--color-border);
-    border-radius: 0.75rem;
-    overflow: hidden;
+  /* Simulación */
+  .sim {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
     background-color: #fff;
   }
-  .lab-viewport iframe {
+  .sim[hidden] {
+    display: none;
+  }
+  .sim iframe {
     display: block;
     width: 100%;
-    height: min(70vh, 42rem);
+    height: 100%;
     border: none;
   }
-  .lab-overlay {
+  .sim-overlay {
     position: absolute;
     inset: 0;
     pointer-events: none;
   }
 
-  .lab-hint {
-    font-size: 0.78rem;
-    line-height: 1.6;
-    color: var(--color-muted);
-    margin: 0.85rem 0 0;
+  .hud {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    pointer-events: none;
   }
-  .lab-hint code {
+  .hud-btn {
+    pointer-events: auto;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #e8eaed;
+    background-color: rgb(10 14 16 / 0.85);
+    border: 1px solid rgb(255 255 255 / 0.15);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+  .hud-btn:hover {
+    border-color: var(--color-accent);
+  }
+  .hud-btn kbd {
+    font-size: 0.62rem;
+    color: inherit;
+    background: rgb(255 255 255 / 0.12);
+    border-color: rgb(255 255 255 / 0.2);
+  }
+  .hud-badge {
+    margin-left: auto;
+    margin-right: 0.5rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: #e8eaed;
+    background-color: rgb(10 14 16 / 0.85);
+    border: 1px solid rgb(255 255 255 / 0.15);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    backdrop-filter: blur(6px);
   }
 
-  .lab-svg-defs {
+  .drawer {
+    position: absolute;
+    top: 3.4rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: min(21rem, calc(100vw - 1.5rem));
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    overflow-y: auto;
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.9rem;
+    background-color: var(--color-bg);
+    box-shadow: 0 18px 48px -18px rgb(0 0 0 / 0.35);
+  }
+  .drawer[hidden] {
+    display: none;
+  }
+
+  .drawer-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  .drawer-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: 0;
+  }
+  .drawer-label b {
+    color: var(--color-accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .url-input {
+    font-family: inherit;
+    font-size: 0.88rem;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    outline: none;
+  }
+  .url-input:focus {
+    border-color: var(--color-accent);
+  }
+  .url-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .conditions {
+    gap: 0.25rem;
+  }
+  .condition {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+  .condition:hover {
+    background-color: var(--color-surface);
+  }
+  .condition input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .condition kbd {
+    flex-shrink: 0;
+  }
+  .condition span {
+    font-size: 0.88rem;
+    color: var(--color-muted);
+  }
+  .condition:has(input:checked) {
+    background-color: color-mix(
+      in oklab,
+      var(--color-accent) 12%,
+      var(--color-bg)
+    );
+  }
+  .condition:has(input:checked) span {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .condition:has(input:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  input[type='range'] {
+    accent-color: var(--color-accent);
+  }
+  input[type='range']:disabled {
+    opacity: 0.4;
+  }
+
+  .drawer-blurb {
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+    margin: 0;
+  }
+  .drawer-hint {
+    font-size: 0.73rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+    margin: auto 0 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .drawer-hint code {
+    font-size: 0.68rem;
+  }
+
+  .svg-defs {
     position: absolute;
     width: 0;
     height: 0;
