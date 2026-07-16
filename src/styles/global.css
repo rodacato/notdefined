@@ -443,3 +443,27 @@ body::before {
 .card-list-item:hover::before {
   opacity: 1;
 }
+
+/* Foco visible y branded en todo el sitio, no solo el default del navegador. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Un solo guard para animaciones. El cursor que parpadea y la línea del header
+   corren infinito (WCAG 2.2.2); .fade-in-item necesita quedar visible, no en
+   opacity 0, si el observer no alcanza a dispararse. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .fade-in-item {
+    opacity: 1;
+    transform: none;
+  }
+}

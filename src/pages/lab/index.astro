@@ -26,7 +26,7 @@ const sorted = [...labs].sort((a, b) => b.date.localeCompare(a.date));
               <span class="lab-dot" />
               {statusLabel[lab.status]}
             </span>
-            <h3 class="lab-name">{lab.title}</h3>
+            <h2 class="lab-name">{lab.title}</h2>
             <p class="lab-blurb">{lab.blurb}</p>
             {lab.tags.length > 0 && (
               <div class="lab-tags">

@@ -6,7 +6,13 @@ const enabled = Boolean(analytics.gaId) && import.meta.env.PROD;
 
 {
   enabled && (
-    <div id="consent-bar" class="consent-bar" hidden>
+    <div
+      id="consent-bar"
+      class="consent-bar"
+      role="region"
+      aria-label="Consentimiento de cookies"
+      hidden
+    >
       <span class="consent-icon" aria-hidden="true">
         🍪
       </span>

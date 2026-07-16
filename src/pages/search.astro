@@ -59,7 +59,14 @@ const topTags = Object.entries(tagCounts)
     />
   </div>
 
-  <p id="search-count" class="search-count"></p>
+  <p
+    id="search-count"
+    class="search-count"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+  </p>
   <ul id="results" class="card-list"></ul>
 
   <div id="suggestions" class="suggestions">
@@ -106,7 +113,7 @@ const topTags = Object.entries(tagCounts)
       link.className = 'post-link';
       link.href = `/blog/${post.slug}/`;
 
-      const title = document.createElement('h3');
+      const title = document.createElement('h2');
       title.className = 'post-title';
       title.textContent = post.title;
 

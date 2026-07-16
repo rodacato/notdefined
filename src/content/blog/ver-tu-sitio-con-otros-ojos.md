@@ -8,12 +8,14 @@ draft: true
 
 ## TL;DR
 
-<!-- Adrian: estos bullets se cierran cuando tengamos las mediciones. Borrador: -->
+<!-- Adrian: estos bullets se cierran cuando cierres la tesis. Borrador: -->
 
-- Pasamos años desgastando la vista frente a una pantalla, y diseñamos como si todos los ojos fueran los nuestros. Construí [un lab](/lab/a11y) para voltear la cámara: ver este blog (o cualquier sitio embebible) bajo daltonismo, visión baja, cataratas, glaucoma y degeneración macular.
-- Las matrices de daltonismo que circulan por internet están mal. Las científicamente válidas son las de **Machado et al. (2009)** y operan en **RGB lineal** — detalle que la mitad de los simuladores se salta.
-- <!-- Adrian: veredicto del verde terminal bajo deuteranopia va aquí, con números -->
-- <!-- Adrian: distancia entre el mini-lector casero y VoiceOver real va aquí (v2) -->
+- Pasamos años desgastando la vista frente a una pantalla, y diseñamos como si todos los ojos fueran los nuestros. Construí [un lab](/lab/a11y) para voltear la cámara: ver este blog (o cualquier sitio embebible) bajo daltonismo, visión baja, cataratas, glaucoma, degeneración macular — y un modo sin visión con lector de voz.
+- **La accesibilidad no es un feature que agregas al final. Es parte de hacer una buena página.**
+- Medí mis propios tokens bajo daltonismo completo: **el blog pasa**. Pero no por virtuoso — pasa porque el HTML semántico y los defaults hicieron el trabajo. **Los frameworks son tus amigos; no les des la espalda.**
+- Los links pasan AA por un pelo bajo protanopia: **4.88 contra 4.5 requerido**. Un tono más claro y reprueban.
+- Las matrices de daltonismo que circulan por internet están mal. Las válidas son las de **Machado et al. (2009)** y operan en **RGB lineal** — detalle que la mitad de los simuladores se salta.
+- <!-- Adrian: distancia entre el mini-lector casero y VoiceOver real va aquí -->
 
 ---
 
@@ -22,6 +24,27 @@ draft: true
 <!-- Adrian: tu motivación real, en tu voz — la vista desgastada por el oficio,
 la reflexión de "¿cómo sería mi mundo con una condición así?". Abre el post,
 NO lo cierra. -->
+
+---
+
+## No es un feature: es hacer bien la página
+
+<!-- Adrian: TU OPINIÓN, el corazón del post. La idea: la a11y no es un ticket
+que agregas en el sprint 12, es una propiedad de haber hecho bien lo básico.
+
+Anclas honestas para no caer en sermón:
+- Mi blog pasó, pero no porque yo "trabajé la accesibilidad" — pasó porque usé
+  HTML semántico y no me puse creativo. Suerte con buen gusto, no virtud.
+- Lo que los frameworks te dan GRATIS: elementos nativos (un <button> ya es
+  focusable, ya responde a Enter/Space, ya se anuncia como botón), manejo de
+  foco, roles implícitos, navegación por teclado. El <input type="radio"> del
+  lab navega con flechas sin que yo escribiera una línea.
+- Dónde NO te salvan (esto es lo importante, evita el "úsalo y ya"):
+  contraste de tus tokens, color como único canal de información, orden de
+  lectura, alt text que de verdad describa.
+- El costo de darles la espalda: cada <div onclick> es reimplementar a mano lo
+  que ya tenías gratis — y siempre peor.
+-->
 
 ---
 
@@ -97,11 +120,33 @@ columna.
 
 ---
 
-## Lo que reprobó mi propio blog
+## Lo que pasó — y lo que no — en mi propio blog
 
-<!-- Adrian: aquí van los números — baseline de axe-core/Lighthouse, ratios de
-contraste de los tokens bajo cada matriz, y el veredicto del verde terminal
-bajo deuteranopia. Sin aforismos: datos. -->
+<!-- Adrian: los números medidos. Tabla de contraste de los tokens (normal /
+protan / deutan / tritan). El mea culpa: yo esperaba que el "verde terminal"
+reprobara... y resulta que el accent nunca fue verde, es índigo #4c4ee4. Pasó
+la prueba, pero por las razones equivocadas (defaults sanos, no virtud).
+El dato filoso: links 4.88 vs 4.5 requerido bajo protanopia — pasa por un pelo.
+Nota de entorno honesta: Lighthouse ni corrió, Node v20.3.1. -->
+
+---
+
+## El plan de mejora (y qué sí arreglé)
+
+<!-- Adrian: esta sección es la PRUEBA de la tesis. No basta con opinar que la
+a11y es parte de hacer bien la página: hay que auditar este blog, arreglar lo
+que salga, y reportar el delta con números.
+
+Estructura:
+1. La auditoría: qué revisé (páginas del sitio, no solo el post) y cómo.
+2. Los hallazgos por categoría (contraste / semántica / foco / teclado /
+   alt text / orden de lectura / motion).
+3. Qué arreglé y qué NO (y por qué — lo que no vale la pena también es opinión).
+4. El delta medido: antes → después.
+5. Lo que quedó escrito en AGENTS.md para que no se degrade: la a11y como
+   regla del repo, no como buena intención. Reportar aquí que gracias a esto
+   el blog mejoró en [X categorías].
+-->
 
 ---
 

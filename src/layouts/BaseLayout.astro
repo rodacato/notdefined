@@ -58,6 +58,7 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     <Analytics />
   </head>
   <body class="flex min-h-full flex-col">
+    <a href="#main" class="skip-link">Saltar al contenido</a>
     <div class="cursor-glow" aria-hidden="true"></div>
     {
       !bare && (
@@ -69,11 +70,7 @@ const ogImageURL = new URL('/logo.png', Astro.site);
             ]}
           >
             <a href="/" class="brand">
-              <img
-                src="/logo.png"
-                alt="notdefined.dev logo"
-                class="brand-logo"
-              />
+              <img src="/logo.png" alt="" class="brand-logo" />
               <span class="brand-name">
                 notdefined<span class="cursor-blink">_</span>
               </span>
@@ -107,7 +104,7 @@ const ogImageURL = new URL('/logo.png', Astro.site);
                 />
               </form>
             )}
-            <nav class="flex items-center gap-5">
+            <nav class="flex items-center gap-5" aria-label="Principal">
               <a href="/blog/" class="nav-link">
                 Blog
               </a>
@@ -147,6 +144,7 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     }
 
     <main
+      id="main"
       class:list={bare
         ? ['w-full flex-1']
         : ['mx-auto w-full flex-1 px-6 py-12 md:py-16', maxWidth]}
@@ -176,11 +174,7 @@ const ogImageURL = new URL('/logo.png', Astro.site);
                 </a>
               </div>
               <div class="footer-right">
-                <span
-                  class="footer-konami"
-                  title="↑ ↑ ↓ ↓ ← → ← → B A"
-                  aria-label="Konami code soportado"
-                >
+                <span class="footer-konami" title="↑ ↑ ↓ ↓ ← → ← → B A">
                   konami code supported
                 </span>
                 <a href="/rss.xml" class="rss-link" title="Feed RSS">
@@ -198,6 +192,24 @@ const ogImageURL = new URL('/logo.png', Astro.site);
 </html>
 
 <style>
+  .skip-link {
+    position: absolute;
+    left: 0.75rem;
+    top: -3rem;
+    z-index: 200;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #fff;
+    background-color: var(--color-accent);
+    border-radius: 0 0 0.5rem 0.5rem;
+    padding: 0.6rem 1rem;
+    text-decoration: none;
+    transition: top 150ms ease;
+  }
+  .skip-link:focus {
+    top: 0;
+  }
+
   .site-header {
     position: sticky;
     top: 0;
@@ -262,6 +274,8 @@ const ogImageURL = new URL('/logo.png', Astro.site);
   }
   .header-search:focus-within {
     border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px
+      color-mix(in oklab, var(--color-accent) 15%, transparent);
   }
 
   .header-search-icon {
@@ -533,9 +547,10 @@ const ogImageURL = new URL('/logo.png', Astro.site);
     }
   });
 
-  // Parallax sections (landing page only)
+  // Parallax sections (landing page only). Desplazamiento a distinta velocidad
+  // que el scroll = disparador vestibular; con reduced-motion no corre.
   const parallaxSections = document.querySelectorAll('[data-parallax]');
-  if (parallaxSections.length > 0) {
+  if (parallaxSections.length > 0 && !reduceMotion) {
     window.addEventListener(
       'scroll',
       () => {

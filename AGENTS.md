@@ -45,6 +45,36 @@ Guiado por [docs/editorial/ghostwriter.md](docs/editorial/ghostwriter.md): voz d
 - **No abrir PRs ni hacer push sin pedido explícito.** Default: commits locales.
 - **Chat en español; commits / issues / docs en inglés; contenido editorial en es-MX casual.**
 - **Para diseño: escribe prompts** (ver [docs/design/claude-design-prompts.md](docs/design/claude-design-prompts.md)) — no intentes mockups directos. Adrian los corre en Claude Design / Stitch / v0.
+- **Accesibilidad: no es un feature, es parte de hacer bien la página.** Reglas abajo.
+
+---
+
+## Accesibilidad — reglas del repo
+
+No es una fase ni un ticket: es una propiedad del código que ya escribes. El sitio pasa hoy porque los defaults semánticos hicieron el trabajo — la regla existe para que no se degrade.
+
+**Apóyate en la plataforma (los frameworks son tus amigos):**
+
+- Elemento nativo antes que ARIA. `<button>`, `<a href>`, `<input type="radio">`, `<details>` ya traen foco, teclado y rol. Un `<div onclick>` es reimplementar a mano —y peor— lo que ya tenías gratis.
+- ARIA solo cuando no hay elemento nativo que lo dé. `aria-label` en un `<span>` genérico no lo expone nadie: es código muerto.
+- Si un `<img>` es decorativo o su texto ya está al lado, `alt=""`. Alt redundante = el lector lo dice dos veces.
+
+**Lo que la plataforma NO te da gratis — revisa a mano:**
+
+| Regla | Cómo verificar |
+|---|---|
+| **Un skip link** al `#main` como primer foco del `<body>` | Tab desde el inicio: el primer stop debe ser "Saltar al contenido" |
+| **Orden de encabezados sin saltos** (`h1` → `h2` → `h3`), un solo `h1` | Es exactamente lo que la tecla `H` de un lector usa para navegar |
+| **Landmarks distinguibles**: si hay 2+ `<nav>`, cada uno con `aria-label` | Sin eso, la lista de landmarks dice "navigation" dos veces |
+| **Contenido inyectado por JS se anuncia** (`role="status"` / `aria-live="polite"`) | Buscador, filtros, cualquier resultado dinámico |
+| **El color nunca es el único canal** | Link dentro de un párrafo → subrayado. Estado → ícono o texto, no solo un punto de color |
+| **Contraste WCAG de los tokens** ≥4.5:1 texto, ≥3:1 link-vs-texto circundante | Ver tabla en `docs/design/tokens.md` |
+| **Toda animación respeta `prefers-reduced-motion`** | Parallax, animaciones infinitas (`blink`, `accent-slide`, `mesh-drift`), scroll effects |
+| **`:focus-visible` nunca se destruye** | `outline: none` solo si hay reemplazo visible en la misma regla |
+
+**Antes de dar por terminado un cambio de UI:** navégalo solo con teclado (Tab / Enter / Esc), y pásalo por [`/lab/a11y`](src/pages/lab/a11y.astro) — el simulador del sitio, incluyendo el modo "Sin visión" que lo lee en voz alta.
+
+**Trampa conocida:** el patrón bueno suele existir ya en el repo y no estar promovido a global (`.prose a` subraya, `a11y.astro` usa `aria-live` y `:focus-visible`). Antes de inventar, busca si ya está resuelto en otro archivo.
 
 ---
 

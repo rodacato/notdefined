@@ -248,9 +248,13 @@ function formatDate(date: Date) {
   .featured-item .post-link:hover {
     background-color: var(--color-surface-2);
   }
+  /* Subrayado obligatorio: dentro de un párrafo el color solo da 1.09:1 contra
+     el texto — invisible como link sin discriminación rojo-verde. */
   .hero-link {
     color: var(--color-accent);
-    text-decoration: none;
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent-dim);
+    text-underline-offset: 3px;
     white-space: nowrap;
     transition: opacity 150ms ease;
   }

@@ -144,7 +144,7 @@ function formatDateShort(date: Date) {
   <!-- Series prev/next -->
   {
     (prevInSeries || nextInSeries) && (
-      <nav class="series-nav">
+      <nav class="series-nav" aria-label="Navegación de la serie">
         <p class="series-nav-label">Más en esta serie</p>
         <div class="series-nav-links">
           {prevInSeries && (
