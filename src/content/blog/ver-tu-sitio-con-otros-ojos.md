@@ -54,7 +54,7 @@ Le puse una caption en vivo sobre el negro, que muestra lo que se está narrando
 
 Dos cosas que confiesa en su propia cara. **Solo lee este sitio** — la Same-Origin Policy sella el DOM de un iframe de otro origen, así que con una URL externa el modo se apaga y explica por qué. Y **no es un screen reader**: NVDA y VoiceOver tienen rotor, modo formularios, décadas de heurísticas. Lo mío es una aproximación para que alguien que ve sienta el problema.
 
-Construyéndolo me cayó el veinte de algo: la tecla `H` salta encabezados. Si tu página va de `h1` a `h3`, esa navegación se rompe. **El orden de headings no es cosmético — es la navegación de alguien.**
+Construyéndolo me cayó el veinte de algo: la tecla `H` salta encabezados. Si tu página brinca de `h1` a `h3`, le rompes esa navegación a quien la usa para moverse. El orden de los headings es, literalmente, cómo alguien recorre tu página sin verla.
 
 <!-- Adrian: aquí va el cierre del arco — probar el blog con VoiceOver real
 (macOS, ya lo tienes) y documentar qué tan lejos quedó el lector casero.
@@ -113,7 +113,7 @@ Iba con una teoría bien armada: mi verde terminal iba a reprobar bajo deuterano
 
 El daltonismo casi no mueve la aguja. Mi color de marca no falla, pero no fue decisión de accesibilidad: fue suerte con buen gusto.
 
-Y las categorías que suelen doler pasaron todas, sin que yo les dedicara un sprint: cero `<div onclick>`, cero inputs sin label, landmarks reales, `lang` puesto, ningún focus ring destruido. Eso me lo dio la plataforma. Un `<button>` ya es focusable, ya responde a Enter, ya se anuncia como botón. **Por eso los frameworks son tus amigos**: cada `<div onclick>` que escribes reimplementa —peor— algo que ya tenías.
+Y las categorías que suelen doler pasaron todas, sin que yo les dedicara un sprint: cero `<div onclick>`, cero inputs sin label, landmarks reales, `lang` puesto, ningún focus ring destruido. Eso me lo dio la plataforma. Un `<button>` ya es focusable, ya responde a Enter, ya se anuncia como botón. Por eso digo que los frameworks son tus amigos: cada `<div onclick>` que escribes reimplementa —peor— algo que ya tenías.
 
 Pero cuatro cosas ningún default te las regala, y las cuatro pegan justo donde no ves:
 
@@ -126,24 +126,22 @@ Porque en el [post de Google Stitch](/blog/google-stitch-diseno-para-devs-que-no
 
 > *"diseña en escala de grises primero. Te obliga a crear jerarquía con spacing y contraste, no escondiéndote detrás de colores."*
 
-Los links de mi hero: índigo, dentro de un párrafo gris, sin subrayado. Accent y texto tienen casi la misma luminosidad; lo único que los separa es el matiz. Contraste link contra texto: **1.09:1** cuando WCAG pide 3:1. En escala de grises esos links no existen. Yo di el consejo, en mi blog, y no lo seguí en mi propia portada.
+Los links de mi hero eran índigo, sin subrayado, dentro de un párrafo gris. El detalle: el índigo del link y el gris del texto son casi igual de oscuros, lo único que cambia es el color. Si no distingues esos dos colores —por daltonismo, o en una pantalla en grises— el link se pierde en el párrafo como texto normal. Medido, el contraste entre link y texto es de **1.09:1**; la regla pide al menos 3:1. Di el consejo en mi propio blog y no lo seguí en mi portada.
 
-No mames.
+De esas cuatro, tres ya estaban resueltas en mi código: `.prose a` subrayaba, el lab usaba `aria-live`, `BaseLayout` calculaba `reduceMotion`. El sitio no era inaccesible; los patrones buenos simplemente nunca subieron a global.
 
-De esas cuatro, tres ya estaban resueltas en mi código: `.prose a` subrayaba, el lab usaba `aria-live`, `BaseLayout` calculaba `reduceMotion`. No era que el sitio fuera inaccesible — los patrones buenos nunca subieron a global.
+Y aquí es donde no quiero que se me malentienda: el framework hace muchísimo, pero no lo hace todo. Astro me dio los elementos nativos; el criterio para usarlos bien no lo da ninguna librería. Mis cuatro barreras son la punta de una lista más larga — las cosas que ningún framework resuelve por ti porque dependen de tu contenido y tus decisiones, no de la herramienta:
 
-Y aquí está el punto que me quiero clavar, porque es fácil malentenderlo: **el framework hace mucho, pero no lo hace todo, y creerte lo contrario es donde te caes**. Astro me dio los elementos nativos; nadie me dio el criterio de usarlos bien. Mis cuatro barreras no son casos raros, son la lista de siempre — las cosas que ningún framework te resuelve porque dependen de tu contenido y tus decisiones, no de la librería:
+- **Alt text que signifique algo** — el framework te da el `<img>` vacío, el texto lo escribes tú, y "logo" no cuenta.
+- **El contraste de tus tokens**: la librería no elige tu paleta, ese cálculo es tuyo.
+- **El color como único canal** — un estado, un link o una gráfica que solo se distinguen por color, y nadie te lo marca.
+- **Orden de headings y un solo `h1`**, que para un lector es la navegación, no maquetación.
+- **Skip link y foco tras navegar**: saltar al contenido, devolver el foco al cerrar un modal. Trabajo manual.
+- **Regiones vivas** para todo lo que inyectas con JS y cambia en silencio.
+- **`prefers-reduced-motion` en tus animaciones** — el framework anima, el guard lo pones tú.
+- **`:focus-visible` que tu propio reset no destruya**: un `outline: none` sin reemplazo y rompiste lo que venía gratis.
 
-- **Alt text que signifique algo.** El framework te da el `<img>`; el texto lo escribes tú, y "logo" no es texto.
-- **El contraste de tus tokens.** La librería no elige tu paleta. Ese cálculo es tuyo.
-- **El color como único canal.** Un estado, un link, una gráfica que solo se distinguen por color. Nadie te lo marca.
-- **Orden de headings y un solo `h1`.** Es la navegación de un lector, no un detalle de maquetación.
-- **Skip link y foco tras navegar.** Devolver el foco después de cerrar un modal, saltar al contenido: trabajo manual.
-- **Regiones vivas para lo asíncrono.** Todo lo que inyectas con JS y cambia en silencio.
-- **Tus animaciones con su `prefers-reduced-motion`.** El framework anima; el guard lo pones tú.
-- **`:focus-visible` que tu propio reset no destruya.** Un `outline: none` sin reemplazo y ya rompiste lo que venía gratis.
-
-El valor no está en elegir el framework. Está en la atención al detalle que pones **encima** de él. El framework te sube al 90% sin esfuerzo; ese último 10% es puro criterio, y es justo el que separa un sitio que "compila accesible" de uno que de verdad se puede usar sin ver.
+Ninguna de esas la agarra elegir mejor la librería. Las agarra la atención al detalle que pones encima.
 
 ---
 
@@ -160,9 +158,9 @@ El valor no está en elegir el framework. Está en la atención al detalle que p
 | Headings | Tres saltos `h1→h3` corregidos |
 | Alt text | Alt redundante fuera del logo, avatar e íconos |
 
-El del alt merece nota: el logo tenía `alt="notdefined.dev logo"` junto al texto "notdefined", así que el lector anunciaba **"notdefined.dev logo notdefined"** en cada página. `alt=""` y listo — el texto de al lado ya la nombra. Alt vacío no es descuido: es decir "esto no aporta, sigue".
+El del alt merece nota: el logo tenía `alt="notdefined.dev logo"` junto al texto "notdefined", así que el lector anunciaba **"notdefined.dev logo notdefined"** en cada página. `alt=""` y listo — el texto de al lado ya la nombra. Poner el alt vacío ahí es intencional: le dice al lector que esa imagen no aporta y que siga de largo.
 
-Y para que no se degrade en tres meses, la accesibilidad quedó escrita como regla del repo en `AGENTS.md`, con tabla de verificación. No como buena intención: como cosa que se revisa.
+Y para que no se degrade en tres meses, la accesibilidad quedó escrita como regla del repo en `AGENTS.md`, con su tabla de verificación, para que se revise y no se quede en buena intención.
 
 ---
 
@@ -172,7 +170,7 @@ Empecé pensando que iba a encontrar un desastre y contar la heroica de arreglar
 
 Mi blog no pasó porque yo sea accesible. Pasó porque usé `<button>` cuando quería un botón.
 
-Y el único hallazgo con dientes —los links invisibles del hero— no lo agarró ningún linter. `axe` no lo marca, Lighthouse tampoco: el contraste contra el fondo estaba perfecto. Lo agarró ponerle protanopia encima y no encontrar los links. Por eso construí un simulador y no una checklist más: **el checklist te dice que el contraste pasa; el ojo simulado te enseña que el link no se ve.**
+Y el único hallazgo con dientes —los links invisibles del hero— no lo agarró ningún linter. `axe` le dio verde a ese contraste, Lighthouse también: contra el fondo estaba perfecto. Lo agarró ponerle protanopia encima y no encontrar mis propios links. Por eso construí un simulador y no otra checklist.
 
 ---
 
