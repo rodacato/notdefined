@@ -28,7 +28,7 @@ export const labs: Lab[] = [
     date: '2026-07-15',
     tags: ['a11y', 'SVG', 'feColorMatrix'],
     requirements: 'cualquier navegador',
-    metric: '7 condiciones',
+    metric: '8 modos',
     post: {
       href: '/blog/ver-tu-sitio-con-otros-ojos/',
       label: 'Lee el post',

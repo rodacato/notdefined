@@ -120,6 +120,15 @@ const conditions = [
     scale:
       'Ferris et al. (2005) — AREDS Simplified Severity Scale (Report No. 18).',
   },
+  {
+    id: 'blind',
+    label: 'Sin visión (lector)',
+    blurb:
+      'Pantalla en negro: navega el sitio solo con oído y teclado, con un lector de voz casero. Solo funciona con contenido de este sitio (mismo origen).',
+    steps: [],
+    scale:
+      'No es un lector real. NVDA y VoiceOver tienen rotor, modos y décadas de heurísticas; esto es una aproximación para que un vidente sienta el problema.',
+  },
 ];
 
 const sources = [
@@ -185,7 +194,7 @@ const sources = [
       </aside>
 
       <dl class="start-keys">
-        <div><dt><kbd>1</kbd>–<kbd>8</kbd></dt><dd>cambiar condición</dd></div>
+        <div><dt><kbd>1</kbd>–<kbd>9</kbd></dt><dd>cambiar condición</dd></div>
         <div><dt><kbd>c</kbd></dt><dd>abrir / cerrar controles</dd></div>
         <div><dt><kbd>Esc</kbd> / back</dt><dd>volver a esta pantalla</dd></div>
       </dl>
@@ -233,6 +242,35 @@ const sources = [
       title="Sitio bajo simulación visual"
       referrerpolicy="no-referrer"></iframe>
     <div id="overlay" class="sim-overlay" aria-hidden="true"></div>
+
+    <div id="blind" class="blind" hidden>
+      <div id="blind-unavailable" class="blind-msg" hidden>
+        <p>
+          El modo <strong>Sin visión</strong> solo funciona con contenido de este
+          sitio. La Same-Origin Policy sella el DOM de un iframe de otro origen, y
+          el lector necesita leer ese texto para narrarlo.
+        </p>
+        <button id="blind-load-post" class="btn btn-primary" type="button">
+          Cargar el post
+        </button>
+      </div>
+      <div id="blind-reader" class="blind-reader" hidden>
+        <p class="blind-eyebrow">Sin visión · lector de pantalla casero</p>
+        <p id="blind-caption" class="blind-caption" aria-live="polite">
+          Cargando…
+        </p>
+        <ul class="blind-keys">
+          <li><kbd>↑</kbd><kbd>↓</kbd> leer</li>
+          <li><kbd>H</kbd> encabezados</li>
+          <li><kbd>K</kbd> enlaces</li>
+          <li><kbd>Enter</kbd> abrir enlace</li>
+          <li><kbd>Esc</kbd> salir</li>
+        </ul>
+        <p class="blind-note">
+          No es NVDA ni VoiceOver — es una aproximación para sentir el problema.
+        </p>
+      </div>
+    </div>
 
     <button
       id="drawer-open"
@@ -502,10 +540,212 @@ const sources = [
   const stageTicks = $('stage-ticks');
   const prevalenceEl = $('prevalence');
   const scaleEl = $('scale');
+  const blindEl = $('blind');
+  const blindUnavailable = $('blind-unavailable');
+  const blindReader = $('blind-reader');
+  const blindCaption = $('blind-caption');
 
   let type = 'none';
   let label = 'Visión típica';
   let steps: Step[] = [];
+
+  // Lector de pantalla casero (modo "Sin visión"). Solo mismo origen: la SOP
+  // sella el DOM de un iframe cross-origin, así que solo puede leer este sitio.
+  let readerActive = false;
+  let flow: HTMLElement[] = [];
+  let headings: HTMLElement[] = [];
+  let links: HTMLElement[] = [];
+  let cur: HTMLElement | null = null;
+  let flowIndex = 0;
+  let voice: SpeechSynthesisVoice | null = null;
+
+  function pickVoice() {
+    if (!('speechSynthesis' in window)) return;
+    const vs = speechSynthesis.getVoices();
+    voice =
+      vs.find((v) => /es[-_]MX/i.test(v.lang)) ||
+      vs.find((v) => /^es/i.test(v.lang)) ||
+      null;
+  }
+  pickVoice();
+  if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = pickVoice;
+
+  function speak(text: string) {
+    blindCaption.textContent = text;
+    if (!('speechSynthesis' in window)) return;
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'es-MX';
+    if (voice) u.voice = voice;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  }
+
+  function getFrameDoc(): Document | null {
+    try {
+      const d = frame.contentDocument;
+      if (!d || !d.body) return null;
+      void d.body.tagName;
+      return d;
+    } catch {
+      return null;
+    }
+  }
+
+  function readText(el: HTMLElement) {
+    if (el.tagName === 'IMG') return (el.getAttribute('alt') || '').trim();
+    return (el.innerText || el.textContent || '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 300);
+  }
+
+  function usable(el: HTMLElement) {
+    if (!readText(el)) return false;
+    return el.offsetParent !== null || el.getClientRects().length > 0;
+  }
+
+  function describe(el: HTMLElement) {
+    const tag = el.tagName.toLowerCase();
+    if (tag === 'img')
+      return `imagen: ${el.getAttribute('alt') || 'sin descripción'}`;
+    const text = readText(el);
+    if (/^h[1-6]$/.test(tag)) return `encabezado nivel ${tag[1]}: ${text}`;
+    if (tag === 'a') return `enlace: ${text}`;
+    if (tag === 'button') return `botón: ${text}`;
+    if (tag === 'li') return `viñeta: ${text}`;
+    return text;
+  }
+
+  function buildNodes(doc: Document) {
+    flow = Array.from(
+      doc.querySelectorAll<HTMLElement>(
+        'h1,h2,h3,h4,h5,h6,p,li,button,img[alt]',
+      ),
+    ).filter(usable);
+    headings = flow.filter((el) => /^h[1-6]$/i.test(el.tagName));
+    links = Array.from(doc.querySelectorAll<HTMLElement>('a[href]')).filter(
+      usable,
+    );
+  }
+
+  function setCur(el: HTMLElement) {
+    cur = el;
+    const i = flow.indexOf(el);
+    if (i >= 0) flowIndex = i;
+    speak(describe(el));
+  }
+
+  function move(dir: number) {
+    if (!flow.length) return;
+    flowIndex = Math.max(0, Math.min(flow.length - 1, flowIndex + dir));
+    setCur(flow[flowIndex]);
+  }
+
+  function relative(list: HTMLElement[], dir: number): HTMLElement | null {
+    if (!cur) return list[0] ?? null;
+    if (dir > 0) {
+      for (const el of list) {
+        if (
+          el !== cur &&
+          cur.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING
+        )
+          return el;
+      }
+      return null;
+    }
+    let last: HTMLElement | null = null;
+    for (const el of list) {
+      if (
+        el !== cur &&
+        cur.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_PRECEDING
+      )
+        last = el;
+    }
+    return last;
+  }
+
+  function activateCur() {
+    if (!cur) return;
+    if (cur.tagName === 'A') {
+      const href = (cur as HTMLAnchorElement).href;
+      speak('Abriendo enlace');
+      const doc = getFrameDoc();
+      if (doc && doc.defaultView) doc.defaultView.location.href = href;
+      else frame.src = href;
+    } else if (cur.tagName === 'BUTTON') {
+      speak('Botón — desactivado en el lector');
+    }
+  }
+
+  function handleReaderKey(e: KeyboardEvent): boolean {
+    const k = e.key;
+    if (k === 'ArrowDown' || k === 'ArrowRight') {
+      e.preventDefault();
+      move(1);
+      return true;
+    }
+    if (k === 'ArrowUp' || k === 'ArrowLeft') {
+      e.preventDefault();
+      move(-1);
+      return true;
+    }
+    if (k === 'h' || k === 'H') {
+      e.preventDefault();
+      const el = relative(headings, e.shiftKey ? -1 : 1);
+      if (el) setCur(el);
+      else speak('No hay más encabezados');
+      return true;
+    }
+    if (k === 'k' || k === 'K') {
+      e.preventDefault();
+      const el = relative(links, e.shiftKey ? -1 : 1);
+      if (el) setCur(el);
+      else speak('No hay más enlaces');
+      return true;
+    }
+    if (k === 'Enter') {
+      e.preventDefault();
+      activateCur();
+      return true;
+    }
+    if (k === 'Home') {
+      e.preventDefault();
+      if (flow[0]) setCur(flow[0]);
+      return true;
+    }
+    if (k === 'End') {
+      e.preventDefault();
+      if (flow.length) setCur(flow[flow.length - 1]);
+      return true;
+    }
+    return false;
+  }
+
+  function activateBlind() {
+    readerActive = true;
+    blindEl.hidden = false;
+    const doc = getFrameDoc();
+    if (!doc) {
+      blindUnavailable.hidden = false;
+      blindReader.hidden = true;
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+      return;
+    }
+    blindUnavailable.hidden = true;
+    blindReader.hidden = false;
+    buildNodes(doc);
+    cur = flow[0] ?? null;
+    flowIndex = 0;
+    if (cur) speak(describe(cur));
+    else speak('No encontré contenido legible en esta página.');
+  }
+
+  function deactivateBlind() {
+    if (!readerActive) return;
+    readerActive = false;
+    blindEl.hidden = true;
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+  }
 
   function renderMatrix(cvdKey: string, level: number) {
     const m = MACHADO[cvdKey][Math.round(level * 10)];
@@ -588,6 +828,14 @@ const sources = [
     scaleEl.hidden = !scale;
     scaleEl.textContent = scale;
 
+    if (type === 'blind') {
+      frame.style.filter = '';
+      overlay.style.background = '';
+      badge.textContent = label;
+      activateBlind();
+      return;
+    }
+    deactivateBlind();
     apply();
   }
 
@@ -634,6 +882,7 @@ const sources = [
   });
 
   function exitSim() {
+    deactivateBlind();
     if (history.state?.sim) {
       history.back();
     } else {
@@ -666,12 +915,39 @@ const sources = [
     frame.src = POST_URL;
   });
 
+  $('blind-load-post').addEventListener('click', () => {
+    frame.src = POST_URL;
+  });
+
+  // Al recargar el iframe (navegar un enlace, o cargar el post desde el modo sin
+  // visión), reconstruye el árbol de nodos y sigue leyendo desde arriba.
+  frame.addEventListener('load', () => {
+    if (!readerActive) return;
+    const doc = getFrameDoc();
+    if (!doc) {
+      blindUnavailable.hidden = false;
+      blindReader.hidden = true;
+      return;
+    }
+    blindUnavailable.hidden = true;
+    blindReader.hidden = false;
+    buildNodes(doc);
+    cur = flow[0] ?? null;
+    flowIndex = 0;
+    if (cur) speak(describe(cur));
+  });
+
   window.addEventListener('keydown', (e) => {
     if (sim.hidden) return;
     const target = e.target as HTMLElement | null;
-    const typing =
-      target &&
-      (target.tagName === 'INPUT' ||
+    // Solo los campos de texto tragan las teclas; radios/botones/slider no, para
+    // que las flechas y H/K del lector funcionen aunque el foco quede en ellos.
+    const textEntry =
+      !!target &&
+      ((target.tagName === 'INPUT' &&
+        !['radio', 'checkbox', 'range', 'button', 'submit'].includes(
+          (target as HTMLInputElement).type,
+        )) ||
         target.tagName === 'TEXTAREA' ||
         target.isContentEditable);
 
@@ -679,11 +955,12 @@ const sources = [
       exitSim();
       return;
     }
-    if (typing) return;
+    if (textEntry) return;
     if (e.key === 'c') {
       setDrawer(drawer.hidden);
       return;
     }
+    if (readerActive && handleReaderKey(e)) return;
     const n = Number(e.key);
     if (n >= 1 && n <= radios.length) {
       const radio = radios[n - 1];
@@ -893,10 +1170,89 @@ const sources = [
     pointer-events: none;
   }
 
+  .blind {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: #e8eaed;
+  }
+  .blind[hidden] {
+    display: none;
+  }
+  .blind-msg {
+    max-width: 32rem;
+    text-align: center;
+    line-height: 1.7;
+  }
+  .blind-msg[hidden] {
+    display: none;
+  }
+  .blind-msg p {
+    margin: 0 0 1.25rem;
+    color: #cfd3d6;
+    font-size: 0.95rem;
+  }
+  .blind-reader {
+    max-width: 42rem;
+    text-align: center;
+  }
+  .blind-reader[hidden] {
+    display: none;
+  }
+  .blind-eyebrow {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7fd8a6;
+    margin: 0 0 1.5rem;
+  }
+  .blind-caption {
+    font-size: clamp(1.4rem, 4vw, 2.3rem);
+    font-weight: 500;
+    line-height: 1.4;
+    color: #fff;
+    min-height: 3.2em;
+    margin: 0 0 2rem;
+  }
+  .blind-keys {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    justify-content: center;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    font-size: 0.8rem;
+    color: #9aa0a6;
+  }
+  .blind-keys li {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .blind kbd {
+    color: #e8eaed;
+    background-color: rgb(255 255 255 / 0.1);
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-bottom-width: 2px;
+  }
+  .blind-note {
+    font-size: 0.78rem;
+    color: #6b7075;
+    margin: 0;
+  }
+
   .drawer-handle {
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
+    z-index: 10;
     display: flex;
     align-items: center;
     gap: 0.6rem;
@@ -927,6 +1283,7 @@ const sources = [
     top: 0;
     right: 0;
     bottom: 0;
+    z-index: 10;
     width: min(21rem, calc(100vw - 2rem));
     display: flex;
     flex-direction: column;
