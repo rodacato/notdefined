@@ -67,8 +67,9 @@ const conditions = [
         Pasamos años frente a una pantalla desgastando la vista, y diseñamos
         como si todos los ojos fueran los nuestros. Este experimento voltea la
         cámara:
-        <strong>¿cómo se ve tu sitio con otra visión?</strong> Por default carga este
-        blog; puedes probar cualquier URL que se deje embeber.
+        <strong>¿cómo se ve tu sitio con otra visión?</strong> Por default carga el
+        post que acompaña este lab — con ejemplos hechos a propósito para que cada
+        condición se note. Puedes probar cualquier URL que se deje embeber.
       </p>
 
       <aside class="start-note">
@@ -149,7 +150,7 @@ const conditions = [
         />
         <div class="url-actions">
           <button class="btn btn-primary" type="submit">Cargar</button>
-          <button id="reset-url" class="btn" type="button">Este blog</button>
+          <button id="reset-url" class="btn" type="button">El post</button>
         </div>
       </form>
 
@@ -352,6 +353,10 @@ const conditions = [
     ],
   };
 
+  // El post companion trae un "playground" de ejemplos diseñados para romperse
+  // bajo cada condición — mejor demo que el home del blog.
+  const POST_URL = '/blog/ver-tu-sitio-con-otros-ojos/';
+
   const $ = (id: string) => document.getElementById(id)!;
   const start = $('start');
   const sim = $('sim');
@@ -437,7 +442,7 @@ const conditions = [
 
   function showSim() {
     if (!frameLoaded) {
-      frame.src = '/';
+      frame.src = POST_URL;
       frameLoaded = true;
     }
     start.hidden = true;
@@ -488,7 +493,7 @@ const conditions = [
 
   $('reset-url').addEventListener('click', () => {
     ($('url') as HTMLInputElement).value = '';
-    frame.src = '/';
+    frame.src = POST_URL;
   });
 
   window.addEventListener('keydown', (e) => {
