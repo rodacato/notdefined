@@ -32,10 +32,14 @@ export const collections: GuiaCollection[] = [
   {
     id: 'polyglot',
     name: 'Polyglot',
-    hook: 'Temas avanzados de cada lenguaje. Las bases están en todos lados; esto no.',
+    hook: 'Temas avanzados de cada lenguaje, en escala de idiomas: del B2 al C2. Las bases están en todos lados; esto no.',
     itemLabel: 'guías',
   },
 ];
+
+// Escala CEFR de Polyglot (ADR 0006): B2 "con soltura" · C1 "dominado" ·
+// C2 "a fondo". A1–B1 no existen en la colección.
+export type GuiaNivel = 'B2' | 'C1' | 'C2';
 
 export interface Guia {
   slug: string;
@@ -45,6 +49,7 @@ export interface Guia {
   tags: string[];
   collection: GuiaCollectionId;
   tomo?: number; // solo almanaque-1001: orden en la colección (I = primera publicada)
+  nivel?: GuiaNivel; // solo polyglot: el "tomo" de esa colección
   theme: GuiaTheme;
 }
 
@@ -171,6 +176,7 @@ export const guias: Guia[] = [
     date: '2026-07-18',
     tags: ['Ruby', 'Internals', 'YARV', 'GC'],
     collection: 'polyglot',
+    nivel: 'C2',
     theme: {
       canvas: '#1c1116',
       ink: '#f5e9ed',

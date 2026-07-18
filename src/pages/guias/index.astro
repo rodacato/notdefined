@@ -51,7 +51,10 @@ function spineTitle(title: string, collection: string) {
               COLECCIÓN {String(i + 1).padStart(2, '0')}{' '}
               <span class="sep">//</span> {shelf.col.name.toUpperCase()}
               <span class="shelf-count">
-                {shelf.items.length} {shelf.col.itemLabel}
+                {shelf.items.length}{' '}
+                {shelf.items.length === 1
+                  ? shelf.col.itemLabel.replace(/s$/, '')
+                  : shelf.col.itemLabel}
               </span>
             </p>
             <p class="shelf-hook">{shelf.col.hook}</p>
@@ -67,6 +70,12 @@ function spineTitle(title: string, collection: string) {
                     <div class="spine-rail">
                       <span class="spine-tomo">{ROMAN[guia.tomo]}</span>
                       <span class="spine-tomo-label">Tomo</span>
+                    </div>
+                  )}
+                  {guia.nivel && (
+                    <div class="spine-rail">
+                      <span class="spine-tomo spine-nivel">{guia.nivel}</span>
+                      <span class="spine-tomo-label">Nivel</span>
                     </div>
                   )}
                   <div class="spine-body">
@@ -156,7 +165,8 @@ function spineTitle(title: string, collection: string) {
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url('/guias/polyglot-ruby-c2/fonts/Spectral-Bold.woff2') format('woff2');
+    src: url('/guias/polyglot-ruby-c2/fonts/Spectral-Bold.woff2')
+      format('woff2');
   }
 
   .realm-head {
@@ -364,6 +374,12 @@ function spineTitle(title: string, collection: string) {
     font-size: 1.9rem;
     line-height: 1;
     color: var(--g-accent);
+  }
+  /* El nivel CEFR es alfanumérico corto (C2): mono, como código de escala. */
+  .spine-nivel {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
   }
   .spine-tomo-label {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
