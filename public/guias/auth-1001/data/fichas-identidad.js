@@ -42,7 +42,7 @@
     paga: "La seguridad hereda la del correo del usuario: si le hackean el buzón, entran. Fricción de contexto — hay que salir de tu app, abrir el correo, volver. Deliverability: si el mail cae en spam, no hay login.",
     cuandoNo: "Para cuentas de alto valor sin un segundo factor detrás. Para flujos donde el cambio de contexto al correo mata la conversión. Para acceso máquina-a-máquina, obviamente.",
     revoca: "Fácil a nivel de enlace: caduca solo (TTL corto) y se invalida al primer uso. La sesión que crea después se revoca según el mecanismo de sesión que uses detrás (cookie o token).",
-    parientes: "Primo de los OTP por correo/SMS. Se confunde con passwordless «de verdad»: los magic links son passwordless, sí, pero no resisten phishing como las passkeys — un enlace se puede reenviar a un sitio falso.",
+    parientes: "Primo de los OTP por correo/SMS. Se confunde con passwordless «de verdad»: los magic links son passwordless, sí, pero no resisten phishing como las passkeys — al usuario lo pueden inducir a reenviar el enlace o el código al atacante, o el flujo puede haberlo iniciado el atacante mismo.",
     sims: []
   };
 

@@ -29,7 +29,7 @@
         { id: "api",     label: "API / recurso", color: "var(--role-api)" }
       ],
       tabs: [{ id: "flujo", label: "El baile", pasos: [
-        { narracion: "La app genera un secreto de un solo uso, el code_verifier, y guarda solo su hash: el code_challenge.",
+        { narracion: "La app genera un secreto de un solo uso, el code_verifier — que se queda con él — y deriva su hash: el code_challenge, lo único que enviará.",
           why: "El verifier nunca sale del cliente todavía. Recuérdalo — es la pieza clave.",
           activos: ["app"], local: { actor: "app", etiqueta: "verifier + challenge" } },
         { narracion: "La app manda al navegador al servidor de auth con el code_challenge, pidiendo autorización.",
@@ -120,7 +120,7 @@
           activos: ["server"], local: { actor: "server", etiqueta: "recalcula HMAC · coincide ✓", tipo: "ok" } },
         { narracion: "Firma válida y timestamp fresco: acepta el webhook.",
           activos: ["partner", "server"], mensaje: { de: "server", a: "partner", etiqueta: "200 OK", dir: "izq", tipo: "ok" } },
-        { narracion: "Un atacante en la red había capturado ese request idéntico.",
+        { narracion: "Un atacante había capturado ese request idéntico — no de la red (TLS la cubre): de tus logs o de un proxy interno comprometido.",
           activos: ["atacante"], local: { actor: "atacante", etiqueta: "guardó el request" } },
         { narracion: "Lo reenvía tal cual, intentando un ataque de replay.",
           activos: ["atacante", "server"], mensaje: { de: "atacante", a: "server", etiqueta: "replay · request idéntico", dir: "der" } },
@@ -174,20 +174,23 @@
       tracks: [
         { id: "session", nombre: "Session cookie", sub: "estado en el servidor" },
         { id: "jwtpuro", nombre: "JWT puro", sub: "JWT de 60 min, sin refresh" },
-        { id: "jwtref",  nombre: "JWT corto + refresh", sub: "access 15 min · refresh revocable" }
+        { id: "jwtref",  nombre: "JWT corto + refresh", sub: "access 15 min · refresh revocable" },
+        { id: "dpop",    nombre: "JWT + DPoP", sub: "access 15 min · amarrado a tu llave" }
       ],
       pasos: [
         { narracion: "Sesión iniciada. Los tres métodos te tienen dentro, todo normal.",
           estados: {
             session: { estado: "alive", detalle: "Cookie válida · sesión en Redis" },
             jwtpuro: { estado: "alive", detalle: "JWT válido · caduca en 60 min" },
-            jwtref:  { estado: "alive", detalle: "Access 15 min · refresh en servidor" }
+            jwtref:  { estado: "alive", detalle: "Access 15 min · refresh en servidor" },
+            dpop:    { estado: "alive", detalle: "Access 15 min · cada request lleva la prueba de posesión de tu llave" }
           } },
         { narracion: "Un atacante roba tu token/cookie desde otra máquina. Ahora hay dos copias vivas.",
           estados: {
             session: { estado: "alive", detalle: "Cookie robada · pero la sesión sigue en TU servidor" },
             jwtpuro: { estado: "alive", detalle: "JWT robado · válido tal cual, sin tocar tu servidor" },
-            jwtref:  { estado: "alive", detalle: "Access robado · válido, refresh también" }
+            jwtref:  { estado: "alive", detalle: "Access robado · válido, refresh también" },
+            dpop:    { estado: "alive", detalle: "Access robado · la llave privada no: esa nunca sale de tu dispositivo" }
           } },
         { narracion: "Pulsas «Cerrar sesión». Aquí se separan los caminos.",
           estados: {
@@ -196,7 +199,9 @@
             jwtpuro: { estado: "zombie", detalle: "El servidor no puede invalidarlo. El JWT sigue vivo.", timer: 98,
                        verdict: { tono: "lose", texto: "Logout solo borra tu copia local. La del atacante sigue." } },
             jwtref:  { estado: "zombie", detalle: "Refresh revocado en servidor; el access aún no caduca.", timer: 100,
-                       verdict: { tono: "neutral", texto: "Acotado: el access morirá en ≤15 min." } }
+                       verdict: { tono: "neutral", texto: "Acotado: el access morirá en ≤15 min." } },
+            dpop:    { estado: "zombie", detalle: "Refresh revocado; el access vive ≤15 min — y solo corre con tu llave.", timer: 100,
+                       verdict: { tono: "neutral", texto: "Acotado como el refresh. La diferencia se ve en el siguiente paso." } }
           } },
         { narracion: "El atacante usa su copia justo después del logout.",
           estados: {
@@ -205,7 +210,9 @@
             jwtpuro: { estado: "zombie", detalle: "200 OK · el atacante entra. Faltan 59 min de validez.", timer: 90,
                        verdict: { tono: "lose", texto: "Acceso robado en curso." } },
             jwtref:  { estado: "zombie", detalle: "200 OK · todavía dentro de la ventana de 15 min.", timer: 70,
-                       verdict: { tono: "neutral", texto: "Entra, pero con reloj corriendo." } }
+                       verdict: { tono: "neutral", texto: "Entra, pero con reloj corriendo." } },
+            dpop:    { estado: "zombie", detalle: "401 · presenta el token… sin la firma DPoP de tu llave. Rebota.", timer: 70,
+                       verdict: { tono: "win", texto: "La copia robada no sirve sin la llave." } }
           } },
         { narracion: "Pasan 15 minutos.",
           estados: {
@@ -214,7 +221,9 @@
             jwtpuro: { estado: "zombie", detalle: "Sigue vivo. 45 min más de acceso robado.", timer: 60,
                        verdict: { tono: "lose", texto: "El daño se acumula." } },
             jwtref:  { estado: "dead", detalle: "El access caducó y el refresh está revocado: renovar → falla.",
-                       verdict: { tono: "win", texto: "Se cierra solo. Ventana máxima: 15 min." } }
+                       verdict: { tono: "win", texto: "Se cierra solo. Ventana máxima: 15 min." } },
+            dpop:    { estado: "dead", detalle: "El access caducó; el refresh estaba revocado.",
+                       verdict: { tono: "win", texto: "Y el atacante nunca entró." } }
           } },
         { narracion: "Pasa 1 hora. Recuento de daños.",
           estados: {
@@ -223,7 +232,9 @@
             jwtpuro: { estado: "dead", detalle: "Por fin caduca solo. Estuvo 1 hora entera en manos del atacante.",
                        verdict: { tono: "lose", texto: "Firmaste un cheque que no pudiste cancelar." } },
             jwtref:  { estado: "dead", detalle: "Muerto desde el minuto 15.",
-                       verdict: { tono: "win", texto: "El compromiso 2026: ventana de 15 min, no de 60." } }
+                       verdict: { tono: "win", texto: "El compromiso 2026: ventana de 15 min, no de 60." } },
+            dpop:    { estado: "dead", detalle: "Muerto desde el minuto 15 — y la copia robada jamás sirvió.",
+                       verdict: { tono: "win", texto: "El robo se volvió papel: token amarrado (sender-constrained), justo lo que OAuth 2.1 pide para clientes públicos." } }
           } }
       ]
     }

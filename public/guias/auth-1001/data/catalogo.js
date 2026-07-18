@@ -107,17 +107,17 @@
     { id: "rbac", folio: "12", familia: "autorizacion", titulo: "RBAC", tipo: "Roles → permisos", frecuencia: "nucleo",
       desc: "Agrupas permisos en roles y asignas roles a la gente. El default que casi siempre alcanza.",
       tags: ["revocar-ya"],
-      ejes: { phishing: 4, revocabilidad: 6, complejidad: 2, ux: 5, m2m: 5, terceros: 1, madurez: 7 } },
+      ejes: { phishing: null, revocabilidad: 6, complejidad: 2, ux: 5, m2m: 5, terceros: 1, madurez: 7 } },
 
     { id: "abac", folio: "13", familia: "autorizacion", titulo: "ABAC", tipo: "Atributos + políticas", frecuencia: "medio",
       desc: "Reglas sobre atributos: quién, qué, cuándo, dónde. Flexible hasta volverse inauditables.",
       tags: [],
-      ejes: { phishing: 4, revocabilidad: 6, complejidad: 5, ux: 4, m2m: 6, terceros: 3, madurez: 6 } },
+      ejes: { phishing: null, revocabilidad: 6, complejidad: 5, ux: 4, m2m: 6, terceros: 3, madurez: 6 } },
 
     { id: "rebac", folio: "14", familia: "autorizacion", titulo: "ReBAC", tipo: "Relaciones (estilo Zanzibar)", frecuencia: "cola",
       desc: "El permiso se deriva de relaciones: «eres editor de este doc porque estás en la carpeta».",
       tags: [],
-      ejes: { phishing: 4, revocabilidad: 6, complejidad: 6, ux: 5, m2m: 6, terceros: 4, madurez: 5 } }
+      ejes: { phishing: null, revocabilidad: 6, complejidad: 6, ux: 5, m2m: 6, terceros: 4, madurez: 5 } }
   ];
 
   // --- Índices derivados (una sola construcción, todos los consumen) ---

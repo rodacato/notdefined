@@ -180,6 +180,10 @@ button { background: none; border: none; padding: 0; margin: 0; cursor: pointer;
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 3px; }
 
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.not-here { margin-top: 26px; padding: 16px 20px; border: 1px dashed var(--rule); border-radius: 12px; }
+.not-here .nh-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+.not-here p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-faint); }
 .serif { font-family: var(--font-display); }
 .serif-italic { font-family: var(--font-display); font-style: italic; }
 
@@ -402,6 +406,8 @@ html.dark .chip.active { background: var(--primary); color: var(--ink-inverse); 
 @media (max-width: 520px) { .rating { grid-template-columns: 130px 1fr 24px; } }
 .rating .r-label { font-size: 13px; color: var(--ink-soft); }
 .rating .r-track { position: relative; height: 8px; background: var(--muted); border-radius: var(--radius-full); overflow: hidden; }
+.rating.na { opacity: 0.55; }
+.rating.na .r-track { background: repeating-linear-gradient(45deg, var(--muted) 0 4px, transparent 4px 8px); }
 .rating .r-fill { position: absolute; inset: 0 auto 0 0; border-radius: var(--radius-full); background: var(--fam, var(--primary)); transition: width .5s cubic-bezier(.2,.7,.3,1); }
 .rating .r-fill.inverse { background: var(--ink-faint); }
 .rating .r-num { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); text-align: right; }
@@ -461,7 +467,7 @@ html.dark .sim-btn.primary { background: var(--primary); color: var(--ink-invers
 .sim-count { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
 
 /* ---------- Simulador de logout (comparación de 3 estrategias) ---------- */
-.logout-sim .lo-tracks { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); padding: var(--s6) var(--s5); background: var(--paper); }
+.logout-sim .lo-tracks { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--s4); padding: var(--s6) var(--s5); background: var(--paper); }
 @media (max-width: 760px) { .logout-sim .lo-tracks { grid-template-columns: 1fr; } }
 .lo-track { display: flex; flex-direction: column; gap: var(--s3); padding: var(--s4); border: 1px solid var(--rule); border-radius: var(--radius-md); background: var(--surface); }
 .lo-track .lt-name { font-family: var(--font-display); font-weight: 600; font-size: 16px; }

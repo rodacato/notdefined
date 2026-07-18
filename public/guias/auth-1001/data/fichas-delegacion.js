@@ -9,7 +9,7 @@
   G.fichas = G.fichas || {};
 
   G.fichas["oauth"] = {
-    que: "El protocolo para que una app acceda a tus recursos en otro servicio sin conocer tu contraseña. Tú autorizas; el servicio emite un token de acceso acotado. OAuth 2.1 consolidó las buenas prácticas: authorization code + PKCE es el piso, no una opción.",
+    que: "El protocolo para que una app acceda a tus recursos en otro servicio sin conocer tu contraseña. Tú autorizas; el servicio emite un token de acceso acotado. OAuth 2.1 (aún draft en la IETF; en la práctica ya es la norma) consolidó las buenas prácticas: authorization code + PKCE es el piso, no una opción.",
     secreto: "El authorization server guarda las credenciales del usuario y emite tokens. El cliente nunca ve la contraseña, solo recibe un access token (y, si toca, un refresh token). En clientes públicos (SPA, móvil) el PKCE reemplaza al client secret que no puedes esconder.",
     gana: "Acceso delegado y acotado por scopes: la app tercera solo obtiene lo que autorizaste, nada más. Tokens revocables desde el auth server. El estándar universal para «conéctate con…».",
     paga: "Complejidad y muchas maneras de configurarlo mal. Hay varios flujos y elegir el equivocado es un agujero de seguridad clásico. La UX de consentimiento se puede falsificar si el usuario no mira la barra de direcciones.",
@@ -19,7 +19,7 @@
     variantes: [
       { nombre: "Authorization code + PKCE", nota: "El baile por defecto. El cliente crea un `code_verifier` secreto, manda su hash (`code_challenge`), y al canjear el code prueba el verifier. Aunque intercepten el code, sin el verifier no vale nada.", estrella: true },
       { nombre: "Device flow", nota: "Para dispositivos sin teclado ni navegador (TV, CLI): muestran un código corto y una URL; tú autorizas desde el teléfono. Variante, no ficha aparte." },
-      { nombre: "Client credentials", nota: "Máquina a máquina puro, sin usuario: el propio cliente se autentica con sus credenciales y pide un token para sí mismo. Cuando no hay humano que delegue nada." }
+      { nombre: "Client credentials", nota: "Máquina a máquina puro, sin usuario: el propio cliente se autentica con sus credenciales y pide un token para sí mismo. Cuando no hay humano que delegue nada. Es el auth típico del s2s que el Tomo IV (APIs) compara como gRPC/REST." }
     ],
     sims: ["oauth"]
   };

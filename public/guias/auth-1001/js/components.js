@@ -124,6 +124,13 @@
     var fam = G.familiaPorId[m.familia];
     var filas = G.ejes.map(function (eje) {
       var val = m.ejes[eje.key];
+      if (val == null) {
+        return el("div", { class: "rating na" }, [
+          el("span", { class: "r-label", text: eje.label }),
+          el("div", { class: "r-track" }),
+          el("span", { class: "r-num mono", text: "n/a" })
+        ]);
+      }
       var pct = Math.round((val / 7) * 100);
       var fill = el("div", { class: "r-fill" + (eje.inverso ? " inverse" : ""), style: { width: "0%" } });
       // Anima el ancho de 0 → pct. Doble rAF para el arranque suave y un

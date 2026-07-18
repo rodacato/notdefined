@@ -103,6 +103,11 @@
       });
     }
 
+    shell.appendChild(el("div", { class: "not-here" }, [
+      el("span", { class: "nh-title", text: "Qué NO está en este tomo" }),
+      el("p", { text: "Estos 14 métodos no agotan el tema. SCIM (el aprovisionamiento que todo cliente de SSO pregunta después del login), Kerberos y Active Directory (el SSO de la intranet clásica), y OAuth token exchange (RFC 8693: cambiar un token por otro entre servicios) quedaron fuera a propósito. DPoP no tiene ficha, pero asoma donde más importa: como cuarto final en la simulación de logout." })
+    ]));
+
     shell.appendChild(G.colofon());
     G.scrollTop();
   };

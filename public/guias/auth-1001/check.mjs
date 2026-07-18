@@ -63,7 +63,8 @@ for (const m of G.catalogo) {
     if (!dolorIds.has(t)) fail(`${at}: tag de dolor inexistente «${t}»`);
   for (const k of ejeKeys) {
     const v = m.ejes?.[k];
-    if (typeof v !== 'number' || v < 1 || v > 7) fail(`${at}: eje ${k} inválido (${v})`);
+    // null = «no aplica» (p. ej. phishing en autorización); se pinta como n/a.
+    if (v !== null && (typeof v !== 'number' || v < 1 || v > 7)) fail(`${at}: eje ${k} inválido (${v})`);
   }
 }
 
@@ -108,7 +109,7 @@ for (const [id, sim] of Object.entries(G.simulaciones)) {
     }
   } else if (sim.tipo === 'logout') {
     const trackIds = (sim.tracks || []).map((t) => t.id);
-    if (trackIds.length !== 3) fail(`${at}: ${trackIds.length} tracks, esperaba 3`);
+    if (trackIds.length !== 4) fail(`${at}: ${trackIds.length} tracks, esperaba 4`);
     for (const [i, p] of (sim.pasos || []).entries()) {
       const pat = `${at}.pasos[${i}]`;
       if (!p.narracion) fail(`${pat}: sin narración`);

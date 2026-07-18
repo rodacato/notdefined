@@ -34,7 +34,7 @@
     paga: "Secreto compartido: si se filtra, el atacante puede firmar mensajes válidos. No da confidencialidad (el payload va en claro salvo que uses TLS encima, que sí o sí debes). La rotación del secreto requiere coordinación con el emisor.",
     cuandoNo: "Para autenticar usuarios (es integridad de mensaje, no identidad de persona). Cuando necesitas no-repudio fuerte: ahí quieres firmas asimétricas, no un secreto compartido.",
     revoca: "Rotas el secreto compartido en ambos lados y las firmas viejas dejan de validar. Muchos proveedores soportan dos secretos activos a la vez para rotar sin downtime.",
-    parientes: "Primo de JWT (folio 02), que por dentro suele ser HMAC (HS256). Se confunde con cifrado: HMAC no oculta nada, solo prueba integridad. El timestamp + firma es lo que mata el replay.",
+    parientes: "Primo de JWT (folio 02), que por dentro suele ser HMAC (HS256). Se confunde con cifrado: HMAC no oculta nada, solo prueba integridad. El timestamp + firma es lo que mata el replay. Es la contraparte exacta de la ficha de Webhooks del Tomo IV (APIs): la misma firma, contada del otro lado del cable.",
     sims: ["hmac"]
   };
 
