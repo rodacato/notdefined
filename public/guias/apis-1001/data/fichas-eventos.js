@@ -31,7 +31,8 @@
       { nombre: "Polling", desc: "La alternativa que webhooks evita. Ver webhooks vs polling.", link: "#/desambiguacion" },
       { nombre: "APIs de eventos", desc: "Cuando necesitas orden, replay y garantías fuertes.", link: "#/ficha/eventos" },
       { nombre: "SSE", desc: "Push en vivo pero hacia un cliente conectado, no a un endpoint tuyo.", link: "#/ficha/sse" },
-      { nombre: "Pub-Sub", desc: "El patrón de mensajería del que webhooks es la cara HTTP pública (Tomo II).", link: "/guias/architectures-1001/#/familia/3/pub-sub" }
+      { nombre: "Pub-Sub", desc: "El patrón de mensajería del que webhooks es la cara HTTP pública (Tomo II).", link: "/guias/architectures-1001/#/familia/3/pub-sub" },
+      { nombre: "Firmas HMAC", desc: "La misma firma de estos webhooks, contada del lado de auth (Tomo V).", link: "/guias/auth-1001/#/ficha/hmac" }
     ],
     ratings: { contrato: 3, caching: 1, tooling: 4, adopcion: 5, overhead: 4, realtime: 5, evolucion: 3 },
     verdict: "La forma correcta de que un tercero te avise sin que estés preguntando cada 5 segundos. Trátalos como entrega no confiable: firma, idempotencia y una cola propia detrás. No es «una respuesta que te llega tarde».",

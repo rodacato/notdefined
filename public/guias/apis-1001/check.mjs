@@ -144,22 +144,32 @@ for (const [i, d] of G.desambiguacion.entries()) {
 const ROUTES = new Set(['#/', '#/comparador', '#/quiz', '#/desambiguacion']);
 
 // Cross-links a otros tomos: se valida contra los datos reales del tomo destino.
-const tomoII = (() => {
+const loadTomo = (rel) => {
   const c = { window: {} };
   vm.createContext(c);
-  vm.runInContext(readFileSync(join(GUIDE, '../architectures-1001/data/catalogo.js'), 'utf8'), c);
-  return c.window.GUIA.data;
-})();
+  vm.runInContext(readFileSync(join(GUIDE, rel), 'utf8'), c);
+  return c.window.GUIA;
+};
+const tomoII = loadTomo('../architectures-1001/data/catalogo.js').data;
+const tomoV = loadTomo('../auth-1001/data/catalogo.js');
 function checkCrossLink(at, link) {
-  const m = link.match(/^\/guias\/architectures-1001\/#\/familia\/(\d+)\/(.+)$/);
-  if (!m) return false;
-  const arch = tomoII.ARCHS.find((a) => a.id === m[2]);
-  if (!arch) fail(`${at}: cross-link a estilo inexistente «${m[2]}» en Tomo II`);
-  else {
-    const fam = tomoII.FAMILIES.find((f) => f.id === arch.family);
-    if (String(fam.numero) !== m[1]) fail(`${at}: «${m[2]}» vive en la familia ${fam.numero}, no ${m[1]}`);
+  let m = link.match(/^\/guias\/architectures-1001\/#\/familia\/(\d+)\/(.+)$/);
+  if (m) {
+    const arch = tomoII.ARCHS.find((a) => a.id === m[2]);
+    if (!arch) fail(`${at}: cross-link a estilo inexistente «${m[2]}» en Tomo II`);
+    else {
+      const fam = tomoII.FAMILIES.find((f) => f.id === arch.family);
+      if (String(fam.numero) !== m[1]) fail(`${at}: «${m[2]}» vive en la familia ${fam.numero}, no ${m[1]}`);
+    }
+    return true;
   }
-  return true;
+  m = link.match(/^\/guias\/auth-1001\/#\/ficha\/(.+)$/);
+  if (m) {
+    if (!tomoV.catalogo.some((x) => x.id === m[1]))
+      fail(`${at}: cross-link a método inexistente «${m[1]}» en Tomo V`);
+    return true;
+  }
+  return false;
 }
 
 for (const [at, link] of fichaLinks) {
