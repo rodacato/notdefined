@@ -31,7 +31,7 @@
       threshold: 20
     },
 
-    callout: { tag: "Mito", text: '«El JIT compila todo mi programa al arrancar». No: solo compila lo caliente, tras muchas ejecuciones, y puede <b>deshacer</b> esa compilación si tus suposiciones de tipo cambian. El umbral real es mucho mayor que el de esta demo.' },
+    callout: { tag: "Mito", text: '«El JIT compila todo mi programa al arrancar». No: solo compila lo caliente, tras muchas ejecuciones, y puede <b>deshacer</b> esa compilación si tus suposiciones de tipo cambian. El umbral real de YJIT anda entre 30 y 120 llamadas según versión y tamaño del programa — esta demo usa 20 para que no esperes.' },
 
     recursos: [
       { title: "YJIT: Building a New JIT Compiler for CRuby", note: "Shopify Engineering", url: "https://shopify.engineering/yjit-just-in-time-compiler-cruby" },

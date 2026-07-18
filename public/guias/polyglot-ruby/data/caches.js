@@ -30,7 +30,7 @@
       intro: 'Llama <code class="ic">perro.hablar</code> varias veces y mira la caché pasar de miss a hit. Luego redefine el método y observa la invalidación.'
     },
 
-    callout: { tag: "Conexión", text: 'El JIT compila código máquina bajo la misma suposición («hablar sigue siendo este método»). Cuando la <b>global version</b> cambia, se invalidan a la vez el inline cache <b>y</b> el código JIT que dependía de él.' },
+    callout: { tag: "Conexión", text: 'El JIT compila código máquina bajo la misma suposición («hablar sigue siendo este método»). Cuando esa versión cambia (en Ruby moderno, la de <b>esa clase</b>), se invalidan a la vez el inline cache <b>y</b> el código JIT que dependía de él.' },
 
     recursos: [
       { title: "Docs de YJIT · invariants", note: "qué invalida el código compilado", url: "https://docs.ruby-lang.org/en/3.4/yjit/yjit_md.html" },

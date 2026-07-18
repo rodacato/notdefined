@@ -22,7 +22,7 @@
 
     fundamento: 'El <a href="#/gvl">GVL</a> existe porque los hilos comparten memoria y eso es peligroso. La idea del Ractor invierte el problema: si <b>no comparten memoria mutable</b>, no hace falta candado, y pueden correr a la vez. El coste: ya no puedes pasar objetos libremente entre ellos — tienes que mandarte mensajes, y hay reglas sobre qué se puede compartir.',
 
-    comoFunciona: 'Los Ractors se mandan objetos, y hay tres destinos posibles. <b>Copiar</b>: se hace un duplicado profundo, cada Ractor tiene el suyo. <b>Mover</b>: el objeto pasa al receptor y el emisor <b>pierde el acceso</b> (útil para objetos grandes, sin copiar). <b>Compartir</b>: solo los objetos <em>shareable</em> —inmutables o congelados— pueden compartirse por referencia sin copiar. Intentar compartir un objeto mutable es un error.',
+    comoFunciona: 'Los Ractors se mandan objetos, y hay tres destinos posibles. <b>Copiar</b>: se hace un duplicado profundo, cada Ractor tiene el suyo. <b>Mover</b>: el objeto pasa al receptor y el emisor <b>pierde el acceso</b> (útil para objetos grandes, sin copiar). <b>Compartir</b>: solo los objetos <em>shareable</em> —inmutables o congelados— pueden compartirse por referencia sin copiar. Intentar compartir un objeto mutable es un error. La letra chica: buena parte del ecosistema (gemas, partes de la stdlib) aún no es Ractor-safe, así que hoy brillan en cargas puras de CPU con pocas dependencias — no como reemplazo general de hilos.',
 
     widget: {
       kind: "ractors",

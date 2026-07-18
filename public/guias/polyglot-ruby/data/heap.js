@@ -15,14 +15,14 @@
 
     enBreve: [
       { k: "Unidad grande",   v: "Página (heap page)" },
-      { k: "Unidad pequeña",  v: "Slot · tamaño fijo" },
+      { k: "Unidad pequeña",  v: "Slots · size pools" },
       { k: "Un objeto",       v: "Vive en un slot" },
       { k: "Se inspecciona",  v: "GC.stat · ObjectSpace" }
     ],
 
     fundamento: 'Pedir memoria al sistema operativo objeto por objeto sería lentísimo. En su lugar, Ruby pide bloques grandes —<b>páginas</b>— y los reparte internamente en <b>slots</b> del mismo tamaño. Colocar un objeto es tan simple como ocupar el siguiente slot libre. Cuando una página se llena, Ruby pide otra.',
 
-    comoFunciona: 'Cada objeto vive en un slot; los objetos muy grandes se manejan aparte. El <a href="#/gc">GC</a> recorre páginas y slots para marcar y barrer. Al liberar objetos dispersos quedan <b>huecos</b>: la <b>fragmentación</b>. Hay slots libres, pero repartidos, así que ninguna página se puede devolver al sistema. La <b>compactación</b> reagrupa los objetos vivos para vaciar páginas enteras.',
+    comoFunciona: 'Cada objeto vive en un slot. Desde Ruby 3.2 no hay un único tamaño: el heap se organiza en <b>size pools</b> (40, 80, 160… bytes) y cada objeto va al pool donde cabe; lo que no cabe en ningún slot se maneja aparte. El <a href="#/gc">GC</a> recorre páginas y slots para marcar y barrer. Al liberar objetos dispersos quedan <b>huecos</b>: la <b>fragmentación</b>. Hay slots libres, pero repartidos, así que ninguna página se puede devolver al sistema. La <b>compactación</b> reagrupa los objetos vivos para vaciar páginas enteras.',
 
     widget: {
       kind: "heap",

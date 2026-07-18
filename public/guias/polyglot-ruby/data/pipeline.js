@@ -22,7 +22,7 @@
 
     fundamento: 'Ruby es un lenguaje <b>interpretado</b>, pero «interpretado» no significa que la máquina lea tu texto letra por letra. Antes de ejecutar nada, Ruby <b>traduce</b> tu código a una forma que su motor entiende rápido. Si esa traducción no existiera, cada línea habría que re-analizarla una y otra vez: lentísimo. El pipeline es esa traducción, en etapas.',
 
-    comoFunciona: 'Cuatro etapas. El <b>código fuente</b> lo lee <b>Prism</b> (el parser por defecto desde Ruby 4.0, que reemplazó al viejo <code class="ic">parse.y</code>) y lo convierte en un <b>AST</b>, un árbol que representa la estructura. El <b>compilador</b> recorre ese árbol y emite <b>ISEQ</b>: el bytecode de la máquina virtual YARV. Ese bytecode lo ejecuta el <b>intérprete</b>; y si un método se ejecuta muchas veces («caliente»), un <b>JIT</b> (YJIT o ZJIT) lo traduce a código máquina nativo.',
+    comoFunciona: 'Cuatro etapas. El <b>código fuente</b> lo lee <b>Prism</b> (el parser por defecto desde Ruby 3.4, que reemplazó al viejo <code class="ic">parse.y</code>) y lo convierte en un <b>AST</b>, un árbol que representa la estructura. El <b>compilador</b> recorre ese árbol y emite <b>ISEQ</b>: el bytecode de la máquina virtual YARV. Ese bytecode lo ejecuta el <b>intérprete</b>; y si un método se ejecuta muchas veces («caliente»), un <b>JIT</b> (YJIT o ZJIT) lo traduce a código máquina nativo.',
 
     widget: {
       kind: "pipeline",
