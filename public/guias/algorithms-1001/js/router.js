@@ -38,6 +38,8 @@
     var pages = G.pages || {};
     var parsed = parseHash();
     var key = resolve(parsed.key);
+    // Ruta desconocida: normaliza el hash para que URL y pantalla coincidan.
+    if (parsed.key && key === "") { location.replace("#/"); return; }
     var page = pages[key] || pages[""];
 
     if (typeof currentCleanup === "function") { try { currentCleanup(); } catch (e) {} }

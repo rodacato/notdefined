@@ -18,7 +18,7 @@
     if (partes[0] === "ficha") return { page: "ficha", params: { id: partes[1] } };
     if (partes[0] === "cual-uso") return { page: "cual-uso", params: {} };
     if (partes[0] === "desambiguacion") return { page: "desambiguacion", params: {} };
-    return { page: "inicio", params: {} };
+    return { page: "inicio", params: {}, unknown: true };
   }
 
   function titulo(ruta) {
@@ -33,6 +33,8 @@
 
   function render() {
     var ruta = parseHash();
+    // Ruta desconocida: normaliza el hash para que URL y pantalla coincidan.
+    if (ruta.unknown) { location.replace("#/"); return; }
     document.title = titulo(ruta);
     var root = document.getElementById("app");
     G.clear(root);

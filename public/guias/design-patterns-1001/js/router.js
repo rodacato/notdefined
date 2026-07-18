@@ -28,7 +28,9 @@
     var patternMatch = hash.match(/^\/patron\/(.+)$/);
     if (hash === '/desambiguacion') renderDisambig();
     else if (patternMatch) renderPattern(decodeURIComponent(patternMatch[1]));
-    else renderHome();
+    else if (hash === '/' || hash === '') renderHome();
+    // Ruta desconocida: normaliza el hash para que URL y pantalla coincidan.
+    else { location.replace('#/'); return; }
     currentNav();
   }
 

@@ -226,7 +226,7 @@
       return p.id === id;
     });
     if (!pattern) {
-      G.renderHome(); // en call-time: page-catalogo.js carga después que este
+      location.replace('#/'); // id inexistente: normaliza el hash y re-rutea
       return;
     }
 

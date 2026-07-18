@@ -343,6 +343,7 @@ html.dark .text-warning  { color: var(--color-warning); }
 
 /* Filtro de dolores */
 .filter-bar { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.filter-status { min-height: 18px; margin-top: 8px; font-size: 12.5px; color: var(--color-fg-subtle); }
 .filter-chip {
   font-family: var(--font-mono); font-size: 12px; letter-spacing: .01em;
   padding: 7px 13px; border-radius: var(--radius-full);

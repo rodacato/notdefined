@@ -94,7 +94,9 @@
     else if (/^#\/comparador/.test(hash)) { node = G.pages.comparador(); title = "Comparador de escenario · " + TITLE_BASE; }
     else if (/^#\/quiz/.test(hash)) { node = G.pages.quiz(); title = "¿Cuál uso? · " + TITLE_BASE; }
     else if (/^#\/desambiguacion/.test(hash)) { node = G.pages.desambiguacion(); title = "Los que se confunden · " + TITLE_BASE; }
-    else { node = G.pages.catalogo(); title = TITLE_BASE + " — estilos de API catalogados"; }
+    else if (hash === "#/" || hash === "#") { node = G.pages.catalogo(); title = TITLE_BASE + " — estilos de API catalogados"; }
+    // Ruta desconocida: normaliza el hash para que URL y pantalla coincidan.
+    else { location.replace("#/"); return; }
 
     document.title = title;
     G.mount(node);

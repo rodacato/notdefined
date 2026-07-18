@@ -40,12 +40,14 @@
       return G.el("button", { class: "filter-chip", "data-dolor": d.id, text: d.label, onclick: function () { setDolor(d.id); } });
     }));
     var filterBar = G.el("div", { class: "filter-bar" }, chips);
+    var filterStatus = G.el("div", { class: "filter-status", role: "status", "aria-live": "polite" });
 
     var filterWrap = G.el("div", { class: "mt-8" }, [
       G.el("div", { class: "section-title" }, [
         G.el("span", { class: "eyebrow", text: "Empieza por el dolor" })
       ]),
-      filterBar
+      filterBar,
+      filterStatus
     ]);
 
     /* --- Catálogo por familias --- */
@@ -84,6 +86,19 @@
         var match = !estado.dolor || (e.dolores.indexOf(estado.dolor) !== -1);
         card.classList.toggle("dim", !match);
       });
+      // Contador de matches + lleva el primero a la vista (puede vivir fuera del viewport).
+      G.clear(filterStatus);
+      if (estado.dolor) {
+        var n = G.catalogo.filter(function (e) { return e.dolores.indexOf(estado.dolor) !== -1; }).length;
+        filterStatus.appendChild(G.el("span", {
+          text: n + (n === 1 ? " estilo responde" : " estilos responden") + " a este dolor — los demás se atenúan."
+        }));
+        var first = root.querySelector(".cat-card:not(.dim)");
+        if (first) first.scrollIntoView({
+          behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          block: "nearest"
+        });
+      }
     }
 
     function stat(n, label) {

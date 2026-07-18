@@ -18,12 +18,14 @@
     if (parts.length === 0) return { name: "catalogo" };
     if (parts[0] === "cual-usar") return { name: "cual-usar" };
     if (parts[0] === "familia") return { name: "familia", num: parts[1], ficha: parts[2] };
-    return { name: "catalogo" };
+    return { name: "catalogo", unknown: true };
   }
 
   function render() {
     const app = document.getElementById("app");
     const r = parse();
+    // Ruta desconocida: normaliza el hash para que URL y pantalla coincidan.
+    if (r.unknown) { location.replace("#/"); return; }
     if (r.name === "cual-usar") {
       document.title = "¿Cuál arquitectura usar? · " + BASE;
       G.pages.cualUsar(app);
