@@ -2,7 +2,7 @@
 // datos; `npm run check:guias` los descubre y corre todos).
 //
 // Ruby a fondo · Polyglot. El check verifica la INTEGRIDAD de los datos y su
-// cruce con las vistas: catálogo completo (12 temas · 4 bloques) con folios
+// cruce con las vistas: catálogo completo (13 temas · 5 bloques) con folios
 // únicos y consecutivos; cada tema aparece en exactamente un bloque y en el
 // orden lineal, sin huérfanos; cada tema tiene su ficha y su widget con la
 // estructura que su visualización espera (insns/stacks/texts de YARV, pasos y
@@ -18,7 +18,7 @@ import vm from 'node:vm';
 const GUIDE = dirname(fileURLToPath(import.meta.url));
 const TOPIC_FILES = [
   'pipeline', 'yarv', 'jit', 'gvl', 'ractors', 'fibers',
-  'gc', 'shapes', 'heap', 'lookup', 'singleton', 'caches',
+  'gc', 'shapes', 'heap', 'lookup', 'singleton', 'caches', 'perfila',
 ];
 const DATA_FILES = ['data/catalog.js', ...TOPIC_FILES.map((t) => `data/${t}.js`)];
 
@@ -37,7 +37,7 @@ const isArr = (v) => Array.isArray(v);
 // --- Familias (contrato de la colección: 4 bloques) ---------------------------
 const coreSrc = readFileSync(join(GUIDE, 'js/core.js'), 'utf8');
 const FAMILIES = new Set([...coreSrc.matchAll(/^\s*(\w+):\s*\{\s*label:/gm)].map((m) => m[1]));
-for (const fam of ['exec', 'conc', 'mem', 'obj'])
+for (const fam of ['exec', 'conc', 'mem', 'obj', 'taller'])
   if (!FAMILIES.has(fam)) fail(`core.js: falta la familia «${fam}» en G.FAMILIES`);
 
 // --- Catálogo -----------------------------------------------------------------
@@ -49,10 +49,10 @@ const topics = G.data.topics || {};
 for (const k of ['meta', 'order', 'blocks', 'quote', 'biblio', 'colofon'])
   if (cat[k] == null) fail(`catalog.${k}: falta`);
 
-if (!isArr(cat.order) || cat.order.length !== 12)
-  fail(`catalog.order: ${cat.order?.length} temas, esperaba 12`);
-if (!isArr(cat.blocks) || cat.blocks.length !== 4)
-  fail(`catalog.blocks: ${cat.blocks?.length} bloques, esperaba 4`);
+if (!isArr(cat.order) || cat.order.length !== 13)
+  fail(`catalog.order: ${cat.order?.length} temas, esperaba 13`);
+if (!isArr(cat.blocks) || cat.blocks.length !== 5)
+  fail(`catalog.blocks: ${cat.blocks?.length} bloques, esperaba 5`);
 
 // meta
 if (!isStr(cat.meta?.lede)) fail('catalog.meta.lede: falta');
@@ -195,6 +195,42 @@ const KIND_KEYS = {
   },
   singleton: () => {},
   caches: () => {},
+  perfila: (w, at) => {
+    if (!isStr(w.code)) fail(`${at}: perfila sin snippet code`);
+    if (!isStr(w.nota)) fail(`${at}: perfila sin nota de números ilustrativos`);
+    if (!isArr(w.impls) || w.impls.length !== 2) return fail(`${at}: perfila debe traer 2 impls`);
+    for (const im of w.impls) {
+      if (!isStr(im.key) || !isStr(im.label) || !isStr(im.sub)) fail(`${at}: impl sin key/label/sub`);
+      if (typeof im.ips !== 'number' || typeof im.dev !== 'number')
+        fail(`${at}: impl «${im.key}» sin ips/dev numéricos`);
+    }
+    if (!isArr(w.steps) || w.steps.length < 4) return fail(`${at}: perfila necesita ≥4 steps`);
+    const FASES = ['listo', 'warmup', 'mide', 'fin'];
+    let prev = -1;
+    for (const s of w.steps) {
+      if (!isStr(s.text)) fail(`${at}: step sin narración`);
+      const fi = FASES.indexOf(s.fase);
+      if (fi === -1) { fail(`${at}: fase desconocida «${s.fase}»`); continue; }
+      if (fi < prev) fail(`${at}: las fases deben avanzar listo→warmup→mide→fin`);
+      prev = fi;
+      if ((s.fase === 'warmup' || s.fase === 'mide') &&
+          (!isArr(s.vals) || s.vals.length !== 2 || s.vals.some((v) => typeof v !== 'number')))
+        fail(`${at}: step «${s.fase}» sin vals numéricos [impl0, impl1]`);
+    }
+    if (w.steps[0].fase !== 'listo') fail(`${at}: el primer step debe ser «listo»`);
+    if (w.steps.at(-1).fase !== 'fin') fail(`${at}: el último step debe ser «fin»`);
+    const warm = w.steps.filter((s) => s.fase === 'warmup');
+    const mide = w.steps.filter((s) => s.fase === 'mide');
+    if (warm.length < 2) fail(`${at}: el warmup necesita ≥2 steps (es la tesis del widget)`);
+    if (!mide.length) fail(`${at}: falta la fase de medición`);
+    for (let i = 1; i < warm.length; i++)
+      for (const j of [0, 1])
+        if (warm[i].vals?.[j] <= warm[i - 1].vals?.[j])
+          fail(`${at}: el warmup debe calentar — vals de impl ${j} no crecen en el paso ${i}`);
+    const cierre = mide.at(-1);
+    if (cierre && (cierre.vals?.[0] !== w.impls[0].ips || cierre.vals?.[1] !== w.impls[1].ips))
+      fail(`${at}: el último step de medición debe cerrar en los ips finales de cada impl`);
+  },
 };
 
 for (const slug of cat.order) {

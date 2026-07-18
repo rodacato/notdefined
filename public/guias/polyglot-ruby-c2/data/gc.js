@@ -52,7 +52,8 @@
     recursos: [
       { title: "Building a Compacting GC for MRI", note: "Aaron Patterson, RubyConf 2017", url: "https://www.youtube.com/watch?v=8Q7M513vewk" },
       { title: "Ruby Under a Microscope", note: "los capítulos de GC", url: "https://patshaughnessy.net/ruby-under-a-microscope" },
-      { title: "GC.stat y GC.compact", note: "inspecciona y compacta tú mismo", url: "https://docs.ruby-lang.org/en/master/GC.html" }
+      { title: "GC.stat y GC.compact", note: "inspecciona y compacta tú mismo", url: "https://docs.ruby-lang.org/en/master/GC.html" },
+      { title: "GC modular (3.4+)", note: "el GC como pieza intercambiable — experimental", url: "https://bugs.ruby-lang.org/issues/20470" }
     ]
   };
 

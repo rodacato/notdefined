@@ -11,7 +11,8 @@
     exec: { label: "Ejecución y compilación",            color: "var(--fam-exec)" },
     conc: { label: "Concurrencia y paralelismo",         color: "var(--fam-conc)" },
     mem:  { label: "Memoria y objetos",                  color: "var(--fam-mem)"  },
-    obj:  { label: "Modelo de objetos y metaprogramación", color: "var(--fam-obj)" }
+    obj:  { label: "Modelo de objetos y metaprogramación", color: "var(--fam-obj)" },
+    taller: { label: "El taller",                          color: "var(--fam-taller)" }
   };
 
   // ---- Helpers de DOM ----------------------------------------------------

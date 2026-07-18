@@ -22,7 +22,7 @@
 
     fundamento: 'En Ruby los métodos viven en clases, no en objetos. Pero a veces quieres un método <b>solo para este objeto</b>, sin afectar a los demás de su clase. ¿Dónde ponerlo? Ruby crea, en silencio, una clase intermedia exclusiva de ese objeto —su singleton class— y mete ahí el método. Como nadie más la comparte, el método es único de ese objeto.',
 
-    comoFunciona: '<code class="ic">def obj.saludar</code> define el método en la singleton class de <code class="ic">obj</code>, que se inserta en la cadena de <a href="#/lookup">lookup</a> <b>antes</b> que su clase. Y el gran truco: los «métodos de clase» son en realidad métodos de instancia de la singleton class de <em>la propia clase</em>. Una clase también es un objeto, así que también tiene su eigenclass.',
+    comoFunciona: '<code class="ic">def obj.saludar</code> define el método en la singleton class de <code class="ic">obj</code>, que se inserta en la cadena de <a href="#/lookup">lookup</a> <b>antes</b> que su clase. Y el gran truco: los «métodos de clase» son en realidad métodos de instancia de la singleton class de <em>la propia clase</em>. Una clase también es un objeto, así que también tiene su eigenclass. La excepción: Integer, Float y Symbol no aceptan singleton class (<code class="ic">1.singleton_class</code> truena con TypeError); nil/true/false hacen trampa — su singleton class ES NilClass/TrueClass/FalseClass.',
 
     widget: {
       kind: "singleton",

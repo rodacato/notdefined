@@ -22,7 +22,7 @@
 
     fundamento: 'Muchas estructuras internas de Ruby (la pila de la VM, tablas de objetos, el GC) <b>no son seguras</b> si dos hilos las tocan a la vez. La solución más simple y robusta: un único candado que un hilo debe <b>poseer</b> para ejecutar código Ruby. Sin él, dos hilos podrían corromper la memoria del intérprete. El precio: no hay dos hilos ejecutando Ruby en paralelo, jamás.',
 
-    comoFunciona: 'Un hilo solo corre si <b>posee el GVL</b>. El planificador lo va rotando entre hilos listos en rebanadas de tiempo. La clave está en el <b>I/O</b>: cuando un hilo hace una operación de red o disco, <b>libera el GVL</b> mientras espera, y otro hilo puede avanzar. Por eso los hilos aceleran cargas I/O-bound (muchas esperas que se solapan) pero no CPU-bound (todos pelean por el mismo candado).',
+    comoFunciona: 'Un hilo solo corre si <b>posee el GVL</b>. El planificador lo va rotando entre hilos listos en rebanadas de tiempo. La clave está en el <b>I/O</b>: cuando un hilo hace una operación de red o disco, <b>libera el GVL</b> mientras espera, y otro hilo puede avanzar. Por eso los hilos aceleran cargas I/O-bound (muchas esperas que se solapan) pero no CPU-bound (todos pelean por el mismo candado). Dos notas: las gemas en C pueden liberar el GVL durante su trabajo nativo (por eso una gema de compresión sí paraleliza), y desde 3.3 existe el scheduler M:N (<code class="ic">RUBY_MN_THREADS</code>) que multiplexa hilos Ruby sobre menos hilos del sistema.',
 
     widget: {
       kind: "gvl",

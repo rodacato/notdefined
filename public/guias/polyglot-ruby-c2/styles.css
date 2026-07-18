@@ -83,6 +83,7 @@
   --fam-conc: #2FA090;   /* Concurrencia y paralelismo */
   --fam-mem:  #B368AE;   /* Memoria y objetos */
   --fam-obj:  #5E86CE;   /* Modelo de objetos */
+  --fam-taller: #8F9A3D; /* El taller (profiling) */
   --data-ok:   #3FA46B;  /* mejora / éxito */
   --data-bad:  #E2685E;  /* dolor / fallo */
   --data-warn: #E0A33A;  /* la estrella / atención */
