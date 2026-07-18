@@ -7,7 +7,7 @@ export interface GuiaTheme {
   inkSoft: string;
   accent: string;
   border: string;
-  texture: 'grid' | 'grain' | 'stripes' | 'arcs' | 'rules' | 'morse';
+  texture: 'grid' | 'grain' | 'stripes' | 'arcs' | 'rules' | 'morse' | 'facets';
   displayFamily: string; // nombre de la @font-face declarada en index.astro
 }
 
@@ -161,6 +161,24 @@ export const guias: Guia[] = [
       border: '#2a3a4a',
       texture: 'morse',
       displayFamily: 'Guia Barlow Condensed',
+    },
+  },
+  {
+    slug: 'polyglot-ruby',
+    title: 'Ruby a fondo',
+    blurb:
+      'Los internals de Ruby, de Prism al código máquina: 12 piezas del motor en 4 bloques — pipeline de ejecución, YARV, YJIT/ZJIT, la GVL y los Ractors, Fibers, el GC compactador, object shapes, heap y method lookup. Cada tema desmonta un malentendido, al día con Ruby 4.0.',
+    date: '2026-07-18',
+    tags: ['Ruby', 'Internals', 'YARV', 'GC'],
+    collection: 'polyglot',
+    theme: {
+      canvas: '#1c1116',
+      ink: '#f5e9ed',
+      inkSoft: '#c2a6b1',
+      accent: '#e24d68',
+      border: '#442a38',
+      texture: 'facets',
+      displayFamily: 'Guia Spectral',
     },
   },
   {

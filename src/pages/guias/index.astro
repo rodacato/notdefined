@@ -150,6 +150,14 @@ function spineTitle(title: string, collection: string) {
     src: url('/guias/messaging-1001/fonts/barlow-condensed-700.woff2')
       format('woff2');
   }
+  /* Display compartido de la colección Polyglot (mismo libro, distinta portada). */
+  @font-face {
+    font-family: 'Guia Spectral';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/guias/polyglot-ruby/fonts/Spectral-Bold.woff2') format('woff2');
+  }
 
   .realm-head {
     margin-bottom: 2rem;
@@ -291,6 +299,20 @@ function spineTitle(title: string, collection: string) {
       color-mix(in srgb, var(--g-accent) 8%, transparent) 0 1px,
       transparent 1px 26px
     );
+  }
+  /* facetas de gema (polyglot-ruby): diagonales cruzadas a ±60deg */
+  .spine.texture-facets {
+    background-image:
+      repeating-linear-gradient(
+        60deg,
+        color-mix(in srgb, var(--g-accent) 7%, transparent) 0 1px,
+        transparent 1px 34px
+      ),
+      repeating-linear-gradient(
+        -60deg,
+        color-mix(in srgb, var(--g-accent) 7%, transparent) 0 1px,
+        transparent 1px 34px
+      );
   }
   /* raya-punto morse (messaging): la capa de canvas tapa todo salvo ranuras
      de 1px cada 28px, por donde asoma el patrón de rayas y puntos. */
