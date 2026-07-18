@@ -164,7 +164,7 @@ export const guias: Guia[] = [
     },
   },
   {
-    slug: 'polyglot-ruby',
+    slug: 'polyglot-ruby-c2',
     title: 'Ruby a fondo',
     blurb:
       'Los internals de Ruby, de Prism al código máquina: 12 piezas del motor en 4 bloques — pipeline de ejecución, YARV, YJIT/ZJIT, la GVL y los Ractors, Fibers, el GC compactador, object shapes, heap y method lookup. Cada tema desmonta un malentendido, al día con Ruby 4.0.',
