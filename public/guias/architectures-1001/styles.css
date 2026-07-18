@@ -213,9 +213,9 @@ svg.icon {
 .legend-bar .lab { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
 .scale-key { display: inline-flex; align-items: center; gap: 5px; }
 .scale-glyph { font-family: var(--font-mono); font-size: 13px; line-height: 1; }
-.scale-glyph.large { color: var(--color-primary); }
-.scale-glyph.mid   { color: var(--color-fg-default); }
-.scale-glyph.small { color: var(--color-fg-subtle); }
+.scale-glyph.esencial { color: var(--color-primary); }
+.scale-glyph.situacional { color: var(--color-fg-default); }
+.scale-glyph.nicho { color: var(--color-fg-subtle); }
 
 /* Barra de problema */
 .problembar { margin-top: 24px; }
@@ -343,6 +343,10 @@ html.dark .dz-eyebrow { color: var(--color-warning); }
 .role.dashed .swatch { background: transparent; border: 1.5px dashed var(--color-fg-subtle); }
 .role .rname { font-weight: 600; }
 .role .rnote { color: var(--color-fg-subtle); }
+.not-here { margin-top: 26px; padding: 16px 20px; border: 1px dashed var(--color-border-default); border-radius: 12px; }
+.not-here .nh-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-fg-subtle); }
+.not-here p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--color-fg-subtle); }
+
 .foot-note { margin-top: 22px; text-align: center; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; color: var(--color-fg-subtle); }
 
 @media (max-width: 720px) {

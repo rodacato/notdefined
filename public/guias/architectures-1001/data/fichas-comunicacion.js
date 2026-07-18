@@ -33,7 +33,7 @@
     gana: "Cross-cutting concerns (auth, límites, caché) resueltos una sola vez, y payloads a la medida de cada cliente.",
     paga: "Un hop extra de latencia y un punto único que concentra riesgo; si le metes lógica de negocio, se vuelve un mini-monolito frente a todo.",
     cuandoNo: "Un cliente y dos servicios: el gateway es una pieza más que operar sin nada que agregue.",
-    parientes: "El BFF es su variante por tipo de cliente (uno para web, otro para móvil). Casi obligado con microservicios; irrelevante frente a un monolito.",
+    parientes: "El BFF es su variante por tipo de cliente (uno para web, otro para móvil). Casi obligado con microservicios; irrelevante frente a un monolito. A escala de objetos es el Facade del Tomo I: una puerta simple frente a un subsistema complejo.",
     ratings: { indep: 3, ops: 2, lat: 2, team: 3, cons: 2, scale: 3, change: 3 },
     diagrama: [
       { t: "node", x: 14, y: 56, w: 80, h: 46, role: "actor", label: "Web" },
@@ -55,9 +55,9 @@
     queEs: "El emisor publica mensajes a un tópico; el broker los entrega a quien esté suscrito. Emisor y receptores no se conocen.",
     fuerza: "Desacoplar en identidad y en tiempo: publicar sin saber quién escucha ni si está disponible ahora.",
     gana: "Agregar consumidores sin tocar al emisor; el broker amortigua los picos.",
-    paga: "Sin respuesta inmediata, entrega at-least-once que exige consumidores idempotentes, y flujos que ya no se leen de corrido.",
+    paga: "Sin respuesta inmediata, entrega típicamente at-least-once (la garantía exacta la configura el broker) que exige consumidores idempotentes, y flujos que ya no se leen de corrido.",
     cuandoNo: "Cuando el emisor necesita la respuesta para continuar o el orden global es requisito: ahí el desacople estorba.",
-    parientes: "Es el mecanismo de transporte; EDA es el estilo de arquitectura que se construye encima. Pipes & filters también encadena etapas, pero en línea con orden fijo — aquí la topología es un abanico.",
+    parientes: "Es el mecanismo de transporte; EDA es el estilo de arquitectura que se construye encima. Pipes & filters también encadena etapas, pero en línea con orden fijo — aquí la topología es un abanico. Es el Observer del Tomo I a escala de red: el subject que no sabe quién escucha, con un broker en medio.",
     ratings: { indep: 3, ops: 3, lat: 2, team: 3, cons: 1, scale: 4, change: 3 },
     diagrama: [
       { t: "node", x: 14, y: 112, w: 112, h: 56, role: "service", label: "Publicador" },
@@ -80,7 +80,7 @@
     gana: "El verdadero separador de lógicas y dependencias: el emisor no conoce a sus consumidores, y una reacción nueva se suma sin tocar lo existente. Al principio se siente boilerplate; el cambio mental llega después.",
     paga: "Flujos que ya no se leen de corrido: debugging distribuido, duplicados e idempotencia a tu cargo. Y la tentación de que TODO sea un evento — un gran poder, una gran responsabilidad.",
     cuandoNo: "Si no sabes qué acciones tiene tu sistema ni qué side-effects producen, no sabes qué eventos tener: empezar aquí es sobreingeniería. Los eventos se descubren de las acciones, no se diseñan primero — y antes de agregar uno pregunta quién lo usa, para qué, y si no hay ya un evento que lo resuelva. Para pedir-y-responder, con requests te alcanza.",
-    parientes: "Pub/sub es el transporte; EDA es el estilo que se construye encima, coordinando por coreografía. Event sourcing persiste eventos como fuente de verdad — reaccionar a ellos es otra decisión. Las sagas coordinan pasos largos usando estos mismos eventos.",
+    parientes: "Pub/sub es el transporte; EDA es el estilo que se construye encima, coordinando por coreografía. Event sourcing persiste eventos como fuente de verdad — reaccionar a ellos es otra decisión. Las sagas coordinan pasos largos usando estos mismos eventos. ¿Y el bus es Mediator u Observer (Tomo I)? Mientras solo reparta, es Observer; se vuelve Mediator el día que decida quién responde.",
     ratings: { indep: 4, ops: 4, lat: 2, team: 4, cons: 1, scale: 4, change: 3 },
     diagrama: [
       { t: "node", x: 60, y: 24, w: 110, h: 52, role: "service", star: true, label: "Pedidos", sub: "publica y olvida" },
@@ -105,7 +105,7 @@
     gana: "Filtros reutilizables y testeables por separado; cambiar el pipeline es reordenar piezas.",
     paga: "Latencia por cada etapa extra y un mal encaje cuando los pasos necesitan compartir estado o conversar entre sí.",
     cuandoNo: "Flujos interactivos con ida y vuelta de estado entre pasos: la tubería es unidireccional por diseño.",
-    parientes: "El pipe de Unix es el ejemplo canónico; ETL y stream processing son sus versiones a escala. A diferencia de pub-sub, aquí el orden de etapas es fijo y lineal, no un abanico de suscriptores.",
+    parientes: "El pipe de Unix es el ejemplo canónico; ETL y stream processing son sus versiones a escala. A diferencia de pub-sub, aquí el orden de etapas es fijo y lineal, no un abanico de suscriptores. En el Tomo I es la variante pipeline del Chain of Responsibility: todos procesan y pasan.",
     ratings: { indep: 2, ops: 2, lat: 2, team: 2, cons: 2, scale: 3, change: 4 },
     diagrama: [
       { t: "node", x: 6, y: 114, w: 76, h: 52, role: "actor", label: "Fuente" },
@@ -118,6 +118,30 @@
       { t: "edge", x1: 376, y1: 140, x2: 392, y2: 140, arrow: true },
       { t: "node", x: 392, y: 118, w: 62, h: 44, role: "store", label: "Salida" },
       { t: "label", x: 230, y: 206, text: "el dato fluye en un solo sentido" },
+    ],
+  };
+
+  F["soa"] = {
+    n: "15", id: "soa", nombre: "SOA (orientada a servicios)", prominencia: "nicho", vistaPrimaria: "limites",
+    queEs: "Servicios de granularidad gruesa coordinados, a menudo vía un bus de servicios (ESB).",
+    fuerza: "Integrar sistemas empresariales heterogéneos con reuso.",
+    gana: "Integración y reuso a nivel de empresa.",
+    paga: "El ESB tiende a volverse cuello de botella y «objeto-dios».",
+    cuandoNo: "En un sistema nuevo: hoy su lugar lo toman microservicios + mensajería ligera. Sobrevive sobre todo en contextos empresariales heredados.",
+    parientes: "El ancestro pesado de la comunicación moderna: el ESB hacía de puerta y de bus a la vez — hoy ese trabajo se reparte entre el API Gateway y la mensajería ligera. Más histórico que recomendado.",
+    ratings: { indep: 3, ops: 3, lat: 2, team: 3, cons: 2, scale: 3, change: 2 },
+    diagrama: [
+      { t: "node", x: 56, y: 50, w: 102, h: 44, role: "service", label: "CRM" },
+      { t: "node", x: 180, y: 50, w: 102, h: 44, role: "service", label: "ERP" },
+      { t: "node", x: 304, y: 50, w: 102, h: 44, role: "service", label: "Facturación" },
+      { t: "node", x: 36, y: 128, w: 392, h: 34, role: "msg", star: true, label: "Bus de servicios (ESB)" },
+      { t: "edge", x1: 107, y1: 94, x2: 107, y2: 128 },
+      { t: "edge", x1: 231, y1: 94, x2: 231, y2: 128 },
+      { t: "edge", x1: 355, y1: 94, x2: 355, y2: 128 },
+      { t: "node", x: 110, y: 196, w: 110, h: 44, role: "service", label: "Pedidos" },
+      { t: "node", x: 250, y: 196, w: 110, h: 44, role: "service", label: "Inventario" },
+      { t: "edge", x1: 165, y1: 162, x2: 165, y2: 196 },
+      { t: "edge", x1: 305, y1: 162, x2: 305, y2: 196 },
     ],
   };
 })(window.GUIA = window.GUIA || {});

@@ -9,8 +9,9 @@
 
    Cómo agregar un estilo nuevo al catálogo:
      1. Añade una entrada a ARCHS con: n, id, name, family (id de FAMILIES),
-        scale ('large'|'mid'|'small'), primary (clave de VIEWS), force, avoid,
-        y fit { team, scaleParts, domain, consistency }. star:true lo destaca.
+        primary (clave de VIEWS), force, avoid, y fit { team, scaleParts,
+        domain, consistency }. El glifo del catálogo sale de la prominencia
+        de su ficha profunda (data/fichas-<familia>.js).
      2. Si quieres ficha profunda + diagrama, agrégala en data/fichas-<familia>.js
         y marca hasFicha/hasDiagrama aquí.
    ========================================================================== */
@@ -37,9 +38,9 @@
     { numero: 3, id: "comunicacion", name: "Comunicación",
       q: "¿Cómo hablan las partes entre sí?",
       sub: "Llamadas, puertas de enlace, eventos y colas." },
-    { numero: 4, id: "distribuidos", name: "Distribuidos",
-      q: "¿Cómo se reparte el trabajo y el dato en la red?",
-      sub: "Patrones a escala de sistema repartido." },
+    { numero: 4, id: "distribuidos", name: "Datos y consistencia",
+      q: "¿Cómo se modela el dato y se sostiene la consistencia?",
+      sub: "Escrituras vs lecturas, eventos como verdad, transacciones que cruzan servicios." },
     { numero: 5, id: "codigo", name: "Organización del código",
       q: "¿En cuántos repositorios vive el código?",
       sub: "Estrategia de repos — independiente del runtime." },
@@ -54,14 +55,6 @@
     evolucion: "Evolución",
   };
 
-  // --- Escala de prominencia en el catálogo ---------------------------------
-  // large ★ · mid ◐ · small ○  (qué tan central es el estilo)
-  const SCALE = {
-    large: { glyph: "★", label: "gran escala" },
-    mid:   { glyph: "◐", label: "escala media" },
-    small: { glyph: "○", label: "escala pequeña" },
-  };
-
   // --- Ejes fijos de trade-offs (para las fichas profundas) -----------------
   // El eje `ops` (complejidad operativa) es COSTO: más alto = se paga más.
   const AXES = [
@@ -74,9 +67,9 @@
     { key: "change", label: "Facilidad de cambio" },
   ];
 
-  // --- Prominencia de la ficha profunda (glifo del set del Tomo I) ----------
+  // --- Prominencia (única escala de glifos: índice y fichas la comparten) ---
   const PROM = {
-    esencial:    { glyph: "★", label: "esencial · por defecto" },
+    esencial:    { glyph: "★", label: "esencial · conócelo" },
     situacional: { glyph: "◐", label: "situacional" },
     nicho:       { glyph: "○", label: "nicho · avanzado" },
   };
@@ -86,131 +79,131 @@
   // trae la ficha profunda y su diagrama de topología.
   const ARCHS = [
     // ---- 1 · DESPLIEGUE ----------------------------------------------------
-    { n: "01", id: "monolito", name: "Monolito", family: "despliegue", scale: "small",
+    { n: "01", id: "monolito", name: "Monolito", family: "despliegue",
       primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Empezar sin fricción: un artefacto, un deploy, una base de datos.",
       avoid: "El equipo crece y todos se pisan en el mismo release.",
       fit: { team: ["small", "mid"], scaleParts: false, domain: "any", consistency: "strong" } },
 
-    { n: "02", id: "monolito-modular", name: "Monolito modular", family: "despliegue", scale: "mid",
+    { n: "02", id: "monolito-modular", name: "Monolito modular", family: "despliegue",
       primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "El monolito creció; urgen fronteras internas antes de partirlo.",
       avoid: "Partes con cargas tan dispares que exigen escalar por separado.",
       fit: { team: ["small", "mid", "large"], scaleParts: false, domain: "stable", consistency: "strong" } },
 
-    { n: "03", id: "microservicios", name: "Microservicios", family: "despliegue", scale: "large",
-      primary: "topologia", star: true, hasFicha: true, hasDiagrama: true,
+    { n: "03", id: "microservicios", name: "Microservicios", family: "despliegue",
+      primary: "topologia", hasFicha: true, hasDiagrama: true,
       force: "Equipos numerosos que se bloquean entre sí en un único deploy.",
       avoid: "Equipo chico, dominio aún difuso o necesidad de consistencia fuerte.",
       fit: { team: ["large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
-    { n: "04", id: "serverless", name: "Serverless · FaaS", family: "despliegue", scale: "mid",
+    { n: "04", id: "serverless", name: "Serverless · FaaS", family: "despliegue",
       primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Carga intermitente: pagar solo por ejecución, sin servidores ociosos.",
       avoid: "Procesos largos, latencia en frío crítica o estado pesado en memoria.",
       fit: { team: ["small", "mid"], scaleParts: true, domain: "any", consistency: "eventual" } },
 
     // ---- 2 · ORGANIZACIÓN INTERNA -----------------------------------------
-    { n: "05", id: "capas", name: "Capas (N-capas)", family: "interna", scale: "small",
+    { n: "05", id: "capas", name: "Capas (N-capas)", family: "interna",
       primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Separar presentación, lógica y datos sin ceremonia.",
       avoid: "La lógica se filtra entre capas y todo termina dependiendo de la DB.",
       fit: { team: "any", scaleParts: false, domain: "any", consistency: "strong" } },
 
-    { n: "06", id: "hexagonal", name: "Hexagonal", family: "interna", scale: "mid",
-      primary: "limites", star: true, hasFicha: true, hasDiagrama: true,
+    { n: "06", id: "hexagonal", name: "Hexagonal", family: "interna",
+      primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Aislar el dominio de la infraestructura que cambia debajo.",
       avoid: "CRUD simple donde los puertos y adaptadores son pura ceremonia.",
       fit: { team: ["mid", "large"], scaleParts: false, domain: "stable", consistency: "strong" } },
 
-    { n: "07", id: "clean", name: "Clean · Cebolla", family: "interna", scale: "mid",
+    { n: "07", id: "clean", name: "Clean · Cebolla", family: "interna",
       primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Reglas de negocio que sobreviven a frameworks y bases de datos.",
       avoid: "Equipo sin disciplina para sostener la regla de dependencias.",
       fit: { team: ["mid", "large"], scaleParts: false, domain: "stable", consistency: "strong" } },
 
-    { n: "08", id: "vertical-slices", name: "Vertical Slices", family: "interna", scale: "mid",
+    { n: "08", id: "vertical-slices", name: "Vertical Slices", family: "interna",
       primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Organizar por caso de uso completo, no por capa técnica.",
       avoid: "Mucha lógica compartida que la división por feature termina duplicando.",
       fit: { team: ["mid", "large"], scaleParts: false, domain: "exploring", consistency: "any" } },
 
-    { n: "09", id: "microkernel", name: "Microkernel · Plugins", family: "interna", scale: "mid",
+    { n: "09", id: "microkernel", name: "Microkernel · Plugins", family: "interna",
       primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Un núcleo estable con capacidades que entran como extensiones.",
       avoid: "Dominio que aún no estabiliza qué es núcleo y qué es plugin.",
       fit: { team: ["mid", "large"], scaleParts: false, domain: "stable", consistency: "strong" } },
 
     // ---- 3 · COMUNICACIÓN --------------------------------------------------
-    { n: "10", id: "cliente-servidor", name: "Cliente-Servidor", family: "comunicacion", scale: "small",
+    { n: "10", id: "cliente-servidor", name: "Cliente-Servidor", family: "comunicacion",
       primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Pedir y responder: el contrato más directo entre dos partes.",
       avoid: "Muchos consumidores acoplados al mismo servicio síncrono.",
       fit: { team: "any", scaleParts: false, domain: "any", consistency: "strong" } },
 
-    { n: "11", id: "api-gateway", name: "API Gateway · BFF", family: "comunicacion", scale: "mid",
+    { n: "11", id: "api-gateway", name: "API Gateway · BFF", family: "comunicacion",
       primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Una puerta única ante muchos servicios y muchos clientes.",
       avoid: "Un solo cliente y dos servicios: el gateway sobra.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "stable", consistency: "any" } },
 
-    { n: "12", id: "pub-sub", name: "Publicación-Suscripción", family: "comunicacion", scale: "mid",
+    { n: "12", id: "pub-sub", name: "Publicación-Suscripción", family: "comunicacion",
       primary: "topologia", hasFicha: true, hasDiagrama: true,
       force: "Desacoplar emisor y receptor: que no necesiten conocerse.",
       avoid: "Flujo que exige respuesta inmediata y orden estricto.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "any", consistency: "eventual" } },
 
-    { n: "13", id: "eda", name: "Dirigida por eventos", family: "comunicacion", scale: "large",
-      primary: "flujo", star: true, hasFicha: true, hasDiagrama: true,
+    { n: "13", id: "eda", name: "Dirigida por eventos", family: "comunicacion",
+      primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Reaccionar a hechos ya ocurridos, no orquestar llamadas.",
       avoid: "Equipo sin tooling para depurar flujos asíncronos y reintentos.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
-    { n: "14", id: "pipes-filters", name: "Tubería y filtros", family: "comunicacion", scale: "small",
+    { n: "14", id: "pipes-filters", name: "Tubería y filtros", family: "comunicacion",
       primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Procesar un flujo en etapas componibles e independientes.",
       avoid: "Pasos con mucho ir y venir de estado entre etapas.",
       fit: { team: "any", scaleParts: false, domain: "any", consistency: "any" } },
 
-    // ---- 4 · DISTRIBUIDOS --------------------------------------------------
-    { n: "15", id: "soa", name: "SOA", family: "distribuidos", scale: "mid",
+    { n: "15", id: "soa", name: "SOA", family: "comunicacion",
       primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Servicios de negocio reutilizables a escala de empresa.",
       avoid: "Un bus central que se vuelve el nuevo monolito acoplado.",
       fit: { team: ["large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
-    { n: "16", id: "cqrs", name: "CQRS", family: "distribuidos", scale: "mid",
+    // ---- 4 · DATOS Y CONSISTENCIA ------------------------------------------
+    { n: "16", id: "cqrs", name: "CQRS", family: "distribuidos",
       primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Leer y escribir tienen cargas y formas muy distintas.",
       avoid: "CRUD parejo donde separar comando y consulta solo agrega piezas.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
-    { n: "17", id: "event-sourcing", name: "Event Sourcing", family: "distribuidos", scale: "mid",
+    { n: "17", id: "event-sourcing", name: "Event Sourcing", family: "distribuidos",
       primary: "evolucion", hasFicha: true, hasDiagrama: true,
       force: "El historial de cambios ES la fuente de verdad, no el estado actual.",
       avoid: "No se necesita auditoría ni rebobinar: basta el último estado.",
       fit: { team: ["mid", "large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
-    { n: "18", id: "saga", name: "Saga", family: "distribuidos", scale: "mid",
+    { n: "18", id: "saga", name: "Saga", family: "distribuidos",
       primary: "flujo", hasFicha: true, hasDiagrama: true,
       force: "Transacciones que cruzan servicios sin un commit de dos fases.",
       avoid: "Todo cabe en una sola base: una transacción ACID basta.",
       fit: { team: ["large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
-    { n: "19", id: "space-based", name: "Espacio compartido", family: "distribuidos", scale: "large",
+    { n: "19", id: "space-based", name: "Espacio compartido", family: "distribuidos",
       primary: "topologia", hasFicha: true, hasDiagrama: true,
       force: "Picos de carga extremos sin la base de datos como cuello de botella.",
       avoid: "Carga modesta y predecible: la complejidad no se paga sola.",
       fit: { team: ["large"], scaleParts: true, domain: "stable", consistency: "eventual" } },
 
     // ---- 5 · ORGANIZACIÓN DEL CÓDIGO --------------------------------------
-    { n: "20", id: "monorepo", name: "Monorepo", family: "codigo", scale: "mid",
+    { n: "20", id: "monorepo", name: "Monorepo", family: "codigo",
       primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Un cambio atómico que cruza muchos módulos a la vez.",
       avoid: "Sin tooling de build incremental, todo se vuelve lento.",
       fit: { team: "any", scaleParts: false, domain: "any", consistency: "any" } },
 
-    { n: "21", id: "polyrepo", name: "Polyrepo", family: "codigo", scale: "mid",
+    { n: "21", id: "polyrepo", name: "Polyrepo", family: "codigo",
       primary: "limites", hasFicha: true, hasDiagrama: true,
       force: "Equipos que liberan en su propio calendario, sin pedir permiso.",
       avoid: "Cambios que cruzan repos y exigen coordinar muchos PRs.",
@@ -390,7 +383,7 @@
       id: "computo", nav: "Serverless · Contenedor",
       title: ["Serverless · FaaS", "Monolito / contenedor"],
       same: "Decidir dónde corre el cómputo",
-      tagline: "Ambos ejecutan tu código. La decisión: ¿la carga es intermitente y sin estado, o constante y con estado?",
+      tagline: "Ambos ejecutan tu código. La decisión: ¿la carga es intermitente y sin estado, o constante y con estado? (Estrictamente comparamos modelo de ejecución, no empaquetado — pero así se vive la decisión.)",
       algos: [
         { id: "serverless", name: "Serverless · FaaS", fam: 1,
           traits: [
@@ -532,11 +525,69 @@
         { prompt: "Diez equipos con ciclos de release propios y dependencias mínimas entre sí.", answer: "polyrepo", why: "La autonomía de liberar sin coordinar favorece repos separados." },
       ],
     },
+
+    {
+      id: "topico-cola", nav: "Tópico · Cola",
+      title: ["Tópico (pub-sub)", "Cola punto-a-punto"],
+      same: "Mensajería asíncrona vía broker",
+      tagline: "Ambos pasan por un broker. La pregunta que decide: ¿cada mensaje debe llegar a TODOS los interesados, o ser procesado por UNO solo?",
+      algos: [
+        { id: "topico", name: "Tópico (pub-sub)", fam: 3,
+          traits: [
+            { k: "Entrega", v: "a todos los suscriptores", hot: true },
+            { k: "Consumidores", v: "cada uno recibe su copia" },
+            { k: "Uso típico", v: "difundir hechos" },
+          ],
+          intent: "El broker copia el mensaje a cada suscriptor: un fan-out. Sirve para anunciar hechos que varios módulos necesitan conocer.",
+          pick: "cuando varios interesados deben enterarse del mismo evento." },
+        { id: "cola", name: "Cola punto-a-punto", fam: 3,
+          traits: [
+            { k: "Entrega", v: "a UN solo consumidor", hot: true },
+            { k: "Consumidores", v: "compiten («competing consumers»)", hot: true },
+            { k: "Uso típico", v: "repartir trabajo" },
+          ],
+          intent: "Cada mensaje lo toma un solo worker: agregar consumidores reparte la carga, no la duplica. Sirve para procesar trabajos exactamente una vez… bueno, típicamente al menos una.",
+          pick: "cuando cada trabajo debe procesarlo un solo worker y quieres escalar agregando workers." },
+      ],
+      scenarios: [
+        { prompt: "«pedido-creado» debe enterar a facturación, notificaciones y analítica a la vez.", answer: "topico", why: "Fan-out: cada interesado recibe su propia copia del evento." },
+        { prompt: "Diez mil imágenes por redimensionar y cinco workers para repartirse la chamba.", answer: "cola", why: "Competing consumers: cada imagen la procesa un solo worker; más workers = más throughput." },
+      ],
+    },
+
+    {
+      id: "saga-coordinacion", nav: "Orquestación · Coreografía",
+      title: ["Saga orquestada", "Saga coreografiada"],
+      same: "Coordinar los pasos de una saga",
+      tagline: "La misma saga, dos maneras de coordinarla. La pregunta que decide: ¿quién sabe en qué paso va el pedido?",
+      algos: [
+        { id: "orquestada", name: "Orquestada", fam: 4,
+          traits: [
+            { k: "Coordinador", v: "un orquestador explícito", hot: true },
+            { k: "El flujo vive", v: "en un solo lugar", hot: true },
+            { k: "Acoplamiento", v: "servicios ↔ orquestador" },
+          ],
+          intent: "Un orquestador llama a cada servicio y decide el siguiente paso. El estado del flujo vive en un solo lugar: fácil de leer, de razonar y de auditar.",
+          pick: "cuando el flujo es complejo, las compensaciones varían y necesitas ver en qué paso va cada transacción." },
+        { id: "coreografiada", name: "Coreografiada", fam: 4,
+          traits: [
+            { k: "Coordinador", v: "nadie — puros eventos", hot: true },
+            { k: "El flujo vive", v: "repartido entre servicios", hot: true },
+            { k: "Acoplamiento", v: "mínimo, por eventos" },
+          ],
+          intent: "Cada servicio reacciona al evento anterior y publica el suyo; nadie tiene el mapa completo. Máximo desacople, a cambio de un flujo más difícil de rastrear.",
+          pick: "cuando los pasos son pocos y estables, y el desacople pesa más que ver el flujo completo." },
+      ],
+      scenarios: [
+        { prompt: "Un checkout de siete pasos con compensaciones distintas según dónde falle, y soporte pregunta a diario «¿en qué paso quedó el pedido?».", answer: "orquestada", why: "El orquestador tiene el estado del flujo en un solo lugar: responder es una consulta, no una arqueología de logs." },
+        { prompt: "Tres servicios, un flujo lineal y estable, y equipos que no quieren depender de una pieza central.", answer: "coreografiada", why: "Con pocos pasos los eventos bastan, y nadie se vuelve el dueño del flujo." },
+      ],
+    },
   ];
 
   // Publica el contenido del catálogo en el namespace.
   G.data = {
-    META, FAMILIES, VIEWS, SCALE, AXES, PROM, ARCHS,
+    META, FAMILIES, VIEWS, AXES, PROM, ARCHS,
     PROBLEMS, QUADRANTS, ROLES, COMPARISONS,
   };
   // Contenedor para las fichas profundas por familia (lo llenan los data/fichas-<familia>.js).

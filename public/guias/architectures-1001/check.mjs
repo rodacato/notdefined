@@ -34,7 +34,7 @@ const errs = [];
 const fail = (msg) => errs.push(msg);
 
 // --- Colecciones base -------------------------------------------------------
-for (const k of ['META', 'FAMILIES', 'VIEWS', 'SCALE', 'AXES', 'PROM', 'ARCHS', 'PROBLEMS', 'QUADRANTS', 'ROLES', 'COMPARISONS'])
+for (const k of ['META', 'FAMILIES', 'VIEWS', 'AXES', 'PROM', 'ARCHS', 'PROBLEMS', 'QUADRANTS', 'ROLES', 'COMPARISONS'])
   if (!D[k]) fail(`data.${k}: falta`);
 
 const famIds = new Set(D.FAMILIES.map((f) => f.id));
@@ -48,14 +48,13 @@ const archIds = new Set();
 const archNs = new Set();
 for (const a of D.ARCHS) {
   const at = `ARCHS[${a.id || a.n || '?'}]`;
-  for (const k of ['n', 'id', 'name', 'family', 'scale', 'primary', 'force', 'avoid', 'fit'])
+  for (const k of ['n', 'id', 'name', 'family', 'primary', 'force', 'avoid', 'fit'])
     if (a[k] == null || a[k] === '') fail(`${at}: falta ${k}`);
   if (archIds.has(a.id)) fail(`${at}: id repetido`);
   archIds.add(a.id);
   if (archNs.has(a.n)) fail(`${at}: n repetido (${a.n})`);
   archNs.add(a.n);
   if (!famIds.has(a.family)) fail(`${at}: familia inexistente «${a.family}»`);
-  if (!D.SCALE[a.scale]) fail(`${at}: scale inválida «${a.scale}»`);
   if (!D.VIEWS[a.primary]) fail(`${at}: vista primaria inválida «${a.primary}»`);
   for (const k of ['team', 'scaleParts', 'domain', 'consistency'])
     if (a.fit?.[k] == null) fail(`${at}: falta fit.${k}`);

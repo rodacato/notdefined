@@ -69,7 +69,7 @@
   };
 
   F["microservicios"] = {
-    n: "03", id: "microservicios", nombre: "Microservicios", prominencia: "situacional", vistaPrimaria: "topologia", destacada: true,
+    n: "03", id: "microservicios", nombre: "Microservicios", prominencia: "situacional", vistaPrimaria: "topologia",
     queEs: "El sistema descompuesto en servicios pequeños, desplegables de forma independiente, cada uno dueño de sus datos.",
     fuerza: "Escalar equipos y partes del sistema de forma independiente.",
     gana: "Autonomía de equipos; deploy y escala independientes.",

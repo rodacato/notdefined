@@ -24,8 +24,8 @@
       h("div", { class: "rule-double" }),
       h("div", { class: "legend-bar" },
         h("div", { class: "grp" },
-          h("span", { class: "lab" }, "Escala"),
-          scaleKey("large", "gran escala"), scaleKey("mid", "media"), scaleKey("small", "pequeña")),
+          h("span", { class: "lab" }, "Prominencia"),
+          promKey("esencial"), promKey("situacional"), promKey("nicho")),
         h("div", { class: "grp" },
           h("span", { class: "lab" }, "Vista primaria"),
           h("span", null, "cada ficha abre por su vista más reveladora · Límites · Topología · Flujo · Trade-offs · Evolución"))));
@@ -120,8 +120,18 @@
         h("span", { class: "dz-eyebrow" }, "¿Dudas entre dos que sirven para lo mismo?"),
         h("span", { class: "dz-title" }, "¿Cuál arquitectura usar?"),
         h("span", { class: "dz-sub" },
-          "Monolito vs microservicios · Capas vs Hexagonal vs Clean · CRUD vs CQRS · ACID vs Saga… mismo objetivo, distinta presión. Cada par, lado a lado, con el rasgo que inclina la decisión resaltado.")),
+          "Monolito vs microservicios · Capas vs Hexagonal vs Clean · CRUD vs CQRS · Tópico vs cola · Orquestación vs coreografía… mismo objetivo, distinta presión. Cada par, lado a lado, con el rasgo que inclina la decisión resaltado.")),
       h("span", { class: "dz-arrow" }, "→"));
+
+    // ----- Cierre de alcance: qué NO está en este tomo ---------------------
+    const notHere = h("div", { class: "not-here" },
+      h("span", { class: "nh-title" }, "Qué NO está en este tomo"),
+      h("p", null,
+        "Estos 21 estilos no son todas las arquitecturas que existen. El actor model, peer-to-peer, " +
+        "las arquitecturas de datos (lambda, kappa), cell-based y los patrones de migración como el " +
+        "Strangler Fig (que aquí solo asoma como pariente: es una ruta, no un estilo) viven fuera de " +
+        "este tomo. Y Big Ball of Mud no está en el catálogo porque no es un estilo — es lo que queda " +
+        "cuando no eliges ninguno."));
 
     // ----- Convenciones ----------------------------------------------------
     const conventions = h("section", { class: "conventions" },
@@ -142,7 +152,7 @@
       h("div", { class: "section-lead" },
         h("span", { class: "sl-no" }, "✳"),
         h("span", { class: "sl-name" }, "Antes de elegir — no confundas estos dos ejes")),
-      quad, disambig, conventions,
+      quad, disambig, notHere, conventions,
       h("div", { class: "foot-note" }, "1001 — Arquitecturas · empieza por el problema, no por el nombre")));
     setActive(null);
   }
@@ -159,9 +169,10 @@
     return out;
   }
 
-  function scaleKey(scale, label) {
+  function promKey(key) {
+    const P = G.data.PROM[key];
     return h("span", { class: "scale-key" },
-      h("span", { class: "scale-glyph " + scale }, G.data.SCALE[scale].glyph), label);
+      h("span", { class: "scale-glyph " + key }, P.glyph), P.label);
   }
 
   function archCard(a) {
@@ -177,11 +188,19 @@
         h("span", { class: "acard-n" }, a.n),
         h("span", { class: "acard-name" }, a.name,
           h("span", { class: "match-badge" }, icon("check"), "ataca este dolor")),
-        h("span", { class: "acard-scale", title: G.data.SCALE[a.scale].label },
-          h("span", { class: "scale-glyph " + a.scale }, G.data.SCALE[a.scale].glyph))),
+        archProm(a)),
       h("span", { class: "view-tag" }, h("span", { class: "dotv" }), G.data.VIEWS[a.primary]),
       h("div", { class: "acard-force" }, a.force),
       h("div", { class: "acard-avoid" }, h("span", { class: "k" }, "Evita"), h("span", null, a.avoid)));
+  }
+
+  // La prominencia vive en la ficha profunda: una sola fuente para índice y ficha.
+  function archProm(a) {
+    const prom = (G.fichas[a.id] || {}).prominencia;
+    if (!prom) return null;
+    const P = G.data.PROM[prom];
+    return h("span", { class: "acard-scale", title: P.label },
+      h("span", { class: "scale-glyph " + prom }, P.glyph));
   }
 
   function iconCls(name, extra) { const s = icon(name); s.classList.add(extra); return s; }
