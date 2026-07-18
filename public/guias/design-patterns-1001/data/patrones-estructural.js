@@ -969,7 +969,7 @@ window.PATRONES.patrones.push(
       whenNot:
         'Si no necesitas interceptar, es indirección de más. Demasiados proxies anidados ocultan de dónde sale el comportamiento.',
       relatives:
-        'vs Decorator (misma estructura, intención distinta: controlar acceso vs. enriquecer comportamiento).',
+        'vs Decorator (misma estructura, intención distinta: controlar acceso vs. enriquecer comportamiento). El proxy de caché en miniatura es la memoización (Tomo III · algoritmos): la misma jugada dentro de una función.',
       paradigm:
         'Python tiene __getattr__ para proxies dinámicos; Ruby method_missing; Go suele envolver la interfaz a mano.',
       diagram: {
