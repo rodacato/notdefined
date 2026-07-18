@@ -11,7 +11,7 @@ export interface GuiaTheme {
   displayFamily: string; // nombre de la @font-face declarada en index.astro
 }
 
-export type GuiaCollectionId = 'almanaque-1001' | 'essentials';
+export type GuiaCollectionId = 'almanaque-1001' | 'polyglot';
 
 export interface GuiaCollection {
   id: GuiaCollectionId;
@@ -30,9 +30,9 @@ export const collections: GuiaCollection[] = [
     itemLabel: 'tomos',
   },
   {
-    id: 'essentials',
-    name: 'Essentials',
-    hook: 'Lo esencial para moverte políglota entre lenguajes y herramientas — sin tomo, sin ceremonia.',
+    id: 'polyglot',
+    name: 'Polyglot',
+    hook: 'Temas avanzados de cada lenguaje. Las bases están en todos lados; esto no.',
     itemLabel: 'guías',
   },
 ];
