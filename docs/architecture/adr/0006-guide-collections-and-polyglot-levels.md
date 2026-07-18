@@ -24,18 +24,22 @@ Collections registered before their first guide simply don't render.
 **Polyglot uses a CEFR-style scale** — the leveling system for human
 languages, which is the collection's joke and its structure at once:
 
-| Level | Name                 | Question it answers                               |
-| ----- | -------------------- | ------------------------------------------------- |
-| B2    | "«Lang» con soltura" | the language, well spoken                         |
-| C1    | "«Lang» dominado"    | what do _I_ do with the language, at expert level |
-| C2    | "«Lang» a fondo"     | what does the _machine_ do underneath             |
+| Level | Name              | Question it answers                               |
+| ----- | ----------------- | ------------------------------------------------- |
+| C1    | "«Lang» dominado" | what do _I_ do with the language, at expert level |
+| C2    | "«Lang» a fondo"  | what does the _machine_ do underneath             |
 
-- **A1–B1 do not exist** in Polyglot. The collection's thesis is "the basics
-  are everywhere; this isn't". Basic-tutorial content is out of scope by
-  definition, not by omission.
+- **A1–B2 do not exist** in Polyglot. The collection's thesis is "the basics
+  are everywhere; this isn't". B2 "con soltura" (fluent everyday use) was
+  initially included but dropped: fluent usage is the least advanced rung and
+  overlaps with what tutorials and docs already cover, so it sits on the wrong
+  side of the thesis. Only C1 (expert use) and C2 (internals) qualify — both
+  unmistakably "not found just anywhere". The B1→C1 jump _is_ the collection.
+- Displayed **ascending, C1 → C2**: the natural path is master the language,
+  then go under the hood.
 - The level is the collection's ordering device, shown as a rail badge on the
   spine (where almanac tomos show roman numerals). Data: optional `nivel`
-  field, typed `'B2' | 'C1' | 'C2'`.
+  field, typed `'C1' | 'C2'`.
 - **The palette identifies the language and is shared across its levels**
   (O'Reilly model: same book design, different cover per language; Polyglot
   additionally shares one type trio — Spectral / Source Sans 3 / Spline Sans

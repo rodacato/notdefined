@@ -32,14 +32,15 @@ export const collections: GuiaCollection[] = [
   {
     id: 'polyglot',
     name: 'Polyglot',
-    hook: 'Temas avanzados de cada lenguaje, en escala de idiomas: del B2 al C2. Las bases están en todos lados; esto no.',
+    hook: 'Temas avanzados de cada lenguaje, en escala de idiomas: C1 y C2. Las bases están en todos lados; esto no.',
     itemLabel: 'guías',
   },
 ];
 
-// Escala CEFR de Polyglot (ADR 0006): B2 "con soltura" · C1 "dominado" ·
-// C2 "a fondo". A1–B1 no existen en la colección.
-export type GuiaNivel = 'B2' | 'C1' | 'C2';
+// Escala CEFR de Polyglot (ADR 0006): C1 "dominado" · C2 "a fondo".
+// A1–B2 no existen — B2 "con soltura" quedó fuera por ser el eslabón menos
+// avanzado (uso fluido ≈ lo que ya cubren tutoriales y docs).
+export type GuiaNivel = 'C1' | 'C2';
 
 export interface Guia {
   slug: string;

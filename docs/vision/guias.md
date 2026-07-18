@@ -18,11 +18,11 @@ from the main site) rendering one shelf per collection.
 
 ## Collections ([ADR 0006])
 
-| Collection               | What                                                 | Ordering                                                                          | Identity                                                                                 |
-| ------------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Almanaque técnico · 1001 | Concepts (patterns, APIs, auth…) — they don't expire | Tomos (roman numerals)                                                            | Per-tomo theme: own palette, texture AND type trio                                       |
-| Polyglot                 | Advanced per-language guides                         | CEFR levels: B2 "con soltura" · C1 "dominado" · C2 "a fondo" (no A1–B1 by thesis) | Per-language palette shared across levels; one collection type trio; level as rail badge |
-| Manuales (incubating)    | Frameworks, as parody user manuals — expiry embraced | TBD                                                                               | TBD                                                                                      |
+| Collection               | What                                                 | Ordering                                                       | Identity                                                                                 |
+| ------------------------ | ---------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Almanaque técnico · 1001 | Concepts (patterns, APIs, auth…) — they don't expire | Tomos (roman numerals)                                         | Per-tomo theme: own palette, texture AND type trio                                       |
+| Polyglot                 | Advanced per-language guides                         | CEFR levels: C1 "dominado" · C2 "a fondo" (no A1–B2 by thesis) | Per-language palette shared across levels; one collection type trio; level as rail badge |
+| Manuales (incubating)    | Frameworks, as parody user manuals — expiry embraced | TBD                                                            | TBD                                                                                      |
 
 Each collection carries one structural joke, used once per guide: 1001
 parodies course numbering ("el 101 ya te lo sabías"); Polyglot parodies
