@@ -5,7 +5,7 @@
   "use strict";
 
   G.data.topics.shapes = {
-    slug: "shapes", n: "08", kind: "el plano", glyph: "◆◆◇", family: "mem",
+    slug: "shapes", n: "09", kind: "el plano", glyph: "◆◆◇", family: "mem",
     navShort: "Object Shapes",
     title: "Object Shapes",
     tagline: "El «plano» de las variables de instancia que acelera su acceso y ayuda al JIT.",

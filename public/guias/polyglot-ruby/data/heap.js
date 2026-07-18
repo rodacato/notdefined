@@ -5,7 +5,7 @@
   "use strict";
 
   G.data.topics.heap = {
-    slug: "heap", n: "09", kind: "el heap", glyph: "◆◇◇", family: "mem",
+    slug: "heap", n: "08", kind: "el heap", glyph: "◆◇◇", family: "mem",
     navShort: "Heap y slots",
     title: "Cómo se guarda la memoria",
     tagline: "La memoria de objetos vive en páginas divididas en slots de tamaño fijo.",

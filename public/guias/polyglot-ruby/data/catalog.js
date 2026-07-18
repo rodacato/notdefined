@@ -18,7 +18,7 @@
     },
 
     // Orden lineal de las fichas (anterior / siguiente sale de aquí).
-    order: ["pipeline", "yarv", "jit", "gvl", "ractors", "fibers", "gc", "shapes", "heap", "lookup", "singleton", "caches"],
+    order: ["pipeline", "yarv", "jit", "gvl", "ractors", "fibers", "gc", "heap", "shapes", "lookup", "singleton", "caches"],
 
     blocks: [
       { family: "exec", eyebrow: "Bloque 1 · Ejecución y compilación", hint: "del texto al código máquina",
@@ -26,7 +26,7 @@
       { family: "conc", eyebrow: "Bloque 2 · Concurrencia y paralelismo", hint: "concurrente no es paralelo",
         topics: ["gvl", "ractors", "fibers"] },
       { family: "mem", eyebrow: "Bloque 3 · Memoria y objetos", hint: "dónde viven los objetos",
-        topics: ["gc", "shapes", "heap"] },
+        topics: ["gc", "heap", "shapes"] },
       { family: "obj", eyebrow: "Bloque 4 · Modelo de objetos y metaprogramación", hint: "cómo se resuelve un método",
         topics: ["lookup", "singleton", "caches"] }
     ],
