@@ -21,7 +21,7 @@ window.PATRONES.patrones.push(
       whenNot:
         'Si solo hay un manejador, sobra. Y ojo: una petición puede recorrer toda la cadena sin que nadie la atienda — falla en silencio si no pones un eslabón final.',
       relatives:
-        'vs Decorator (ambos encadenan; CoR puede DETENER la petición, Decorator siempre la pasa).',
+        'vs Decorator (ambos encadenan; CoR puede DETENER la petición, Decorator siempre la pasa). Su versión pipeline a escala de proceso: tubería y filtros (Tomo II · arquitecturas).',
       paradigm:
         'En estilos funcionales suele ser una lista de funciones que se recorre hasta el primer resultado no vacío.',
       diagram: {
@@ -470,7 +470,7 @@ window.PATRONES.patrones.push(
       whenNot:
         'Cuidado: el mediador puede volverse un «objeto-dios» que concentra toda la lógica. Para pocos objetos, sobra.',
       relatives:
-        'vs Facade (Facade solo expone hacia afuera; Mediator coordina iguales que se hablan) y vs Observer (mecanismo de notificación).',
+        'vs Facade (Facade solo expone hacia afuera; Mediator coordina iguales que se hablan) y vs Observer (mecanismo de notificación). A escala de sistemas: el event bus que decide y coordina (Tomo II · arquitecturas).',
       paradigm:
         'En sistemas de eventos, el bus de eventos cumple el rol de mediador desacoplado.',
       diagram: {
@@ -759,7 +759,7 @@ window.PATRONES.patrones.push(
       whenNot:
         'Cuidado con cascadas de notificaciones difíciles de depurar (A notifica a B que notifica a C…).',
       relatives:
-        'vs Mediator (Mediator centraliza interacción bidireccional; Observer es difusión uno-a-muchos).',
+        'vs Mediator (Mediator centraliza interacción bidireccional; Observer es difusión uno-a-muchos). A escala de red es pub/sub: un broker reparte el notify (Tomo II · arquitecturas).',
       paradigm:
         'A menudo lo reemplazan los eventos del lenguaje o librerías reactivas (RxJS, signals).',
       diagram: {

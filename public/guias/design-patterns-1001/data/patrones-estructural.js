@@ -645,7 +645,7 @@ window.PATRONES.patrones.push(
       whenNot:
         'No la conviertas en un dios que todo lo hace. Es una puerta de entrada, no un reemplazo del subsistema.',
       relatives:
-        'vs Adapter (Facade simplifica, no traduce uno-a-uno); vs Mediator (Mediator coordina iguales que se hablan, Facade solo expone hacia afuera).',
+        'vs Adapter (Facade simplifica, no traduce uno-a-uno); vs Mediator (Mediator coordina iguales que se hablan, Facade solo expone hacia afuera). A escala de red es el API Gateway (Tomo II · arquitecturas).',
       paradigm:
         'En cualquier lenguaje suele ser una clase o función fina por encima del subsistema.',
       diagram: {
