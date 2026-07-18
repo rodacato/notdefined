@@ -24,7 +24,7 @@
     /* ---- Módulo 04 · Arreglo vs lista enlazada ---- */
     "array-lista": {
       title: "Arreglo vs lista enlazada", values: [17, 42, 8, 30, 25, 11],
-      intro: "Las dos estructuras lineales base. El arreglo es una fila de casilleros numerados: vas directo al k. La lista es una cadena de eslabones: para llegar al k, camin\u00e1s. Lo barato en una es caro en la otra.",
+      intro: "Las dos estructuras lineales base. El arreglo es una fila de casilleros numerados: vas directo al k. La lista es una cadena de eslabones: para llegar al k, caminas. Lo barato en una es caro en la otra.",
       cx: "<table class=\"cx\"><thead><tr><th>operaci\u00f3n</th><th>arreglo</th><th>lista enlazada</th></tr></thead><tbody>" +
         "<tr><td>acceso al \u00edndice k</td><td class=\"mono\" style=\"color:var(--st-done)\">O(1)</td><td class=\"mono\" style=\"color:var(--st-out)\">O(n)</td></tr>" +
         "<tr><td>insertar / borrar en medio</td><td class=\"mono\" style=\"color:var(--st-out)\">O(n)</td><td class=\"mono\" style=\"color:var(--st-done)\">O(1)*</td></tr>" +
@@ -56,7 +56,7 @@
       title: "Heap binario (min-heap)", initial: [10, 20, 15, 40, 25, 18],
       intro: "Un \u00e1rbol donde cada padre es menor que sus hijos, as\u00ed el m\u00ednimo siempre est\u00e1 en la ra\u00edz. La clave: el \u00e1rbol es <b>conceptual</b> \u2014 los datos viven en un arreglo y \u201cpadre/hijos\u201d son pura aritm\u00e9tica de \u00edndices.",
       cx: "<p>Insertar y extraer-m\u00edn son <b class=\"tag-mono\" style=\"color:var(--st-done)\">O(log n)</b> (el sift recorre una rama); ver el m\u00ednimo es <b class=\"tag-mono\" style=\"color:var(--st-cand)\">O(1)</b> (siempre la ra\u00edz).</p>" +
-        "<ul class=\"cx-list\"><li>Mira las dos vistas a la par: el \u00e1rbol es solo una forma de leer el arreglo con aritm\u00e9tica de \u00edndices.</li><li>Esto es una <b>cola de prioridad</b>: lo que usan Dijkstra y Prim para sacar siempre el m\u00e1s barato.</li><li>No est\u00e1 ordenado del todo \u2014 solo garantiza que el m\u00ednimo est\u00e1 arriba.</li></ul>",
+        "<ul class=\"cx-list\"><li>Mira las dos vistas a la par: el \u00e1rbol es solo una forma de leer el arreglo con aritm\u00e9tica de \u00edndices.</li><li>Esto es una <b>cola de prioridad</b>: lo que usan Dijkstra y Prim (m\u00f3dulo 05) para sacar siempre el m\u00e1s barato.</li><li>No est\u00e1 ordenado del todo \u2014 solo garantiza que el m\u00ednimo est\u00e1 arriba.</li></ul>",
     },
 
   });

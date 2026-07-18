@@ -35,7 +35,7 @@
         { key: "one",   label: "O(1)",       name: "constante",     hex: "#4C9A6A", glyph: "\u25CF", everyday: "Mirar la primera entrada de tu agenda." },
         { key: "log",   label: "O(log n)",   name: "logar\u00edtmica",  hex: "#2E8B8B", glyph: "\u25C6", everyday: "Buscar un nombre en una agenda ordenada, partiendo a la mitad." },
         { key: "lin",   label: "O(n)",       name: "lineal",        hex: "#3E7CB1", glyph: "\u25B2", everyday: "Leer toda la agenda, contacto por contacto, una sola vez." },
-        { key: "nlogn", label: "O(n log n)", name: "lineal\u00edtmica",  hex: "#E0A93B", glyph: "\u25A0", everyday: "Ordenar la agenda completa de la A a la Z." },
+        { key: "nlogn", label: "O(n log n)", name: "loglineal",  hex: "#E0A93B", glyph: "\u25A0", everyday: "Ordenar la agenda completa de la A a la Z." },
         { key: "quad",  label: "O(n\u00b2)",      name: "cuadr\u00e1tica",   hex: "#B05B4D", glyph: "\u2726", everyday: "Comparar a cada contacto contra todos los dem\u00e1s." },
       ],
       predict: {

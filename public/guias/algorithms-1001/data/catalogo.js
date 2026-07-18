@@ -97,7 +97,7 @@
   /* Textos de la portada. */
   DATA.index = {
     title: "Algoritmos a simple vista",
-    lede: "El mapa completo del curso. Pensado para recuperarlos <em>por el problema que resuelven</em>, no por su nombre \u2014 porque rara vez recuerdas c\u00f3mo se llama el algoritmo que necesitas, pero s\u00ed el problema que tienes enfrente.",
+    lede: "El mapa completo del tomo. Pensado para recuperarlos <em>por el problema que resuelven</em>, no por su nombre \u2014 porque rara vez recuerdas c\u00f3mo se llama el algoritmo que necesitas, pero s\u00ed el problema que tienes enfrente.",
     colophon: "Cada m\u00f3dulo comparte el mismo sistema: se aprende moviendo \u2014 predecir, animar, comparar \u2014 con intuici\u00f3n primero y despu\u00e9s el mecanismo, la complejidad y el c\u00f3digo. Esta portada es solo el mapa. Navegable por teclado.",
   };
 

@@ -153,6 +153,12 @@
           h("span.dz-sub", "Lineal vs binaria \u00b7 quicksort vs merge \u00b7 BFS vs DFS \u00b7 Dijkstra vs A* \u00b7 hash vs \u00e1rbol \u00b7 greedy vs DP\u2026 mismo objetivo, distinta herramienta.")),
         h("span.dz-arrow.mono", "\u2192")));
 
+    // cierre de alcance: qué NO está en este tomo
+    wrap.appendChild(
+      h("div.not-here",
+        h("span.nh-title", "Qué NO está en este tomo"),
+        h("p", "Estos 23 temas no son todo el mapa. Los sorts que no comparan (counting, radix — rompen la barrera n log n porque cuentan en vez de comparar), two pointers y sliding window, Union-Find como tema propio (aquí vive dentro de Kruskal) y Bellman-Ford (que asoma en la ficha de Dijkstra) quedaron fuera de este primer recorrido a propósito.")));
+
     // colofón
     wrap.appendChild(
       h("div.colophon-wrap", h("p.colophon", D.index.colophon)));

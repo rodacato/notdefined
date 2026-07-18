@@ -36,7 +36,11 @@
         if (!conflict) { st[a.id] = "done"; chosen.push(a); snap(a.id + " se queda. Ocupa " + a.s + "\u2013" + a.e + ".", a.id); }
         else { st[a.id] = "out"; snap(a.id + " se descarta.", a.id); }
       });
-      snap("Con \"" + strat.label + "\" quedaron " + chosen.length + " actividades" + (strat.optimal ? " \u2014 y es el m\u00e1ximo posible (elegir la que termina antes es la estrategia \u00f3ptima)." : ". Pero el \u00f3ptimo es " + C.optimo + ": esta estrategia greedy NO siempre acierta."), null);
+      snap("Con \"" + strat.label + "\" quedaron " + chosen.length + " actividades" + (strat.optimal
+        ? " \u2014 y es el m\u00e1ximo posible (elegir la que termina antes es la estrategia \u00f3ptima)."
+        : chosen.length === C.optimo
+          ? " \u2014 esta vez empat\u00f3 con el \u00f3ptimo, pero no est\u00e1 garantizado: con otros datos esta estrategia falla."
+          : ". Pero el \u00f3ptimo es " + C.optimo + ": esta estrategia greedy NO siempre acierta."), null);
       return F;
     }
     function timelineEl(order, states) {

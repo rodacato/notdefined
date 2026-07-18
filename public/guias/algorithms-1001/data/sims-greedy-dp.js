@@ -25,11 +25,11 @@
     greedy: {
       title: "Greedy: selecci\u00f3n de actividades",
       intro: "La idea greedy: en cada paso elegir lo que se ve mejor <b>ahora</b>, sin volver atr\u00e1s. Ac\u00e1 queremos el mayor n\u00famero de actividades sin solapamiento \u2014 y la <b>estrategia</b> de elecci\u00f3n decide si llegamos al \u00f3ptimo.",
-      acts: [{ id: "A", s: 0, e: 4 }, { id: "B", s: 3, e: 6 }, { id: "C", s: 5, e: 9 }, { id: "D", s: 9, e: 13 }, { id: "E", s: 8, e: 12 }],
+      acts: [{ id: "A", s: 1, e: 5 }, { id: "B", s: 6, e: 10 }, { id: "C", s: 10, e: 13 }, { id: "D", s: 4, e: 7 }, { id: "E", s: 0, e: 11 }],
       T: 13, optimo: 3,
       strats: [{ id: "end", label: "termina antes", optimal: true }, { id: "short", label: "m\u00e1s corto" }, { id: "start", label: "empieza antes" }],
       cx: "<p><b class=\"tag-mono\" style=\"color:var(--st-cand)\">O(n log n)</b>: el trabajo est\u00e1 en ordenar las actividades; despu\u00e9s, una sola pasada lineal.</p>" +
-        "<ul class=\"cx-list\"><li>Elegir siempre <b>la que termina antes</b> deja el mayor hueco para el resto: es \u00f3ptima (se puede demostrar).</li><li>Prueba \u201cm\u00e1s corto\u201d o \u201cempieza antes\u201d: son greedy tambi\u00e9n, pero dan menos actividades. La estrategia importa.</li><li>Greedy es r\u00e1pido, pero solo da el \u00f3ptimo cuando el problema tiene la estructura adecuada.</li></ul>",
+        "<ul class=\"cx-list\"><li>Elegir siempre <b>la que termina antes</b> deja el mayor hueco para el resto: es \u00f3ptima (se puede demostrar).</li><li>Prueba \u201cm\u00e1s corto\u201d o \u201cempieza antes\u201d: son greedy tambi\u00e9n, pero ac\u00e1 caen en 2 y 1 actividades (la madrugadora E acapara el d\u00eda entero). La estrategia importa.</li><li>Greedy es r\u00e1pido, pero solo da el \u00f3ptimo cuando el problema tiene la estructura adecuada.</li></ul>",
     },
 
 
@@ -38,7 +38,7 @@
       title: "Fibonacci: recursi\u00f3n y memoizaci\u00f3n",
       intro: "fib(n) = fib(n\u22121) + fib(n\u22122). La recursi\u00f3n ingenua recalcula los mismos subproblemas una y otra vez. <b>Memoizar</b> \u2014guardar cada resultado la primera vez\u2014 los elimina: el \u00e1rbol se desploma. Es el \u201caj\u00e1\u201d de la programaci\u00f3n din\u00e1mica.",
       cx: "<p>Sin memo: <b class=\"tag-mono\" style=\"color:var(--st-out)\">~O(2\u207f)</b> (el \u00e1rbol casi se duplica por nivel). Con memo: <b class=\"tag-mono\" style=\"color:var(--st-done)\">O(n)</b> (cada fib(k) se calcula una vez).</p>" +
-        "<ul class=\"cx-list\"><li>La clave de la DP: <b>subproblemas que se solapan</b>. Si se repiten, vale la pena guardarlos.</li><li>Esto es memoizaci\u00f3n <b>top-down</b> (recursi\u00f3n + cach\u00e9). La mochila (6.3) usa una tabla <b>bottom-up</b>.</li><li>Contrasta con Han\u00f3i (m\u00f3dulo 03): ah\u00ed NO hay subproblemas repetidos, por eso memoizar no ayuda.</li></ul>",
+        "<ul class=\"cx-list\"><li>La clave de la DP: <b>subproblemas que se solapan</b>. Si se repiten, vale la pena guardarlos.</li><li>Esto es memoizaci\u00f3n <b>top-down</b> (recursi\u00f3n + cach\u00e9). La mochila (6.3) usa una tabla <b>bottom-up</b>.</li><li>Contrasta con Han\u00f3i (m\u00f3dulo 03): all\u00e1 el subproblema no devuelve un n\u00famero que cachear, sino movimientos que igual hay que ejecutar \u2014 por eso memoizar no ayuda.</li><li>Es el patr\u00f3n de cach\u00e9 en miniatura: la misma jugada que un Proxy de cach\u00e9 (Tomo I \u00b7 patrones), aqu\u00ed dentro de una funci\u00f3n.</li></ul>",
     },
 
 

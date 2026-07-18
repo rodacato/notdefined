@@ -35,7 +35,7 @@
       title: "Torres de Han\u00f3i", scenario: { n: 3 },
       intro: "El salto recursivo: <b>confiar</b> en que la llamada hija ya resuelve el subproblema m\u00e1s chico. Para mover n discos, mueves n\u22121 al poste auxiliar (conf\u00eda), mueves el grande, y mueves los n\u22121 encima (conf\u00eda).",
       cx: "<p><b class=\"tag-mono\" style=\"color:var(--st-out)\">O(2\u207f)</b> movimientos (cada disco extra duplica el trabajo) y profundidad de pila <b class=\"tag-mono\" style=\"color:var(--st-goal)\">O(n)</b>.</p>" +
-        "<ul class=\"cx-list\"><li>Lo exponencial es <b>inherente</b>: hay que hacer 2\u207f\u22121 movimientos s\u00ed o s\u00ed.</li><li>No hay subproblemas repetidos, as\u00ed que memoizar no ayuda \u2014 al rev\u00e9s de Fibonacci.</li><li>Usa \u201cconf\u00eda en la recursi\u00f3n\u201d para colapsar un sub\u00e1rbol y sentir el salto de fe.</li></ul>",
+        "<ul class=\"cx-list\"><li>Lo exponencial es <b>inherente</b>: hay que hacer 2\u207f\u22121 movimientos s\u00ed o s\u00ed.</li><li>Memoizar no ayuda \u2014 y no porque falten subproblemas repetidos (hanoi(1) aparece mont\u00f3n de veces): es que el resultado no es un valor que caches, es <b>trabajo</b>. Los 2\u207f\u22121 movimientos hay que hacerlos todos.</li><li>Usa \u201cconf\u00eda en la recursi\u00f3n\u201d para colapsar un sub\u00e1rbol y sentir el salto de fe.</li></ul>",
     },
 
   });

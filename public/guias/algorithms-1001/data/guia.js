@@ -28,7 +28,7 @@
       { id: "quick-merge", nav: "Quicksort \u00b7 Merge", title: ["Quicksort", "Merge sort"], same: "Ordenar en O(n log n) con divide y vencer\u00e1s",
         tagline: "Ambos parten el problema a la mitad y ordenan recursivamente. La decisi\u00f3n est\u00e1 en tres rasgos: garant\u00eda, memoria y estabilidad.",
         algos: [
-          { id: "quick", name: "Quicksort", mod: 2, traits: [{ k: "Tiempo", v: "prom. `O(n log n)` \u00b7 peor `O(n\u00b2)`" }, { k: "Espacio", v: "`O(log n)`", hot: true }, { k: "Estable", v: "no" }, { k: "In-place", v: "s\u00ed", hot: true }],
+          { id: "quick", name: "Quicksort", mod: 2, traits: [{ k: "Tiempo", v: "prom. `O(n log n)` \u00b7 peor `O(n\u00b2)`" }, { k: "Espacio", v: "prom. `O(log n)` \u00b7 peor `O(n)`", hot: true }, { k: "Estable", v: "no" }, { k: "In-place", v: "s\u00ed", hot: true }],
             intent: "Particiona in-place alrededor de un pivote. Rap\u00eddisimo en la pr\u00e1ctica por su localidad de cach\u00e9, con memoria m\u00ednima.", pick: "cuando quieres la mayor velocidad promedio y memoria m\u00ednima, sin necesitar estabilidad." },
           { id: "merge", name: "Merge sort", mod: 2, traits: [{ k: "Tiempo", v: "`O(n log n)` garantizado", hot: true }, { k: "Espacio", v: "`O(n)`", hot: true }, { k: "Estable", v: "s\u00ed", hot: true }, { k: "In-place", v: "no" }],
             intent: "Garantiza O(n log n) siempre (sin peor caso patol\u00f3gico) y preserva el orden de los elementos iguales \u2014 a cambio de O(n) de memoria extra.", pick: "cuando necesitas estabilidad, una garant\u00eda dura, o vas a ordenar listas enlazadas o datos que no caben en memoria." },
@@ -47,7 +47,7 @@
         ],
         scenarios: [
           { prompt: "Mis datos ya llegan casi ordenados, con solo unos pocos fuera de lugar.", answer: "insertion", why: "Insertion sort es adaptativo: sobre datos casi ordenados hace casi O(n)." },
-          { prompt: "Cada escritura a la memoria es car\u00edsima; quiero minimizar los swaps.", answer: "selection", why: "Selection sort hace O(n) intercambios, el m\u00ednimo posible." },
+          { prompt: "Cada escritura a la memoria es car\u00edsima; quiero minimizar los swaps.", answer: "selection", why: "Selection sort hace O(n) intercambios \u2014 casi el m\u00ednimo (el r\u00e9cord exacto lo tiene cycle sort)." },
         ] },
       { id: "bfs-dfs", nav: "BFS \u00b7 DFS", title: ["BFS", "DFS"], same: "Recorrer un grafo, visitando cada nodo y arista una vez",
         tagline: "Mismo costo O(V+E), misma cobertura. Lo \u00fanico que cambia es la estructura que guarda los pendientes \u2014 y con ella, el orden de visita.",
