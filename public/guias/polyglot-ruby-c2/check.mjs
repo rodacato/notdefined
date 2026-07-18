@@ -9,7 +9,7 @@
 // stats del GC, árbol de shapes, cadena de lookup, etc.); las simulaciones son
 // deterministas (sin Math.random); y los widget.kind que usan las fichas tienen
 // un iniciador registrado en js/page-*.js. Uso:
-//   node public/guias/polyglot-ruby/check.mjs
+//   node public/guias/polyglot-ruby-c2/check.mjs
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -232,8 +232,8 @@ if (!routerSrc.includes('document.title')) fail('router.js: no fija document.tit
 
 // --- Resultado -----------------------------------------------------------------
 if (errs.length) {
-  console.error(`✗ polyglot-ruby: ${errs.length} problema(s)`);
+  console.error(`✗ polyglot-ruby-c2: ${errs.length} problema(s)`);
   for (const e of errs) console.error(`  - ${e}`);
   process.exit(1);
 }
-console.log(`✓ polyglot-ruby: ${cat.order.length} temas · ${cat.blocks.length} bloques · ${Object.keys(topics).length} fichas · ${registered.size} widgets registrados · ${cat.biblio.length} grupos de bibliografía`);
+console.log(`✓ polyglot-ruby-c2: ${cat.order.length} temas · ${cat.blocks.length} bloques · ${Object.keys(topics).length} fichas · ${registered.size} widgets registrados · ${cat.biblio.length} grupos de bibliografía`);
