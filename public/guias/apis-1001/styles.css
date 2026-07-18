@@ -188,6 +188,10 @@ p { margin: 0; }
 .body { font-size: 15px; line-height: 1.55; }
 .caption { font-size: 12px; line-height: 1.5; color: var(--color-fg-subtle); }
 
+.not-here { margin-top: 26px; padding: 16px 20px; border: 1px dashed var(--color-border-default); border-radius: 12px; }
+.not-here .nh-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-fg-faint); }
+.not-here p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--color-fg-subtle); }
+
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 11px;

@@ -33,7 +33,8 @@
     parientes: [
       { nombre: "JSON sobre HTTP", desc: "El 90% de las «APIs REST» reales. Ver desambiguación: madurez de Richardson.", link: "#/desambiguacion" },
       { nombre: "GraphQL", desc: "Resuelve el over-fetching que REST arrastra.", link: "#/ficha/graphql" },
-      { nombre: "OData", desc: "REST + gramática de consulta estándar encima.", link: "#/ficha/odata" }
+      { nombre: "OData", desc: "REST + gramática de consulta estándar encima.", link: "#/ficha/odata" },
+      { nombre: "Cliente-Servidor", desc: "El estilo de arquitectura debajo de todo request-response (Tomo II).", link: "/guias/architectures-1001/#/familia/3/cliente-servidor" }
     ],
     ratings: { contrato: 3, caching: 7, tooling: 7, adopcion: 7, overhead: 4, realtime: 1, evolucion: 4 },
     verdict: "El default correcto para APIs públicas y CRUD. Deja de pretender que es «RESTful» y aprovecha lo que sí te regala: caching HTTP.",
@@ -68,7 +69,7 @@
       "Overhead brutal: el envelope XML pesa mucho más que el dato útil.",
       "Ergonomía dolorosa: namespaces, WS-*, verbosidad y herramientas pesadas.",
       "Sin caching HTTP: todo es POST a un endpoint.",
-      "Los errores viven en <soap:Fault> dentro de un 200, no en el status HTTP."
+      "El status HTTP no discrimina el error: sea 200 o un 500 genérico, la semántica del fallo vive en el XML del <soap:Fault>."
     ],
     cuandoNo: [
       "Empiezas algo nuevo sin un mandato de contrato formal — REST o gRPC te dan más por menos.",
@@ -90,7 +91,7 @@
       steps: [
         { from: "cli", to: "srv", dir: "right", kind: "req", label: "POST · <Envelope>", bytes: "~1.2 KB", narracion: "Mandas un envelope XML: <Header> WS-* + <Body>. ~1.2 KB para pedir un usuario." },
         { from: "srv", to: "cli", dir: "left", kind: "res", label: "200 · <Envelope>", bytes: "~1.4 KB", narracion: "Responde otro envelope. El dato útil son ~180 B; el resto es ceremonia XML." },
-        { from: "srv", to: "cli", dir: "left", kind: "fail", label: "200 · <soap:Fault>", bytes: "~900 B", narracion: "Si algo falla no hay status HTTP semántico: el error viene en un <Fault> dentro de un 200." }
+        { from: "srv", to: "cli", dir: "left", kind: "fail", label: "500 · <soap:Fault>", bytes: "~900 B", narracion: "El binding devuelve un 500 genérico, pero el status no te dice qué falló: la semántica del error viene dentro del <soap:Fault>, en el XML." }
       ]
     }
   };
@@ -121,7 +122,7 @@
       { nombre: "tRPC", desc: "RPC tipado, pero atado a TypeScript de punta a punta.", link: "#/ficha/trpc" }
     ],
     ratings: { contrato: 2, caching: 2, tooling: 3, adopcion: 6, overhead: 3, realtime: 2, evolucion: 3 },
-    verdict: "El RPC honesto y sin ceremonia. Brilla en nichos —wallets de blockchain, plugins, control interno— donde «llamar un método» es el modelo natural y nadie necesita OpenAPI.",
+    verdict: "El RPC honesto y sin ceremonia. Brilla en nichos —wallets de blockchain, plugins, control interno— donde «llamar un método» es el modelo natural y nadie necesita OpenAPI. Y lo usas a diario sin saberlo: LSP, el protocolo que conecta tu editor con cada lenguaje, es JSON-RPC.",
     sim: {
       titulo: "Llamar un método, y luego un batch",
       actors: [

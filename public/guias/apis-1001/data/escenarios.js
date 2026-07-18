@@ -68,7 +68,7 @@
       planes: {
         rest: {
           setup: 1, viajes: 1, bytes: 620,
-          nota: "JSON legible pero pesado. En HTTP/1.1 sin keep-alive, encima pagas el TCP handshake por llamada.",
+          nota: "JSON legible pero pesado: los nombres de campo viajan en cada respuesta, y a ×500/s serializar y parsear también cobra CPU.",
           trips: [
             { dir: "req", label: "GET /products/882", bytes: 210 },
             { dir: "res", label: "200 · { product } JSON", bytes: 410 }

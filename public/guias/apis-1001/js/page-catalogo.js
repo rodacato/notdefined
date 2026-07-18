@@ -59,11 +59,16 @@
       ]);
     });
 
+    var notHere = G.el("div", { class: "not-here" }, [
+      G.el("span", { class: "nh-title", text: "Qué NO está en este tomo" }),
+      G.el("p", { text: "Estos " + G.catalogo.length + " estilos no son todos los que existen. WebRTC (P2P y media en vivo — otra bestia, con su propia señalización), CoAP (el primo de MQTT para dispositivos aún más chicos), AMQP como protocolo (aquí el broker vive detrás de las APIs de eventos) y las GraphQL subscriptions (que por debajo son WebSockets o SSE) quedaron fuera a propósito: si tu problema es de esos, ya sabes por dónde empezar." })
+    ]);
+
     var root = G.el("div", {}, [
       G.shell([
         masthead,
         filterWrap
-      ].concat(familyBlocks))
+      ].concat(familyBlocks).concat([notHere]))
     ]);
 
     function setDolor(id) {

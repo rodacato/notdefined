@@ -142,10 +142,30 @@ for (const [i, d] of G.desambiguacion.entries()) {
 
 // --- Links internos #/ficha/:id ------------------------------------------------
 const ROUTES = new Set(['#/', '#/comparador', '#/quiz', '#/desambiguacion']);
+
+// Cross-links a otros tomos: se valida contra los datos reales del tomo destino.
+const tomoII = (() => {
+  const c = { window: {} };
+  vm.createContext(c);
+  vm.runInContext(readFileSync(join(GUIDE, '../architectures-1001/data/catalogo.js'), 'utf8'), c);
+  return c.window.GUIA.data;
+})();
+function checkCrossLink(at, link) {
+  const m = link.match(/^\/guias\/architectures-1001\/#\/familia\/(\d+)\/(.+)$/);
+  if (!m) return false;
+  const arch = tomoII.ARCHS.find((a) => a.id === m[2]);
+  if (!arch) fail(`${at}: cross-link a estilo inexistente «${m[2]}» en Tomo II`);
+  else {
+    const fam = tomoII.FAMILIES.find((f) => f.id === arch.family);
+    if (String(fam.numero) !== m[1]) fail(`${at}: «${m[2]}» vive en la familia ${fam.numero}, no ${m[1]}`);
+  }
+  return true;
+}
+
 for (const [at, link] of fichaLinks) {
   const m = link.match(/^#\/ficha\/(.+)$/);
   if (m) { if (!ids.has(m[1])) fail(`${at}: link a ficha inexistente «${m[1]}»`); }
-  else if (!ROUTES.has(link)) fail(`${at}: ruta desconocida «${link}»`);
+  else if (!ROUTES.has(link) && !checkCrossLink(at, link)) fail(`${at}: ruta desconocida «${link}»`);
 }
 
 // --- Resumen ------------------------------------------------------------------

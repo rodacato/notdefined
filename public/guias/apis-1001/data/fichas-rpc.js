@@ -30,7 +30,8 @@
     parientes: [
       { nombre: "tRPC", desc: "RPC tipado también, pero sin codegen y atado a TypeScript. Ver diferencia.", link: "#/desambiguacion" },
       { nombre: "SOAP", desc: "El «RPC con contrato fuerte» de la generación anterior, en XML.", link: "#/ficha/soap" },
-      { nombre: "APIs de eventos", desc: "Cuando el s2s deja de ser petición-respuesta y pasa a streams.", link: "#/ficha/eventos" }
+      { nombre: "APIs de eventos", desc: "Cuando el s2s deja de ser petición-respuesta y pasa a streams.", link: "#/ficha/eventos" },
+      { nombre: "Cliente-Servidor", desc: "El estilo de arquitectura debajo de todo request-response (Tomo II).", link: "/guias/architectures-1001/#/familia/3/cliente-servidor" }
     ],
     ratings: { contrato: 7, caching: 1, tooling: 6, adopcion: 4, overhead: 2, realtime: 6, evolucion: 6 },
     verdict: "El estándar de facto puertas adentro. Entre tus microservicios es difícil justificar JSON sobre HTTP cuando gRPC te ahorra bytes, CPU y bugs de contrato. Puertas afuera, casi nunca.",
@@ -77,7 +78,7 @@
       { nombre: "GraphQL", desc: "Otra ruta al type-safety en front, vía SDL + codegen.", link: "#/ficha/graphql" },
       { nombre: "JSON-RPC", desc: "El mismo modelo «llamar métodos», sin la magia de tipos.", link: "#/ficha/jsonrpc" }
     ],
-    ratings: { contrato: 6, caching: 4, tooling: 5, adopcion: 6, overhead: 4, realtime: 3, evolucion: 4 },
+    ratings: { contrato: 6, caching: 2, tooling: 5, adopcion: 6, overhead: 4, realtime: 3, evolucion: 4 },
     verdict: "Dentro de un monorepo full-stack de TypeScript es casi imbatible por productividad. El pedo es que fuera de ahí no existe. No es una API: es un pegamento tipado entre tu front y tu back.",
     sim: {
       titulo: "Llamar un procedure tipado — y el error que nunca llega a prod",

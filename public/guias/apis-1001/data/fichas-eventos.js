@@ -30,7 +30,8 @@
     parientes: [
       { nombre: "Polling", desc: "La alternativa que webhooks evita. Ver webhooks vs polling.", link: "#/desambiguacion" },
       { nombre: "APIs de eventos", desc: "Cuando necesitas orden, replay y garantías fuertes.", link: "#/ficha/eventos" },
-      { nombre: "SSE", desc: "Push en vivo pero hacia un cliente conectado, no a un endpoint tuyo.", link: "#/ficha/sse" }
+      { nombre: "SSE", desc: "Push en vivo pero hacia un cliente conectado, no a un endpoint tuyo.", link: "#/ficha/sse" },
+      { nombre: "Pub-Sub", desc: "El patrón de mensajería del que webhooks es la cara HTTP pública (Tomo II).", link: "/guias/architectures-1001/#/familia/3/pub-sub" }
     ],
     ratings: { contrato: 3, caching: 1, tooling: 4, adopcion: 5, overhead: 4, realtime: 5, evolucion: 3 },
     verdict: "La forma correcta de que un tercero te avise sin que estés preguntando cada 5 segundos. Trátalos como entrega no confiable: firma, idempotencia y una cola propia detrás. No es «una respuesta que te llega tarde».",
@@ -73,7 +74,8 @@
     parientes: [
       { nombre: "Webhooks", desc: "El push a terceros «ligero»; esto es su versión con garantías.", link: "#/ficha/webhooks" },
       { nombre: "MQTT", desc: "Pub/sub también, pero optimizado para IoT y dispositivos.", link: "#/ficha/mqtt" },
-      { nombre: "gRPC", desc: "Cuando el s2s vuelve a ser petición-respuesta síncrona.", link: "#/ficha/grpc" }
+      { nombre: "gRPC", desc: "Cuando el s2s vuelve a ser petición-respuesta síncrona.", link: "#/ficha/grpc" },
+      { nombre: "EDA · Event Sourcing · CQRS", desc: "Los estilos de arquitectura que se construyen sobre estas APIs (Tomo II).", link: "/guias/architectures-1001/#/familia/3/eda" }
     ],
     ratings: { contrato: 5, caching: 1, tooling: 5, adopcion: 3, overhead: 3, realtime: 6, evolucion: 5 },
     verdict: "La columna vertebral de los sistemas grandes que no quieren acoplarse a sí mismos. Es una decisión de arquitectura, no de endpoint: si dudas si lo necesitas, todavía no lo necesitas.",
@@ -131,7 +133,7 @@
         { from: "app", to: "brk", dir: "right", kind: "req", label: "SUBSCRIBE envio/+/temp · QoS 1", bytes: "~18 B", narracion: "La app se suscribe a un topic con comodín (+). QoS 1 pide entrega 'al menos una vez'." },
         { from: "sen", to: "brk", dir: "right", kind: "frame", label: "PUBLISH envio/42/temp", bytes: "~12 B", narracion: "El sensor publica. El header MQTT son 2 bytes: pensado para batería y redes pobres." },
         { from: "brk", to: "app", dir: "right", kind: "frame", label: "→ envio/42/temp: 6.4°C", bytes: "~12 B", narracion: "El broker enruta a todos los suscritos al topic. Sensor y app nunca se hablan directo." },
-        { from: "app", to: "brk", dir: "left", kind: "res", label: "PUBACK", bytes: "~4 B", narracion: "Con QoS 1 la app confirma con PUBACK. El broker reintenta hasta el ack: entrega garantizada." }
+        { from: "app", to: "brk", dir: "left", kind: "res", label: "PUBACK", bytes: "~4 B", narracion: "Con QoS 1 la app confirma con PUBACK. El broker reintenta hasta el ack: entrega al menos una vez — por eso pueden llegar duplicados." }
       ]
     }
   };
