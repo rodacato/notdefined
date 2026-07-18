@@ -17,7 +17,7 @@ window.PATRONES.patrones.push(
       smell:
         'Varios manejadores posibles y no quieres que el emisor los conozca a todos.',
       realWorld:
-        'Pipelines de middleware (Rack, Express), burbujeo de eventos, flujos de aprobación, niveles de logging.',
+        'Pipelines de middleware (Rack, Express) — ojo: son la variante donde TODOS procesan y pasan; el CoR clásico se detiene en el primero que atiende. Burbujeo de eventos, flujos de aprobación, niveles de logging.',
       whenNot:
         'Si solo hay un manejador, sobra. Y ojo: una petición puede recorrer toda la cadena sin que nadie la atienda — falla en silencio si no pones un eslabón final.',
       relatives:
@@ -190,6 +190,7 @@ window.PATRONES.patrones.push(
       star: 'El objeto comando — lleva la acción y sabe ejecutarla y deshacerla.',
       smell:
         'Necesitas desacoplar al que invoca del que ejecuta, y poder deshacer / encolar / registrar acciones.',
+      fowler: 'refactor: Replace Function with Command',
       realWorld:
         'Deshacer/rehacer, acciones de botones/menú, colas de trabajos (jobs en background), operaciones transaccionales, grabar macros.',
       whenNot:
@@ -336,7 +337,7 @@ window.PATRONES.patrones.push(
         'El cliente acoplado a la estructura interna de la colección (índices, nodos…).',
       realWorld: 'Cada for...of, each, generador. Está en todas partes.',
       whenNot:
-        'Casi nunca lo escribes a mano: tu lenguaje ya lo trae y ya te la sabes (for...of, each). Implementarlo manual para una lista es reinventar la rueda.',
+        'Casi nunca lo escribes a mano: tu lenguaje ya lo trae y ya te la sabes (for...of, each). Implementarlo manual para una lista, a mi forma de verlo, es reinventar la rueda.',
       relatives:
         'Pariente de Composite (iterar árboles). Más concepto integrado que código que vayas a teclear.',
       paradigm:
@@ -463,6 +464,7 @@ window.PATRONES.patrones.push(
       star: 'El mediador — el punto central por el que pasan todas las interacciones.',
       smell:
         'Una telaraña de objetos que se referencian entre sí (acoplamiento spaghetti).',
+      fowler: 'smell: Inappropriate Intimacy — los colegas se conocen de más',
       realWorld:
         'Una sala de chat (los usuarios hablan vía la sala), un coordinador de formulario (campos que se habilitan entre sí), control de tráfico aéreo.',
       whenNot:
@@ -624,7 +626,7 @@ window.PATRONES.patrones.push(
       realWorld:
         'Deshacer (junto con Command), partidas guardadas, rollback de transacciones, historial de un editor.',
       whenNot:
-        'Ojo con el costo de memoria de los snapshots: copiar todo el estado a cada cambio puede ser caro.',
+        'Sobra cuando el estado es trivial o ya es inmutable — ahí conservar la referencia anterior basta. Y ojo con el costo de memoria: copiar todo el estado a cada cambio puede ser caro.',
       relatives:
         'Se combina con Command para construir undo/redo. El cuidador guarda mementos pero no los inspecciona.',
       paradigm:
@@ -872,7 +874,7 @@ window.PATRONES.patrones.push(
       code: {
         ts: 'interface Observer { update(event: string): void }\n\nclass EmailObserver implements Observer {\n  update(event: string) { console.log(`email: ${event}`); }\n}\nclass SmsObserver implements Observer {\n  update(event: string) { console.log(`sms: ${event}`); }\n}\n\n// el subject mantiene la lista y hace el fan-out solo\nclass Subject {\n  private subscribers: Observer[] = [];\n  subscribe(o: Observer) { this.subscribers.push(o); }\n  notify(event: string) {\n    // avisa sin saber (ni importarle) quién escucha\n    for (const o of this.subscribers) o.update(event);\n  }\n}\n\nconst shipments = new Subject();\nshipments.subscribe(new EmailObserver());\nshipments.subscribe(new SmsObserver());\n\nshipments.notify("pedido enviado");\n// => email: pedido enviado\n// => sms: pedido enviado',
         py: 'class Subject:\n    # el subject mantiene la lista y hace el fan-out solo\n    def __init__(self): self._subscribers = []\n\n    def subscribe(self, callback): self._subscribers.append(callback)\n\n    def notify(self, event):\n        # avisa sin saber (ni importarle) quién escucha\n        for callback in self._subscribers:\n            callback(event)\n\n# en Python cualquier callable sirve de observer\ndef email_observer(event): print(f"email: {event}")\ndef sms_observer(event): print(f"sms: {event}")\n\nshipments = Subject()\nshipments.subscribe(email_observer)\nshipments.subscribe(sms_observer)\n\nshipments.notify("pedido enviado")\n# => email: pedido enviado\n# => sms: pedido enviado',
-        rb: 'require "observer"\n\nclass Shipments\n  include Observable   # el subject lleva la lista de suscriptores\n\n  def dispatch(order)\n    changed                   # marca que hubo cambio...\n    notify_observers(order)   # ...y hace el fan-out solo\n  end\nend\n\nclass EmailObserver\n  def update(event) = puts("email: #{event}")\nend\n\nclass SmsObserver\n  def update(event) = puts("sms: #{event}")\nend\n\nshipments = Shipments.new\nshipments.add_observer(EmailObserver.new)\nshipments.add_observer(SmsObserver.new)\n\nshipments.dispatch("pedido enviado")\n# => email: pedido enviado\n# => sms: pedido enviado',
+        rb: 'require "observer"   # Ruby ≥ 3.4: ya no es default gem, agrégala al Gemfile\n\nclass Shipments\n  include Observable   # el subject lleva la lista de suscriptores\n\n  def dispatch(order)\n    changed                   # marca que hubo cambio...\n    notify_observers(order)   # ...y hace el fan-out solo\n  end\nend\n\nclass EmailObserver\n  def update(event) = puts("email: #{event}")\nend\n\nclass SmsObserver\n  def update(event) = puts("sms: #{event}")\nend\n\nshipments = Shipments.new\nshipments.add_observer(EmailObserver.new)\nshipments.add_observer(SmsObserver.new)\n\nshipments.dispatch("pedido enviado")\n# => email: pedido enviado\n# => sms: pedido enviado',
         go: 'package main\n\nimport "fmt"\n\n// En Go el observer natural es una función.\ntype Observer func(event string)\n\n// El subject mantiene la lista y hace el fan-out solo.\ntype Subject struct{ subscribers []Observer }\n\nfunc (s *Subject) Subscribe(o Observer) { s.subscribers = append(s.subscribers, o) }\n\nfunc (s *Subject) Notify(event string) {\n    // avisa sin saber (ni importarle) quién escucha\n    for _, o := range s.subscribers {\n        o(event)\n    }\n}\n\nfunc main() {\n    shipments := &Subject{}\n    shipments.Subscribe(func(e string) { fmt.Println("email: " + e) })\n    shipments.Subscribe(func(e string) { fmt.Println("sms: " + e) })\n\n    shipments.Notify("pedido enviado")\n    // => email: pedido enviado\n    // => sms: pedido enviado\n}',
       },
       category: 'comportamiento',
@@ -890,6 +892,7 @@ window.PATRONES.patrones.push(
       star: 'El objeto-estado — encapsula el comportamiento de un estado y sus transiciones.',
       smell:
         'Condicionales gigantes sobre una variable de estado, repartidos por toda la clase.',
+      fowler: 'smell: Repeated Switches · refactor: Replace Type Code with State/Strategy',
       realWorld:
         'El ciclo de vida de un pedido (borrador→pagado→despachado), un flujo de documento, un reproductor (reproduciendo/pausado/detenido), los estados de una conexión TCP.',
       whenNot:
@@ -1000,7 +1003,7 @@ window.PATRONES.patrones.push(
       beforeAfter: {
         before: {
           label: 'switch gigante repartido',
-          code: 'function pay(order) {\n  switch (order.status) {            // y este switch se repite\n    case "draft":  order.status = "paid"; break;\n    case "paid":   throw "ya pagado";\n    case "shipped":throw "ya enviado";\n  }\n}',
+          code: 'function pay(order) {\n  switch (order.status) {            // y este switch se repite\n    case "draft":   order.status = "paid"; break;\n    case "paid":    throw "ya pagado";\n    case "shipped": throw "ya enviado";\n  }\n}',
           pain: [1, 2, 3, 4],
         },
         after: {
@@ -1059,6 +1062,7 @@ window.PATRONES.patrones.push(
       star: 'La estrategia enchufable — el algoritmo que el contexto delega y puede cambiar.',
       smell:
         'Varias maneras de hacer algo elegidas en runtime, resueltas con condicionales.',
+      fowler: 'smell: Repeated Switches · refactor: Replace Conditional with Polymorphism',
       realWorld:
         'Comparadores de ordenamiento, métodos de pago, algoritmos de compresión, planificadores de ruta (auto/caminando/transporte), reglas de precios.',
       whenNot:
@@ -1196,6 +1200,7 @@ window.PATRONES.patrones.push(
       star: 'El método plantilla — fija el orden de los pasos y deja huecos (hooks) sobrescribibles.',
       smell:
         'Varios algoritmos comparten estructura pero difieren en pasos → duplicación.',
+      fowler: 'smell: Duplicated Code · refactor: Form Template Method',
       realWorld:
         'Los hook methods de un framework, un pipeline de datos con un paso de parseo sobrescribible, setup/teardown de tests, callbacks del ciclo de vida.',
       whenNot:
@@ -1337,7 +1342,7 @@ window.PATRONES.patrones.push(
       realWorld:
         'Recorrer un AST en un compilador (visitante de tipos, de generación de código), exportar un documento (a PDF/HTML), reportes sobre una jerarquía.',
       whenNot:
-        'Si la jerarquía cambia seguido, Visitor duele: agregar una clase obliga a tocar todos los visitantes. Avanzado.',
+        'Si la jerarquía cambia seguido, Visitor duele: el pedo es que agregar una clase obliga a tocar todos los visitantes. Avanzado.',
       relatives:
         'Se relaciona con el pattern matching / tipos suma en funcional. El doble despacho es su mecanismo central.',
       paradigm:

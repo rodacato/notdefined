@@ -73,7 +73,7 @@
         { class: 'lede' },
         'El mapa completo de los 23 patrones del Gang of Four. Pensado para recuperarlos ',
         h('em', null, 'por el problema que resuelven'),
-        ', no por su nombre \u2014 porque casi nunca recuerdas c\u00f3mo se llama el patr\u00f3n que necesitas, pero s\u00ed el dolor que tienes enfrente.',
+        ', no por su nombre \u2014 porque casi nunca recuerdas c\u00f3mo se llama el patr\u00f3n que necesitas, pero s\u00ed el dolor que tienes enfrente. Y a un patr\u00f3n se llega refactorizando desde ese dolor, no dise\u00f1ando en el pizarr\u00f3n.',
       ),
       h(
         'div',
@@ -158,6 +158,11 @@
             h('span', { class: 'freq-glyph freq-open' }, '\u25CB'),
             ' cola rara',
           ),
+          h(
+            'span',
+            { class: 'freq-def' },
+            '\u2014 qu\u00E9 tanto lo escribir\u00E1s en c\u00F3digo moderno, no cu\u00E1nto lo encontrar\u00E1s en c\u00F3digo ajeno',
+          ),
         ),
         h(
           'div',
@@ -190,10 +195,24 @@
           h(
             'span',
             { class: 'dz-sub' },
-            'Strategy vs State \u00b7 los cuatro envoltorios \u00b7 Factory vs Abstract Factory\u2026 mismo esqueleto, distinta intenci\u00f3n.',
+            'Strategy vs State \u00b7 los cuatro envoltorios \u00b7 Mediator vs Observer \u00b7 Builder vs Factory\u2026 mismo esqueleto, distinta intenci\u00f3n.',
           ),
         ),
         h('span', { class: 'dz-arrow' }, '\u2192'),
+      ),
+    );
+
+    // cierre de alcance: GoF no es todo lo que existe
+    root.appendChild(
+      h(
+        'div',
+        { class: 'not-here' },
+        h('span', { class: 'nh-title' }, 'Qu\u00e9 NO est\u00e1 en este almanaque'),
+        h(
+          'p',
+          null,
+          'Los 23 del GoF no son todos los patrones que existen \u2014 son el cat\u00e1logo de 1994. Inyecci\u00f3n de dependencias, Repository, Unit of Work, CQRS, los patrones de arquitectura empresarial (PoEAA) y los de concurrencia viven en otros tomos. Si no lo encontraste aqu\u00ed, no est\u00e1 mal archivado: es de otro cat\u00e1logo.',
+        ),
       ),
     );
 

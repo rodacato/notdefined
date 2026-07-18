@@ -16,6 +16,7 @@ window.PATRONES.patrones.push(
       star: 'El método fábrica — la costura donde el «new» se vuelve un punto de extensión.',
       smell:
         'El código está sembrado de new ConcreteX(), atado a clases concretas; agregar un tipo nuevo significa cazar todos esos sitios uno por uno.',
+      fowler: 'refactor: Replace Constructor with Factory Method',
       realWorld:
         'Una app de logística que crea Camión o Barco según la subclase; un toolkit de UI que crea el botón propio de cada sistema operativo.',
       whenNot:
@@ -122,7 +123,7 @@ window.PATRONES.patrones.push(
       beforeAfter: {
         before: {
           label: 'Acoplado a clases concretas',
-          code: 'function render(os: string) {\n  let btn;\n  if (os === "win")   btn = new WinButton();\n  else if (os==="mac") btn = new MacButton();\n  else                 btn = new LinuxButton();\n  btn.paint();\n  // + un tipo nuevo  ⇒  tocar TODOS estos sitios\n}',
+          code: 'function render(os: string) {\n  let btn;\n  if (os === "win")      btn = new WinButton();\n  else if (os === "mac") btn = new MacButton();\n  else                   btn = new LinuxButton();\n  btn.paint();\n  // + un tipo nuevo  ⇒  tocar TODOS estos sitios\n}',
           pain: [2, 3, 4, 6],
         },
         after: {
@@ -372,7 +373,8 @@ window.PATRONES.patrones.push(
         'Construir objetos complejos paso a paso; el mismo proceso permite distintas representaciones.',
       star: 'El builder — acumula partes y entrega el producto ya ensamblado.',
       smell:
-        'Constructores telescópicos / listas de parámetros enormes (el smell «Long Parameter List»).',
+        'Constructores telescópicos / listas de parámetros enormes.',
+      fowler: 'smell: Long Parameter List',
       realWorld:
         'Armar una petición HTTP, un query builder de SQL, ensamblar una comida o una casa por partes.',
       whenNot:
@@ -515,7 +517,7 @@ window.PATRONES.patrones.push(
       realWorld:
         'Duplicar un objeto ya configurado; spawnear entidades repetidas en un juego.',
       whenNot:
-        'Ojo con copias superficiales vs. profundas: un clone() ingenuo comparte referencias y filtra estado.',
+        'Sobra cuando construir es barato y las clases son conocidas: un new directo es más claro. Y ojo con copias superficiales vs. profundas: un clone() ingenuo comparte referencias y filtra estado.',
       relatives:
         'Pariente de Factory (crear sin nombrar la clase). Útil cuando hay muchas variantes ya configuradas.',
       paradigm:
@@ -641,6 +643,7 @@ window.PATRONES.patrones.push(
       star: 'La instancia única — constructor cerrado + acceso estático compartido.',
       smell:
         'Un recurso que debe ser único (configuración, pool de conexiones) termina instanciado varias veces.',
+      fowler: 'smell: Global Data',
       realWorld: 'Configuración global, logger, pool de conexiones.',
       whenNot:
         'Es un global encubierto: esconde dependencias, y el pedo es que lo notas hasta que intentas testear. Casi siempre es mejor crear UNA instancia e inyectarla (DI). Trátalo como patrón con advertencia, no como default.',

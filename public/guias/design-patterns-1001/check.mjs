@@ -31,6 +31,17 @@ for (const f of DATA_FILES)
   vm.runInContext(readFileSync(join(GUIDE, f), 'utf8'), ctx);
 const patterns = ctx.window.PATRONES.patrones;
 
+// El numerado global (01–23) debe seguir el orden del arreglo: la ficha
+// deriva de él su posición dentro de la categoría.
+const misnumbered = patterns
+  .map((p, i) => ({ p, want: String(i + 1).padStart(2, '0') }))
+  .filter(({ p, want }) => p.no !== want)
+  .map(({ p, want }) => `${p.id}: no "${p.no}", esperaba "${want}"`);
+if (misnumbered.length) {
+  console.error('numerado fuera de orden:\n' + misnumbered.join('\n'));
+  process.exit(1);
+}
+
 const runners = {
   py: (f) => ['python3', [f]],
   rb: (f) => ['ruby', [f]],

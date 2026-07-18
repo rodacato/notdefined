@@ -197,18 +197,6 @@
       );
       body.appendChild(tabs);
       body.appendChild(CodeBlock(pattern.code[currentLang], null, null));
-      var langObj = LANGS.find(function (l) {
-        return l.id === currentLang;
-      });
-      if (langObj.dyn)
-        body.appendChild(
-          h(
-            'p',
-            { class: 'dyn-note' },
-            h('span', { class: 'b' }, 'idiom\u00e1tico:'),
-            ' ' + pattern.paradigm,
-          ),
-        );
     }
     function toggle() {
       open = !open;
@@ -247,6 +235,7 @@
     var siblings = DATA.patrones.filter(function (p) {
       return p.category === catKey;
     });
+    var pos = String(siblings.indexOf(pattern) + 1).padStart(2, '0');
     var count = String(siblings.length).padStart(2, '0');
     var catColor = pattern.categoryColor || CAT_HEX[catKey];
 
@@ -313,7 +302,7 @@
         h(
           'span',
           { class: 'eyebrow' },
-          cat.name + ' \u00b7 ' + pattern.no + ' / ' + count,
+          cat.name + ' \u00b7 ' + pos + ' / ' + count,
         ),
       ),
     );
@@ -380,6 +369,14 @@
           { class: 'pain' },
           h('span', { class: 'lbl' }, 'El dolor \u2014 empieza aqu\u00ed'),
           h('p', null, pattern.smell),
+          pattern.fowler
+            ? h(
+                'p',
+                { class: 'fowler' },
+                h('span', { class: 'fw' }, 'En vocabulario de Fowler'),
+                ' ' + pattern.fowler,
+              )
+            : null,
         ),
         predict,
       ),

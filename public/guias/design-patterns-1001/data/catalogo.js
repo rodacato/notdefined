@@ -11,13 +11,13 @@
      data/patrones-creacional.js    ← 5 patrones
      data/patrones-estructural.js   ← 7 patrones
      data/patrones-comportamiento.js← 11 patrones
-     data/desambiguacion.js         ← 6 comparaciones
+     data/desambiguacion.js         ← 8 comparaciones
 
    Estructura:
      .categorias      metadatos de las 3 categorías (nombre, color, blurb)
      .catalogo        la portada: problemas, roles y frecuencia
      .patrones        los 23 patrones (fuente de verdad), ordenados 01..23
-     .desambiguacion  6 comparaciones de patrones parecidos
+     .desambiguacion  8 comparaciones de patrones parecidos
 
    --------------------------------------------------------------------------
    CÓMO AGREGAR UN PATRÓN NUEVO — copia un objeto de .patrones y ajusta:
@@ -32,6 +32,7 @@
        warn: false,               // true = patrón con advertencia (p. ej. Singleton)
        primary: "antes-despues",  // vista inicial: estructura | antes-despues | en-accion
        intent: "…", star: "…", smell: "…",
+       fowler: "…",               // opcional: smell/refactor formal (Fowler) del dolor
        realWorld: "…", whenNot: "…", relatives: "…", paradigm: "…",
        diagram: { vb:[ancho,alto], nodes:[…], edges:[…] },  // coords fijas del SVG
        beforeAfter: { before:{…}, after:{…}, why:[…] },
@@ -91,7 +92,7 @@ window.PATRONES = {
       comportamiento: {
         name: 'De comportamiento',
         varc: '--cat-comp',
-        desc: 'Cómo colaboran los objetos y reparten responsabilidades en runtime.',
+        desc: 'Cómo colaboran los objetos y reparten responsabilidades en runtime. Interpreter va al final a propósito: el más raro cierra el tomo.',
       },
     },
     problems: [

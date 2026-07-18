@@ -157,7 +157,7 @@ window.PATRONES.patrones.push(
       smell:
         'Una jerarquía que se multiplica en producto cartesiano (Figura × Color → CírculoRojo, CuadradoAzul…): seis clases hoy, doce en cuanto agregues un color.',
       realWorld:
-        'Un toolkit gráfico sobre varios SO; un control remoto (abstracción) sobre dispositivos (implementación); figuras × APIs de render.',
+        'Un toolkit gráfico sobre varios SO; un control remoto (abstracción) sobre dispositivos (implementación); figuras × APIs de render. Ojo: Figura × Color es el ejemplo didáctico — en el Bridge canónico el segundo eje es una plataforma (renderer, driver, SO), no un atributo.',
       whenNot:
         'Se diseña por adelantado solo cuando prevés variar DOS dimensiones; si no, sobra estructura.',
       relatives:
@@ -894,8 +894,8 @@ window.PATRONES.patrones.push(
       beforeAfter: {
         before: {
           label: 'Estado completo por objeto',
-          code: 'class Tree {\n  constructor(\n    public x: number, public y: number,   // extrínseco\n    public mesh: Mesh, public texture: Tex, // repetido 1M veces\n  ) {}\n}',
-          pain: [3],
+          code: 'class Tree {\n  mesh: Mesh; texture: Tex;\n  constructor(public x: number, public y: number) {\n    this.mesh = loadMesh("roble");        // cada árbol carga\n    this.texture = loadTexture("roble");  // SU PROPIA copia — 1M veces\n  }\n}',
+          pain: [3, 4],
         },
         after: {
           label: 'Intrínseco compartido, extrínseco fuera',
@@ -906,7 +906,7 @@ window.PATRONES.patrones.push(
           before: {
             total: '≈ 2 GB',
             pct: 100,
-            label: '1 000 000 × Tree { mesh, texture, x, y }',
+            label: '1 000 000 × Tree, cada uno con su copia del mesh y la textura',
           },
           after: {
             total: '≈ 24 MB',
