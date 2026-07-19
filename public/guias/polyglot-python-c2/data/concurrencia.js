@@ -17,7 +17,7 @@
       "Los threads <b>sí</b> ayudan en cargas <b>I/O-bound</b>; <b>no</b> en <b>CPU-bound</b>.",
       "Existe para hacer thread-safe el intérprete (incluido el refcount) con un solo lock."
     ],
-    fundamento: "Por eso los threads de Python <strong>no aceleran tareas de CPU en paralelo</strong>. Es el internal más famoso (y más malentendido) de Python — el análogo conceptual al GVL de Ruby. Existe para proteger el estado del intérprete, incluido el reference counting, de condiciones de carrera.",
+    fundamento: "Por eso los threads de Python <strong>no aceleran tareas de CPU en paralelo</strong>. Es el internal más famoso (y más malentendido) de Python — el análogo conceptual al GVL de Ruby. Existe para proteger el estado del intérprete, incluido el reference counting, de condiciones de carrera: cada objeto lleva un contador de referencias — a fondo en el tema 09.",
     fuerza: "Un solo candado hace que todo el intérprete sea trivialmente thread-safe y que las extensiones C sean simples de escribir. El precio: cero paralelismo de bytecode.",
     comoFunciona: "Un thread debe <strong>poseer el GIL</strong> para ejecutar bytecode. Lo <strong>libera</strong> en operaciones de <strong>I/O</strong> (disco, red…) o cada cierto <em>switch interval</em> (~5&nbsp;ms, el de <code>sys.setswitchinterval()</code>) para que otro avance. Por eso los threads <strong>sí</strong> ayudan en cargas <strong>I/O-bound</strong> — pasan casi todo el tiempo esperando — pero <strong>no</strong> en <strong>CPU-bound</strong>.",
     mito: {
@@ -142,11 +142,11 @@
     slug: "asyncio", folio: "08", bloque: 2, fam: 2, dificultad: 2, estrella: false,
     cardTitulo: "asyncio: event loop y corrutinas",
     titulo: "asyncio: event loop y corrutinas",
-    tagline: "Concurrencia cooperativa en un solo hilo: cada await cede el control al loop. Como el event loop de JS.",
+    tagline: "Concurrencia cooperativa en un solo hilo: el await cede el control al loop cuando lo que esperas todavía no está listo. Como el event loop de JS.",
     evita: "Usarlo para trabajo CPU-bound.",
-    lede: "Un <em>event loop</em> de un solo hilo que multiplexa muchas corrutinas: concurrencia cooperativa, donde cada <span class='mono'>await</span> cede el control.",
+    lede: "Un <em>event loop</em> de un solo hilo que multiplexa muchas corrutinas: concurrencia cooperativa, donde el <span class='mono'>await</span> cede el control cuando lo que espera todavía no está listo.",
     enBreve: [
-      "Concurrencia <b>cooperativa</b>: nadie interrumpe a nadie, cada corrutina cede en el <code>await</code>.",
+      "Concurrencia <b>cooperativa</b>: nadie interrumpe a nadie; la corrutina cede en un <code>await</code> que aún no está listo (si ya lo está, sigue de frente).",
       "El loop guarda tareas listas y esperas de I/O, y reanuda cuando el I/O completa.",
       "Todo en <b>un hilo</b>: no ayuda con CPU-bound (bloquea el loop entero).",
       "Por debajo, las corrutinas son <b>generadores reanudables</b> (ver tema 03)."

@@ -40,7 +40,7 @@
         { k: "Fuente", rep: "x = a + b", nota: "Tu texto, tal cual lo escribes." },
         { k: "Tokens", rep: "NAME(x) OP(=)\nNAME(a) OP(+) NAME(b)", nota: "El tokenizer trocea el texto en tokens." },
         { k: "AST", rep: "Assign(\n  target=x,\n  value=BinOp(a, Add, b))", nota: "El parser arma el árbol sintáctico: estructura, no texto." },
-        { k: "Bytecode", rep: "LOAD_FAST  a\nLOAD_FAST  b\nBINARY_OP  +\nSTORE_FAST x", nota: "El compilador emite instrucciones → objeto code (y se cachea el .pyc)." },
+        { k: "Bytecode", rep: "LOAD_FAST  a\nLOAD_FAST  b\nBINARY_OP  +\nSTORE_FAST x", nota: "El compilador emite instrucciones → objeto code (y se cachea el .pyc). Es un esquema simplificado: el dis de 3.14 fusiona las dos cargas en una sola instrucción y mete entradas CACHE detrás de BINARY_OP." },
         { k: "Ejecución", rep: "eval loop (ceval)\n→ x = 3", nota: "La máquina de pila ejecuta el bytecode: recién aquí «corre» tu programa." }
       ]
     }
@@ -82,7 +82,7 @@
     ],
     widgetLabel: "Visualízalo — un «debugger» de la pila",
     widget: {
-      intro: "Ejecuta x = a + b instrucción a instrucción y mira cómo cambia la pila de valores.",
+      intro: "Ejecuta x = a + b instrucción a instrucción y mira cómo cambia la pila de valores. El listado es un esquema simplificado, no la salida literal de dis: en 3.14 las dos cargas van fusionadas (LOAD_FAST_BORROW_LOAD_FAST_BORROW) y BINARY_OP arrastra cinco entradas CACHE, así que los offsets reales no son 0, 2, 4, 6.",
       pasos: el2.map(function (s) {
         var code = INS2.map(function (ins, i) {
           var tag = i === s.pc ? "hl" : (i < s.pc ? "dim" : "");
@@ -92,7 +92,7 @@
           ? s.stack.map(function (v) { return "<div class='w-cell on'>" + v + "</div>"; }).join("")
           : "<div class='w-cell'>·</div>";
         var vis = "<div class='w-row'>" +
-          "<div class='w-grow'><div class='w-tag'>bytecode · dis.dis</div><pre class='w-code'>" + code + "</pre></div>" +
+          "<div class='w-grow'><div class='w-tag'>bytecode · esquema simplificado</div><pre class='w-code'>" + code + "</pre></div>" +
           "<div class='w-col' style='flex:0 0 150px'>" +
           "<div class='w-tag'>pila de valores (↑ cima)</div><div class='w-cells'>" + cells + "</div>" +
           "<div class='w-tag'>locales</div><div class='w-mono'>" + s.loc + "</div></div></div>";
@@ -252,7 +252,7 @@
         {
           id: "jit", label: "JIT copy-and-patch · PEP 744",
           pasos: [
-            { vis: "<div class='w-lane'><span class='lbl'>bucle</span><span class='track'><i style='width:20%'></i></span><span class='st'>iter 200k</span></div>", nota: "Un bucle que se ejecuta muchísimas veces va calentándose. El JIT solo compila lo caliente." },
+            { vis: "<div class='w-lane'><span class='lbl'>bucle</span><span class='track'><i style='width:20%'></i></span><span class='st'>muchas iteraciones</span></div>", nota: "Un bucle que se ejecuta muchísimas veces va calentándose. El JIT solo compila lo caliente." },
             { vis: "<div class='w-lane'><span class='lbl'>bucle</span><span class='track'><i class='warn' style='width:100%'></i></span><span class='st'>🔥 caliente</span></div>", nota: "Cruza el umbral: se marca «caliente» y el JIT elige el trace a compilar." },
             { vis: "<div class='w-chips'><span class='w-chip done'>_LOAD_FAST</span><span class='w-chip done'>_BINARY_OP_ADD_INT</span><span class='w-chip active'>_STORE_FAST</span></div>", nota: "copy-and-patch: plantillas LLVM generadas en build se cosen en memoria ejecutable, parcheando constantes y direcciones." },
             { vis: "<div class='w-pill ok'>✓ código máquina listo — el trace corre sin pasar por el intérprete</div>", nota: "El trace ya es código máquina: se ejecuta directo, sin el overhead del eval loop.", tone: "ok" }

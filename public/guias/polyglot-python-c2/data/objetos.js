@@ -6,17 +6,19 @@
   // 12 · MRO ---------------------------------------------------------------
   function mroChain(states) {
     var cls = ["D", "B", "C", "A", "object"];
+    var define = [false, false, true, true, false];
     return "<div class='w-chips'>" + cls.map(function (c, i) {
       var s = states[i] || "";
       var arrow = i > 0 ? "<span class='w-arrow" + (states[i - 1] ? " on" : "") + "'>›</span>" : "";
-      return arrow + "<span class='w-chip " + s + "'>" + c + "</span>";
+      var lbl = c + (define[i] ? " <span style='opacity:.6'>ping()</span>" : "");
+      return arrow + "<span class='w-chip " + s + "'>" + lbl + "</span>";
     }).join("") + "</div>";
   }
   var mro = [
-    { vis: mroChain(["", "", "", "", ""]), nota: "Diamante: D hereda de B y C; ambas de A; A de object. La linealización C3 da el MRO D → B → C → A → object. Resolvemos d.ping(), con ping() definido en C." },
+    { vis: mroChain(["", "", "", "", ""]), nota: "Diamante: D hereda de B y C; ambas de A; A de object. La linealización C3 da el MRO D → B → C → A → object. Resolvemos d.ping(), definido en A y en C — dos candidatos, para ver cuál gana." },
     { vis: mroChain(["active", "", "", "", ""]), nota: "Empieza por D (la instancia): D no define ping()." },
-    { vis: mroChain(["miss", "active", "", "", ""]), nota: "Sigue por B, la siguiente del MRO: tampoco lo define." },
-    { vis: mroChain(["miss", "miss", "done", "", ""]), nota: "Lo encuentra en C: recorriendo el MRO de izquierda a derecha, gana la primera clase que lo define.", tone: "ok" }
+    { vis: mroChain(["miss", "active", "", "", ""]), nota: "Sigue por B: tampoco lo define. Aquí es donde un recorrido en profundidad se equivocaría: bajaría a la base de B —que es A— y se llevaría el ping() de A." },
+    { vis: mroChain(["miss", "miss", "done", "", ""]), nota: "C3 no baja todavía: agota a las hermanas (C) antes de subir a la base común, así que encuentra ping() en C y ahí para. A también lo define, pero queda detrás en el orden.", tone: "ok" }
   ];
   function descFlow(active) {
     var f = ["c.area", "property en Rect", "area.__get__(c)", "return w*h → 24"];
@@ -36,9 +38,9 @@
     var layout = withDict
       ? "<div class='w-col'><div class='w-surface w-mono'>PyObject header (refcnt, type)</div><div class='w-surface w-mono' style='background:var(--warn-bg);border-color:var(--warn)'>__dict__ → hash table {x, y} (crece, flexible)</div></div>"
       : "<div class='w-col'><div class='w-surface w-mono'>PyObject header (refcnt, type)</div><div class='w-row'><div class='w-surface w-mono w-grow' style='background:color-mix(in srgb,var(--fam-4) 14%,var(--color-bg-surface));border-color:var(--fam-4)'>slot x</div><div class='w-surface w-mono w-grow' style='background:color-mix(in srgb,var(--fam-4) 14%,var(--color-bg-surface));border-color:var(--fam-4)'>slot y</div></div></div>";
-    var bytes = withDict ? 152 : 56;
+    var bytes = withDict ? 88 : 48;
     var bar = "<div style='margin-top:12px'><div class='w-tag'>memoria por instancia (aprox.) — " + bytes + " B</div>" +
-      "<div class='w-lane' style='margin-top:6px'><span class='track'><i class='" + (withDict ? "warn" : "ok") + "' style='width:" + (bytes / 152 * 100) + "%'></i></span></div></div>";
+      "<div class='w-lane' style='margin-top:6px'><span class='track'><i class='" + (withDict ? "warn" : "ok") + "' style='width:" + (bytes / 88 * 100) + "%'></i></span></div></div>";
     return layout + bar;
   }
   T.push({
@@ -95,7 +97,7 @@
   }
   var dct = DENT.map(function (e, i) {
     var nota = i === 2
-      ? "Colisión: 'city' quería el slot 3 (ya ocupado por 'name'). Open addressing prueba el siguiente libre — el slot 4."
+      ? "Colisión: 'city' quería el slot 3 (ya ocupado por 'name'). El open addressing de CPython no prueba el de al lado: deriva otro slot del propio hash con una secuencia perturbada (j = 5j + 1 + perturb), justo para evitar que las colisiones se apelotonen. Aquí cae en el 4."
       : (i === 3 ? "El array denso mantiene el orden name → age → city → role. De ahí que los dicts sean ordenados." : "El hash de la clave elige un slot en la tabla de índices, que apunta a una fila del array denso.");
     return { vis: dictView(i + 1), nota: nota, tone: i === 2 ? "warn" : (i === 3 ? "ok" : undefined) };
   });
@@ -192,7 +194,7 @@
   }
   var str = [
     { vis: strView(["H", "o", "l", "a"], 1), nota: "«Hola» es todo ASCII: 1 byte por carácter (Latin-1). El más barato." },
-    { vis: strView(["H", "o", "l", "a", "あ"], 2), nota: "Añades un kanji: el mayor code point ya no cabe en 1 byte, así que TODA la cadena sube a 2 bytes/car (UCS-2).", tone: "warn" },
+    { vis: strView(["H", "o", "l", "a", "あ"], 2), nota: "Añades un hiragana: el mayor code point ya no cabe en 1 byte, así que TODA la cadena sube a 2 bytes/car (UCS-2).", tone: "warn" },
     { vis: strView(["H", "o", "l", "a", "あ", "😀"], 4), nota: "Un emoji fuera del BMP fuerza 4 bytes/car (UCS-4) para toda la cadena: mismo ancho para todos los caracteres.", tone: "bad" }
   ];
   T.push({
