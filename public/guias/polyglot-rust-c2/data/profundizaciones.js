@@ -79,14 +79,14 @@
     slug: "closures", star: false, difficulty: 2,
     kicker: "Cómo capturan el entorno",
     title: "Closures: Fn / FnMut / FnOnce",
-    tagline: "Una closure es una struct anónima que captura su entorno. Cómo captura (&, &mut, por valor) decide a cuál de los tres traits pertenece.",
+    tagline: "Una closure es una struct anónima que captura su entorno. Lo que el cuerpo hace con lo capturado (leer, mutar, consumir) decide a cuál de los tres traits pertenece.",
     avoid: "Pensar que move la hace FnOnce: move cambia la captura, no el trait.",
-    lede: 'Una closure es <em>una struct anónima</em> que guarda las variables que captura, más un método que la ejecuta. <em>Cómo</em> captura (por referencia, mutable o por valor) determina cuál de los tres traits implementa.',
+    lede: 'Una closure es <em>una struct anónima</em> que guarda las variables que captura, más un método que la ejecuta. Lo que el cuerpo <em>hace</em> con lo capturado determina cuál de los tres traits implementa; el modo de captura lo infiere el compilador — y <code>move</code> lo fuerza por valor sin cambiar el trait.',
     enBreve: [
       { k: "Qué es", v: "Una <strong>struct anónima</strong> que captura su entorno + un método." },
-      { k: "Fn", v: "Captura por <code>&</code>: solo lee, llamable muchas veces." },
-      { k: "FnMut", v: "Captura por <code>&mut</code>: muta, muchas veces, exclusivo." },
-      { k: "FnOnce", v: "Captura por valor y consume: <strong>una sola</strong> llamada." }
+      { k: "Fn", v: "Solo lee lo capturado (captura por <code>&</code>): llamable muchas veces." },
+      { k: "FnMut", v: "Muta lo capturado (captura por <code>&mut</code>): muchas veces, exclusivo." },
+      { k: "FnOnce", v: "Consume lo capturado (captura por valor): <strong>una sola</strong> llamada." }
     ],
     fundamento: {
       fuerza: 'Rust <em>infiere el modo de captura menos restrictivo posible</em> según lo que hagas con la variable dentro de la closure. No lo declaras: se deduce del uso. Esa struct oculta es lo que hace que las closures sean cero-costo.',

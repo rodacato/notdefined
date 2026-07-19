@@ -320,7 +320,7 @@
           (lexical ? "el préstamo léxico cabe dentro de la vida de x." : "r deja de usarse antes de que x muera — NLL lo acepta.") + "</span>" }));
       } else {
         mount.appendChild(G.rustc(
-'<span class="e">error[E0597]</span>: `x` does not live long enough\n <span class="g">--&gt; src/main.rs</span>\n  <span class="g">|</span>\n  <span class="g">|</span>     r = &x;   <span class="r">^^ borrowed value does not live long enough</span>\n  <span class="g">|</span>  }            <span class="g">- `x` dropped here while still borrowed</span>\n  <span class="g">|</span>  ...r usado en línea ' + state.useLine + '  <span class="g">- borrow later used here</span>',
+'<span class="e">error[E0505]</span>: cannot move out of `x` because it is borrowed\n <span class="g">--&gt; src/main.rs</span>\n  <span class="g">|</span>\n  <span class="g">|</span>     let r = &x;   <span class="g">-- borrow of `x` occurs here</span>\n  <span class="g">|</span>     drop(x);      <span class="r">^ move out of `x` occurs here</span>\n  <span class="g">|</span>  ...r usado en línea ' + state.useLine + '  <span class="g">- borrow later used here</span>',
           lexical
             ? "Modo léxico (pre-2018): el préstamo se extendía hasta el fin del bloque, aunque no volvieras a usar r. NLL lo recorta al último uso real."
             : "El último uso de r (línea " + state.useLine + ") ocurre después de que x se libera (línea 5). La referencia quedaría colgando."));
@@ -1077,7 +1077,7 @@
       } else if (state.phase === "err") {
         var e = state.wrap === "rc"
           ? { c: "E0277", m: "`Rc<i32>` cannot be sent between threads safely", n1: "thread::spawn(move || { ... c2 ... });", n2: "^^^^^^^^^^^^^ `Rc<i32>` is not `Send`", h: "Rc usa un contador NO atómico: dos hilos lo corromperían. Cambia a Arc." }
-          : { c: "E0596", m: "cannot borrow data in an `Arc` as mutable", n1: "let mut n = c2;", n2: "*n += 1;   ^^ `Arc` no da mutabilidad interior", h: "Arc<i32> es Send+Sync, pero solo permite LEER. Para mutar necesitas Arc<Mutex<i32>>." };
+          : { c: "E0594", m: "cannot assign to data in an `Arc`", n1: "let mut n = c2;", n2: "*n += 1;   ^^^^^^^ cannot assign — `Arc` no implementa DerefMut", h: "Arc<i32> es Send+Sync, pero solo permite LEER. Para mutar necesitas Arc<Mutex<i32>>." };
         mount.appendChild(G.rustc(
 '<span class="e">error[' + e.c + ']</span>: ' + G.dom.escapeHtml(e.m) + '\n <span class="g">--&gt; src/main.rs</span>\n  <span class="g">|</span>\n  <span class="g">|</span>  ' + G.dom.escapeHtml(e.n1) + '\n  <span class="g">|</span>  <span class="r">' + G.dom.escapeHtml(e.n2) + '</span>', e.h));
       }
@@ -1368,7 +1368,7 @@
      =========================================================== */
   G.widgets.closures = function (host, fam) {
     var M = {
-      read: { xInit: 'String::from("hola")', body: 'println!("{}", x);', cap: "&x   (por referencia)", field: "&String", trait: "Fn", once: false, call: "Se puede llamar muchas veces: solo lee x." },
+      read: { xInit: 'String::from("hola")', body: 'println!("{}", x);', cap: "&x   (por referencia)", field: "&String", trait: "Fn", once: false, call: "Se puede llamar muchas veces: solo lee x. (Con move delante capturaría x: String por valor — y seguiría siendo Fn: el trait lo decide el uso, no move.)" },
       mutate: { xInit: "0", body: "x += 1;", cap: "&mut x   (referencia mutable)", field: "&mut i32", trait: "FnMut", once: false, call: "Se puede llamar muchas veces, pero necesita acceso exclusivo (let mut c)." },
       consume: { xInit: 'String::from("hola")', body: "drop(x);  // consume x", cap: "x   (por valor, movido)", field: "String", trait: "FnOnce", once: true, call: "Se puede llamar UNA sola vez: la segunda es error (x ya fue consumido)." }
     };
@@ -1382,12 +1382,12 @@
       clear(mount);
       var m = M[state.use], tc = COL[m.trait];
       var seg = G.segmented(
-        [{ value: "read", label: "leerla" }, { value: "mutate", label: "mutarla" }, { value: "consume", label: "consumirla (move)" }],
+        [{ value: "read", label: "leerla" }, { value: "mutate", label: "mutarla" }, { value: "consume", label: "consumirla" }],
         state.use, function (u) { set({ use: u }); });
       mount.appendChild(el("div", { class: "wrow" }, [el("span", { class: "eyebrow", text: "El cuerpo usa x para" }), seg.node]));
 
       mount.appendChild(el("div", { style: "display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;align-items:start" }, [
-        el("div", { class: "rustc" }, [el("pre", { text: "let x = " + m.xInit + ";\nlet c = move || {\n    " + m.body + "\n};" })]),
+        el("div", { class: "rustc" }, [el("pre", { text: "let x = " + m.xInit + ";\nlet c = || {\n    " + m.body + "\n};" })]),
         el("div", { style: "background:var(--color-bg-surface);border:1.5px solid " + tc + ";border-radius:var(--radius-md);padding:14px 16px" }, [
           el("div", { class: "eyebrow", style: "font-size:10px", text: "compila a (aprox.)" }),
           el("pre", { class: "mono", style: "margin:8px 0 0;font-size:11.5px;line-height:1.55;color:var(--color-fg-default)", text: "struct Anon {\n    x: " + m.field + ",\n}\nimpl " + m.trait + " for Anon" })
