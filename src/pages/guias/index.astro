@@ -1,41 +1,29 @@
 ---
 import RealmLayout from '../../layouts/RealmLayout.astro';
-import { guias, type Guia, type GuiaNivel } from '../../data/guias';
+import TagPill from '../../components/TagPill.astro';
+import { guias, collections } from '../../data/guias';
 
 const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 
-// Almanaque 1001: bookshelf de lomos, ordenado por tomo.
-const almanaque = guias
-  .filter((g) => g.collection === 'almanaque-1001')
-  .sort((a, b) => (a.tomo ?? 99) - (b.tomo ?? 99));
+// Un estante por colección, en el orden del registro; vacíos no se pintan.
+// Dentro del estante: los tomos por número; Polyglot queda en orden de
+// publicación (sin tomo, el sort es estable).
+const shelves = collections
+  .map((col) => ({
+    col,
+    items: guias
+      .filter((g) => g.collection === col.id)
+      .sort((a, b) => (a.tomo ?? 99) - (b.tomo ?? 99)),
+  }))
+  .filter((s) => s.items.length > 0);
 
-// Polyglot: agrupado por lenguaje, niveles como filas. Escala C1 → C2.
-const langOf = (title: string) =>
-  title.replace(/ (a fondo|dominado|con soltura)$/, '');
-
-const NIVEL_HUB: GuiaNivel[] = ['C1', 'C2'];
-const NIVEL_LABEL: Record<GuiaNivel, string> = {
-  C1: 'dominado',
-  C2: 'a fondo',
-};
-// La definición de cada nivel (del ADR 0006) — una línea, no el blurb largo.
-const NIVEL_DESC: Record<GuiaNivel, string> = {
-  C1: 'uso experto del lenguaje',
-  C2: 'el motor por dentro',
-};
-
-const polyByLang = new Map<string, Guia[]>();
-for (const g of guias.filter((x) => x.collection === 'polyglot')) {
-  const k = langOf(g.title);
-  (polyByLang.get(k) ?? polyByLang.set(k, []).get(k)!).push(g);
+// Dentro de su estante, el sufijo "1001" del lomo es redundante: lo carga
+// el encabezado de la colección. El título completo vive dentro de la guía.
+function spineTitle(title: string, collection: string) {
+  return collection === 'almanaque-1001'
+    ? title.replace(/\s*1001$/, '')
+    : title;
 }
-const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
-  lang,
-  theme: gs[0].theme,
-  levels: gs.sort(
-    (a, b) => NIVEL_HUB.indexOf(a.nivel!) - NIVEL_HUB.indexOf(b.nivel!),
-  ),
-}));
 ---
 
 <RealmLayout
@@ -57,110 +45,79 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
       </p>
     </header>
 
-    <!-- ALMANAQUE — bookshelf de lomos -->
-    <section class="shelf-section" aria-label="Almanaque técnico 1001">
-      <header class="shelf-head">
-        <p class="shelf-name">
-          COLECCIÓN 01 <span class="sep">//</span> ALMANAQUE TÉCNICO · 1001
-          <span class="shelf-count">{almanaque.length} tomos</span>
-        </p>
-        <p class="shelf-hook">Pasa el mouse por un lomo para abrirlo.</p>
-      </header>
-      <ol class="bookshelf">
-        {
-          almanaque.map((g) => (
-            <li
-              class:list={['bookspine', `texture-${g.theme.texture}`]}
-              style={`--g-canvas:${g.theme.canvas};--g-ink:${g.theme.ink};--g-soft:${g.theme.inkSoft};--g-accent:${g.theme.accent};--g-border:${g.theme.border};--g-display:'${g.theme.displayFamily}';`}
-              tabindex="0"
-            >
-              <div class="bs-inner">
-                <div class="bs-closed">
-                  <span class="bs-badge">{ROMAN[g.tomo!]}</span>
-                  <span class="bs-vtitle">
-                    {g.title.replace(/\s*1001$/, '')}
-                  </span>
-                  <span class="bs-dot" />
-                </div>
-                <div class="bs-open">
-                  <span class="bs-open-badge">{ROMAN[g.tomo!]} · Tomo</span>
-                  <h2 class="bs-title">{g.title.replace(/\s*1001$/, '')}</h2>
-                  <p class="bs-blurb">{g.blurb}</p>
-                  <div class="bs-tags">
-                    {g.tags.map((t) => (
-                      <span class="bs-tag">{t}</span>
-                    ))}
+    {
+      shelves.map((shelf, i) => (
+        <details class="shelf-section" open>
+          <summary class="shelf-summary">
+            <span class="shelf-name">
+              COLECCIÓN {String(i + 1).padStart(2, '0')}{' '}
+              <span class="sep">//</span> {shelf.col.name.toUpperCase()}
+            </span>
+            <span class="shelf-count">
+              {shelf.items.length}{' '}
+              {shelf.items.length === 1
+                ? shelf.col.itemLabel.replace(/s$/, '')
+                : shelf.col.itemLabel}
+            </span>
+            <svg class="shelf-chevron" viewBox="0 0 12 12" aria-hidden="true">
+              <path
+                d="M4.5 2.5 L8 6 L4.5 9.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </summary>
+          <p class="shelf-hook">{shelf.col.hook}</p>
+          <ol class="shelf">
+            {shelf.items.map((guia) => (
+              <li
+                class:list={['spine', `texture-${guia.theme.texture}`]}
+                style={`--g-canvas:${guia.theme.canvas};--g-ink:${guia.theme.ink};--g-soft:${guia.theme.inkSoft};--g-accent:${guia.theme.accent};--g-border:${guia.theme.border};--g-display:'${guia.theme.displayFamily}';`}
+              >
+                <a href={`/guias/${guia.slug}/`} class="spine-link">
+                  {guia.tomo && (
+                    <div class="spine-rail">
+                      <span class="spine-tomo">{ROMAN[guia.tomo]}</span>
+                      <span class="spine-tomo-label">Tomo</span>
+                    </div>
+                  )}
+                  {guia.nivel && (
+                    <div class="spine-rail">
+                      <span class="spine-tomo spine-nivel">{guia.nivel}</span>
+                      <span class="spine-tomo-label">Nivel</span>
+                    </div>
+                  )}
+                  <div class="spine-body">
+                    <h2 class="spine-title">
+                      {spineTitle(guia.title, guia.collection)}
+                    </h2>
+                    <p class="spine-blurb">{guia.blurb}</p>
+                    <div class="spine-foot">
+                      <div class="spine-tags">
+                        {guia.tags.map((t) => (
+                          <TagPill label={t} />
+                        ))}
+                      </div>
+                      <span class="spine-cta">Ábrela →</span>
+                    </div>
                   </div>
-                  <a href={`/guias/${g.slug}/`} class="bs-cta">
-                    Ábrela →
-                  </a>
-                </div>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
-    </section>
-
-    <!-- POLYGLOT — agrupado por lenguaje, niveles C1 → C2 -->
-    <section class="shelf-section" aria-label="Polyglot">
-      <header class="shelf-head">
-        <p class="shelf-name">
-          COLECCIÓN 02 <span class="sep">//</span> POLYGLOT
-          <span class="shelf-count">
-            {langGroups.length}
-            {langGroups.length === 1 ? ' lenguaje' : ' lenguajes'}
-          </span>
-        </p>
-        <p class="shelf-hook">
-          Temas avanzados de cada lenguaje, en escala de idiomas: C1 y C2.
-        </p>
-      </header>
-      <div class="lang-grid">
-        {
-          langGroups.map((grp) => (
-            <article
-              class:list={['lang-card', `texture-${grp.theme.texture}`]}
-              style={`--g-canvas:${grp.theme.canvas};--g-ink:${grp.theme.ink};--g-soft:${grp.theme.inkSoft};--g-accent:${grp.theme.accent};--g-border:${grp.theme.border};--g-display:'${grp.theme.displayFamily}';`}
-            >
-              <div class="lang-head">
-                <h2 class="lang-name">{grp.lang}</h2>
-                <span class="lang-count">{grp.levels.length} de 2 niveles</span>
-              </div>
-              <ul class="lvl-list">
-                {NIVEL_HUB.map((lvl) => {
-                  const g = grp.levels.find((x) => x.nivel === lvl);
-                  return g ? (
-                    <li class="lvl-row is-live">
-                      <span class="lvl-badge">{lvl}</span>
-                      <div class="lvl-text">
-                        <span class="lvl-name">{NIVEL_LABEL[lvl]}</span>
-                        <span class="lvl-desc">{NIVEL_DESC[lvl]}</span>
-                      </div>
-                      <a href={`/guias/${g.slug}/`} class="lvl-cta">
-                        Ábrela →
-                      </a>
-                    </li>
-                  ) : (
-                    <li class="lvl-row is-soon">
-                      <span class="lvl-badge">{lvl}</span>
-                      <div class="lvl-text">
-                        <span class="lvl-name">{NIVEL_LABEL[lvl]}</span>
-                        <span class="lvl-desc">pronto</span>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </article>
-          ))
-        }
-      </div>
-    </section>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </details>
+      ))
+    }
   </section>
 </RealmLayout>
 
 <style>
+  /* Fuentes display de cada guía, self-hosteadas desde su carpeta (peso 700).
+     Renombradas con prefijo "Guia " para no chocar si el sitio adopta alguna.
+     Spectral la comparte toda la colección Polyglot. */
   @font-face {
     font-family: 'Guia Spectral';
     font-style: normal;
@@ -171,6 +128,7 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
   }
   @font-face {
     font-family: 'Guia Bitter';
+    font-style: normal;
     font-weight: 700;
     font-display: swap;
     src: url('/guias/design-patterns-1001/fonts/bitter-700.woff2')
@@ -178,6 +136,7 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
   }
   @font-face {
     font-family: 'Guia Chakra Petch';
+    font-style: normal;
     font-weight: 700;
     font-display: swap;
     src: url('/guias/architectures-1001/fonts/chakra-petch-700.woff2')
@@ -185,6 +144,7 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
   }
   @font-face {
     font-family: 'Guia Space Grotesk';
+    font-style: normal;
     font-weight: 700;
     font-display: swap;
     src: url('/guias/algorithms-1001/fonts/space-grotesk-700.woff2')
@@ -192,12 +152,14 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
   }
   @font-face {
     font-family: 'Guia Fraunces';
+    font-style: normal;
     font-weight: 700;
     font-display: swap;
     src: url('/guias/apis-1001/fonts/Fraunces-Bold.woff2') format('woff2');
   }
   @font-face {
     font-family: 'Guia Playfair';
+    font-style: normal;
     font-weight: 700;
     font-display: swap;
     src: url('/guias/auth-1001/fonts/playfair-display-700.woff2')
@@ -205,12 +167,14 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
   }
   @font-face {
     font-family: 'Guia Lora';
+    font-style: normal;
     font-weight: 700;
     font-display: swap;
     src: url('/guias/databases-1001/fonts/lora-700.woff2') format('woff2');
   }
   @font-face {
     font-family: 'Guia Barlow Condensed';
+    font-style: normal;
     font-weight: 700;
     font-display: swap;
     src: url('/guias/messaging-1001/fonts/barlow-condensed-700.woff2')
@@ -252,22 +216,32 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
     color: #8fa39d;
   }
 
+  /* ---- Estante colapsable (native <details>: cero JS, teclado gratis) ---- */
   .shelf-section {
     margin-top: 2.6rem;
   }
-  .shelf-head {
-    margin-bottom: 1rem;
+  .shelf-summary {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    cursor: pointer;
+    list-style: none;
+    padding: 0.35rem 0;
+    border-radius: 0.4rem;
+  }
+  .shelf-summary::-webkit-details-marker {
+    display: none;
+  }
+  .shelf-summary:focus-visible {
+    outline: 2px solid #7fd8a6;
+    outline-offset: 4px;
   }
   .shelf-name {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 0.72rem;
     letter-spacing: 0.18em;
     color: #eef3f2;
-    margin: 0;
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    flex-wrap: wrap;
   }
   .shelf-name .sep {
     color: #8fa39d;
@@ -275,36 +249,57 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
   }
   .shelf-count {
     margin-left: auto;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 0.68rem;
     color: #7fd8a6;
     opacity: 0.8;
   }
+  .shelf-chevron {
+    width: 0.85rem;
+    height: 0.85rem;
+    flex: none;
+    align-self: center;
+    color: #8fa39d;
+    transition: transform 160ms ease;
+  }
+  .shelf-section[open] > .shelf-summary .shelf-chevron {
+    transform: rotate(90deg);
+  }
+  .shelf-summary:hover .shelf-chevron {
+    color: #7fd8a6;
+  }
   .shelf-hook {
     margin: 0.35rem 0 0;
     font-size: 0.85rem;
+    line-height: 1.5;
     color: #8fa39d;
+    max-width: 62ch;
   }
 
-  /* ---- Texturas por guía (mismas fórmulas que las portadas) ----
-     Polyglot (lang-card): siempre visible, la tarjeta es ancha.
-     Almanaque (bookspine): solo al expandir, vía ::before — colapsado y
-     angosto choca con la retícula de la página. ------------------------- */
-  .bookspine::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 220ms ease 90ms;
-  }
-  .bookspine:hover::before,
-  .bookspine:focus::before,
-  .bookspine:focus-within::before {
-    opacity: 1;
+  /* ---- El estante: rows lomo-de-libro ---- */
+  .shelf {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  .bookspine.texture-grid::before,
-  .lang-card.texture-grid {
+  /* Cada spine adopta la paleta oscura + textura + fuente display de su guía. */
+  .spine {
+    border: 1px solid var(--g-border);
+    border-radius: 0.9rem;
+    background-color: var(--g-canvas);
+    overflow: hidden;
+    transition:
+      transform 160ms ease,
+      box-shadow 160ms ease,
+      border-color 160ms ease;
+  }
+
+  /* ---- Texturas por guía (mismas fórmulas que las portadas) ---- */
+  .spine.texture-grid {
     background-image:
       linear-gradient(
         color-mix(in srgb, var(--g-accent) 8%, transparent) 1px,
@@ -317,40 +312,35 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
       );
     background-size: 22px 22px;
   }
-  .bookspine.texture-grain::before,
-  .lang-card.texture-grain {
+  .spine.texture-grain {
     background-image: repeating-linear-gradient(
       90deg,
       color-mix(in srgb, var(--g-accent) 7%, transparent) 0 1px,
       transparent 1px 46px
     );
   }
-  .bookspine.texture-stripes::before,
-  .lang-card.texture-stripes {
+  .spine.texture-stripes {
     background-image: repeating-linear-gradient(
       45deg,
       color-mix(in srgb, var(--g-accent) 7%, transparent) 0 2px,
       transparent 2px 26px
     );
   }
-  .bookspine.texture-arcs::before,
-  .lang-card.texture-arcs {
+  .spine.texture-arcs {
     background-image: repeating-radial-gradient(
       circle at 0 130%,
       color-mix(in srgb, var(--g-accent) 7%, transparent) 0 1px,
       transparent 1px 22px
     );
   }
-  .bookspine.texture-rules::before,
-  .lang-card.texture-rules {
+  .spine.texture-rules {
     background-image: repeating-linear-gradient(
       0deg,
       color-mix(in srgb, var(--g-accent) 8%, transparent) 0 1px,
       transparent 1px 26px
     );
   }
-  .bookspine.texture-facets::before,
-  .lang-card.texture-facets {
+  .spine.texture-facets {
     background-image:
       repeating-linear-gradient(
         60deg,
@@ -363,8 +353,7 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
         transparent 1px 34px
       );
   }
-  .bookspine.texture-lattice::before,
-  .lang-card.texture-lattice {
+  .spine.texture-lattice {
     background-image:
       repeating-linear-gradient(
         30deg,
@@ -377,8 +366,7 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
         transparent 1px 38px
       );
   }
-  .bookspine.texture-crosshatch::before,
-  .lang-card.texture-crosshatch {
+  .spine.texture-crosshatch {
     background-image:
       repeating-linear-gradient(
         0deg,
@@ -391,9 +379,15 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
         transparent 1px 11px
       );
   }
+  .spine.texture-twill {
+    background-image: repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--g-accent) 8%, transparent) 0 1px,
+      transparent 1px 30px
+    );
+  }
   /* foquitos de marquesina: dos hileras desfasadas, como la portada de la guía */
-  .bookspine.texture-bulbs::before,
-  .lang-card.texture-bulbs {
+  .spine.texture-bulbs {
     background-image:
       radial-gradient(
         circle,
@@ -412,16 +406,7 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
       0 0,
       10px 20px;
   }
-  .bookspine.texture-twill::before,
-  .lang-card.texture-twill {
-    background-image: repeating-linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--g-accent) 8%, transparent) 0 1px,
-      transparent 1px 30px
-    );
-  }
-  .bookspine.texture-morse::before,
-  .lang-card.texture-morse {
+  .spine.texture-morse {
     background-image:
       repeating-linear-gradient(
         0deg,
@@ -437,284 +422,135 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
       );
   }
 
-  /* ---- Bookshelf (almanaque) ---- */
-  .bookshelf {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  .spine:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--g-accent) 55%, var(--g-border));
+    box-shadow: 0 16px 40px -20px rgba(0, 0, 0, 0.7);
+  }
+
+  .spine-link {
     display: flex;
-    gap: 8px;
-    height: 320px;
-  }
-  .bookspine {
-    flex: 1 1 62px;
-    min-width: 56px;
-    border: 1px solid var(--g-border);
-    border-radius: 0.7rem;
-    background-color: var(--g-canvas);
-    overflow: hidden;
-    position: relative;
-    cursor: default;
-    transition:
-      flex-grow 280ms cubic-bezier(0.22, 1, 0.36, 1),
-      background-color 220ms ease,
-      border-color 220ms ease;
-  }
-  .bookspine:hover,
-  .bookspine:focus,
-  .bookspine:focus-within {
-    flex-grow: 8;
-    background-color: color-mix(in srgb, var(--g-accent) 8%, var(--g-canvas));
-    border-color: color-mix(in srgb, var(--g-accent) 40%, var(--g-border));
-  }
-  .bookspine:focus-visible {
-    outline: 2px solid var(--g-accent);
-    outline-offset: 2px;
-  }
-  .bs-inner {
-    display: block;
-    position: relative;
-    z-index: 1;
-    height: 100%;
+    gap: clamp(0.9rem, 3vw, 1.6rem);
+    align-items: stretch;
+    padding: clamp(1.1rem, 3vw, 1.5rem) clamp(1.2rem, 3.5vw, 1.7rem);
+    text-decoration: none;
     color: var(--g-ink);
   }
-  .bs-closed {
-    position: absolute;
-    inset: 0;
+
+  .spine-rail {
+    flex: none;
+    width: 3.2rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 0.75rem 0;
-    gap: 0.6rem;
-    transition: opacity 160ms ease;
-  }
-  .bookspine:hover .bs-closed,
-  .bookspine:focus .bs-closed,
-  .bookspine:focus-within .bs-closed {
-    opacity: 0;
-  }
-  .bs-badge {
-    font-family: Georgia, serif;
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--g-accent);
-  }
-  .bs-vtitle {
-    writing-mode: vertical-rl;
-    font-family: var(--g-display), Georgia, serif;
-    font-weight: 700;
-    font-size: 0.94rem;
-    letter-spacing: 0.01em;
-    flex: 1;
-    display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    gap: 0.15rem;
+    border-right: 1px solid color-mix(in srgb, var(--g-border) 70%, transparent);
+    padding-right: clamp(0.6rem, 2vw, 1rem);
   }
-  .bs-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--g-accent);
-  }
-  .bs-open {
-    position: absolute;
-    inset: 0;
-    padding: 1.1rem 1.3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    min-width: 320px;
-    opacity: 0;
-    transition: opacity 240ms ease 140ms;
-  }
-  .bookspine:hover .bs-open,
-  .bookspine:focus .bs-open,
-  .bookspine:focus-within .bs-open {
-    opacity: 1;
-  }
-  .bs-open-badge {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  .spine-tomo {
+    /* Serif fija para el numeral: sin serifas, II/III se ven como barras. */
+    font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 1.9rem;
+    line-height: 1;
     color: var(--g-accent);
   }
-  .bs-title {
+  /* El nivel CEFR es alfanumérico corto (C2): mono, como código de escala. */
+  .spine-nivel {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+  }
+  .spine-tomo-label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--g-soft);
+  }
+
+  .spine-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .spine-title {
     font-family: var(--g-display), Georgia, serif;
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: clamp(1.3rem, 3.4vw, 1.85rem);
     line-height: 1.1;
+    letter-spacing: -0.01em;
     margin: 0;
+    color: var(--g-ink);
   }
-  .bs-blurb {
-    font-size: 0.8rem;
-    line-height: 1.45;
+  .spine-blurb {
+    margin: 0.55rem 0 0;
+    font-size: 0.86rem;
+    line-height: 1.55;
     color: var(--g-soft);
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
-  .bs-tags {
+  .spine-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-top: 0.95rem;
+  }
+  .spine-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
-    margin-top: 0.2rem;
   }
-  .bs-tag {
-    font-size: 0.66rem;
-    padding: 0.12rem 0.5rem;
-    border-radius: 0.35rem;
-    background: color-mix(in srgb, var(--g-accent) 14%, transparent);
-    border: 1px solid color-mix(in srgb, var(--g-accent) 32%, transparent);
-    color: var(--g-ink);
-    white-space: nowrap;
-  }
-  .bs-cta {
-    margin-top: auto;
-    align-self: flex-start;
+  .spine-cta {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--g-accent);
-    text-decoration: none;
-    cursor: pointer;
-  }
-  .bs-cta:hover {
-    text-decoration: underline;
-  }
-
-  /* ---- Polyglot: tarjetas por lenguaje con filas de nivel ---- */
-  .lang-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
-    gap: 1rem;
-  }
-  .lang-card {
-    border: 1px solid var(--g-border);
-    border-radius: 0.9rem;
-    background-color: var(--g-canvas);
-    padding: 1.3rem 1.4rem;
-    color: var(--g-ink);
-  }
-  .lang-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.8rem;
-    margin-bottom: 1rem;
-  }
-  .lang-name {
-    font-family: var(--g-display), Georgia, serif;
-    font-weight: 700;
-    font-size: 1.7rem;
-    line-height: 1;
-    margin: 0;
-    color: var(--g-ink);
-  }
-  .lang-count {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.66rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--g-soft);
-  }
-  .lvl-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-  .lvl-row {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.55rem 0.7rem;
-    border-radius: 0.6rem;
-    border: 1px solid var(--g-border);
-  }
-  .lvl-row.is-live {
-    background: color-mix(in srgb, var(--g-accent) 12%, transparent);
-    border-color: color-mix(in srgb, var(--g-accent) 34%, transparent);
-  }
-  .lvl-row.is-soon {
-    opacity: 0.42;
-  }
-  .lvl-badge {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-weight: 700;
-    font-size: 1.05rem;
-    color: var(--g-accent);
-    flex: none;
-    width: 2ch;
-    text-align: center;
-  }
-  .lvl-row.is-soon .lvl-badge {
-    color: var(--g-soft);
-  }
-  .lvl-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-  }
-  .lvl-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--g-ink);
-  }
-  .lvl-row.is-soon .lvl-name {
-    color: var(--g-soft);
-  }
-  .lvl-desc {
-    font-size: 0.75rem;
-    color: var(--g-soft);
-  }
-  .lvl-cta {
-    margin-left: auto;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--g-accent);
-    text-decoration: none;
     white-space: nowrap;
   }
-  .lvl-cta:hover {
-    text-decoration: underline;
+
+  @media (max-width: 560px) {
+    .spine-link {
+      flex-direction: column;
+    }
+    .spine-rail {
+      flex-direction: row;
+      width: auto;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      border-right: 0;
+      border-bottom: 1px solid
+        color-mix(in srgb, var(--g-border) 70%, transparent);
+      padding: 0 0 0.6rem;
+    }
+    .spine-tomo {
+      font-size: 1.4rem;
+    }
   }
 
-  @media (max-width: 720px) {
-    /* Sin hover en táctil: los lomos se muestran como tarjetas ya abiertas. */
-    .bookshelf {
-      flex-direction: column;
-      height: auto;
-    }
-    .bookspine {
-      flex: none;
-    }
-    .bs-closed {
-      display: none;
-    }
-    .bs-open {
-      position: static;
-      opacity: 1;
-      min-width: 0;
-      padding: 1.1rem 1.2rem;
-    }
-    .lang-grid {
-      grid-template-columns: 1fr;
-    }
-  }
   @media (prefers-reduced-motion: reduce) {
-    .bookspine,
-    .bs-closed,
-    .bs-open {
+    .realm-tag .cur {
+      animation: none;
+    }
+    .spine,
+    .shelf-chevron {
       transition: none;
     }
+    .spine:hover {
+      transform: none;
+    }
+  }
+
+  /* El tag-pill del sitio hereda tokens claros y una animación de aterrizaje
+     que dispara un script de BaseLayout (que aquí no existe): dentro del spine
+     lo re-tiño a la paleta de la guía y lo dejo visible sin animación. */
+  .spine :global(.tag-pill) {
+    background: color-mix(in srgb, var(--g-accent) 14%, transparent);
+    border-color: color-mix(in srgb, var(--g-accent) 32%, transparent);
+    color: var(--g-ink);
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 </style>
