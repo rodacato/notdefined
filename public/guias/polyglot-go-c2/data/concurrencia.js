@@ -26,7 +26,7 @@
       mito: { claim: "Una goroutine es un hilo ligero.", body: "No lo es. Un hilo lo agenda el kernel; una goroutine la agenda el runtime de Go <em>en espacio de usuario</em>, sin cruzar al SO. Por eso lanzar un millón de goroutines es viable y lanzar un millón de hilos, no. El paralelismo real lo pone <code>GOMAXPROCS</code>: tantas goroutines corriendo <em>a la vez</em> como P haya." },
       recursos: [
         { star: true, title: "The Scheduler Saga", desc: "Kavya Joshi (GopherCon 2018) — construye el scheduler GMP desde cero.", kind: "video", href: "https://www.youtube.com/watch?v=YHRO5WQGh0k" },
-        { star: true, title: "Scheduling in Go (I–III)", desc: "Bill Kennedy / Ardan Labs — la serie más didáctica.", kind: "blog", href: "https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part1-os-scheduler.html" },
+        { star: true, title: "Scheduling in Go (I–III)", desc: "Bill Kennedy / Ardan Labs — la serie más didáctica.", kind: "blog", href: "https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part1.html" },
         { star: false, title: "Scalable Go Scheduler Design Doc", desc: "Dmitry Vyukov — la fuente primaria.", kind: "doc", href: "https://golang.org/s/go11sched" }
       ],
       viz: {
@@ -81,7 +81,7 @@
         "Sin esto, un for{} o una lectura colgarían un hilo entero."
       ],
       recursos: [
-        { star: true, title: "Scheduling in Go, Part II & III", desc: "Ardan Labs — syscalls, netpoller y desacople del P.", kind: "blog", href: "https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part2-go-scheduler.html" },
+        { star: true, title: "Scheduling in Go, Part II & III", desc: "Ardan Labs — syscalls, netpoller y desacople del P.", kind: "blog", href: "https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part2.html" },
         { star: false, title: "The Go netpoller", desc: "Morsing — cómo la I/O de red no bloquea el hilo.", kind: "blog", href: "https://morsmachine.dk/netpoller" }
       ],
       viz: {
