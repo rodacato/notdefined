@@ -363,6 +363,20 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
         transparent 1px 34px
       );
   }
+  .bookspine.texture-lattice::before,
+  .lang-card.texture-lattice {
+    background-image:
+      repeating-linear-gradient(
+        30deg,
+        color-mix(in srgb, var(--g-accent) 7%, transparent) 0 1px,
+        transparent 1px 38px
+      ),
+      repeating-linear-gradient(
+        -30deg,
+        color-mix(in srgb, var(--g-accent) 7%, transparent) 0 1px,
+        transparent 1px 38px
+      );
+  }
   .bookspine.texture-twill::before,
   .lang-card.texture-twill {
     background-image: repeating-linear-gradient(

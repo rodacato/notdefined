@@ -15,7 +15,8 @@ export interface GuiaTheme {
     | 'rules'
     | 'morse'
     | 'facets'
-    | 'twill';
+    | 'twill'
+    | 'lattice';
   displayFamily: string; // nombre de la @font-face declarada en index.astro
 }
 
@@ -212,6 +213,25 @@ export const guias: Guia[] = [
       accent: '#45c0ce',
       border: '#24444c',
       texture: 'twill',
+      displayFamily: 'Guia Spectral',
+    },
+  },
+  {
+    slug: 'polyglot-python-c2',
+    title: 'Python a fondo',
+    blurb:
+      'Python sí compila: a bytecode, y una máquina de pila lo ejecuta. 14 temas en 4 bloques — el pipeline y el eval loop, generadores y frames suspendidos, el import system, el intérprete adaptativo y el JIT, el GIL y el free-threading de 3.14, asyncio, refcount con GC de ciclos, pymalloc, PyObject, MRO y descriptores, el compact dict con key-sharing, y list/int/str por dentro. Cada tema desmonta un malentendido, al día con Python 3.14.',
+    date: '2026-07-18',
+    tags: ['Python', 'Internals', 'GIL', 'CPython'],
+    collection: 'polyglot',
+    nivel: 'C2',
+    theme: {
+      canvas: '#16233b',
+      ink: '#eaf0f8',
+      inkSoft: '#a6b4c8',
+      accent: '#e8b93e',
+      border: '#2c4266',
+      texture: 'lattice',
       displayFamily: 'Guia Spectral',
     },
   },
