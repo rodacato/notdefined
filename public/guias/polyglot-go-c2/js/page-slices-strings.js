@@ -20,7 +20,7 @@
     var w = G.vizCard([appendBtn, resliceBtn, mutateBtn, reset], "runtime");
     function doAppend() {
       if (s.sLen < s.cap) { var idx = s.sOff + s.sLen; s.backing[idx] = 7; s.sLen++; draw("Cabe en cap (" + s.sLen + "/" + s.cap + "): escribe in situ. Quien comparta el array lo ve."); }
-      else { var cur = s.backing.slice(s.sOff, s.sOff + s.sLen); cur.push(7); var oldCap = s.cap; s.cap = s.cap * 2; s.backing = cur.slice(); s.arrId++; s.sOff = 0; s.sLen = cur.length; s.tOff = null; s.tLen = 0; draw("No cab\u00EDa: array NUEVO (cap " + oldCap + "\u2192" + s.cap + "), copia y se desliga. t queda apuntando al array viejo."); }
+      else { var cur = s.backing.slice(s.sOff, s.sOff + s.sLen); cur.push(7); var oldCap = s.cap; s.cap = s.cap * 2; s.backing = cur.slice(); s.arrId++; s.sOff = 0; s.sLen = cur.length; s.tOff = null; s.tLen = 0; draw("No cab\u00EDa: array NUEVO (cap " + oldCap + "\u2192" + s.cap + "), copia y se desliga. t sigue apuntando al array viejo, que ya sali\u00F3 del dibujo: desde aqu\u00ED s y t no comparten memoria."); }
     }
     function reslice() { if (s.sLen < 3) { setMsg(w, "s es corto; reinicia para probar t := s[1:3]."); return; } s.tOff = s.sOff + 1; s.tLen = 2; draw("t := s[1:3] \u00B7 comparte el MISMO array de respaldo que s (offset 1)."); }
     function mutate() { if (s.tOff == null) { setMsg(w, "Primero crea t con \u00ABt := s[1:3]\u00BB."); return; } s.backing[s.tOff] = 9; draw("t[0] = 9 escribe en el array compartido \u2192 s[1] TAMBI\u00C9N cambia a 9. Aliasing."); }

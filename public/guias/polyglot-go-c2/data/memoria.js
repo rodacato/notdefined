@@ -10,7 +10,7 @@
       tagline: "Marca la basura mientras tu programa sigue corriendo, con write barriers y pacer.",
       avoid: "Esperar un GC generacional o de máximo throughput: aquí manda la latencia.",
       lede: "El GC de Go libera memoria sin detener el mundo: marca la basura <em>mientras tu programa sigue corriendo</em>. Su prioridad no es el throughput, son las pausas cortísimas.",
-      fuerza: { icon: "recycle", html: "Un «stop-the-world» que pause tu servidor decenas de milisegundos es inaceptable en producción. El GC tricolor concurrente marca en paralelo con el mutator y solo detiene todo en dos micro-pausas — típicamente por debajo de 100&nbsp;µs." },
+      fuerza: { icon: "recycle", html: "Un «stop-the-world» que pause tu servidor decenas de milisegundos es inaceptable en producción. El GC tricolor concurrente marca en paralelo con el mutator y solo detiene todo en dos micro-pausas que el runtime mantiene por debajo del milisegundo (en heaps sanos suelen quedar en decenas de&nbsp;µs)." },
       legend: [
         { color: "var(--tri-white)", border: "var(--tri-edge)", html: "<strong>Blanco</strong> — candidato a basura" },
         { color: "var(--tri-gray)", border: "var(--tri-edge)", html: "<strong>Gris</strong> — vivo, pendiente de escanear" },
@@ -22,6 +22,7 @@
         "Write barrier: mantiene el invariante durante el marcado.",
         "No es generacional; el pacer (GOGC) decide cuándo arrancar."
       ],
+      mito: { claim: "El GC de Go es generacional como el de la JVM, y subirle a GOGC lo hace más rápido.", body: "Dos creencias, ninguna cierta. <strong>No es generacional</strong>: es un mark-and-sweep concurrente tricolor, sin espacios por edad ni copia de sobrevivientes. Lo intentaron y no salió a cuenta — con el <em>escape analysis</em> dejando en la pila los objetos de vida corta, la «generación joven» que la JVM exprime aquí llega medio vacía. Y <code>GOGC</code> no es un acelerador: mueve el trade-off entre RAM y CPU. Subirlo te da menos ciclos a cambio de un heap más grande, y <code>GOGC=off</code> no apaga el costo, apaga el freno: el heap crece hasta donde aguante la máquina. Si lo que quieres es un techo, ese es <code>GOMEMLIMIT</code> (Go 1.19+), no apagar el GC." },
       recursos: [
         { star: true, title: "A Guide to the Go Garbage Collector", desc: "documento oficial — la mejor referencia del GC y el pacer.", kind: "doc", href: "https://go.dev/doc/gc-guide" },
         { star: true, title: "Garbage Collection in Go (I–III)", desc: "Ardan Labs — semántica, latencia y pacing.", kind: "blog", href: "https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html" },
@@ -31,7 +32,7 @@
         title: "Visualízalo · marca & barrido con write barrier",
         pacerTitle: "El pacer · <code>GOGC</code> decide cuándo arrancar",
         notes: [
-          { html: "Las raíces (la pila) empiezan grises. El GC toma un gris, lo <strong>ennegrece</strong> y pinta grises sus hijos blancos. Al no quedar grises, lo blanco es basura y se barre. <strong>Apaga la write barrier</strong> y observa: si el programa conecta un objeto vivo <em>durante</em> el marcado, el GC no se entera y lo recolecta por error." },
+          { html: "Las raíces (las pilas de las goroutines y las variables globales) empiezan grises. El GC toma un gris, lo <strong>ennegrece</strong> y pinta grises sus hijos blancos. Al no quedar grises, lo blanco es basura y se barre. <strong>Apaga la write barrier</strong> y observa: si el programa conecta un objeto vivo <em>durante</em> el marcado, el GC no se entera y lo recolecta por error." },
           { html: "El GC arranca cuando el heap ha crecido <code>GOGC%</code> desde el tamaño vivo tras el último ciclo. <strong>Más alto</strong> = menos ciclos, más CPU libre, más RAM. <strong>Más bajo</strong> = GC frecuente, menos RAM. No es generacional: no separa objetos jóvenes de viejos." }
         ]
       }

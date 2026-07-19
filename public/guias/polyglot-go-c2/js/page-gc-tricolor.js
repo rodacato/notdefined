@@ -17,7 +17,9 @@
         { id: "n1", x: 168, y: 54 }, { id: "n2", x: 168, y: 150 }, { id: "n3", x: 168, y: 220 },
         { id: "n4", x: 288, y: 40 }, { id: "n5", x: 288, y: 120 }, { id: "n6", x: 288, y: 210 },
         { id: "n7", x: 410, y: 70 }, { id: "n8", x: 410, y: 175 },
-        { id: "g1", x: 560, y: 70 }, { id: "g2", x: 560, y: 170 }, { id: "g3", x: 648, y: 120 }
+        { id: "g1", x: 560, y: 70 }, { id: "g2", x: 560, y: 170 }, { id: "g3", x: 648, y: 120 },
+        // huérfano: nadie lo apunta nunca, es la basura que el barrido sí libera en ambos modos
+        { id: "x1", x: 560, y: 242 }
       ].map(function (n) { return Object.assign({ color: "white", gone: false, wrong: false }, n); });
       var edges = [["r0", "n1"], ["r0", "n2"], ["r1", "n3"], ["n1", "n4"], ["n2", "n5"], ["n3", "n6"], ["n5", "n7"], ["n6", "n8"], ["n4", "n7"], ["g1", "g2"], ["g2", "g3"]].map(function (e) { return { f: e[0], t: e[1] }; });
       return { nodes: nodes, edges: edges };
@@ -36,13 +38,21 @@
 
     function node(id) { return s.nodes.find(function (n) { return n.id === id; }); }
     function edgesFrom(id) { return s.edges.filter(function (e) { return e.f === id; }); }
+    // nodos que el programa volvió alcanzables vía una arista de mutación:
+    // si el barrido los toca aún blancos, eso es el puntero colgante que la
+    // write barrier existe para evitar.
+    function mutatorReachable() {
+      var seen = {}, stack = s.edges.filter(function (e) { return e.mut; }).map(function (e) { return e.t; });
+      while (stack.length) { var id = stack.pop(); if (seen[id]) continue; seen[id] = true; edgesFrom(id).forEach(function (e) { stack.push(e.t); }); }
+      return seen;
+    }
     function syncPlay() { playBtn.querySelector("span:last-child").textContent = s.running ? "Pausa" : (s.phase === "done" ? "Completo" : "Reproducir"); playBtn.querySelector("svg").outerHTML = G.icon(s.running ? "pause" : "play", 18); }
     function step() {
       var color;
       if (s.phase === "done") { return; }
       if (s.phase === "idle") { s.nodes.forEach(function (n) { if (n.root) n.color = "gray"; }); s.phase = "mark"; return draw("Marcado iniciado: las ra\u00EDces se pintan grises."); }
       if (s.phase === "mark") {
-        if (!s.mutatorDone && s.blackened >= 3) {
+        if (!s.mutatorDone && node("n4").color === "black") {
           s.edges.push({ f: "n4", t: "g1", mut: true }); s.mutatorDone = true;
           if (s.barrier) { var g1 = node("g1"); if (g1.color === "white") g1.color = "gray"; return draw("\u270E El programa conecta n4 \u2192 g1 durante el marcado. La WRITE BARRIER pinta g1 gris: se salva.", "var(--positive)"); }
           return draw("\u270E El programa conecta n4 \u2192 g1, pero la write barrier est\u00E1 APAGADA: el GC no se entera.", "var(--role-fail)");
@@ -53,8 +63,8 @@
       }
       if (s.phase === "sweep") {
         var white = s.nodes.find(function (n) { return n.color === "white" && !n.gone; });
-        if (white) { white.gone = true; var mr = s.edges.some(function (e) { return e.mut && e.t === white.id; }) || ((white.id === "g2" || white.id === "g3") && !s.barrier); if (mr) { white.wrong = true; return draw("\u26A0 Se recolecta " + white.id + " \u2014 \u00A1pero el programa lo hab\u00EDa hecho vivo! Puntero colgante.", "var(--role-fail)"); } return draw("Barrido: se libera " + white.id + " (basura)."); }
-        s.phase = "done"; s.running = false; return draw("Ciclo completo. El heap vivo permanece; la basura fue liberada.", "var(--positive)");
+        if (white) { white.gone = true; if (mutatorReachable()[white.id]) { white.wrong = true; return draw("\u26A0 Se recolecta " + white.id + " \u2014 \u00A1pero el programa lo hab\u00EDa hecho vivo! Puntero colgante.", "var(--role-fail)"); } return draw("Barrido: se libera " + white.id + " (basura)."); }
+        s.phase = "done"; s.running = false; return draw("Ciclo completo. El heap vivo permanece; la basura (x1) fue liberada.", "var(--positive)");
       }
     }
     function doReset() { var ng = initGraph(); s.nodes = ng.nodes; s.edges = ng.edges; s.phase = "idle"; s.running = false; s.mutatorDone = false; s.blackened = 0; draw("Reiniciado. " + (s.barrier ? "Write barrier ON." : "Write barrier OFF \u2014 ver\u00E1s el bug.")); }

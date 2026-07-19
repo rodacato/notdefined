@@ -24,7 +24,7 @@
       mito: { claim: "Una interface nil siempre es nil.", body: "Falso. Una interface es <code>nil</code> solo si <em>ambas</em> casillas lo son. Si metes un <code>*T</code> nil en una interface, el itab queda <strong>no-nil</strong> (conoce el tipo <code>*T</code>) y el dato nil — así que <code>err != nil</code> aunque el puntero sea nil. Es la causa clásica del bug del «error que no debería existir».", code: "var p *MyErr = nil\nvar err error = p        <span class=\"faint\">// itab=*MyErr, data=nil</span>\nfmt.Println(err == nil)  <span class=\"bad\">// false  ← sorpresa</span>" },
       recursos: [
         { star: true, title: "Go Data Structures: Interfaces", desc: "Russ Cox (core team) — la representación de iface/itab, de primera mano.", kind: "blog", href: "https://research.swtch.com/interfaces" },
-        { star: false, title: "Errors are values", desc: "The Go Blog — contexto del mito del typed nil y las interfaces de error.", kind: "blog", href: "https://go.dev/blog/errors-are-values" }
+        { star: false, title: "Why is my nil error value not equal to nil?", desc: "Go FAQ — la fuente canónica del typed nil, con el ejemplo del *MyError guardado en una interface.", kind: "doc", href: "https://go.dev/doc/faq#nil_error" }
       ],
       viz: {
         title: "Visualízalo · el dispatch dinámico",
@@ -107,7 +107,7 @@
       tagline: "GCShape stenciling + dictionaries: ni monomorfización total ni boxing puro.",
       avoid: "Creer que los generics de Go monomorfizan por tipo completo, como C++/Rust.",
       lede: "Los generics de Go no monomorfizan como C++/Rust ni hacen boxing puro: el compilador agrupa tipos por su <em>GCShape</em> y genera una copia de código por forma, pasándole un <em>dictionary</em> con lo específico del tipo.",
-      fuerza: { icon: "tree", html: "Una copia de código por cada tipo (monomorfización) infla el binario; meter todo en interfaces (boxing) es lento. Go toma un punto medio: agrupa los tipos por su <strong>GCShape</strong> (tamaño y disposición de punteros) y compila <em>una</em> copia por shape. Todos los tipos puntero comparten la misma copia; a cada instanciación se le pasa un <strong>dictionary</strong> oculto con la info concreta (itabs, tipos, funciones)." },
+      fuerza: { icon: "tree", html: "Una copia de código por cada tipo (monomorfización) infla el binario; meter todo en interfaces (boxing) es lento. Go toma un punto medio: agrupa los tipos por su <strong>GCShape</strong> y compila <em>una</em> copia por shape. El criterio es más estricto de lo que suena: dos tipos comparten shape si su tipo subyacente es el mismo, salvo los punteros, que se unifican todos en uno — por eso <code>*User</code> y <code>*Order</code> comparten copia, pero <code>int64</code> y <code>float64</code> reciben la suya aunque midan lo mismo. A cada instanciación se le pasa un <strong>dictionary</strong> oculto con la info concreta (itabs, tipos, funciones)." },
       brief: [
         "Una copia de código por GCShape, no por tipo.",
         "Todos los tipos puntero comparten un shape (*T).",

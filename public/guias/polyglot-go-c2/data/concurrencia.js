@@ -32,7 +32,7 @@
       viz: {
         title: "Visualízalo · el scheduler en marcha",
         notes: [
-          { html: "Cada <strong>P</strong> ejecuta la goroutine de la cabeza de su cola local (sin locks). Cuando una cola local se vacía, ese P <strong>roba la mitad</strong> de la cola de otro P — <em>work-stealing</em>. La cola global es la red de seguridad. Sube <code>GOMAXPROCS</code> y verás repartirse el trabajo entre más P." },
+          { html: "Cada <strong>P</strong> ejecuta la goroutine de la cabeza de su cola local (sin locks). Cuando una cola local se vacía, ese P busca en orden: primero la <strong>cola global</strong>, luego el netpoller, y solo entonces <strong>roba la mitad</strong> de la cola de otro P — <em>work-stealing</em>. Sube <code>GOMAXPROCS</code> y verás repartirse el trabajo entre más P." },
           { faint: true, html: "Desde Go 1.25 el valor por defecto de <code>GOMAXPROCS</code> es <em>container-aware</em>: respeta el límite de CPU del cgroup en vez de contar todos los núcleos de la máquina." }
         ]
       }
@@ -51,6 +51,7 @@
         "Con buffer, los envíos caben sin receptor… hasta llenarse.",
         "select con varias ramas listas elige una al azar."
       ],
+      mito: { claim: "Un channel siempre le gana a un mutex; en Go se usan channels para todo.", body: "Para <em>proteger</em> un dato compartido el channel es la opción cara: cada envío entra al runtime, que aparca y despierta goroutines. Un <code>sync.Mutex</code> sin contención se resuelve casi en un atómico y puede salir un orden de magnitud más barato. El reparto real es por trabajo: el channel gana cuando <strong>transfieres</strong> la propiedad de un dato o coordinas quién sigue; el mutex gana cuando varias goroutines tocan el mismo estado y ninguna se lo lleva. El proverbio no dice que el mutex esté prohibido — la propia stdlib de Go usa mutex en más de cien paquetes." },
       recursos: [
         { star: true, title: "Understanding Channels", desc: "Kavya Joshi (GopherCon 2017) — los channels por dentro y su relación con el scheduler.", kind: "video", href: "https://www.youtube.com/watch?v=KBZlN0izeiY" },
         { star: true, title: "Effective Go — Concurrency", desc: "la fuente oficial del modelo CSP en Go.", kind: "doc", href: "https://go.dev/doc/effective_go#concurrency" },
