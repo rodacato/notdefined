@@ -16,7 +16,8 @@ export interface GuiaTheme {
     | 'morse'
     | 'facets'
     | 'twill'
-    | 'lattice';
+    | 'lattice'
+    | 'crosshatch';
   displayFamily: string; // nombre de la @font-face declarada en index.astro
 }
 
@@ -232,6 +233,25 @@ export const guias: Guia[] = [
       accent: '#e8b93e',
       border: '#2c4266',
       texture: 'lattice',
+      displayFamily: 'Guia Spectral',
+    },
+  },
+  {
+    slug: 'polyglot-rust-c2',
+    title: 'Rust a fondo',
+    blurb:
+      'Lo que otros lenguajes resuelven en ejecución —con GC, con candado global, con scheduler—, Rust lo resuelve en compilación. 19 temas en 5 bloques: ownership, borrowing y lifetimes (el borrow checker corre sobre MIR, no sobre tu texto), el pipeline de compilación, monomorfización contra trait objects, cómo se expanden las macros, RAII y el drop en orden inverso, panic entre unwind y abort, Rc/Arc con mutabilidad interior, el layout de memoria y el niche, Send/Sync, async como máquina de estados, executors, unsafe, atomics y memory ordering. Cada tema desmonta un malentendido.',
+    date: '2026-07-18',
+    tags: ['Rust', 'Internals', 'Ownership', 'Async'],
+    collection: 'polyglot',
+    nivel: 'C2',
+    theme: {
+      canvas: '#1d1310',
+      ink: '#f2eae4',
+      inkSoft: '#c0ac9f',
+      accent: '#d97742',
+      border: '#463023',
+      texture: 'crosshatch',
       displayFamily: 'Guia Spectral',
     },
   },

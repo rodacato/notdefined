@@ -377,6 +377,20 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
         transparent 1px 38px
       );
   }
+  .bookspine.texture-crosshatch::before,
+  .lang-card.texture-crosshatch {
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--g-accent) 9%, transparent) 0 1px,
+        transparent 1px 11px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--g-accent) 9%, transparent) 0 1px,
+        transparent 1px 11px
+      );
+  }
   .bookspine.texture-twill::before,
   .lang-card.texture-twill {
     background-image: repeating-linear-gradient(
