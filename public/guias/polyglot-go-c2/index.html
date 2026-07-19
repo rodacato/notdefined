@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Go a fondo · Polyglot</title>
+<meta name="description" content="El B1 te lo dio el tutorial. Esto es el C2: hablar Go como lo habla su máquina.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230B1F26'/%3E%3Cg fill='none' stroke='%2345C0CE' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='M5 9V5h4M19 9V5h-4M5 15v4h4M19 15v4h-4'/%3E%3C/g%3E%3Ccircle cx='12' cy='12' r='1.8' fill='%2345C0CE'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./styles.css">
+<script>
+  /* tema antes del primer paint: lee localStorage("guia-tema") (light/dark/system, default dark) */
+  (function () {
+    var m = "dark";
+    try { var v = localStorage.getItem("guia-tema"); if (v === "light" || v === "dark" || v === "system") m = v; } catch (e) {}
+    var dark = m === "dark" || (m === "system" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.classList.toggle("dark", dark);
+  })();
+</script>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- vanilla, sin build, sin ES modules; orden explícito -->
+<!-- Motor: núcleo primero, piezas compartidas después -->
+<script src="./js/core.js"></script>
+<script src="./js/components.js"></script>
+
+<!-- Contenido (el guión): agregar o corregir temas se hace solo aquí -->
+<script src="./data/compilacion.js"></script>
+<script src="./data/concurrencia.js"></script>
+<script src="./data/memoria.js"></script>
+<script src="./data/tipos.js"></script>
+
+<!-- Mecánica de cada widget interactivo (una vista por archivo) -->
+<script src="./js/page-pipeline-aot.js"></script>
+<script src="./js/page-ssa-pgo.js"></script>
+<script src="./js/page-escape-analysis.js"></script>
+<script src="./js/page-defer-panic-recover.js"></script>
+<script src="./js/page-scheduler-gmp.js"></script>
+<script src="./js/page-channels-select.js"></script>
+<script src="./js/page-preempcion-netpoller.js"></script>
+<script src="./js/page-gc-tricolor.js"></script>
+<script src="./js/page-allocator-mcache.js"></script>
+<script src="./js/page-stacks-goroutine.js"></script>
+<script src="./js/page-interfaces-itable.js"></script>
+<script src="./js/page-slices-strings.js"></script>
+<script src="./js/page-maps-swiss-tables.js"></script>
+<script src="./js/page-generics.js"></script>
+
+<!-- Enrutado por hash y arranque: al final -->
+<script src="./js/router.js"></script>
+</body>
+</html>
