@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>JavaScript a fondo · Polyglot</title>
+  <meta name="description" content="El B1 te lo dio el tutorial. Esto es el C2: hablar JavaScript como lo habla su máquina.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2038%2038'%3E%3Crect%20width='38'%20height='38'%20rx='7'%20fill='%231A1712'/%3E%3Cg%20fill='none'%20stroke='%23E8C93F'%20stroke-width='2.4'%20stroke-linecap='square'%3E%3Cpath%20d='M6%2013V6h7M32%2013V6h-7M6%2025v7h7M32%2025v7h-7'/%3E%3C/g%3E%3Ccircle%20cx='19'%20cy='19'%20r='3'%20fill='%23E8C93F'/%3E%3C/svg%3E">
+
+  <!-- Aplica el tema ANTES del primer paint para evitar parpadeo -->
+  <script>
+    (function () {
+      try {
+        var pref = localStorage.getItem("guia-tema") || "dark";
+        var dark = pref === "dark" || (pref === "system" &&
+          window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (dark) document.documentElement.classList.add("dark");
+      } catch (e) {
+        document.documentElement.classList.add("dark"); // default: teatro a oscuras
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- Scripts clásicos en orden explícito (sin ES modules: abre con doble click) -->
+  <script src="./js/core.js"></script>
+  <script src="./js/components.js"></script>
+  <script src="./js/player.js"></script>
+  <script src="./data/meta.js"></script>
+  <script src="./data/ejecucion.js"></script>
+  <script src="./data/concurrencia.js"></script>
+  <script src="./data/memoria.js"></script>
+  <script src="./data/objetos.js"></script>
+  <script src="./data/modulos.js"></script>
+  <script src="./data/catalogo.js"></script>
+  <script src="./js/page-index.js"></script>
+  <script src="./js/page-tema.js"></script>
+  <script src="./js/router.js"></script>
+</body>
+</html>
