@@ -17,7 +17,8 @@ export interface GuiaTheme {
     | 'facets'
     | 'twill'
     | 'lattice'
-    | 'crosshatch';
+    | 'crosshatch'
+    | 'bulbs';
   displayFamily: string; // nombre de la @font-face declarada en index.astro
 }
 
@@ -252,6 +253,25 @@ export const guias: Guia[] = [
       accent: '#d97742',
       border: '#463023',
       texture: 'crosshatch',
+      displayFamily: 'Guia Spectral',
+    },
+  },
+  {
+    slug: 'polyglot-javascript-c2',
+    title: 'JavaScript a fondo',
+    blurb:
+      'Un solo hilo, cuatro compiladores y un event loop que no es del lenguaje sino del runtime. 13 temas en 4 bloques: el pipeline de V8, Ignition y su bytecode, los cuatro niveles del JIT con su desoptimización, módulos ESM contra CommonJS, el event loop y las microtareas que siempre le ganan a los timers, Workers, el GC Orinoco, shapes e inline caches, Smi tagging, prototipos, closures y this. Cada ficha dice en qué capa vive —motor, runtime o lenguaje— y desmonta un malentendido.',
+    date: '2026-07-18',
+    tags: ['JavaScript', 'Internals', 'V8', 'Event loop'],
+    collection: 'polyglot',
+    nivel: 'C2',
+    theme: {
+      canvas: '#1a1712',
+      ink: '#f4efdf',
+      inkSoft: '#c0b694',
+      accent: '#e8c93f',
+      border: '#453d24',
+      texture: 'bulbs',
       displayFamily: 'Guia Spectral',
     },
   },

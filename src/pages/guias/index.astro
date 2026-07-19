@@ -391,6 +391,27 @@ const langGroups = [...polyByLang.entries()].map(([lang, gs]) => ({
         transparent 1px 11px
       );
   }
+  /* foquitos de marquesina: dos hileras desfasadas, como la portada de la guía */
+  .bookspine.texture-bulbs::before,
+  .lang-card.texture-bulbs {
+    background-image:
+      radial-gradient(
+        circle,
+        color-mix(in srgb, var(--g-accent) 22%, transparent) 1.2px,
+        transparent 1.3px
+      ),
+      radial-gradient(
+        circle,
+        color-mix(in srgb, var(--g-accent) 22%, transparent) 1.2px,
+        transparent 1.3px
+      );
+    background-size:
+      20px 40px,
+      20px 40px;
+    background-position:
+      0 0,
+      10px 20px;
+  }
   .bookspine.texture-twill::before,
   .lang-card.texture-twill {
     background-image: repeating-linear-gradient(
