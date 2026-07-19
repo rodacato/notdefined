@@ -241,7 +241,7 @@ export const guias: Guia[] = [
     slug: 'polyglot-rust-c2',
     title: 'Rust a fondo',
     blurb:
-      'Lo que otros lenguajes resuelven en ejecución —con GC, con candado global, con scheduler—, Rust lo resuelve en compilación. 19 temas en 5 bloques: ownership, borrowing y lifetimes (el borrow checker corre sobre MIR, no sobre tu texto), el pipeline de compilación, monomorfización contra trait objects, cómo se expanden las macros, RAII y el drop en orden inverso, panic entre unwind y abort, Rc/Arc con mutabilidad interior, el layout de memoria y el niche, Send/Sync, async como máquina de estados, executors, unsafe, atomics y memory ordering. Cada tema desmonta un malentendido.',
+      'Lo que otros lenguajes resuelven en ejecución —con GC, con candado global, con scheduler—, Rust lo resuelve en compilación. 19 temas en 5 bloques: ownership, borrowing y lifetimes (el borrow checker corre sobre MIR, no sobre tu texto), el pipeline de compilación, monomorfización contra trait objects, cómo se expanden las macros, RAII y el drop en orden inverso, panic entre unwind y abort, Rc/Arc con mutabilidad interior, el layout de memoria y el niche, Send/Sync, async como máquina de estados, executors, unsafe, atomics y memory ordering. Cada tema desmonta un malentendido, al día con Rust 1.93.',
     date: '2026-07-18',
     tags: ['Rust', 'Internals', 'Ownership', 'Async'],
     collection: 'polyglot',
@@ -260,7 +260,7 @@ export const guias: Guia[] = [
     slug: 'polyglot-javascript-c2',
     title: 'JavaScript a fondo',
     blurb:
-      'Un solo hilo, cuatro compiladores y un event loop que no es del lenguaje sino del runtime. 13 temas en 4 bloques: el pipeline de V8, Ignition y su bytecode, los cuatro niveles del JIT con su desoptimización, módulos ESM contra CommonJS, el event loop y las microtareas que siempre le ganan a los timers, Workers, el GC Orinoco, shapes e inline caches, Smi tagging, prototipos, closures y this. Cada ficha dice en qué capa vive —motor, runtime o lenguaje— y desmonta un malentendido.',
+      'Un solo hilo, cuatro niveles de intérprete a JIT, y un event loop que no es del lenguaje sino del runtime. 13 temas en 4 bloques: el pipeline de V8, Ignition y su bytecode, los niveles del JIT con su desoptimización, módulos ESM contra CommonJS, el event loop y las microtareas que siempre le ganan a los timers, Workers, el GC Orinoco, shapes e inline caches, Smi tagging, prototipos, closures y this. Cada ficha dice en qué capa vive —motor, runtime o lenguaje— y desmonta un malentendido. Evaluado en julio de 2026.',
     date: '2026-07-18',
     tags: ['JavaScript', 'Internals', 'V8', 'Event loop'],
     collection: 'polyglot',
