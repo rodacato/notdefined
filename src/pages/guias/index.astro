@@ -47,7 +47,7 @@ function spineTitle(title: string, collection: string) {
 
     {
       shelves.map((shelf, i) => (
-        <details class="shelf-section" open>
+        <details class="shelf-section" open data-col={shelf.col.id}>
           <summary class="shelf-summary">
             <span class="shelf-name">
               COLECCIÓN {String(i + 1).padStart(2, '0')}{' '}
@@ -111,6 +111,40 @@ function spineTitle(title: string, collection: string) {
         </details>
       ))
     }
+
+    <!-- Recuerda qué colecciones dejaste colapsadas. Va inline y DESPUÉS de
+         los <details> a propósito: corre antes del primer paint, así no se
+         ve abrir-y-cerrar. Sin JS el <details> nativo sigue funcionando. -->
+    <script is:inline>
+      (function () {
+        const KEY = 'guias-colapsadas';
+        const shelves = document.querySelectorAll('.shelf-section[data-col]');
+        let cerradas = [];
+        try {
+          const raw = JSON.parse(localStorage.getItem(KEY));
+          if (Array.isArray(raw)) cerradas = raw;
+        } catch {
+          cerradas = [];
+        }
+        // Guardamos las CERRADAS, no las abiertas: una colección nueva nace
+        // abierta sin que haya que tocar nada.
+        const recordar = () => {
+          const next = [];
+          shelves.forEach((s) => {
+            if (!s.open) next.push(s.dataset.col);
+          });
+          try {
+            localStorage.setItem(KEY, JSON.stringify(next));
+          } catch {
+            /* modo privado o storage lleno: se pierde la memoria, no la página */
+          }
+        };
+        shelves.forEach((d) => {
+          if (cerradas.indexOf(d.dataset.col) >= 0) d.removeAttribute('open');
+          d.addEventListener('toggle', recordar);
+        });
+      })();
+    </script>
   </section>
 </RealmLayout>
 
