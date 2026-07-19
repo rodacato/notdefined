@@ -69,8 +69,10 @@ function spineTitle(title: string, collection: string) {
                 stroke-linejoin="round"
               />
             </svg>
+            {/* Dentro del summary a propósito: colapsada, la colección sigue
+                diciendo qué guarda. */}
+            <span class="shelf-hook">{shelf.col.hook}</span>
           </summary>
-          <p class="shelf-hook">{shelf.col.hook}</p>
           <ol class="shelf">
             {shelf.items.map((guia) => (
               <li
@@ -254,11 +256,14 @@ function spineTitle(title: string, collection: string) {
   .shelf-section {
     margin-top: 2.6rem;
   }
+  /* Grid y no flex: el hook debe caer SIEMPRE en su propia fila. Con flex,
+     `flex-basis:100%` lo capa el `max-width` y se colaba junto al conteo
+     cuando el nombre de la colección era corto. */
   .shelf-summary {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
     align-items: baseline;
-    gap: 0.6rem;
-    flex-wrap: wrap;
+    column-gap: 0.6rem;
     cursor: pointer;
     list-style: none;
     padding: 0.35rem 0;
@@ -282,7 +287,6 @@ function spineTitle(title: string, collection: string) {
     opacity: 0.7;
   }
   .shelf-count {
-    margin-left: auto;
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 0.68rem;
     color: #7fd8a6;
@@ -302,7 +306,10 @@ function spineTitle(title: string, collection: string) {
   .shelf-summary:hover .shelf-chevron {
     color: #7fd8a6;
   }
+  /* Segunda fila del summary: cae bajo el nombre de la colección y se queda
+     visible aunque el estante esté cerrado. */
   .shelf-hook {
+    grid-column: 1 / -1;
     margin: 0.35rem 0 0;
     font-size: 0.85rem;
     line-height: 1.5;

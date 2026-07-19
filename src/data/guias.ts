@@ -37,13 +37,13 @@ export const collections: GuiaCollection[] = [
   {
     id: 'almanaque-1001',
     name: 'Almanaque técnico · 1001',
-    hook: 'El 101 ya te lo sabías. Tomos numerados, cada uno con su tema, su paleta y su tipografía.',
+    hook: 'El 101 ya te lo sabías; este es el 1001. Conceptos que no caducan —patrones, arquitecturas, APIs, auth—, un tomo por tema.',
     itemLabel: 'tomos',
   },
   {
     id: 'polyglot',
     name: 'Polyglot',
-    hook: 'Temas avanzados de cada lenguaje, en escala de idiomas: C1 y C2. Las bases están en todos lados; esto no.',
+    hook: 'El B1 te lo dio el tutorial. Un lenguaje por guía, en escala de idiomas: C1 lo dominas tú; C2 lo habla su máquina.',
     itemLabel: 'guías',
   },
 ];
