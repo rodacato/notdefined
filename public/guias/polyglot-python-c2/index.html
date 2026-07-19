@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Python a fondo · Polyglot</title>
+<meta name="description" content="El B1 te lo dio el tutorial. Esto es el C2: hablar Python como lo habla su máquina.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2316233B'/%3E%3Cg fill='none' stroke='%23E8B93E' stroke-width='6' stroke-linecap='round'%3E%3Cpath d='M30 30h11M30 30v11M70 30h-11M70 30v11M30 70h11M30 70v-11M70 70h-11M70 70v-11'/%3E%3C/g%3E%3Ccircle cx='50' cy='50' r='5' fill='%23E8B93E'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./styles.css">
+<script>
+  // Tema antes del primer paint: lee guia-tema (light/dark/system, default dark)
+  (function () {
+    try {
+      var pref = localStorage.getItem("guia-tema") || "dark";
+      var dark = pref === "dark" || (pref === "system" &&
+        window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.classList.toggle("dark", dark);
+    } catch (e) { /* file:// sin storage: se queda en dark por la clase del <html> */ }
+  })();
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="back" href="/guias/">&larr; notdefined.dev/guias</a>
+    <div class="theme-toggle" id="theme-toggle" role="group" aria-label="Tema de color"></div>
+  </div>
+</header>
+
+<main id="app" class="wrap"></main>
+
+<!-- Motor: sin build, sin módulos ES; scripts clásicos en orden explícito.
+     core (namespace + helpers) → data (contenido) → components (piezas)
+     → widget (motor de visualizaciones) → page-* (vistas) → router (arranque). -->
+<script src="./js/core.js"></script>
+<script src="./data/coleccion.js"></script>
+<script src="./data/compilacion.js"></script>
+<script src="./data/concurrencia.js"></script>
+<script src="./data/memoria.js"></script>
+<script src="./data/objetos.js"></script>
+<script src="./js/components.js"></script>
+<script src="./js/widget.js"></script>
+<script src="./js/page-indice.js"></script>
+<script src="./js/page-tema.js"></script>
+<script src="./js/router.js"></script>
+</body>
+</html>
