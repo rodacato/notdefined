@@ -50,13 +50,13 @@
       "El mecanismo principal es el <b>reference counting</b>: libera en cuanto el contador llega a 0.",
       "El refcount <b>no ve los ciclos</b> (A↔B), así que existe un GC aparte para eso.",
       "El GC de ciclos es <b>generacional</b> (3 generaciones): la basura joven se revisa más seguido.",
-      "Desde 3.13 ese recolector es <b>incremental</b>, para pausas más cortas."
+      "Un colector <b>incremental</b> salió en 3.14.0 y se revirtió en 3.14.5; el vigente sigue siendo el generacional."
     ],
     fundamento: "La principal es el <strong>reference counting</strong>: cada objeto sabe cuántas referencias tiene y se libera en cuanto llegan a cero — memoria predecible, sin pausas. Pero el contador no puede liberar <strong>ciclos</strong> (A apunta a B y B apunta a A), así que un <strong>GC generacional</strong> aparte se ocupa solo de esos.",
     fuerza: "Liberar en el instante exacto en que muere la última referencia da memoria predecible y sin pausas — el precio es un contador que no ve los ciclos, y de ahí el segundo mecanismo.",
     comoFunciona: [
       "<strong>Refcount:</strong> cada <code>PyObject</code> tiene un contador; asignar o borrar referencias lo sube o baja; al llegar a 0 se desasigna de inmediato.",
-      "<strong>GC de ciclos:</strong> recorre periódicamente los objetos «contenedor» buscando referencias cíclicas inalcanzables. Es <em>generacional</em> (3 generaciones): lo que sobrevive se promueve y se revisa menos, porque la mayoría de la basura muere joven. <em>Nota de vigencia:</em> desde 3.13 el recolector es <strong>incremental</strong> (efectivamente joven + viejo) para acortar pausas — el modelo de 3 generaciones sigue siendo el mapa mental correcto."
+      "<strong>GC de ciclos:</strong> recorre periódicamente los objetos «contenedor» buscando referencias cíclicas inalcanzables. Es <em>generacional</em> (3 generaciones): lo que sobrevive se promueve y se revisa menos, porque la mayoría de la basura muere joven. <em>Nota de vigencia:</em> un recolector <strong>incremental</strong> salió en 3.14.0 y se <strong>revirtió en 3.14.5</strong> por crecimiento de memoria sin acotar; se re-propone vía PEP para versiones futuras. Mientras tanto, las 3 generaciones no son solo el mapa mental — son el colector vigente."
     ],
     mito: {
       mito: "«Python tiene un garbage collector como Java que gestiona toda la memoria».",
@@ -81,14 +81,14 @@
   function pool(n) {
     var cells = "";
     for (var i = 0; i < 8; i++) cells += "<div class='w-cell" + (i < n ? " on" : "") + "'>" + (i < n ? "•" : "") + "</div>";
-    return "<div class='w-surface'><div class='w-tag'>pool · clase 32 B · ~4 KB</div><div class='w-cells' style='margin-top:8px'>" + cells + "</div></div>";
+    return "<div class='w-surface'><div class='w-tag'>pool · clase 32 B · 16 KiB</div><div class='w-cells' style='margin-top:8px'>" + cells + "</div></div>";
   }
   function soLane(big) {
     return "<div class='w-box' style='flex:0 0 160px'><div class='w-tag'>SO directo</div>" +
       (big ? "<div class='w-pill warn' style='margin-top:8px'>objeto grande · malloc()</div>" : "<div class='w-mono' style='margin-top:8px;color:var(--color-fg-faint)'>objetos &gt; 512 B saltan pymalloc</div>") + "</div>";
   }
   var pm = [
-    { vis: "<div class='w-row'><div class='w-grow'><div class='w-tag'>arena · ~1 MiB del SO</div>" + pool(0) + "</div>" + soLane(false) + "</div>", nota: "Arena: un bloque grande (~1 MiB desde 3.9; eran 256 KB hasta 3.8) que pymalloc pide UNA vez al SO." },
+    { vis: "<div class='w-row'><div class='w-grow'><div class='w-tag'>arena · ~1 MiB del SO</div>" + pool(0) + "</div>" + soLane(false) + "</div>", nota: "Arena: un bloque grande (~1 MiB desde 3.10 en 64-bit; eran 256 KB hasta 3.9) que pymalloc pide UNA vez al SO." },
     { vis: "<div class='w-row'><div class='w-grow'><div class='w-tag'>arena · ~1 MiB del SO</div>" + pool(1) + "</div>" + soLane(false) + "</div>", nota: "Un objeto de 32 B cae en el próximo block libre de un pool de esa size class. No se llama al SO." },
     { vis: "<div class='w-row'><div class='w-grow'><div class='w-tag'>arena · ~1 MiB del SO</div>" + pool(3) + "</div>" + soLane(false) + "</div>", nota: "Más objetos del mismo tamaño llenan blocks del mismo pool: asignar es casi solo mover un puntero." },
     { vis: "<div class='w-row'><div class='w-grow'><div class='w-tag'>arena · ~1 MiB del SO</div>" + pool(3) + "</div>" + soLane(true) + "</div>", nota: "Un objeto grande (&gt; 512 B) esquiva pymalloc y llama directo al allocator del SO.", tone: "warn" },
@@ -103,13 +103,13 @@
     lede: "Pedir memoria al sistema en cada objeto pequeño sería lentísimo — y Python crea objetos chicos todo el tiempo. Por eso tiene su propio allocator: <em>arenas → pools → blocks</em>.",
     enBreve: [
       "<b>Arenas</b>: bloques grandes (~1 MiB) pedidos al SO de una vez.",
-      "<b>Pools</b>: una página (~4 KB), cada uno dedicado a una <em>size class</em> fija.",
+      "<b>Pools</b>: bloques de 16 KiB (una página de 4 KB hasta 3.9), cada uno dedicado a una <em>size class</em> fija.",
       "<b>Blocks</b>: los slots de los objetos, en clases de 8 en 8 bytes hasta 512.",
       "Objetos <b>&gt; 512 B</b> saltan pymalloc y van directos al allocator del SO."
     ],
     fundamento: "Cada llamada al allocator del SO (<code>malloc</code>) tiene un coste fijo apreciable. Como Python crea y destruye objetos pequeños constantemente, CPython interpone <strong>pymalloc</strong>, optimizado justo para ese patrón: muchísimos objetos chicos y efímeros.",
     fuerza: "Reservar memoria en grandes bloques al SO y repartirla desde ahí convierte cada asignación en poco más que mover un puntero — órdenes de magnitud más barato que ir al SO cada vez.",
-    comoFunciona: "Jerarquía de tres niveles: <strong>arenas</strong> (bloques grandes del SO, ~1&nbsp;MiB desde 3.9 — eran 256&nbsp;KB hasta 3.8) → <strong>pools</strong> (una página, ~4&nbsp;KB, cada uno para un tamaño fijo) → <strong>blocks</strong> (los slots, en <em>size classes</em> de 8 en 8 bytes hasta 512). Los objetos grandes (&gt;512&nbsp;B) saltan pymalloc y van directos al SO. Todo bajo el GIL — o con locks finos en free-threading.",
+    comoFunciona: "Jerarquía de tres niveles: <strong>arenas</strong> (bloques grandes del SO, ~1&nbsp;MiB desde 3.10 en 64-bit — eran 256&nbsp;KB hasta 3.9) → <strong>pools</strong> (16&nbsp;KiB desde 3.10; una página de 4&nbsp;KB antes, cada uno para un tamaño fijo) → <strong>blocks</strong> (los slots, en <em>size classes</em> de 8 en 8 bytes hasta 512). Los objetos grandes (&gt;512&nbsp;B) saltan pymalloc y van directos al SO. Todo bajo el GIL — y el build free-threaded sustituye pymalloc por <em>mimalloc</em>.",
     mito: {
       mito: "«Liberar objetos en Python devuelve la memoria al sistema operativo».",
       realidad: "Muchas veces la memoria vuelve a los pools/arenas de pymalloc para reutilizarse, no al SO. Por eso el proceso puede «no soltar» RAM tras liberar millones de objetos pequeños. Comparable a <code>mcache/mcentral/mheap</code> de Go."
@@ -134,13 +134,13 @@
       ? "<span class='w-pill ok'>a is b → True</span> <span class='w-mono' style='color:var(--color-fg-faint)'>mismo objeto (cache)</span>"
       : "<span class='w-pill bad'>a is b → False</span> <span class='w-mono' style='color:var(--color-fg-faint)'>objetos distintos</span>";
     return "<div class='w-col'>" + diag +
-      "<div class='w-box'><span class='w-tag'>cache de enteros pequeños: −5 … 256</span><div class='w-mono' style='margin-top:6px'>a = " + v + "; b = " + v + "; a is b</div></div>" +
+      "<div class='w-box'><span class='w-tag'>cache de enteros pequeños: −5 … 256</span><div class='w-mono' style='margin-top:6px'>a = int('" + v + "'); b = int('" + v + "'); a is b</div></div>" +
       "<div>" + pill + "</div></div>";
   }
   var po = [
-    { v: 100, nota: "a = 100; b = 100. 100 está en el cache de enteros pequeños: ambas variables apuntan al MISMO objeto pre-creado.", tone: "ok" },
+    { v: 100, nota: "100 está en el cache de enteros pequeños: no importa cómo lo construyas, siempre recibes el MISMO objeto pre-creado.", tone: "ok" },
     { v: 256, nota: "256 es el borde superior del cache. Sigue compartido: a is b es True.", tone: "ok" },
-    { v: 257, nota: "257 ya no está cacheado: cada asignación crea su propio PyObject. a is b es False.", tone: "bad" },
+    { v: 257, nota: "257 ya no está cacheado: cada construcción crea su propio PyObject. a is b es False. (Ojo: escrito como literal — a = 257; b = 257 — en un mismo script daría True: el compilador deduplica las constantes del code object. Por eso construimos en runtime — otra razón para no fiarte de is.)", tone: "bad" },
     { v: 1000, nota: "Con 1000, dos objetos distintos con el mismo valor. == daría True, pero is (identidad) da False.", tone: "bad" }
   ];
   T.push({
