@@ -21,6 +21,9 @@
     function globals() { return s.goroutines.filter(function (g) { return g.loc.t === "global"; }); }
 
     function seed() { var id = 1, gs = []; for (var i = 0; i < 6; i++) gs.push({ id: id++, loc: { t: "global" }, remaining: 0 }); s.goroutines = gs; s.nextId = id; s.tick = 0; draw("6 goroutines esperan en la cola global."); }
+    // runqput real: la goroutine nueva entra a la cola LOCAL del P que la crea;
+    // solo el desborde (cola llena) se va a la global.
+    function enqueue(g, p) { if (localsOf(p).length < 4) { g.loc = { t: "local", p: p }; return "local"; } g.loc = { t: "global" }; return "global"; }
     function step() {
       var ev = "", gmp = s.gmp;
       for (var p = 0; p < gmp; p++) { var r = runOf(p); if (r) { r.remaining -= 1; if (r.remaining <= 0) { s.goroutines = s.goroutines.filter(function (g) { return g.id !== r.id; }); ev = "P" + p + " terminó g" + r.id + "."; } } }
@@ -34,10 +37,16 @@
         var gl = globals(); if (gl.length) { var tk = Math.min(2, gl.length); for (var m = 0; m < tk; m++) gl[m].loc = { t: "local", p: p2 }; if (!ev) ev = "P" + p2 + " toma " + tk + " de la cola global."; }
       }
       s.tick += 1;
-      if (s.tick % 4 === 0 && s.goroutines.length < 16) { var nn = 3 + Math.floor(Math.random() * 3); for (var j = 0; j < nn; j++) s.goroutines.push({ id: s.nextId++, loc: { t: "global" }, remaining: 0 }); ev = "nacen " + nn + " goroutines → cola global."; }
+      if (s.tick % 4 === 0 && s.goroutines.length < 16) { var nn = 3 + Math.floor(Math.random() * 3), src = Math.floor(Math.random() * gmp), spill = 0; for (var j = 0; j < nn; j++) { var ng = { id: s.nextId++, loc: { t: "global" }, remaining: 0 }; s.goroutines.push(ng); if (enqueue(ng, src) !== "local") spill++; } ev = "nacen " + nn + " goroutines en P" + src + " → su cola local" + (spill ? " (" + spill + " desbordan a la global)." : "."); }
       draw(ev || null);
     }
-    function spawn() { for (var k = 0; k < 5; k++) s.goroutines.push({ id: s.nextId++, loc: { t: "global" }, remaining: 0 }); draw("go f() ×5 → 5 goroutines a la cola global."); }
+    function spawn() {
+      var src = 0;
+      for (var p = 0; p < s.gmp; p++) if (runOf(p)) { src = p; break; }
+      var spill = 0;
+      for (var k = 0; k < 5; k++) { var g = { id: s.nextId++, loc: { t: "global" }, remaining: 0 }; s.goroutines.push(g); if (enqueue(g, src) !== "local") spill++; }
+      draw("go f() ×5 desde P" + src + " → a su cola LOCAL (runqput)" + (spill ? "; " + spill + " desbordan a la global." : " — a la global solo iría el desborde."));
+    }
     function setGmp(v) { s.gmp = Math.max(1, Math.min(4, parseInt(v, 10))); gmpVal.textContent = s.gmp; s.goroutines.forEach(function (g) { if ((g.loc.t === "local" || g.loc.t === "run") && g.loc.p >= s.gmp) g.loc = { t: "global" }; }); draw("GOMAXPROCS = " + s.gmp + " → " + s.gmp + (s.gmp === 1 ? " P (sin paralelismo real)." : " P ejecutan en paralelo.")); }
 
     var playBtn = G.button("Reproducir", "play", "btn-primary", function () { s.running = !s.running; sync(); });

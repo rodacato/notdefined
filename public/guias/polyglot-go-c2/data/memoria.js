@@ -25,7 +25,7 @@
       recursos: [
         { star: true, title: "A Guide to the Go Garbage Collector", desc: "documento oficial — la mejor referencia del GC y el pacer.", kind: "doc", href: "https://go.dev/doc/gc-guide" },
         { star: true, title: "Garbage Collection in Go (I–III)", desc: "Ardan Labs — semántica, latencia y pacing.", kind: "blog", href: "https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html" },
-        { star: false, title: "The Go Memory Model", desc: "por qué la write barrier es correcta: el invariante tricolor.", kind: "doc", href: "https://go.dev/ref/mem" }
+        { star: false, title: "Getting to Go: The Journey of Go's Garbage Collector", desc: "el keynote de Rick Hudson — tricolor, write barrier y la historia de las pausas.", kind: "blog", href: "https://go.dev/blog/ismmkeynote" }
       ],
       viz: {
         title: "Visualízalo · marca & barrido con write barrier",

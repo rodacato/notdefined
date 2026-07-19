@@ -118,14 +118,14 @@
       tagline: "Open-coded defers (1.14): de una lista enlazada en el heap a casi gratis.",
       avoid: "Evitar <code>defer</code> «por performance» — eso era antes de Go 1.14.",
       lede: "Desde Go 1.14 los <code>defer</code> son casi gratis: los <em>open-coded defers</em> los inlinean en el flujo normal de la función. <code>panic</code> desenrolla la pila corriendo defers en orden LIFO; <code>recover</code> corta ahí — pero solo si se llama directo desde un defer.",
-      fuerza: { icon: "layers", html: "Antes, cada <code>defer</code> registraba un nodo en una lista enlazada en el heap: caro si lo usabas en caliente. Los <em>open-coded defers</em> (1.14) inlinean las llamadas diferidas directamente en la función y usan un <strong>bitmask</strong> para saber cuáles deben correr, así el caso común casi no cuesta. Solo los defers dentro de bucles o condicionales impredecibles caen al mecanismo antiguo." },
+      fuerza: { icon: "layers", html: "Antes, cada <code>defer</code> registraba un nodo en una lista enlazada en el heap: caro si lo usabas en caliente. Los <em>open-coded defers</em> (1.14) inlinean las llamadas diferidas directamente en la función y usan un <strong>bitmask</strong> para saber cuáles deben correr, así el caso común casi no cuesta. Solo los defers dentro de bucles — o cuando la función pasa de 8 — caen al mecanismo antiguo." },
       brief: [
         "Open-coded defers (1.14): de lista enlazada en heap a inline.",
         "Un bitmask (deferBits) marca qué defers deben ejecutarse.",
         "panic recorre la cadena LIFO desenrollando y corriendo defers.",
         "recover solo corta si se llama directamente desde un defer."
       ],
-      mito: { claim: "Evita defer «por performance».", body: "Eso era cierto antes de Go 1.14. Hoy el <em>open-coded defer</em> del caso común cuesta casi lo mismo que llamar la función a mano; el compilador lo inlinea. Solo los defers dentro de bucles o rutas condicionales impredecibles caen al camino lento con la lista enlazada. Escribe <code>defer</code> por claridad: cerrar recursos bien importa más que un nanosegundo." },
+      mito: { claim: "Evita defer «por performance».", body: "Eso era cierto antes de Go 1.14. Hoy el <em>open-coded defer</em> del caso común cuesta casi lo mismo que llamar la función a mano; el compilador lo inlinea. Solo los defers dentro de bucles (o más de 8 en una función) caen al camino lento con la lista enlazada. Escribe <code>defer</code> por claridad: cerrar recursos bien importa más que un nanosegundo." },
       recursos: [
         { star: true, title: "Defer, Panic, and Recover", desc: "The Go Blog — el modelo mental base.", kind: "blog", href: "https://go.dev/blog/defer-panic-and-recover" },
         { star: true, title: "Proposal: Low-cost defers through inline code", desc: "Dan Scales — el diseño de los open-coded defers (1.14).", kind: "doc", href: "https://github.com/golang/proposal/blob/master/design/34481-opencoded-defers.md" },

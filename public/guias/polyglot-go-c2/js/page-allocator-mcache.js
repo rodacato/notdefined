@@ -36,7 +36,7 @@
       var tx = 250, tw = 380, th = 62, objColor = s.size === "large" ? "var(--fam-comp)" : "var(--fam-conc)";
       b += R(40, 130, 150, 62, active("obj") ? "color-mix(in srgb," + objColor + " 16%,var(--color-bg-canvas))" : "var(--color-bg-canvas)", objColor, 'rx="12" stroke-width="1.5"');
       b += T(115, 156, s.size === "large" ? "obj >32KB" : s.size === "medium" ? "obj ~2KB" : "obj 48B", "600 13px var(--font-mono)", objColor, "middle");
-      b += T(115, 176, s.size === "large" ? "objeto grande" : "size class " + (s.size === "medium" ? "#40" : "#5"), "500 10px var(--font-sans)", "var(--color-fg-subtle)", "middle");
+      b += T(115, 176, s.size === "large" ? "objeto grande" : "size class " + (s.size === "medium" ? "#38" : "#5"), "500 10px var(--font-sans)", "var(--color-fg-subtle)", "middle");
       tiers.forEach(function (tr) {
         var on = active(tr.id), lst = last(tr.id);
         b += R(tx, tr.y, tw, th, on ? "color-mix(in srgb," + tr.color + " 14%,var(--color-bg-canvas))" : "var(--color-bg-canvas)", lst ? tr.color : on ? tr.color : "var(--color-border-strong)", 'rx="12" stroke-width="' + (lst ? 2 : on ? 1.5 : 1) + '"');
