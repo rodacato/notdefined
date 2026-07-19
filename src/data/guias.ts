@@ -7,7 +7,15 @@ export interface GuiaTheme {
   inkSoft: string;
   accent: string;
   border: string;
-  texture: 'grid' | 'grain' | 'stripes' | 'arcs' | 'rules' | 'morse' | 'facets';
+  texture:
+    | 'grid'
+    | 'grain'
+    | 'stripes'
+    | 'arcs'
+    | 'rules'
+    | 'morse'
+    | 'facets'
+    | 'twill';
   displayFamily: string; // nombre de la @font-face declarada en index.astro
 }
 
@@ -185,6 +193,25 @@ export const guias: Guia[] = [
       accent: '#e24d68',
       border: '#442a38',
       texture: 'facets',
+      displayFamily: 'Guia Spectral',
+    },
+  },
+  {
+    slug: 'polyglot-go-c2',
+    title: 'Go a fondo',
+    blurb:
+      'El runtime de Go viaja dentro del binario: sin VM, sin JIT. 14 temas en 4 bloques — el pipeline AOT y la SSA, escape analysis, defer/panic/recover, el scheduler GMP con su work-stealing, channels, el GC tricolor y su pacer, el allocator por-P, interfaces e itables, slices, Swiss Tables y los generics por dentro. Cada tema desmonta un malentendido, al día con Go 1.25.',
+    date: '2026-07-18',
+    tags: ['Go', 'Internals', 'Scheduler', 'GC'],
+    collection: 'polyglot',
+    nivel: 'C2',
+    theme: {
+      canvas: '#0b1f26',
+      ink: '#e6f1f3',
+      inkSoft: '#9db8bc',
+      accent: '#45c0ce',
+      border: '#24444c',
+      texture: 'twill',
       displayFamily: 'Guia Spectral',
     },
   },
