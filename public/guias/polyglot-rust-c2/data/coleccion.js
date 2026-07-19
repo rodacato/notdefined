@@ -53,6 +53,7 @@
 
     colofon: {
       serie: "Polyglot · Ruby · JavaScript · Go · Python · Rust",
+      evaluado: "al día con Rust 1.93",
       locale: "rs-VM"   // huevo de pascua: el locale de la máquina virtual
     }
   };

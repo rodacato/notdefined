@@ -63,7 +63,7 @@
       ]
     },
     widget: "atomics",
-    sim: { title: "El patrón «publicar un dato»", intro: 'Hilo A escribe un dato y luego pone la bandera <code>listo=true</code>. Hilo B espera la bandera y lee el dato. Elige el ordering y pulsa <strong>ejecutar</strong>: con <code>Relaxed</code>, B puede ver la bandera antes que el dato (¡basura!); con <code>Release/Acquire</code>, nunca.' },
+    sim: { title: "El patrón «publicar un dato»", intro: 'Hilo A escribe un dato y luego pone la bandera <code>listo=true</code>. Hilo B espera la bandera y lee el dato. Elige el ordering y pulsa <strong>ejecutar</strong>: con <code>Relaxed</code>, B puede ver la bandera antes que el dato; con <code>Release/Acquire</code>, nunca. Ojo con el atajo mental de «lee basura»: <code>datos</code> es una escritura normal, no atómica, así que sin la pareja Release/Acquire eso es una <em>carrera de datos</em> — comportamiento indefinido, no un 0 que puedas razonar.' },
     mito: {
       myth: '«Si es atómico, ya es seguro; usa siempre <code>SeqCst</code> por si acaso.»',
       real: 'Atómico ≠ ordenado: <code>Relaxed</code> permite reordenar y romper el patrón. <code>SeqCst</code> es correcto pero puede costar barreras extra; <code>Release/Acquire</code> suele ser justo lo necesario. Elegir el ordering mínimo correcto es el arte.'
@@ -128,7 +128,7 @@
     ],
     fundamento: {
       fuerza: 'Sin coherencia, dos crates podrían implementar el mismo trait para el mismo tipo de forma distinta, y al juntarlas el compilador no sabría cuál elegir. La orphan rule previene ese conflicto <em>de antemano</em>: puedes implementar un trait para un tipo solo si <strong>tú posees al menos uno de los dos</strong>.',
-      prose: 'Regla práctica: para escribir <code>impl Trait for Tipo</code>, el <code>Trait</code> es local a tu crate <strong>o</strong> el <code>Tipo</code> es local a tu crate. Si ambos son ajenos (p.ej. <code>impl Display for Vec&lt;T&gt;</code>), está prohibido — son «huérfanos».'
+      prose: 'Regla práctica: para escribir <code>impl Trait for Tipo</code>, el <code>Trait</code> es local a tu crate <strong>o</strong> el <code>Tipo</code> es local a tu crate. Si ambos son ajenos (p.ej. <code>impl Display for Vec&lt;T&gt;</code>), está prohibido — son «huérfanos». Esa es la primera aproximación: la regla completa es más sutil con genéricos (hay casos como <code>impl TraitAjeno&lt;MiTipo&gt; for TipoAjeno</code> que sí pasan, por los llamados <em>covered types</em>).'
     },
     como: {
       blocks: [

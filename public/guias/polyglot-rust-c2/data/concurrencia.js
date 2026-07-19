@@ -67,8 +67,8 @@
     widget: "async-futures",
     sim: { title: "poll paso a paso", intro: 'Marca si cada sub-future está listo o pendiente, y pulsa <strong>poll()</strong>. La máquina solo avanza cuando el <code>await</code> actual resuelve; si no, devuelve <code>Pending</code> y se pausa guardando su estado.' },
     mito: {
-      myth: '«Llamar a una async fn la pone a ejecutarse, como en JS o Python.»',
-      real: 'Solo construye el <code>Future</code> (la struct de estados) y lo devuelve <em>sin ejecutar nada</em>. En JS una promesa ya está corriendo; aquí no pasa nada hasta que un executor hace <code>poll</code>. Es una struct concreta que tú controlas.'
+      myth: '«Llamar a una async fn la pone a ejecutarse, como en JS.»',
+      real: 'Solo construye el <code>Future</code> (la struct de estados) y lo devuelve <em>sin ejecutar nada</em>. En JS la promesa ya arrancó; Python en cambio ya es perezoso como Rust — una <code>async def</code> te devuelve una corrutina inerte —, y lo que Rust suma es que tampoco hay event loop implícito: sin un executor que haga <code>poll</code>, nadie la mueve. Es una struct concreta que tú controlas.'
     },
     recursos: [
       { kind: "Oficial ⭐", label: "Asynchronous Programming in Rust (async book)", href: "https://rust-lang.github.io/async-book/" },
@@ -82,7 +82,7 @@
     kicker: "El lenguaje trae el qué; la librería, el cuándo",
     title: "Executors y runtimes (tokio)",
     tagline: "El lenguaje define el qué; tú traes el executor. Cola → poll → aparcar en el reactor → waker → re-encolar. Work-stealing, como Go.",
-    avoid: "Creer que async trae runtime: tú eliges tokio / async-std.",
+    avoid: "Creer que async trae runtime: tú eliges tokio / smol.",
     lede: 'Si <code>async</code> solo crea máquinas de estado inertes, <em>¿quién las hace avanzar?</em> Un <strong>executor</strong>. Y como el lenguaje no trae uno, eliges una librería: <strong>tokio</strong> es el estándar de facto.',
     enBreve: [
       { k: "El reparto", v: "El lenguaje trae el modelo; tú traes el <strong>executor</strong>." },
@@ -91,7 +91,7 @@
       { k: "Sin runtime", v: "Sin <code>#[tokio::main]</code>, un Future nunca corre." }
     ],
     fundamento: {
-      fuerza: 'Separar «lenguaje» de «runtime» es único entre los cinco lenguajes de la serie. Rust define el <em>modelo</em> (<code>Future</code>, <code>poll</code>, <code>Waker</code>) en la stdlib, pero <strong>no incluye scheduler</strong>: eliges tokio, async-std o escribes el tuyo, según tu caso.',
+      fuerza: 'Separar «lenguaje» de «runtime» es único entre los cinco lenguajes de la serie. Rust define el <em>modelo</em> (<code>Future</code>, <code>poll</code>, <code>Waker</code>) en la stdlib, pero <strong>no incluye scheduler</strong>: eliges tokio, smol o escribes el tuyo, según tu caso.',
       prose: 'El <strong>executor</strong> hace <code>poll</code> sobre las tareas listas. Cuando una devuelve <code>Pending</code>, se <strong>aparca</strong>; el <strong>reactor</strong> (mio/epoll/kqueue) registra el descriptor y, al haber actividad, usa el <strong>waker</strong> para <strong>re-encolarla</strong>. tokio reparte con <em>work-stealing</em> — como el scheduler GMP de Go, pero en una librería.'
     },
     como: {

@@ -127,7 +127,7 @@
       { k: "Costo", v: "Las proc-macros <strong>compilan primero</strong> — inflan el build." }
     ],
     fundamento: {
-      fuerza: 'La higiene de <code>macro_rules!</code> es la fuerza silenciosa: los identificadores que introduce la macro no chocan con los tuyos. No es sustitución de texto como el preprocesador de C — el compilador respeta ámbitos.',
+      fuerza: 'La higiene de <code>macro_rules!</code> es la fuerza silenciosa: las variables locales y los <em>labels</em> que introduce la macro no chocan con los tuyos. No es sustitución de texto como el preprocesador de C — el compilador respeta ámbitos. Eso sí, la higiene es <strong>parcial</strong>: no cubre items ni tipos, que se resuelven en el ámbito donde expandes.',
       prose: '<code>macro_rules!</code> empareja fragmentos (<code>$x:expr</code>, <code>$t:ty</code>, <code>$($xs:expr),*</code>) y los pega en una plantilla. Una <strong>proc-macro</strong> (derive, atributo o function-like) es una función que recibe un <code>TokenStream</code> y devuelve otro; vive en su propio crate con <code>proc-macro = true</code> y se compila <em>antes</em> que quien la usa.'
     },
     como: {

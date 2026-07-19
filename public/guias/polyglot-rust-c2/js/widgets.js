@@ -473,7 +473,7 @@
           arrow("var(--data-warn)"),
           pill(label + "::draw()", "var(--data-warn)", "var(--data-warn-bg)", true)
         ]));
-        path.appendChild(el("p", { class: "whint", style: "margin-top:10px", text: "2 saltos indirectos: el destino se lee de la vtable en runtime. No inline-able, pero una sola copia de código." }));
+        path.appendChild(el("p", { class: "whint", style: "margin-top:10px", text: "Una carga de la vtable + una llamada indirecta: el destino se lee en runtime. No inline-able, pero una sola copia de código." }));
       }
       mount.appendChild(path);
 
@@ -860,7 +860,7 @@
         if (state.cellPanic) mount.appendChild(G.rustc("<span class=\"e\">thread 'main' panicked</span> at src/main.rs:\nalready borrowed: BorrowMutError", "La misma regla «aliasing XOR mutabilidad» — pero verificada en runtime: si la violas, panic, no error de compilación."));
       } else {
         var weak = state.useWeak;
-        var aStrong = weak ? 1 : 2, bStrong = weak ? 1 : 2;
+        var aStrong = weak ? 1 : 2, bStrong = 2;
         mount.appendChild(el("div", { class: "wrow", style: "margin-top:18px" }, [
           el("span", { class: "eyebrow", style: "font-size:10px", text: "arista b → a" }),
           el("button", { class: "mono", style: "font-size:12px;padding:7px 14px;border-radius:var(--radius-full);cursor:pointer;border:1px solid " + (weak ? "var(--data-pos)" : "var(--color-border-strong)") + ";background:" + (weak ? "var(--data-pos-bg)" : "var(--color-bg-surface)") + ";color:" + (weak ? "var(--data-pos)" : "var(--color-fg-subtle)"), text: (weak ? "✓ " : "") + "usar Weak", on: { click: function () { set({ useWeak: !weak }); } } })
@@ -1293,7 +1293,7 @@
 
       if (state.picked !== null) {
         var o = OPS[state.picked];
-        if (!inUnsafe) mount.appendChild(G.rustc('<span class="e">error[E0133]</span>: `' + G.dom.escapeHtml(o.code) + '` requiere un bloque unsafe\n  <span class="g">= note: consult the Nomicon; wrap in an `unsafe` block</span>'));
+        if (!inUnsafe) mount.appendChild(G.rustc('<span class="e">error[E0133]</span>: `' + G.dom.escapeHtml(o.code) + '` is unsafe and requires unsafe function or block\n  <span class="g">= note: consult the Nomicon; wrap in an `unsafe` block</span>'));
         else mount.appendChild(el("div", { style: "margin-top:16px;background:var(--data-warn-bg);border:1px solid var(--data-warn);border-radius:var(--radius-md);padding:12px 16px" }, [
           el("span", { class: "mono", style: "font-size:12.5px;color:var(--data-warn)", text: "⚠ permitido dentro de unsafe" }),
           el("div", { class: "prose", style: "margin-top:6px;font-size:13px", html: "<strong>Tu invariante:</strong> " + o.inv })
@@ -1358,6 +1358,7 @@
           el("span", { class: "mono", style: "font-size:12.5px;color:" + v.c, text: v.m }),
           el("span", { class: "prose", style: "margin:0 0 0 6px;display:inline;font-size:13px", text: v.t })
         ]));
+        if (torn) mount.appendChild(el("p", { class: "whint", style: "margin-top:10px;max-width:74ch", html: 'Y ese «0» es una simplificación: <code>datos</code> no es atómico, así que sin happens-before esto es una <strong>carrera de datos</strong> — comportamiento indefinido en el modelo de memoria, no un valor viejo que puedas razonar.' }));
       }
     }
     render();
@@ -1487,7 +1488,7 @@
       generic: { code: "fn imprime<T: Display>(x: T) {\n    println!(\"{}\", x);\n}\n// monomorfizado por cada T concreto", who: "quien llama", many: "muchos (uno por T)", dispatch: "estático (monomorfización)", when: "El caso por defecto: máxima flexibilidad y velocidad. Quien llama fija T; el compilador genera una copia especializada." },
       assoc: { code: "trait Iterator {\n    type Item;            // tipo asociado\n    fn next(&mut self) -> Option<Self::Item>;\n}\n// un solo Item por implementador", who: "el implementador", many: "uno (fijado en el impl)", dispatch: "estático", when: "Cuando cada tipo tiene UN tipo relacionado natural (el Item que un iterador produce). Evita anotar el parámetro en cada uso." },
       arg: { code: "fn imprime(x: impl Display) {\n    println!(\"{}\", x);\n}\n// azúcar de fn imprime<T: Display>(x: T)", who: "quien llama", many: "muchos", dispatch: "estático", when: "Azúcar sintáctico para un genérico simple en posición de argumento. Más legible cuando no necesitas nombrar T." },
-      ret: { code: "fn contador() -> impl Iterator<Item=u32> {\n    (0..).map(|x| x * 2)\n}\n// tipo concreto oculto, fijado por la fn", who: "la función (tipo oculto)", many: "uno concreto", dispatch: "estático (sin vtable)", when: "Para devolver un tipo complejo/anónimo (closures, cadenas de iteradores) sin escribir su nombre. Un solo tipo por rama — no vale para devolver dos distintos." }
+      ret: { code: "fn contador() -> impl Iterator<Item=u32> {\n    (0..).map(|x| x * 2)\n}\n// tipo concreto oculto, fijado por la fn", who: "la función (tipo oculto)", many: "uno concreto", dispatch: "estático (sin vtable)", when: "Para devolver un tipo complejo/anónimo (closures, cadenas de iteradores) sin escribir su nombre. Un solo tipo para todas las ramas — no vale para devolver dos distintos." }
     };
     var state = { form: "generic" };
     var mount = el("div");

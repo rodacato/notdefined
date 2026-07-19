@@ -67,6 +67,7 @@
       html: '<strong style="color:var(--color-primary)">Nivel ' + c.nivel.code + ' de Polyglot.</strong> ' + c.nivel.escala }));
     app.appendChild(el("div", { class: "colophon" }, [
       el("span", { html: c.colofon.serie.replace("Rust", '<strong>Rust</strong>') }),
+      el("span", { text: c.colofon.evaluado }),
       el("span", { text: "locale " + c.colofon.locale })
     ]));
 
