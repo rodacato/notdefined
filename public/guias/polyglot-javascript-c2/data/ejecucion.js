@@ -150,7 +150,7 @@
           { phase: "~40 invocaciones", nivel: ["TurboFan \u00b7 ~10\u00d7+"], fb: ["a: number \u00b7 b: number \u2713"],
             cap: "Muy caliente: <strong>TurboFan</strong> la compila al m\u00e1ximo, especulando que <span class=\"inline-code\">a</span> y <span class=\"inline-code\">b</span> son enteros. Rapid\u00edsima\u2026 mientras se mantenga." },
           { phase: "\u26A1 lleg\u00f3 un string", nivel: ["Ignition \u00b7 1\u00d7"], fb: ["number \u2717 string \u2192 polim\u00f3rfico"],
-            cap: "Llamas <span class=\"inline-code\">add('x', 'y')</span>: lleg\u00f3 un string donde se esperaba number. La suposici\u00f3n se rompi\u00f3: V8 <strong>desoptimiza</strong>, reconstruye el estado del int\u00e9rprete y cae de vuelta a Ignition. Toca re-calentar desde cero." },
+            cap: "Llamas <span class=\"inline-code\">add('x', 'y')</span>: lleg\u00f3 un string donde se esperaba number. La suposici\u00f3n se rompi\u00f3: V8 <strong>desoptimiza</strong>, reconstruye el estado del int\u00e9rprete y cae de vuelta a Ignition. Toca re-calentar, aunque no desde cero: el feedback vector sobrevive, as\u00ed que el ascenso suele ser m\u00e1s r\u00e1pido que la primera vez." },
         ],
       }],
     },

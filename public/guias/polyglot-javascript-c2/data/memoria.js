@@ -141,10 +141,10 @@
     quees: "<p>Una \u00abpalabra\u00bb de memoria puede guardar un valor <em class=\"serif-italic\">o</em> un puntero. V8 los distingue mirando los <strong>bits de etiqueta</strong> (los de menor peso): un <span class=\"inline-code\">Smi</span> (Small Integer) termina en <span class=\"inline-code\">0</span> y va inline; un puntero a objeto termina en <span class=\"inline-code\">1</span>.</p>",
     fundamento: "<p>Un entero peque\u00f1o (Smi) se guarda <strong>dentro</strong> de la palabra: sumar dos es casi gratis, sin tocar el heap. Un n\u00famero grande o decimal no cabe: se guarda como <em class=\"serif-italic\">heap number</em> (un double en el heap) y la palabra guarda un puntero hacia \u00e9l.</p>",
     como: [
-      "<strong>new space</strong>: la young generation, donde nacen los objetos.",
-      "<strong>old space</strong>: los que sobrevivieron varias rondas; Mark-Compact los gestiona.",
-      "<strong>large object space</strong>: objetos tan grandes que se asignan aparte, sin mover nunca.",
-      "<strong>code / map space</strong>: c\u00f3digo compilado y las Shapes (Maps) viven en espacios propios.",
+      "<strong>Una palabra, dos papeles</strong>: cada palabra de memoria guarda un valor <em>o</em> un puntero.",
+      "<strong>La etiqueta</strong>: los bits de menor peso dicen cu\u00e1l de los dos; si terminan en <span class=\"inline-code\">0</span>, es un Smi.",
+      "<strong>Smi</strong>: el entero vive DENTRO de la palabra \u2014 operar con \u00e9l no toca el heap.",
+      "<strong>Fuera de rango o decimal</strong>: se guarda como <span class=\"inline-code\">HeapNumber</span> (un double de 64 bits) en el heap, y la palabra guarda su direcci\u00f3n.",
     ],
     mito: "<p>\u00abTodos los n\u00fameros en JS son doubles de 64 bits.\u00bb En la <em class=\"serif-italic\">spec</em>, s\u00ed. Pero el motor hace trampa: los enteros peque\u00f1os se guardan como Smi inline, sin heap ni double. Por eso un bucle con \u00edndices enteros es mucho m\u00e1s barato de lo que la spec sugerir\u00eda \u2014 hasta que el n\u00famero crece y se vuelve un heap number.</p>",
     recursos: [

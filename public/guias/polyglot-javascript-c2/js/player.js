@@ -193,6 +193,9 @@
       if (showConsole) {
         G.clear(consoleRow);
         const out = fr.out || [];
+        if (!out.length) {
+          consoleRow.appendChild(el("div", { class: "out out--empty" }, "(aún nada)"));
+        }
         out.forEach(function (o, i) {
           consoleRow.appendChild(el("div", { class: "out" + (i === out.length - 1 ? " out--fresh" : "") }, o));
         });

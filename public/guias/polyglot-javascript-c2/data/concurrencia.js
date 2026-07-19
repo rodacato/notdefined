@@ -95,7 +95,7 @@
     avoid: "pensar que await pausa el hilo o crea paralelismo.",
     lede: "<span class=\"mono\" style=\"font-size:15px\">async/await</span> no crea hilos ni magia paralela: es az\u00facar sobre <em class=\"serif-italic\">promesas</em>, que se resuelven v\u00eda la cola de microtareas.",
     breve: [
-      { k: "Capa", v: "Lenguaje" },
+      { k: "Capa", v: "Lenguaje + runtime" },
       { k: "Es", v: "Az\u00facar sobre promesas" },
       { k: "await", v: "Parte la funci\u00f3n" },
       { k: "Continuaci\u00f3n", v: "Microtarea" },

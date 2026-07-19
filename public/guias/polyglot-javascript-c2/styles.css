@@ -555,6 +555,7 @@ html.dark .prose code, html.dark .inline-code { color: var(--color-primary); }
   border: 1px solid rgba(216,210,190,0.22); border-radius: var(--radius-sm); padding: 6px 12px;
 }
 .out--fresh { color: var(--color-on-primary); background: var(--color-primary); border-color: var(--color-primary); animation: chipIn .2s ease; }
+.out--empty { color: var(--color-code-cap); background: none; border-style: dashed; font-weight: 400; }
 
 /* transporte */
 .transport { margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
