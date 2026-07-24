@@ -193,7 +193,7 @@ Estas frases son la firma. Úsalas naturalmente (no todas en cada post, pero sí
 - "por eso" — para conectar causa y consecuencia
 - "a mi forma de verlo" — antes de dar una opinión
 - "wey" / "mira" — para arrancar explicaciones informales
-- "el pedo es que..." — para ir al punto del problema
+- "el pedo es que..." — para ir al punto del problema. **Solo en chat/conversación, NO en blog posts ni TILs publicados**: Adrian la usa poco y solo en confianza; en público prefiere no darla (2026-07-17). En contenido, usar "el problema es que" o ir directo.
 - "no mames" — cuando algo es absurdo o sorprendente (folklore mexicano). **Solo en chat/conversación, NO en blog posts publicados**: Adrian lo considera poco entendible y grosero para un artículo (2026-07-16). En posts, usar otra muletilla o dejar la reacción en la prosa.
 - "chispitas de X" — atenuador honesto cuando algo no llegó al 100% ("Clean Architecture con chispitas de DDD")
 - "alivio" (como sustantivo emocional) — cuando algo resuelve un problema mental, más fuerte que "ayudó" ("el libro fue un alivio")
@@ -256,7 +256,7 @@ Antes de marcar `draft: false`, hacer estos chequeos sobre el post:
 
 Estas son marcas de autoría real y deben quedarse aunque "suenen menos pulidas":
 
-- Muletillas mexicanas ("hmm", "el pedo es que", "wey", "chispitas de", "alivio", "una delicia", "vislumbrar") — "no mames" queda fuera de posts (ver arriba)
+- Muletillas mexicanas ("hmm", "wey", "chispitas de", "alivio", "una delicia", "vislumbrar") — "no mames" y "el pedo es que" quedan fuera de posts (ver arriba); son de chat, no de contenido publicado
 - Oraciones incompletas ocasionales ("Funcionó. Más o menos.", "Ya no.", "Punto.")
 - Errores menores de ortografía en contexto casual ("por que" sin tilde, "haver", "ay" por "ahí")
 - Transiciones imperfectas entre secciones — a veces solo cambias de tema y ya
