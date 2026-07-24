@@ -19,20 +19,30 @@ export async function getStaticPaths() {
     seriesMap.get(series)!.push(post);
   }
 
-  return [...seriesMap.entries()].map(([series, seriesPosts]) => ({
-    params: { series },
-    props: {
-      series,
-      posts: seriesPosts.sort(
-        (a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0),
-      ),
-    },
-  }));
+  const orderedNames = [...seriesMap.keys()]
+    .map((name) => ({ name, order: seriesByName(name)?.order ?? 999 }))
+    .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name))
+    .map((s) => s.name);
+
+  return [...seriesMap.entries()].map(([series, seriesPosts]) => {
+    const i = orderedNames.indexOf(series);
+    return {
+      params: { series },
+      props: {
+        series,
+        posts: seriesPosts.sort(
+          (a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0),
+        ),
+        next: orderedNames[i + 1] ?? null,
+      },
+    };
+  });
 }
 
-const { series, posts } = Astro.props as {
+const { series, posts, next } = Astro.props as {
   series: string;
   posts: CollectionEntry<'blog'>[];
+  next: string | null;
 };
 const meta = seriesByName(series);
 const totalMin = posts.reduce((sum, p) => sum + readingTime(p.body), 0);
@@ -83,6 +93,18 @@ function formatDate(date: Date) {
       ))
     }
   </CardList>
+
+  <nav class="series-footer" aria-label="Navegación entre series">
+    {
+      next && (
+        <a href={`/blog/series/${encodeURIComponent(next)}/`} class="next-series">
+          <span class="next-label">Sigue con</span>
+          <span class="next-name">{next} →</span>
+        </a>
+      )
+    }
+    <a href="/blog/series/" class="all-series">Todas las series</a>
+  </nav>
 </BaseLayout>
 
 <style>
@@ -165,5 +187,66 @@ function formatDate(date: Date) {
     color: var(--color-muted);
     white-space: nowrap;
     opacity: 0.7;
+  }
+
+  /* End-of-series nav (#5) */
+  .series-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .next-series {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    text-decoration: none;
+  }
+  .next-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .next-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text);
+    transition: color 120ms ease;
+  }
+  .next-series:hover .next-name {
+    color: var(--color-accent);
+  }
+  .all-series {
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+  .all-series:hover {
+    color: var(--color-accent);
+  }
+
+  /* Responsive: stack the date/read-time under the title on narrow screens (#6) */
+  @media (max-width: 560px) {
+    .post-link {
+      flex-wrap: wrap;
+    }
+    .post-meta {
+      flex-basis: calc(100% - 2.25rem);
+    }
+    .post-right {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.6rem;
+      width: 100%;
+      padding-left: 2.25rem;
+      padding-top: 0.4rem;
+    }
   }
 </style>
