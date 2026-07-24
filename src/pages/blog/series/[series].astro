@@ -4,6 +4,7 @@ import PageHeader from '../../../components/PageHeader.astro';
 import CardList from '../../../components/CardList.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { readingTime } from '../../../utils/reading-time';
+import { seriesByName, statusLabel } from '../../../data/series';
 
 export async function getStaticPaths() {
   const posts = await getCollection(
@@ -33,6 +34,8 @@ const { series, posts } = Astro.props as {
   series: string;
   posts: CollectionEntry<'blog'>[];
 };
+const meta = seriesByName(series);
+const totalMin = posts.reduce((sum, p) => sum + readingTime(p.body), 0);
 
 function formatDate(date: Date) {
   return date.toLocaleDateString('es-MX', {
@@ -50,10 +53,16 @@ function formatDate(date: Date) {
   <PageHeader
     backHref="/blog/series/"
     backLabel="← Todas las series"
-    label="Series"
+    label={meta ? statusLabel[meta.status] : 'Series'}
     title={series}
-    description={`${posts.length} parte${posts.length !== 1 ? 's' : ''} · En orden de lectura`}
+    description={meta?.thesis ??
+      `${posts.length} parte${posts.length !== 1 ? 's' : ''} · En orden de lectura`}
   />
+
+  <p class="series-lead">
+    {posts.length} parte{posts.length !== 1 ? 's' : ''} · {totalMin} min de lectura
+    · En orden
+  </p>
 
   <CardList as="ol" class="series-list">
     {
@@ -62,7 +71,7 @@ function formatDate(date: Date) {
           <a href={`/blog/${post.slug}/`} class="post-link">
             <span class="part-num">{i + 1}</span>
             <div class="post-meta">
-              <span class="post-title">{post.data.title}</span>
+              <h2 class="post-title">{post.data.title}</h2>
               <p class="post-desc">{post.data.description}</p>
             </div>
             <div class="post-right">
@@ -77,6 +86,13 @@ function formatDate(date: Date) {
 </BaseLayout>
 
 <style>
+  .series-lead {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--color-muted);
+    margin: 0 0 1.5rem;
+  }
+
   .series-list {
     list-style: none;
     padding: 0;
@@ -116,7 +132,7 @@ function formatDate(date: Date) {
     color: var(--color-text);
     line-height: 1.4;
     display: block;
-    margin-bottom: 0.25rem;
+    margin: 0 0 0.25rem;
   }
   .post-link:hover .post-title {
     color: var(--color-accent);

@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHeader from '../../../components/PageHeader.astro';
-import CardList from '../../../components/CardList.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { readingTime } from '../../../utils/reading-time';
+import { seriesByName, statusLabel } from '../../../data/series';
 
 const posts = await getCollection(
   'blog',
@@ -11,52 +12,76 @@ const posts = await getCollection(
 
 const seriesMap = new Map<string, CollectionEntry<'blog'>[]>();
 for (const post of posts) {
-  const series = post.data.series!;
-  if (!seriesMap.has(series)) seriesMap.set(series, []);
-  seriesMap.get(series)!.push(post);
+  const name = post.data.series!;
+  if (!seriesMap.has(name)) seriesMap.set(name, []);
+  seriesMap.get(name)!.push(post);
 }
 
 const seriesList = [...seriesMap.entries()]
-  .map(([name, seriesPosts]) => ({
-    name,
-    posts: seriesPosts.sort(
+  .map(([name, seriesPosts]) => {
+    const sorted = seriesPosts.sort(
       (a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0),
-    ),
-  }))
-  .sort((a, b) => a.name.localeCompare(b.name));
+    );
+    const meta = seriesByName(name);
+    return {
+      name,
+      posts: sorted,
+      thesis: meta?.thesis,
+      status: meta?.status,
+      order: meta?.order ?? 999,
+      minutes: sorted.reduce((sum, p) => sum + readingTime(p.body), 0),
+    };
+  })
+  .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
 ---
 
 <BaseLayout
   title="Series — notdefined.dev"
-  description="Colecciones de posts relacionados en notdefined.dev."
+  description="Colecciones de posts relacionados en notdefined.dev, en orden de lectura."
 >
   <PageHeader
     backHref="/blog/"
     backLabel="← Blog"
     label="Colecciones"
     title="Series"
-    description="Posts agrupados por tema en orden de lectura."
+    description="Hilos de posts pensados para leerse en orden, cada uno con su propósito."
   />
 
   {
     seriesList.length === 0 ? (
       <p class="empty">No hay series todavía.</p>
     ) : (
-      <CardList>
-        {seriesList.map(({ name, posts }) => (
-          <div class="card-list-item series-item">
+      <ul class="series-grid">
+        {seriesList.map(({ name, posts, thesis, status, minutes }) => (
+          <li class="series-card fade-in-item">
             <a
               href={`/blog/series/${encodeURIComponent(name)}/`}
-              class="series-name"
+              class="series-link"
             >
-              {name}
+              <div class="series-head">
+                <h2 class="series-name">{name}</h2>
+                {status && (
+                  <span class={`series-status series-status-${status}`}>
+                    {statusLabel[status]}
+                  </span>
+                )}
+              </div>
+              {thesis && <p class="series-thesis">{thesis}</p>}
+              <ol class="series-parts">
+                {posts.map((post) => (
+                  <li>
+                    <span class="part-title">{post.data.title}</span>
+                  </li>
+                ))}
+              </ol>
+              <p class="series-meta">
+                {posts.length} parte{posts.length !== 1 ? 's' : ''} · {minutes}{' '}
+                min de lectura
+              </p>
             </a>
-            <span class="series-count">
-              {posts.length} parte{posts.length !== 1 ? 's' : ''}
-            </span>
-          </div>
+          </li>
         ))}
-      </CardList>
+      </ul>
     )
   }
 </BaseLayout>
@@ -67,28 +92,116 @@ const seriesList = [...seriesMap.entries()]
     font-size: 0.95rem;
   }
 
-  .series-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .series-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
     gap: 1rem;
-    padding: 1rem 1.25rem;
   }
 
-  .series-name {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--color-text);
-    text-decoration: none;
-    transition: color 150ms ease;
+  .series-card {
+    border: 1px solid var(--color-border);
+    border-radius: 0.9rem;
+    background-color: var(--color-bg);
+    overflow: hidden;
+    transition: border-color 150ms ease;
   }
-  .series-name:hover {
+  .series-card:hover {
+    border-color: color-mix(
+      in oklab,
+      var(--color-accent) 40%,
+      var(--color-border)
+    );
+  }
+
+  .series-link {
+    display: block;
+    padding: 1.25rem 1.4rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .series-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .series-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+    transition: color 120ms ease;
+  }
+  .series-link:hover .series-name {
     color: var(--color-accent);
   }
 
-  .series-count {
-    font-size: 0.8rem;
-    color: var(--color-muted);
+  .series-status {
     flex-shrink: 0;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    color: var(--color-muted);
+  }
+  .series-status-active {
+    color: var(--color-accent);
+    border-color: color-mix(
+      in oklab,
+      var(--color-accent) 30%,
+      var(--color-border)
+    );
+  }
+
+  .series-thesis {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--color-muted);
+    margin: 0.5rem 0 0.9rem;
+  }
+
+  .series-parts {
+    list-style: none;
+    counter-reset: part;
+    padding: 0;
+    margin: 0 0 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .series-parts li {
+    counter-increment: part;
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--color-text);
+  }
+  .series-parts li::before {
+    content: counter(part);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    color: var(--color-accent);
+    opacity: 0.7;
+    flex-shrink: 0;
+    padding-top: 0.05rem;
+  }
+  .part-title {
+    min-width: 0;
+  }
+
+  .series-meta {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    color: var(--color-muted);
+    margin: 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border);
   }
 </style>
