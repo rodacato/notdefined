@@ -67,6 +67,14 @@ En esta fase, **menciona explícitamente a Adrian los posts existentes que detec
 
 El objetivo: que el catálogo se sienta como un mapa interconectado, no como una pila de archivos independientes. Cada nuevo post debe agregar **al menos un link cruzado** a posts/TILs existentes, salvo que el tema sea genuinamente nuevo y aislado.
 
+**Check de serie (en este mismo paso).** Consulta [`src/data/series.ts`](../../src/data/series.ts) — el registro con la tesis de cada serie. Pregúntate: ¿este post **extiende** una serie que ya existe?
+
+- **Sí** → agrega `series: "<nombre canónico exacto>"` + `seriesOrder: <n>` al frontmatter. El nombre debe coincidir letra por letra con el registro, o la página lo muestra sin tesis.
+- **Sería una serie nueva** → aplica el umbral antes de inventar un string suelto: una serie necesita **≥3 posts planeados y una tesis**. Con menos, es un tag, no una serie. Si pasa el umbral, agrega la entrada a `series.ts` (nombre, tesis, audiencia, status, order) en el mismo commit.
+- **No** → sin `series:`. La mayoría de los posts no son de serie, y está bien.
+
+La membresía vive en el frontmatter; la intención vive en `series.ts`. No dupliques la lista de posts en el registro — el código ya la genera.
+
 ### Paso 1 — Las preguntas core
 
 Haz una ronda de preguntas a Adrian sobre el tema. El objetivo es extraer material que un LLM no puede inventar:
