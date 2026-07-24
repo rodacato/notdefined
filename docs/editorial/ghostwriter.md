@@ -134,7 +134,7 @@ Para conversaciones de descubrimiento de más de 5 turnos, guarda notas estructu
 - Una auditoría posterior del post pueda verificar qué se dijo vs qué se escribió
 - Futuras conversaciones sobre el mismo tema arranquen con contexto, no desde cero
 
-**Ubicación**: `.kwik-e/memory/editorial_research/{slug-del-post}.md` (gitignored, local-only).
+**Ubicación**: `.kwik-e/memory/research/{tipo}/{slug-del-post}.md` (gitignored, local-only), donde `{tipo}` es `blogposts`, `labs` o `guias`. Esa carpeta es el hub único de ideas e investigación, organizado por tipo — ver su `README.md`.
 
 **Estructura mínima**:
 
