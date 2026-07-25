@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>SQL dominado · Polyglot</title>
+<meta name="description" content="El B1 te lo dio el tutorial. Esto es el C1: escribir el SQL que el motor ejecuta mejor que tu código.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2309182B'/%3E%3Cg stroke='%234E9BE6' stroke-width='2' fill='none'%3E%3Cpath d='M6 11V6h5M21 6h5v5M26 21v5h-5M11 26H6v-5'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%23E8913C'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+<script>
+// Tema antes del primer paint: sin flash de claro.
+(function () {
+  var guardado = null;
+  try { guardado = localStorage.getItem("guia-tema"); } catch (e) {}
+  var modo = guardado || "dark";
+  var oscuro = modo === "dark" || (modo === "system" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.classList.toggle("dark", oscuro);
+})();
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="topbar-back" href="/guias/">← notdefined.dev/guias</a>
+  <div class="tema-toggle" id="tema-toggle" role="group" aria-label="Tema de color">
+    <button type="button" data-tema="light" aria-label="Tema claro" title="Claro">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg>
+    </button>
+    <button type="button" data-tema="dark" aria-label="Tema oscuro" title="Oscuro">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/></svg>
+    </button>
+    <button type="button" data-tema="system" aria-label="Tema del sistema" title="Sistema">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="12" rx="1.6"/><path d="M8.5 20h7"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="app" tabindex="-1"></main>
+
+<script src="js/core.js"></script>
+
+<script src="data/catalog.js"></script>
+<script src="data/window.js"></script>
+<script src="data/lateral.js"></script>
+<script src="data/distinct-on.js"></script>
+<script src="data/keyset.js"></script>
+<script src="data/ctes.js"></script>
+<script src="data/recursivas.js"></script>
+<script src="data/subqueries.js"></script>
+<script src="data/group-by.js"></script>
+<script src="data/pivot.js"></script>
+<script src="data/agregados.js"></script>
+<script src="data/upsert.js"></script>
+<script src="data/returning.js"></script>
+<script src="data/skip-locked.js"></script>
+<script src="data/fdw.js"></script>
+<script src="data/jsonb.js"></script>
+<script src="data/criterio.js"></script>
+
+<script src="js/components.js"></script>
+<script src="js/widgets.js"></script>
+<script src="js/page-indice.js"></script>
+<script src="js/page-ficha.js"></script>
+<script src="js/router.js"></script>
+</body>
+</html>

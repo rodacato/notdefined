@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>SQL a fondo · Polyglot</title>
+  <meta name="description" content="El B1 te lo dio el tutorial. Esto es el C2: hablar SQL como lo ejecuta Postgres. Los internals del motor — planner, MVCC, WAL — con widgets deterministas. Motor de referencia: PostgreSQL 17.">
+  <!-- Favicon SVG inline con las tintas del tema: glifo focal-frame + señal ámbar -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2038%2038'%20fill='none'%20stroke='%234E9BE6'%20stroke-width='2.4'%20stroke-linecap='square'%3E%3Cpath%20d='M3%2011V3h8M35%2011V3h-8M3%2027v8h8M35%2027v8h-8'/%3E%3Ccircle%20cx='19'%20cy='19'%20r='3.6'%20fill='%23E8913C'%20stroke='none'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <!-- Pone la clase de tema ANTES del primer paint para evitar el flash. -->
+  <script>
+    (function () {
+      try {
+        var pref = localStorage.getItem('guia-tema') || 'dark';
+        var dark = pref === 'dark' ||
+          (pref === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (dark) document.documentElement.classList.add('dark');
+      } catch (e) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#app">Saltar al contenido</a>
+
+  <header class="topbar" id="topbar"><!-- lo llena js/components.js --></header>
+
+  <main id="app" tabindex="-1"><!-- lo llena el router --></main>
+
+  <footer class="colophon" id="colophon"><!-- lo llena js/components.js --></footer>
+
+  <!-- Datos (el guión): fichas, pasos de widgets, snippets, salidas de EXPLAIN. -->
+  <script src="./data/catalog.js"></script>
+  <script src="./data/pipeline.js"></script>
+  <script src="./data/indices.js"></script>
+  <script src="./data/planner.js"></script>
+  <script src="./data/estadisticas.js"></script>
+  <script src="./data/mvcc.js"></script>
+  <script src="./data/vacuum.js"></script>
+  <script src="./data/aislamiento.js"></script>
+  <script src="./data/locks.js"></script>
+  <script src="./data/wal.js"></script>
+  <script src="./data/paginas.js"></script>
+  <script src="./data/toast.js"></script>
+  <script src="./data/buffers.js"></script>
+  <script src="./data/conexiones.js"></script>
+  <script src="./data/extensibilidad.js"></script>
+  <!-- Motor (la mecánica): estado, render, animaciones. -->
+  <script src="./js/core.js"></script>
+  <script src="./js/components.js"></script>
+  <script src="./js/widget-explain.js"></script>
+  <script src="./js/widget-btree.js"></script>
+  <script src="./js/widget-mvcc.js"></script>
+  <script src="./js/widget-wal.js"></script>
+  <script src="./js/page-index.js"></script>
+  <script src="./js/page-ficha.js"></script>
+  <script src="./js/router.js"></script>
+</body>
+</html>
