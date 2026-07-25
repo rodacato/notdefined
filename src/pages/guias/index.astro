@@ -427,6 +427,16 @@ function spineTitle(title: string, collection: string) {
       transparent 1px 30px
     );
   }
+  /* diagrama de vías: pares de rieles finos, como la portada de la guía SQL */
+  .spine.texture-rails {
+    background-image: repeating-linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--g-accent) 8%, transparent) 0 1px,
+      transparent 1px 4px,
+      color-mix(in srgb, var(--g-accent) 8%, transparent) 4px 5px,
+      transparent 5px 48px
+    );
+  }
   /* foquitos de marquesina: dos hileras desfasadas, como la portada de la guía */
   .spine.texture-bulbs {
     background-image:

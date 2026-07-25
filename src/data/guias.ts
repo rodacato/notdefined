@@ -18,7 +18,8 @@ export interface GuiaTheme {
     | 'twill'
     | 'lattice'
     | 'crosshatch'
-    | 'bulbs';
+    | 'bulbs'
+    | 'rails';
   displayFamily: string; // nombre de la @font-face declarada en index.astro
 }
 
@@ -272,6 +273,44 @@ export const guias: Guia[] = [
       accent: '#e8c93f',
       border: '#453d24',
       texture: 'bulbs',
+      displayFamily: 'Guia Spectral',
+    },
+  },
+  {
+    slug: 'polyglot-sql-c1',
+    title: 'SQL dominado',
+    blurb:
+      'El SQL que un junior no escribe: resolver en el motor, en una query declarativa, lo que otros resuelven trayéndose las filas a la app. 16 temas en 5 bloques — window functions, LATERAL, DISTINCT ON, keyset pagination, CTEs y recursivas, GROUP BY avanzado y pivots, upsert atómico, RETURNING y data-modifying CTEs, SELECT FOR UPDATE SKIP LOCKED como cola de jobs, FDW y jsonb de uso, y el criterio que el motor te delega. Cada ficha desmonta un mito con su cuándo-no. Dialecto de referencia: PostgreSQL 17 (julio de 2026).',
+    date: '2026-07-24',
+    tags: ['SQL', 'PostgreSQL', 'Consultas', 'Uso experto'],
+    collection: 'polyglot',
+    nivel: 'C1',
+    theme: {
+      canvas: '#09182b',
+      ink: '#e8eff9',
+      inkSoft: '#9eb3cb',
+      accent: '#4e9be6',
+      border: '#223a55',
+      texture: 'rails',
+      displayFamily: 'Guia Spectral',
+    },
+  },
+  {
+    slug: 'polyglot-sql-c2',
+    title: 'SQL a fondo',
+    blurb:
+      'Qué hace el motor cuando corres un query, con PostgreSQL 17 de referencia. 14 temas en 4 bloques: el pipeline de un query, los índices por dentro, el query planner cost-based, las estadísticas que lo alimentan, MVCC y VACUUM, niveles de aislamiento, locks y deadlocks, el WAL, el page layout de 8KB, TOAST, el buffer manager y el modelo proceso-por-conexión. Cada ficha desmonta un mito y trae salidas de EXPLAIN reales; el widget del planner te deja mover la selectividad y ver al despachador cambiar de riel. Evaluado contra PostgreSQL 17, julio de 2026.',
+    date: '2026-07-24',
+    tags: ['SQL', 'PostgreSQL', 'Internals', 'Planner'],
+    collection: 'polyglot',
+    nivel: 'C2',
+    theme: {
+      canvas: '#09182b',
+      ink: '#e8eff9',
+      inkSoft: '#9eb3cb',
+      accent: '#4e9be6',
+      border: '#223a55',
+      texture: 'rails',
       displayFamily: 'Guia Spectral',
     },
   },
