@@ -2,7 +2,7 @@
 // datos; `npm run check:guias` los descubre y corre todos).
 //
 // Ruby a fondo · Polyglot. El check verifica la INTEGRIDAD de los datos y su
-// cruce con las vistas: catálogo completo (13 temas · 5 bloques) con folios
+// cruce con las vistas: catálogo completo (11 temas · 4 bloques) con folios
 // únicos y consecutivos; cada tema aparece en exactamente un bloque y en el
 // orden lineal, sin huérfanos; cada tema tiene su ficha y su widget con la
 // estructura que su visualización espera (insns/stacks/texts de YARV, pasos y
@@ -18,7 +18,7 @@ import vm from 'node:vm';
 const GUIDE = dirname(fileURLToPath(import.meta.url));
 const TOPIC_FILES = [
   'pipeline', 'yarv', 'jit', 'gvl', 'ractors', 'fibers',
-  'gc', 'shapes', 'heap', 'lookup', 'singleton', 'caches', 'perfila',
+  'gc', 'shapes', 'heap', 'caches', 'perfila',
 ];
 const DATA_FILES = ['data/catalog.js', ...TOPIC_FILES.map((t) => `data/${t}.js`)];
 
@@ -37,7 +37,7 @@ const isArr = (v) => Array.isArray(v);
 // --- Familias (contrato de la colección: 4 bloques) ---------------------------
 const coreSrc = readFileSync(join(GUIDE, 'js/core.js'), 'utf8');
 const FAMILIES = new Set([...coreSrc.matchAll(/^\s*(\w+):\s*\{\s*label:/gm)].map((m) => m[1]));
-for (const fam of ['exec', 'conc', 'mem', 'obj', 'taller'])
+for (const fam of ['exec', 'conc', 'mem', 'taller'])
   if (!FAMILIES.has(fam)) fail(`core.js: falta la familia «${fam}» en G.FAMILIES`);
 
 // --- Catálogo -----------------------------------------------------------------
@@ -49,10 +49,10 @@ const topics = G.data.topics || {};
 for (const k of ['meta', 'order', 'blocks', 'quote', 'biblio', 'colofon'])
   if (cat[k] == null) fail(`catalog.${k}: falta`);
 
-if (!isArr(cat.order) || cat.order.length !== 13)
-  fail(`catalog.order: ${cat.order?.length} temas, esperaba 13`);
-if (!isArr(cat.blocks) || cat.blocks.length !== 5)
-  fail(`catalog.blocks: ${cat.blocks?.length} bloques, esperaba 5`);
+if (!isArr(cat.order) || cat.order.length !== 11)
+  fail(`catalog.order: ${cat.order?.length} temas, esperaba 11`);
+if (!isArr(cat.blocks) || cat.blocks.length !== 4)
+  fail(`catalog.blocks: ${cat.blocks?.length} bloques, esperaba 4`);
 
 // meta
 if (!isStr(cat.meta?.lede)) fail('catalog.meta.lede: falta');
@@ -184,16 +184,6 @@ const KIND_KEYS = {
     for (const p of w.presets || []) if (!isStr(p.label) || !isArr(p.seq)) fail(`${at}: preset sin label/seq`);
   },
   heap: () => {},
-  lookup: (w, at) => {
-    if (!w.defs || typeof w.defs !== 'object') return fail(`${at}: lookup sin defs`);
-    if (!w.kind_of || typeof w.kind_of !== 'object') return fail(`${at}: lookup sin kind_of`);
-    for (const cls of Object.keys(w.defs)) {
-      if (!isArr(w.defs[cls])) fail(`${at}: defs[${cls}] no es lista de métodos`);
-      if (!w.kind_of[cls]) fail(`${at}: «${cls}» en defs pero no en kind_of`);
-    }
-    if (!isArr(w.methods) || !w.methods.length) fail(`${at}: lookup sin methods`);
-  },
-  singleton: () => {},
   caches: () => {},
   perfila: (w, at) => {
     if (!isStr(w.code)) fail(`${at}: perfila sin snippet code`);

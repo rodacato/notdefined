@@ -5,7 +5,7 @@
   "use strict";
 
   G.data.topics.perfila = {
-    slug: "perfila", n: "13", kind: "el taller", glyph: "◆◆◇", family: "taller",
+    slug: "perfila", n: "11", kind: "el taller", glyph: "◆◆◇", family: "taller",
     navShort: "Perfila el motor",
     title: "Perfila el motor",
     tagline: "Cada herramienta de profiling observa una pieza que ya conoces. Este es el mapa.",

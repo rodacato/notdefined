@@ -185,11 +185,30 @@ export const guias: Guia[] = [
     slug: 'polyglot-ruby-c2',
     title: 'Ruby a fondo',
     blurb:
-      'Los internals de Ruby, de Prism al código máquina: 12 piezas del motor en 4 bloques — pipeline de ejecución, YARV, YJIT/ZJIT, la GVL y los Ractors, Fibers, el GC compactador, object shapes, heap y method lookup. Cada tema desmonta un malentendido, al día con Ruby 4.0.',
+      'Los internals de Ruby, de Prism al código máquina: 11 temas en 4 bloques — el pipeline de ejecución, YARV, YJIT/ZJIT, la GVL y los Ractors, Fibers, el GC compactador, object shapes, el heap, las cachés de método y un cierre de taller para medirlas en tu app. Cada tema desmonta un malentendido, al día con Ruby 4.0.',
     date: '2026-07-18',
     tags: ['Ruby', 'Internals', 'YARV', 'GC'],
     collection: 'polyglot',
     nivel: 'C2',
+    theme: {
+      canvas: '#1c1116',
+      ink: '#f5e9ed',
+      inkSoft: '#c2a6b1',
+      accent: '#e24d68',
+      border: '#442a38',
+      texture: 'facets',
+      displayFamily: 'Guia Spectral',
+    },
+  },
+  {
+    slug: 'polyglot-ruby-c1',
+    title: 'Ruby dominado',
+    blurb:
+      'Lo que un senior hace con Ruby cuando ya no pregunta cómo se escribe: criterio, trade-offs y el folklore que hay que desmontar. 15 temas en 4 bloques — el modelo de objetos (method lookup, singleton classes, resolución de constantes), la metaprogramación con criterio (define_method vs method_missing, el self movedizo, refinements), el lenguaje expresivo (closures, forwarding de argumentos, pattern matching, enumerables lazy y los protocolos de mixin) y la robustez práctica (diseño de errores, los gotchas que se tragan bugs, inmutabilidad real y qué modelo de concurrencia elegir). Cada ficha desmonta un mito con su cuándo-no. Evaluado con Ruby 4.0, julio de 2026.',
+    date: '2026-07-24',
+    tags: ['Ruby', 'Metaprogramación', 'Uso experto'],
+    collection: 'polyglot',
+    nivel: 'C1',
     theme: {
       canvas: '#1c1116',
       ink: '#f5e9ed',

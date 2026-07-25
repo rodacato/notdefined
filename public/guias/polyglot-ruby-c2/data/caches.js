@@ -5,13 +5,13 @@
   "use strict";
 
   G.data.topics.caches = {
-    slug: "caches", n: "12", kind: "la caché", glyph: "◆◆◆", family: "obj",
+    slug: "caches", n: "10", kind: "la caché", glyph: "◆◆◆", family: "mem",
     navShort: "Method cache",
     title: "Method cache e inline caches",
     tagline: "Recordar dónde vive cada método. Las mismas invariantes que vigila el JIT.",
     chips: ["inline cache", "invalidación"],
     eyebrowSub: "recordar dónde vive",
-    lede: 'Buscar un método por toda la <a href="#/lookup">cadena de ancestros</a> cada vez sería lento. Ruby <b>cachea</b> el resultado: la segunda llamada es mucho más rápida. Y descansa en la misma apuesta que hace el <a href="#/jit">JIT</a> — recordar algo mientras nadie cambie las reglas.',
+    lede: 'Buscar un método por toda la <a href="/guias/polyglot-ruby-c1/#/tema/method-lookup">cadena de ancestros</a> (el criterio de USO vive en «Ruby dominado», el C1) cada vez sería lento. Ruby <b>cachea</b> el resultado: la segunda llamada es mucho más rápida. Y descansa en la misma apuesta que hace el <a href="#/jit">JIT</a> — recordar algo mientras nadie cambie las reglas.',
 
     enBreve: [
       { k: "Dónde",     v: "Junto a la llamada" },

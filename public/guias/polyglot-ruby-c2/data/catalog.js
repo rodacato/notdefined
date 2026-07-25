@@ -7,8 +7,8 @@
 
   G.data.catalog = {
     meta: {
-      count: "13 temas · 5 bloques",
-      lede: 'En Ruby tu texto nunca se ejecuta tal cual: viaja por <em>Prism</em>, la máquina <em>YARV</em> y —si algo se calienta— el <em>JIT</em>. Trece piezas: doce del motor, cada una desde el fundamento hasta verla <em>moverse</em>, y un cierre de taller para medirlas en tu app.',
+      count: "11 temas · 4 bloques",
+      lede: 'En Ruby tu texto nunca se ejecuta tal cual: viaja por <em>Prism</em>, la máquina <em>YARV</em> y —si algo se calienta— el <em>JIT</em>. Once piezas: diez del motor, cada una desde el fundamento hasta verla <em>moverse</em>, y un cierre de taller para medirlas en tu app.',
       facts: [
         { k: "Parser",     v: "Prism, por defecto",              sub: "reemplazó a parse.y" },
         { k: "JIT",        v: "YJIT + ZJIT",                     sub: "conviven en 4.0" },
@@ -18,18 +18,16 @@
     },
 
     // Orden lineal de las fichas (anterior / siguiente sale de aquí).
-    order: ["pipeline", "yarv", "jit", "gvl", "ractors", "fibers", "gc", "heap", "shapes", "lookup", "singleton", "caches", "perfila"],
+    order: ["pipeline", "yarv", "jit", "gvl", "ractors", "fibers", "gc", "heap", "shapes", "caches", "perfila"],
 
     blocks: [
       { family: "exec", eyebrow: "Bloque 1 · Ejecución y compilación", hint: "del texto al código máquina",
         topics: ["pipeline", "yarv", "jit"] },
       { family: "conc", eyebrow: "Bloque 2 · Concurrencia y paralelismo", hint: "concurrente no es paralelo",
         topics: ["gvl", "ractors", "fibers"] },
-      { family: "mem", eyebrow: "Bloque 3 · Memoria y objetos", hint: "dónde viven los objetos",
-        topics: ["gc", "heap", "shapes"] },
-      { family: "obj", eyebrow: "Bloque 4 · Modelo de objetos y metaprogramación", hint: "cómo se resuelve un método",
-        topics: ["lookup", "singleton", "caches"] },
-      { family: "taller", eyebrow: "Bloque 5 · El taller", hint: "observa todo lo anterior en TU app",
+      { family: "mem", eyebrow: "Bloque 3 · Memoria y objetos", hint: "dónde viven los objetos y cómo se cachea su lookup",
+        topics: ["gc", "heap", "shapes", "caches"] },
+      { family: "taller", eyebrow: "Bloque 4 · El taller", hint: "observa todo lo anterior en TU app",
         topics: ["perfila"] }
     ],
 
