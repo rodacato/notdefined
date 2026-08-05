@@ -38,22 +38,34 @@ const gtagInit = `
     if (typeof gtag === 'function') gtag('event', event, params);
   }
 
-  const article = document.querySelector('article');
-  if (article) {
+  function trackReading(article: HTMLElement) {
+    const DWELL_MS = 15000;
     let fired = false;
-    const onScroll = () => {
+
+    function complete() {
       if (fired) return;
+      fired = true;
+      track('read_complete', { post: location.pathname });
+      window.removeEventListener('scroll', onScroll);
+    }
+
+    function onScroll() {
       const top = article.getBoundingClientRect().top + window.scrollY;
       const seen = window.scrollY + window.innerHeight - top;
-      if (seen / article.offsetHeight >= 0.9) {
-        fired = true;
-        track('read_complete', { post: location.pathname });
-        window.removeEventListener('scroll', onScroll);
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+      if (seen / article.offsetHeight >= 0.9) complete();
+    }
+
+    // An article shorter than the viewport passes the 90% test on the first
+    // frame, so only elapsed time separates reading it from landing on it.
+    if (article.offsetHeight <= window.innerHeight) {
+      setTimeout(complete, DWELL_MS);
+    } else {
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
   }
+
+  const article = document.querySelector('article');
+  if (article) trackReading(article);
 
   function ctaType(href: string): string | null {
     if (href.includes('github.com')) return 'github';
