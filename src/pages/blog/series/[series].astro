@@ -97,7 +97,10 @@ function formatDate(date: Date) {
   <nav class="series-footer" aria-label="Navegación entre series">
     {
       next && (
-        <a href={`/blog/series/${encodeURIComponent(next)}/`} class="next-series">
+        <a
+          href={`/blog/series/${encodeURIComponent(next)}/`}
+          class="next-series"
+        >
           <span class="next-label">Sigue con</span>
           <span class="next-name">{next} →</span>
         </a>
