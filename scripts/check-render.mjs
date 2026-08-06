@@ -1,14 +1,7 @@
 // Abre cada guía en un navegador real y verifica que PINTE algo.
 // Cobertura parcial a propósito: ver docs/guias/autoria.md §A5.
-import {
-  readdirSync,
-  existsSync,
-  writeFileSync,
-  mkdtempSync,
-  readFileSync,
-} from 'node:fs';
+import { readdirSync, existsSync, writeFileSync, readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
-import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -82,7 +75,6 @@ const slugs = readdirSync(GUIAS)
   .filter((d) => !soloSlug || d === soloSlug);
 
 let fallas = 0;
-const dir = mkdtempSync(join(tmpdir(), 'render-'));
 
 for (const slug of slugs) {
   const html = readFileSync(join(GUIAS, slug, 'index.html'), 'utf8');

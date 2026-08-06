@@ -15,6 +15,9 @@ dist/
 .roo/
 .aider*
 .kwik-e/
+
+# sonda de check-render; su finally la borra, un kill a media corrida no
+public/guias/*/_sonda.html
 logo.png
 CLAUDE.local.md
 .mcp.json
