@@ -49,6 +49,11 @@
       creencia: '«<code>include</code> mete el módulo ARRIBA de la clase, así que sus métodos ganan.»',
       realidad: 'Falso: <code>include</code> inserta el módulo JUSTO DEBAJO de la clase — gana la clase. El que va arriba y sí pisa a la clase es <code>prepend</code>. Media comunidad usa <code>include</code> esperando override y no entiende por qué su método no corre.'
     },
+    callout: {
+      dice: "Pregúntale a Ruby quién define de verdad un método, en vez de adivinarlo:",
+      cmd: "p [].method(:sum).owner",
+      sale: "Array"
+    },
     widget: 'lookup',
     recursos: [
       { titulo: 'Module#ancestors, #include, #prepend', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Module.html', nota: 'La documentación de inserción es explícita sobre la posición. Léela una vez y ya.' },
@@ -94,6 +99,11 @@
     mito: {
       creencia: '«Un "método de clase" es una categoría aparte de un método de instancia.»',
       realidad: 'Falso: es un método de INSTANCIA de la singleton class de la clase. No son dos mecanismos; es uno (lookup sobre la eigenclass) disfrazado de dos.'
+    },
+    callout: {
+      dice: "La cadena de eigenclasses existe y la puedes leer:",
+      cmd: "p Integer.singleton_class.ancestors.first(3)",
+      sale: "[#<Class:Integer>, #<Class:Numeric>, #<Class:Object>]"
     },
     widget: 'eigenclass',
     recursos: [
@@ -145,6 +155,11 @@
     mito: {
       creencia: '«Las constantes se buscan igual que los métodos.»',
       realidad: 'Falso: primero es léxico (<code>Module.nesting</code>), después por ancestros. El gotcha: <code>module A; module B</code> vs <code>module A::B</code> cambian el nesting y con él el resultado.'
+    },
+    callout: {
+      dice: "Imprime el nesting real desde dentro del módulo:",
+      cmd: "module A; X = 1; module B; p Module.nesting; end; end",
+      sale: "[A::B, A]"
     },
     widget: 'constantes',
     recursos: [

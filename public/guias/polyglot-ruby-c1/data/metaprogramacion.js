@@ -62,6 +62,11 @@
       creencia: '«<code>method_missing</code> es como se hacen los métodos dinámicos en Ruby.»',
       realidad: 'Falso: es el ÚLTIMO recurso. <code>define_method</code> genera métodos reales (salen en <code>respond_to?</code>, se cachean, aparecen en el lookup); <code>method_missing</code> es un catch-all que rompe cachés y MIENTE en <code>respond_to?</code> si no defines <code>respond_to_missing?</code>.'
     },
+    callout: {
+      dice: "Struct genera métodos de verdad, no un catch-all — compruébalo:",
+      cmd: "p Struct.new(:a).instance_methods(false).sort",
+      sale: "[:a, :a=]"
+    },
     widget: 'generacion',
     recursos: [
       { titulo: 'BasicObject#method_missing y Object#respond_to_missing?', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/BasicObject.html', nota: 'La doc dice literalmente que llames a <code>super</code> si no reconoces el nombre.' },
@@ -110,6 +115,11 @@
     mito: {
       creencia: '«<code>instance_eval</code> y <code>class_eval</code> hacen casi lo mismo.»',
       realidad: 'Falso: <code>instance_eval</code> cambia self y define en la singleton class del receptor; <code>class_eval</code> (sobre una clase) define métodos de INSTANCIA de esa clase. Confundirlos = tu <code>def</code> termina en el lugar equivocado.'
+    },
+    callout: {
+      dice: "Las dos formas cambian dónde CAE el <code>def</code>, no solo quién es <code>self</code>:",
+      cmd: "class C; end; C.instance_eval { def a; end }; C.class_eval { def b; end }; p [C.methods(false), C.instance_methods(false)]",
+      sale: "[[:a], [:b]]"
     },
     widget: 'self',
     recursos: [
@@ -167,6 +177,11 @@
     mito: {
       creencia: '«Los refinements son monkey-patching seguro y con scope.»',
       realidad: 'Medio falso: su scope léxico es tan estricto que casi nunca hace lo que esperas (no se propaga a métodos llamados desde dentro del scope, no viaja con <code>send</code> dinámico) y la comunidad los abandonó. <code>prepend</code> de un módulo nombrado —rastreable en <code>ancestors</code>— es la respuesta adulta.'
+    },
+    callout: {
+      dice: "Antes de parchar, mira quién es el dueño actual del método:",
+      cmd: "p String.instance_method(:upcase).owner",
+      sale: "String"
     },
     widget: 'refinements',
     recursos: [

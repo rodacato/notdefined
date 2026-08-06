@@ -64,6 +64,11 @@
       creencia: '«Hereda tus excepciones de <code>Exception</code> para que sean "de verdad".»',
       realidad: 'Falso y peligroso: <code>rescue</code> pelón captura <code>StandardError</code>, no <code>Exception</code> — si heredas de <code>Exception</code>, tu error se escapa de casi todos los <code>rescue</code> del ecosistema (y te pones al nivel de <code>SignalException</code>/<code>NoMemoryError</code>, que NUNCA debes rescatar). Hereda de <code>StandardError</code>.'
     },
+    callout: {
+      dice: "La frontera del <code>rescue</code> pelón, en una línea:",
+      cmd: "p [NoMemoryError.ancestors.include?(StandardError), ArgumentError.ancestors.include?(StandardError)]",
+      sale: "[false, true]"
+    },
     widget: 'jerarquia',
     recursos: [
       { titulo: 'Exception — jerarquía, #cause, #full_message', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Exception.html', nota: 'El árbol completo de clases built-in está aquí; vale imprimirlo.' },
@@ -134,6 +139,11 @@
       creencia: '«Con <code>rescue =&gt; e</code> ya estás manejando errores.»',
       realidad: 'Falso: capturar no es manejar. Un <code>rescue</code> que loguea y sigue esconde el fallo; un <code>rescue</code> pelón sin re-raise se traga bugs que no viste venir.'
     },
+    callout: {
+      dice: "Míralo tragarse la excepción en tu propia consola:",
+      cmd: "def f; raise \"grave\"; ensure; return :ok; end; p f",
+      sale: ":ok      # el \"grave\" desapareció"
+    },
     widget: 'ensure',
     recursos: [
       { titulo: 'Exceptions — begin/rescue/ensure/retry', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/syntax/exceptions_rdoc.html', nota: 'La semántica de <code>ensure</code> frente a una excepción en vuelo, escrita.' },
@@ -191,6 +201,11 @@
     mito: {
       creencia: '«<code>obj.freeze</code> congela el objeto y todo lo que contiene.»',
       realidad: 'Falso: <code>freeze</code> es superficial (shallow). <code>[[1,2]].freeze</code> congela el array de afuera pero NO los de adentro — <code>arr[0] &lt;&lt; 3</code> sigue mutando. Para profundo, congelas recursivo tú o usas algo que ya lo hace (<code>Data</code>, <code>Ractor.make_shareable</code>).'
+    },
+    callout: {
+      dice: "El <code>freeze</code> superficial, comprobado:",
+      cmd: "p [[1,2]].freeze.then { |a| a[0] << 3; a }",
+      sale: "[[1, 2, 3]]"
     },
     widget: 'freeze',
     recursos: [
@@ -250,6 +265,11 @@
     mito: {
       creencia: '«Los Ractors ya le quitaron el GVL a Ruby, así que hay paralelismo real para todo.»',
       realidad: 'Medio falso: los Ractors dan paralelismo de CPU real, pero su modelo de aislamiento (solo objetos shareable cruzan, casi todo tiene que ir frozen) los deja fuera de la mayoría del código Rails. En 4.0 maduraron (comunicación por Port, <code>#value</code>/<code>#join</code> en vez de <code>#take</code>) pero siguen experimentales. Para I/O, los threads —con el GVL soltándose en I/O— siguen siendo la respuesta.'
+    },
+    callout: {
+      dice: "Un Ractor de verdad, con su warning de experimental incluido:",
+      cmd: "p Ractor.new { 1 + 1 }.value",
+      sale: "2"
     },
     widget: 'concurrencia',
     recursos: [

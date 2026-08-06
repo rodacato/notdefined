@@ -180,6 +180,30 @@ em { font-family: var(--display); font-style: italic; font-weight: 500; }
   font-family: var(--display); font-size: 18px; line-height: 1.45; color: var(--fg);
 }
 
+/* --- Consola: el one-liner copiable -------------------------------------- */
+.consola {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--primary); border-radius: 5px; padding: 16px 18px;
+}
+.consola__dice { margin: 0 0 12px; font-size: 15px; color: var(--subtle); max-width: 72ch; }
+.consola__linea {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--canvas); border: 1px solid var(--border); border-radius: 4px; padding: 10px 12px;
+}
+.consola__cmd {
+  flex: 1; font-family: var(--mono); font-size: 13px; line-height: 1.5;
+  color: var(--fg); white-space: pre-wrap; word-break: break-word;
+}
+.consola__copiar {
+  flex: none; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em;
+  color: var(--subtle); background: transparent; cursor: pointer;
+  border: 1px solid var(--border-strong); border-radius: 999px; padding: 3px 10px;
+  transition: color var(--paso), border-color var(--paso);
+}
+.consola__copiar:hover { color: var(--primary); border-color: var(--primary); }
+.consola__sale { margin: 10px 0 0; font-family: var(--mono); font-size: 12.5px; color: var(--subtle); }
+.copia-oculta { position: fixed; top: -100px; opacity: 0; }
+
 /* --- Ficha 00: los modelos mentales -------------------------------------- */
 .modelo {
   display: block; padding: 18px 20px; margin-bottom: 12px;
@@ -219,16 +243,18 @@ em { font-family: var(--display); font-style: italic; font-weight: 500; }
 .riel__grupo { margin-bottom: 18px; }
 .riel__cabeza { cursor: pointer; list-style: none; padding: 2px 0 8px; }
 .riel__cabeza::-webkit-details-marker { display: none; }
+/* --fam codifica el bloque y reprueba AA en claro: aquí marca, no escribe. */
 .riel__titulo {
   display: block;
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--faint);
+  color: var(--subtle);
+  border-left: 3px solid var(--fam, var(--primary)); padding-left: 8px;
 }
 .riel__cabeza:hover .riel__titulo { color: var(--subtle); }
 .riel__modelo {
   display: block;
   font-family: var(--display); font-style: italic; font-size: 12.5px; line-height: 1.35;
-  color: var(--subtle); margin-top: 2px;
+  color: var(--subtle); margin-top: 2px; padding-left: 11px;
 }
 .riel__link--intro { margin-bottom: 20px; }
 .riel__lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
@@ -240,7 +266,7 @@ em { font-family: var(--display); font-style: italic; font-weight: 500; }
   transition: background var(--paso), color var(--paso), border-color var(--paso);
 }
 .riel__link:hover { background: var(--surface); color: var(--fg); }
-.riel__link[aria-current='page'] { background: var(--surface-lit); color: var(--fg); border-left-color: var(--primary); font-weight: 600; }
+.riel__link[aria-current='page'] { background: var(--surface-lit); color: var(--fg); border-left-color: var(--fam, var(--primary)); font-weight: 600; }
 .riel__folio { font-family: var(--mono); font-size: 11px; color: var(--faint); flex: none; }
 .riel__link[aria-current='page'] .riel__folio { color: var(--primary); }
 .riel__t { flex: 1; }

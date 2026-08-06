@@ -224,6 +224,43 @@
     return raiz;
   };
 
+  /* --- Consola: el one-liner que el lector pega y corre ------------------- */
+  // La Clipboard API no existe en file://, y la guía abre por doble clic.
+  function copiar(texto) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(texto);
+    var area = G.el('textarea', { texto: texto, clase: 'copia-oculta' });
+    document.body.appendChild(area);
+    area.select();
+    try { document.execCommand('copy'); } finally { document.body.removeChild(area); }
+    return Promise.resolve();
+  }
+
+  C.consola = function (callout) {
+    if (!callout) return null;
+
+    var boton = G.el('button', {
+      clase: 'consola__copiar', texto: 'copiar',
+      attr: { type: 'button' },
+      al: {
+        click: function () {
+          copiar(callout.cmd).then(function () {
+            boton.textContent = 'copiado ✓';
+            window.setTimeout(function () { boton.textContent = 'copiar'; }, 1600);
+          });
+        }
+      }
+    });
+
+    return G.el('div', { clase: 'consola' }, [
+      G.el('p', { clase: 'consola__dice', html: callout.dice }),
+      G.el('div', { clase: 'consola__linea' }, [
+        G.el('code', { clase: 'consola__cmd', texto: callout.cmd }),
+        boton
+      ]),
+      G.el('p', { clase: 'consola__sale', texto: '# => ' + callout.sale })
+    ]);
+  };
+
   /* --- Riel: el índice de la guía, presente en todas las vistas ----------- */
   function dificultad(nivel) {
     var n = nivel || 2;
@@ -277,6 +314,7 @@
         resumen,
         G.el('ul', { clase: 'riel__lista' }, items)
       ]);
+      if (bloque.color) grupo.style.setProperty('--fam', bloque.color);
       if (!compacto || contiene) grupo.setAttribute('open', '');
       return grupo;
     });

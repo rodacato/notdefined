@@ -357,13 +357,15 @@ code, .mono { font-family: var(--font-mono); }
 .rail__group { margin-bottom: 18px; }
 .rail__head { cursor: pointer; list-style: none; padding: 2px 0 8px; }
 .rail__head::-webkit-details-marker { display: none; }
+/* --fam codifica datos y reprueba AA en claro: aquí marca, no escribe. */
 .rail__eyebrow {
   display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: .13em;
-  text-transform: uppercase; color: var(--fam, var(--color-fg-faint));
+  text-transform: uppercase; color: var(--color-fg-muted);
+  border-left: 3px solid var(--fam, var(--color-primary)); padding-left: 8px;
 }
 .rail__hint {
   display: block; font-family: var(--font-display); font-style: italic; font-size: 12.5px;
-  line-height: 1.35; color: var(--color-fg-muted); margin-top: 2px;
+  line-height: 1.35; color: var(--color-fg-muted); margin-top: 2px; padding-left: 11px;
 }
 .rail__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
 .rail__link {

@@ -53,6 +53,11 @@
       creencia: '«Un proc y una lambda son lo mismo, la lambda solo es más estricta.»',
       realidad: 'Falso en dos ejes que muerden: el <code>return</code> de un proc sale del método que lo creó (<code>LocalJumpError</code> si ese método ya regresó); el de una lambda sale de la lambda. Y la lambda valida arity; el proc rellena con <code>nil</code>. Objetos distintos, semántica de flujo distinta.'
     },
+    callout: {
+      dice: "La diferencia no es de estilo, el objeto la lleva encima:",
+      cmd: "p [->(){}.lambda?, proc{}.lambda?]",
+      sale: "[true, false]"
+    },
     widget: 'closures',
     recursos: [
       { titulo: 'Proc — lambda? y la tabla de diferencias', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Proc.html', nota: 'La doc de <code>Proc</code> lista las diferencias explícitamente; es corta.' },
@@ -114,6 +119,11 @@
     mito: {
       creencia: '«<code>def wrap(*args, &amp;blk); real(*args, &amp;blk); end</code> reenvía todo.»',
       realidad: 'Falso desde Ruby 3.0: la separación posicional/kwargs deja los keyword arguments fuera (o los degrada a un hash posicional). El forwarding completo hoy es <code>def wrap(...); real(...); end</code>. Y <code>ruby2_keywords</code> existe precisamente porque esa separación rompió gemas entre 2.7 y 3.0.'
+    },
+    callout: {
+      dice: "Cualquier método te dice su firma real, incluido el de Ruby:",
+      cmd: "p method(:puts).parameters",
+      sale: "[[:rest]]"
     },
     widget: 'forwarding',
     recursos: [
@@ -186,6 +196,11 @@
       creencia: '«Es un switch bonito.»',
       realidad: 'Falso: es destructuring con binding de variables, no comparación de igualdad. <code>case/in</code> no cae a <code>==</code>; llama <code>deconstruct</code>/<code>deconstruct_keys</code> y liga nombres.'
     },
+    callout: {
+      dice: "El <code>in</code> suelto es un match booleano que además liga:",
+      cmd: "x = {estado: \"ok\", n: 42}; hit = (x in {n: Integer => n}); p [hit, n]",
+      sale: "[true, 42]"
+    },
     widget: 'pattern',
     recursos: [
       { titulo: 'Pattern matching — sintaxis completa', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/syntax/pattern_matching_rdoc.html', nota: 'Incluye la tabla de qué patrón llama a qué protocolo.' },
@@ -235,6 +250,11 @@
     mito: {
       creencia: '«<code>.lazy</code> siempre es más rápido porque no crea arrays intermedios.»',
       realidad: 'Falso: cambia arrays intermedios por overhead de Enumerator por elemento. En colecciones chicas o cadenas cortas, <code>.lazy</code> es MÁS lento. Paga solo con secuencias grandes/infinitas o cuando cortas temprano (<code>.first(n)</code>, <code>.take</code>).'
+    },
+    callout: {
+      dice: "La secuencia infinita que solo <code>lazy</code> puede recorrer:",
+      cmd: "p((1..Float::INFINITY).lazy.map { _1 * 2 }.first(3))",
+      sale: "[2, 4, 6]"
     },
     widget: 'lazy',
     recursos: [
@@ -296,6 +316,11 @@
     mito: {
       creencia: '«Para que mi objeto sea ordenable o iterable tengo que definir <code>&lt;</code>, <code>&gt;</code>, <code>map</code>, <code>select</code>… uno por uno.»',
       realidad: 'Falso: defines UNO y el módulo te da el resto. <code>include Comparable</code> + <code>&lt;=&gt;</code> te da <code>&lt; &gt; &lt;= &gt;= == between? clamp</code>; <code>include Enumerable</code> + <code>each</code> te da <code>map select reduce sort min max to_a</code>… decenas gratis. Duck-typing por módulo — el movimiento senior canónico de Ruby.'
+    },
+    callout: {
+      dice: "Lo que te regala <code>Comparable</code> por definir un solo <code>&lt;=&gt;</code>:",
+      cmd: "p Comparable.instance_methods.sort",
+      sale: "[:<, :<=, :==, :>, :>=, :between?, :clamp]"
     },
     widget: 'mixin',
     recursos: [

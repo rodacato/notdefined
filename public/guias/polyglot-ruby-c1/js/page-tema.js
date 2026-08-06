@@ -57,6 +57,9 @@
     var widget = G.comp.widget(G.widgetDe(ficha));
     var interactivo = widget ? G.comp.seccion('hazlo visible', [widget]) : null;
 
+    var consola = G.comp.consola(ficha.callout);
+    var pruebalo = consola ? G.comp.seccion('pruébalo en tu consola', [consola]) : null;
+
     var cuandoNo = G.comp.seccion('cuándo NO usarlo', [
       G.el('div', { clase: 'aviso aviso--no' }, [
         G.el('p', { html: ficha.cuandoNo })
@@ -93,7 +96,7 @@
     ]);
 
     var columna = G.el('article', {}, [
-      cabeza, breve, fundamento, mecanica, interactivo, cuandoNo, mito, recursos, paginacion(ficha)
+      cabeza, breve, fundamento, mecanica, interactivo, pruebalo, cuandoNo, mito, recursos, paginacion(ficha)
     ]);
 
     return G.el('div', { clase: 'envoltura' }, [
