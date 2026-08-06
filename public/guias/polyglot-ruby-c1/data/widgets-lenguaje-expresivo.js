@@ -9,19 +9,18 @@
     filas: [
       { id: 'pesado', texto: 'pesado    String de 10 MB      ¿la lambda lo menciona? no' },
       { id: 'contador', texto: 'contador  Integer             ¿la lambda lo menciona? sí' },
-      { id: 'temp', texto: 'temp      Array de 1000         (asignada después del bloque)' },
       { id: 'self', texto: 'self      el objeto que definió el método' }
     ],
     pasos: [
       {
-        nota: 'El método declara tres locales y devuelve una lambda que solo usa <code>contador</code>.',
+        nota: 'El método declara dos locales y devuelve una lambda que solo usa <code>contador</code>.',
         marca: {},
         panel: { titulo: 'Código', lineas: [{ texto: 'def fuga' }, { texto: '  pesado = "x" * 10_000_000' }, { texto: '  contador = 0' }, { texto: '  -> { contador += 1 }' }, { texto: 'end' }] }
       },
       {
         nota: 'La lambda captura el <em>binding</em> completo, no las variables que usa.',
-        marca: { pesado: 'activo', contador: 'activo', temp: 'activo', self: 'activo' },
-        panel: { titulo: 'Prueba', lineas: [{ texto: 'f = fuga' }, { texto: 'f.binding.local_variables', estado: 'activo' }, { texto: '# => [:pesado, :contador, :temp]', estado: 'activo' }] }
+        marca: { pesado: 'activo', contador: 'activo', self: 'activo' },
+        panel: { titulo: 'Prueba', lineas: [{ texto: 'f = fuga' }, { texto: 'f.binding.local_variables', estado: 'activo' }, { texto: '# => [:pesado, :contador]', estado: 'activo' }] }
       },
       {
         nota: 'Sí: los 10 MB siguen vivos porque el binding los sostiene.',

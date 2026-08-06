@@ -7,7 +7,7 @@
     titulo: 'define_method vs method_missing, lado a lado',
     encabezado: 'Qué sabe el objeto de sus propios métodos',
     filas: [
-      { id: 'lista', texto: 'instance_methods(false)   → [:initialize]' },
+      { id: 'lista', texto: 'instance_methods(false)   → []' },
       { id: 'respond', texto: 'respond_to?(:puerto)      → false' },
       { id: 'method', texto: 'method(:puerto)           → NameError' },
       { id: 'cache', texto: 'inline cache de la llamada → vacía' },
@@ -37,7 +37,7 @@
       {
         nota: 'Opción B — <code>define_method</code> en load-time: métodos reales.',
         marca: { lista: 'ok', respond: 'ok', method: 'ok', cache: 'ok', ruta: 'ok' },
-        panel: { titulo: 'define_method', lineas: [{ texto: 'CAMPOS.each { |c| define_method(c) { @datos[c] } }', estado: 'activo' }, { texto: 'instance_methods(false)  # => [:host, :puerto, :tls, :initialize]', estado: 'ok' }] }
+        panel: { titulo: 'define_method', lineas: [{ texto: 'CAMPOS.each { |c| define_method(c) { @datos[c] } }', estado: 'activo' }, { texto: 'instance_methods(false).sort  # => [:host, :puerto, :tls]', estado: 'ok' }] }
       },
       {
         nota: 'Criterio: nombres conocidos → <code>define_method</code>. Conjunto abierto de verdad → catch-all honesto.',
@@ -108,9 +108,9 @@
         panel: { titulo: 'Setup', lineas: [{ texto: 'module Gritos' }, { texto: '  refine String do' }, { texto: '    def upcase; "¡" + super + "!"; end' }, { texto: '  end' }, { texto: 'end' }] }
       },
       {
-        nota: 'Con <code>using Gritos</code>, la llamada directa sí lo ve. Eso es todo lo que funciona como esperabas.',
-        marca: { directo: 'ok' },
-        panel: { titulo: 'Alcance', lineas: [{ texto: '"hola".upcase  # => "¡HOLA!"', estado: 'ok' }] }
+        nota: 'Con <code>using Gritos</code>, la llamada directa lo ve — y <code>send</code> también: lo que activa el refinement es el <em>scope</em>, no la sintaxis de la llamada.',
+        marca: { directo: 'ok', send: 'ok' },
+        panel: { titulo: 'Alcance', lineas: [{ texto: '"hola".upcase         # => "¡HOLA!"', estado: 'ok' }, { texto: '"hola".send(:upcase)  # => "¡HOLA!"', estado: 'ok' }] }
       },
       {
         nota: 'El scope arranca en la línea del <code>using</code>: arriba no aplica.',
@@ -118,9 +118,9 @@
         panel: { titulo: 'Alcance', lineas: [{ texto: '# arriba del using', estado: 'pierde' }, { texto: '"hola".upcase  # => "HOLA"', estado: 'pierde' }] }
       },
       {
-        nota: 'No se propaga: un método llamado desde el scope refinado NO ve el refinement.',
-        marca: { metodo: 'pierde', send: 'pierde' },
-        panel: { titulo: 'Alcance', lineas: [{ texto: 'def indirecto(s) = s.upcase' }, { texto: 'indirecto("hola")     # => "HOLA"', estado: 'pierde' }, { texto: '"hola".send(:upcase)  # => "HOLA"', estado: 'pierde' }] }
+        nota: 'No se propaga: el cuerpo de un método definido fuera del scope refinado NO ve el refinement, aunque lo llames desde dentro.',
+        marca: { metodo: 'pierde' },
+        panel: { titulo: 'Alcance', lineas: [{ texto: 'def indirecto(s) = s.upcase' }, { texto: 'indirecto("hola")     # => "HOLA"', estado: 'pierde' }, { texto: 'el scope léxico se queda en el archivo, no viaja', estado: 'pierde' }] }
       },
       {
         nota: 'Fuera del archivo, cero. Y no deja rastro auditable en ningún lado.',

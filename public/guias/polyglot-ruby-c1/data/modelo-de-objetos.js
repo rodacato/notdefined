@@ -86,7 +86,7 @@
       'end',
       '',
       'Bodega.singleton_class.instance_method(:inventario)',
-      '# => #<UnboundMethod: #<Class:Bodega>#inventario>',
+      '# => #<UnboundMethod: #<Class:Bodega>#inventario()...>',
       'Bodega.singleton_class.ancestors.first(3)',
       '# => [#<Class:Bodega>, #<Class:Object>, #<Class:BasicObject>]'
     ].join('\n'),
@@ -137,7 +137,9 @@
       'end',
       '',
       'A::B.cual2  # => [[A::B], "top-level"]   # A ya no está en el nesting',
-      'A::B.const_get(:X)  # => "de A"          # por ancestros/lexical parent sí'
+      'A::B.const_get(:X)  # => "top-level"     # const_get NO mira el nesting léxico:',
+      '                                         # busca en A::B y sus ancestros → Object',
+      'A.const_get(:X)     # => "de A"          # hay que preguntarle al módulo correcto'
     ].join('\n'),
     cuandoNo: 'No armes tu propio <code>autoload</code> a mano para la app — Zeitwerk ya resuelve carga y recarga; el autoload casero se rompe con nombres anidados y bajo threads. <code>autoload</code> queda para el arranque de gemas.',
     mito: {

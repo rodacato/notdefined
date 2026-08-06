@@ -45,6 +45,11 @@ def expectativa_en(texto)
   m[1].sub(/\s{2,}#.*$/, '').strip
 end
 
+# `# ~>` marca salida ilustrativa (benchmarks, ids): corre pero no se compara.
+def ilustrativa_en(texto)
+  texto.match?(/#\s*~>/)
+end
+
 # Vive al final de la sentencia o en los comentarios que siguen; el código corta.
 def expectativa_de(lineas, fin)
   propia = expectativa_en(lineas[fin - 1].to_s)
@@ -58,6 +63,18 @@ def expectativa_de(lineas, fin)
     i += 1
   end
   nil
+end
+
+def ilustrativa_de(lineas, fin)
+  return true if ilustrativa_en(lineas[fin - 1].to_s)
+
+  i = fin
+  while (linea = lineas[i])
+    break unless linea.strip.start_with?('#')
+    return true if ilustrativa_en(linea)
+    i += 1
+  end
+  false
 end
 
 def error_esperado?(esperado)
@@ -104,7 +121,10 @@ arbol.value.statements.body.each do |nodo|
   end
   entrada[:printed] = impreso unless impreso.empty?
 
-  if esperado.nil?
+  if ilustrativa_de(lineas, fin)
+    resultados << entrada.merge(kind: 'ilustrativa', ok: levantado.nil?,
+                                got: levantado ? "#{levantado.class}: #{levantado.message}" : valor.inspect)
+  elsif esperado.nil?
     resultados << if levantado
                     entrada.merge(kind: 'error-no-declarado', ok: false,
                                   got: "#{levantado.class}: #{levantado.message}")

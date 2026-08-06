@@ -33,7 +33,9 @@
       'c = Config.new(host: "db.local", puerto: 5432)',
       'c.puerto                       # => 5432',
       'c.respond_to?(:puerto)         # => true',
-      'Config.instance_methods(false) # => [:host, :puerto, :tls, :initialize]',
+      'Config.instance_methods(false).sort  # => [:host, :puerto, :tls]',
+      '#   initialize no sale: Ruby lo hace privado solo. Y sin .sort el orden',
+      '#   es el de la tabla de métodos, no el de definición.',
       '',
       '# catch-all honesto: define el método al primer uso',
       'class Proxy',
@@ -51,8 +53,9 @@
       'end',
       '',
       'p = Proxy.new([3, 1, 2])',
-      'p.sort                         # => [1, 2, 3]   (primera vez: method_missing)',
-      'Proxy.instance_methods(false)  # => [:sort, :initialize, :method_missing, :respond_to_missing?]'
+      'p.sort                         # => [1, 2, 3]   # primera vez: pasa por method_missing',
+      'Proxy.instance_methods(false).sort  # => [:method_missing, :sort]',
+      '#   respond_to_missing? tampoco sale: Ruby lo hace privado igual que initialize'
     ].join('\n'),
     cuandoNo: 'No uses <code>method_missing</code> si puedes enumerar los nombres. Solo paga cuando el conjunto es abierto de verdad (proxies, delegación a un backend desconocido, DSLs).',
     mito: {
@@ -141,7 +144,7 @@
       '',
       'String.prepend(TrimSeguro)',
       '',
-      '"\\u00A0 hola \\u00A0".strip     # => "hola"',
+      '"\\u00A0hola\\u00A0".strip       # => "hola"',
       'String.ancestors.first(2)     # => [TrimSeguro, String]',
       'String.instance_method(:strip).owner  # => TrimSeguro',
       '',
@@ -157,7 +160,8 @@
       'using Gritos',
       '"hola".upcase                 # => "¡HOLA!"',
       'indirecto("hola")             # => "HOLA"     # el método no ve el refinement',
-      '"hola".send(:upcase)          # => "HOLA"     # send dinámico tampoco'
+      '"hola".send(:upcase)          # => "¡HOLA!"   # send SÍ lo ve: la activación',
+      '                              #               es del scope, no de la sintaxis'
     ].join('\n'),
     cuandoNo: 'No hagas monkey-patch del core o de una gema para tapar un bug ajeno en prod — revienta en silencio cuando la gema actualiza. Prepend un módulo tuyo o abre el issue.',
     mito: {

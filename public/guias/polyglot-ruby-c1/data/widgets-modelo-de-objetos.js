@@ -131,7 +131,7 @@
       {
         nota: 'El gotcha: la forma de abrir el módulo cambió el valor. <code>const_get</code> sigue viendo el de <code>A</code>.',
         marca: { anc: 'gana', top: 'gana' },
-        panel: { titulo: 'Escape', lineas: [{ texto: 'A::B.const_get(:X)  # => "de A"', estado: 'ok' }, { texto: '::X                 # => "top-level" explícito', estado: 'ok' }] }
+        panel: { titulo: 'Escape', lineas: [{ texto: 'A::B.const_get(:X)  # => "top-level"', estado: 'pierde' }, { texto: 'A.const_get(:X)     # => "de A"  ← pregúntale a A', estado: 'ok' }, { texto: '::X                 # => "top-level" explícito', estado: 'ok' }] }
       }
     ]
   };
