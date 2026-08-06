@@ -4,31 +4,6 @@
 
   G.paginas = G.paginas || {};
 
-  function riel(slugActual) {
-    var grupos = G.datos.bloques.map(function (bloque) {
-      var items = G.fichasDeBloque(bloque.id).map(function (ficha) {
-        var esta = ficha.slug === slugActual;
-        var link = G.el('a', {
-          clase: 'riel__link',
-          attr: { href: '#/tema/' + ficha.slug }
-        }, [
-          G.el('span', { clase: 'riel__folio', texto: ficha.folio }),
-          G.el('span', { texto: ficha.titulo })
-        ]);
-        if (esta) link.setAttribute('aria-current', 'page');
-        return G.el('li', {}, [link]);
-      });
-
-      return G.el('div', { clase: 'riel__grupo' }, [
-        G.el('p', { clase: 'riel__titulo', texto: bloque.folio + ' · ' + bloque.titulo }),
-        G.el('ul', { clase: 'riel__lista' }, items)
-      ]);
-    });
-
-    return G.el('nav', { clase: 'riel', attr: { 'aria-label': 'Temas de la guía' } },
-      [G.el('span', { clase: 'riel__badge', texto: 'nivel C1' })].concat(grupos));
-  }
-
   function paginacion(ficha) {
     var orden = G.fichasEnOrden();
     var i = orden.map(function (f) { return f.slug; }).indexOf(ficha.slug);
@@ -100,14 +75,19 @@
     var recursos = G.comp.seccion('recursos', [
       G.el('ul', { clase: 'recursos' }, ficha.recursos.map(function (r) {
         var titulo = r.url
-          ? G.el('div', { clase: 'recurso__titulo' }, [
-              G.el('a', { texto: r.titulo, attr: { href: r.url, target: '_blank', rel: 'noopener' } })
-            ])
-          : G.el('div', { clase: 'recurso__titulo', texto: r.titulo });
+          ? G.el('a', {
+              clase: 'recurso__titulo',
+              texto: r.titulo,
+              attr: { href: r.url, target: '_blank', rel: 'noopener' }
+            })
+          : G.el('span', { clase: 'recurso__titulo', texto: r.titulo });
+
         return G.el('li', {}, [
-          titulo,
-          G.el('div', { clase: 'recurso__fuente', texto: r.fuente }),
-          G.el('div', { clase: 'recurso__nota', html: r.nota })
+          G.el('p', { clase: 'recurso__linea' }, [
+            titulo,
+            G.el('span', { clase: 'recurso__fuente', texto: r.fuente })
+          ]),
+          G.el('p', { clase: 'recurso__nota', html: r.nota })
         ]);
       }))
     ]);
@@ -117,7 +97,7 @@
     ]);
 
     return G.el('div', { clase: 'envoltura' }, [
-      G.el('div', { clase: 'tema-layout' }, [riel(slug), columna])
+      G.el('div', { clase: 'tema-layout' }, [G.comp.riel(slug), columna])
     ]);
   };
 })(window.GUIA = window.GUIA || {});

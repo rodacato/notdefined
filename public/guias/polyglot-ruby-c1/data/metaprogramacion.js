@@ -5,6 +5,7 @@
 
   D.fichas.push({
     slug: 'define-method-vs-method-missing',
+    dificultad: 2,
     folio: '04',
     bloque: 'metaprogramacion',
     titulo: 'define_method y method_missing',
@@ -68,6 +69,7 @@
 
   D.fichas.push({
     slug: 'self-movedizo',
+    dificultad: 3,
     folio: '05',
     bloque: 'metaprogramacion',
     titulo: 'El self movedizo',
@@ -116,6 +118,7 @@
 
   D.fichas.push({
     slug: 'monkey-patching-con-modales',
+    dificultad: 2,
     folio: '06',
     bloque: 'metaprogramacion',
     titulo: 'Monkey-patching con modales',

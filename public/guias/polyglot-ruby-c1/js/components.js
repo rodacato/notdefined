@@ -224,6 +224,75 @@
     return raiz;
   };
 
+  /* --- Riel: el índice de la guía, presente en todas las vistas ----------- */
+  function dificultad(nivel) {
+    var n = nivel || 2;
+    return G.el('span', {
+      clase: 'riel__dif',
+      attr: { 'aria-label': 'dificultad ' + n + ' de 3', title: 'dificultad ' + n + ' de 3' }
+    }, [
+      G.el('span', { clase: 'dif--lleno', texto: '◆◆◆'.slice(0, n) }),
+      G.el('span', { clase: 'dif--vacio', texto: '◇◇◇'.slice(0, 3 - n) })
+    ]);
+  }
+
+  C.riel = function (actual) {
+    // En pantalla angosta el riel es la única navegación: solo abre el bloque en curso.
+    var compacto = window.matchMedia('(max-width: 940px)').matches;
+
+    var intro = G.el('a', {
+      clase: 'riel__link riel__link--intro',
+      attr: { href: '#/' }
+    }, [
+      G.el('span', { clase: 'riel__folio', texto: '00' }),
+      G.el('span', { clase: 'riel__t', texto: 'Cómo usar esta guía' })
+    ]);
+    if (actual === 'inicio') intro.setAttribute('aria-current', 'page');
+
+    var grupos = G.datos.bloques.map(function (bloque) {
+      var fichas = G.fichasDeBloque(bloque.id);
+      var contiene = false;
+
+      var items = fichas.map(function (ficha) {
+        var esta = ficha.slug === actual;
+        if (esta) contiene = true;
+        var link = G.el('a', {
+          clase: 'riel__link',
+          attr: { href: '#/tema/' + ficha.slug }
+        }, [
+          G.el('span', { clase: 'riel__folio', texto: ficha.folio }),
+          G.el('span', { clase: 'riel__t', texto: ficha.titulo }),
+          dificultad(ficha.dificultad)
+        ]);
+        if (esta) link.setAttribute('aria-current', 'page');
+        return G.el('li', {}, [link]);
+      });
+
+      var resumen = G.el('summary', { clase: 'riel__cabeza' }, [
+        G.el('span', { clase: 'riel__titulo', texto: bloque.folio + ' · ' + bloque.titulo }),
+        bloque.modelo ? G.el('span', { clase: 'riel__modelo', texto: bloque.modelo }) : null
+      ]);
+
+      var grupo = G.el('details', { clase: 'riel__grupo' }, [
+        resumen,
+        G.el('ul', { clase: 'riel__lista' }, items)
+      ]);
+      if (!compacto || contiene) grupo.setAttribute('open', '');
+      return grupo;
+    });
+
+    var leyenda = G.el('p', { clase: 'riel__leyenda' }, [
+      G.el('span', { clase: 'dif--lleno', texto: '◆' }),
+      G.el('span', { clase: 'dif--vacio', texto: '◇◇' }),
+      G.el('span', { texto: ' entrada · ' }),
+      G.el('span', { clase: 'dif--lleno', texto: '◆◆◆' }),
+      G.el('span', { texto: ' segunda sentada' })
+    ]);
+
+    return G.el('nav', { clase: 'riel', attr: { 'aria-label': 'Temas de la guía' } },
+      [G.el('span', { clase: 'riel__badge', texto: 'nivel C1' }), intro].concat(grupos, [leyenda]));
+  };
+
   /* --- Sección con título de galera -------------------------------------- */
   C.seccion = function (titulo, hijos) {
     return G.el('section', { clase: 'seccion' },

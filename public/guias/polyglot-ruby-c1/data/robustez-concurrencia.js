@@ -5,6 +5,7 @@
 
   D.fichas.push({
     slug: 'diseno-de-errores',
+    dificultad: 2,
     folio: '12',
     bloque: 'robustez-concurrencia',
     titulo: 'Diseño de errores',
@@ -73,6 +74,7 @@
 
   D.fichas.push({
     slug: 'gotchas-de-errores',
+    dificultad: 1,
     folio: '13',
     bloque: 'robustez-concurrencia',
     titulo: 'Gotchas de manejo de errores',
@@ -142,6 +144,7 @@
 
   D.fichas.push({
     slug: 'inmutabilidad-practica',
+    dificultad: 1,
     folio: '14',
     bloque: 'robustez-concurrencia',
     titulo: 'Inmutabilidad práctica',
@@ -199,6 +202,7 @@
 
   D.fichas.push({
     slug: 'concurrencia-practica',
+    dificultad: 2,
     folio: '15',
     bloque: 'robustez-concurrencia',
     titulo: 'Concurrencia práctica',

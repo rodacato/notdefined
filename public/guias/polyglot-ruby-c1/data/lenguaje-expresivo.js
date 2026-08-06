@@ -5,6 +5,7 @@
 
   D.fichas.push({
     slug: 'bloques-procs-lambdas',
+    dificultad: 2,
     folio: '07',
     bloque: 'lenguaje-expresivo',
     titulo: 'Bloques, procs, lambdas y closures',
@@ -62,6 +63,7 @@
 
   D.fichas.push({
     slug: 'argumentos-y-forwarding',
+    dificultad: 3,
     folio: '08',
     bloque: 'lenguaje-expresivo',
     titulo: 'Argumentos con filo',
@@ -123,6 +125,7 @@
 
   D.fichas.push({
     slug: 'pattern-matching',
+    dificultad: 2,
     folio: '09',
     bloque: 'lenguaje-expresivo',
     titulo: 'Pattern matching a fondo',
@@ -187,6 +190,7 @@
 
   D.fichas.push({
     slug: 'enumerables-y-lazy',
+    dificultad: 2,
     folio: '10',
     bloque: 'lenguaje-expresivo',
     titulo: 'Enumerables y lazy',
@@ -236,6 +240,7 @@
 
   D.fichas.push({
     slug: 'protocolos-de-mixin',
+    dificultad: 1,
     folio: '11',
     bloque: 'lenguaje-expresivo',
     titulo: 'Comparable y Enumerable',

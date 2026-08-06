@@ -6,6 +6,7 @@
 
   D.fichas.push({
     slug: 'method-lookup',
+    dificultad: 2,
     folio: '01',
     bloque: 'modelo-de-objetos',
     titulo: 'Method lookup',
@@ -58,6 +59,7 @@
 
   D.fichas.push({
     slug: 'singleton-classes',
+    dificultad: 3,
     folio: '02',
     bloque: 'modelo-de-objetos',
     titulo: 'Singleton classes',
@@ -103,6 +105,7 @@
 
   D.fichas.push({
     slug: 'constantes-y-autoload',
+    dificultad: 2,
     folio: '03',
     bloque: 'modelo-de-objetos',
     titulo: 'Constantes y autoload',

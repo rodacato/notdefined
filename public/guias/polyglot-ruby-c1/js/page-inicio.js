@@ -1,4 +1,5 @@
-/* Vista de inicio: hero de la casa + catálogo por bloques. */
+/* Vista de inicio: la ficha 00 — identidad, camino de lectura y los modelos
+   mentales. El listado de temas no vive aquí: lo carga el riel. */
 (function (G) {
   'use strict';
 
@@ -7,7 +8,7 @@
   G.paginas.inicio = function () {
     var g = G.datos.guia;
 
-    var hero = G.el('header', { clase: 'hero' }, [
+    var cabeza = G.el('header', { clase: 'ficha__cabeza' }, [
       G.el('div', { clase: 'hero__marca' }, [
         G.el('div', { clase: 'hero__firma' }, [
           G.el('span', { clase: 'hero__glifo', html: G.iconos.marca }),
@@ -15,43 +16,42 @@
         ]),
         G.el('div', { clase: 'hero__coordenadas', html: '<strong>' + g.lenguaje + '</strong><br>' + g.conteo })
       ]),
-      G.el('h1', { clase: 'hero__titulo', texto: g.titulo }),
-      G.el('p', { clase: 'hero__lede', texto: g.lede }),
+      G.el('h1', { clase: 'ficha__titulo', texto: g.titulo }),
+      G.el('p', { clase: 'ficha__quees', texto: g.lede }),
       G.el('p', { clase: 'hero__ancla', texto: g.ancla })
     ]);
 
-    var tesis = G.el('p', { clase: 'tesis', html: g.tesis });
+    var tesis = G.comp.seccion('de qué va', [
+      G.el('p', { clase: 'tesis', html: g.tesis })
+    ]);
 
-    var bloques = G.datos.bloques.map(function (bloque) {
+    var camino = G.comp.seccion('por dónde entrar', [
+      G.el('div', { clase: 'aviso aviso--camino' }, [
+        G.el('p', { html: g.camino })
+      ])
+    ]);
+
+    var modelos = G.datos.bloques.map(function (bloque) {
       var fichas = G.fichasDeBloque(bloque.id);
+      var primera = fichas[0];
 
-      var tarjetas = fichas.map(function (ficha) {
-        return G.el('a', {
-          clase: 'tarjeta',
-          attr: { href: '#/tema/' + ficha.slug }
-        }, [
-          G.el('div', { clase: 'tarjeta__alto' }, [
-            G.el('span', { clase: 'tarjeta__folio', texto: ficha.folio }),
-            G.el('span', { clase: 'tarjeta__widget', texto: 'widget' })
-          ]),
-          G.el('h3', { clase: 'tarjeta__titulo', texto: ficha.titulo }),
-          G.el('p', { clase: 'tarjeta__sub', texto: ficha.subtitulo }),
-          G.el('p', { clase: 'tarjeta__mito', html: '<b>mito a desmontar</b>' + ficha.mito.creencia }),
-          G.el('span', { clase: 'tarjeta__ir', texto: 'abrir ficha →' })
-        ]);
-      });
-
-      return G.el('section', { clase: 'bloque' }, [
-        G.el('div', { clase: 'bloque__cabeza' }, [
-          G.el('span', { clase: 'bloque__folio', texto: bloque.folio }),
-          G.el('h2', { clase: 'bloque__titulo', texto: bloque.titulo }),
-          G.el('span', { clase: 'bloque__conteo', texto: fichas.length + ' temas' })
-        ]),
-        G.el('p', { clase: 'bloque__bajada', texto: bloque.bajada }),
-        G.el('div', { clase: 'rejilla' }, tarjetas)
+      return G.el('a', { clase: 'modelo', attr: { href: '#/tema/' + primera.slug } }, [
+        G.el('p', { clase: 'modelo__folio', texto: bloque.folio + ' · ' + bloque.titulo }),
+        G.el('h3', { clase: 'modelo__nombre', texto: bloque.modelo }),
+        G.el('p', { clase: 'modelo__cuerpo', html: bloque.modeloLargo || bloque.bajada }),
+        G.el('p', { clase: 'modelo__pie' }, [
+          G.el('span', { clase: 'modelo__conteo', texto: fichas.length + ' temas' }),
+          G.el('span', { clase: 'modelo__ir', texto: 'empezar por ' + primera.titulo + ' →' })
+        ])
       ]);
     });
 
-    return G.el('div', { clase: 'envoltura' }, [hero, tesis].concat(bloques));
+    var mapa = G.comp.seccion('los cuatro modelos mentales', modelos);
+
+    var columna = G.el('article', {}, [cabeza, tesis, camino, mapa]);
+
+    return G.el('div', { clase: 'envoltura' }, [
+      G.el('div', { clase: 'tema-layout' }, [G.comp.riel('inicio'), columna])
+    ]);
   };
 })(window.GUIA = window.GUIA || {});
