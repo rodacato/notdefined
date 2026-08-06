@@ -28,6 +28,14 @@ of 15 widgets at exactly six steps — that number is the fingerprint of a mould
 questioned, and it is why the interactions read as short and contextless. Four steps is a fine
 answer. So is nine.
 
+**Ask before you show, and veil rather than hide.** The question comes first, the reader
+commits, and only then does the widget become usable — blurred and inert until answered, so it
+reads as a door rather than as missing content. The verdict marks their answer against the
+right one and explains why; being wrong is the point. This is the mechanic that works, in both
+shapes it takes: a gate in front of a simulation, and a `predice` step inside a code walkthrough.
+Its failure mode is a question with no surprising answer — that is a formality in front of the
+content, not a gate, and it belongs to a ficha that should have no widget at all.
+
 ## A2. Widgets are claims, and nothing executes them
 
 A widget's steps are prose. Every false claim found in Ruby dominado lived in **two** places:
