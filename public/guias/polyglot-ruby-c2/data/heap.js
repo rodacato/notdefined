@@ -32,6 +32,16 @@
 
     callout: { tag: "Clave", text: 'Tener muchos <code class="ic">heap_free_slots</code> no siempre es bueno: si están dispersos, la memoria no vuelve al sistema. Compactar los junta y permite liberar páginas enteras.' },
 
+    predice: {
+      "pregunta": "Dos programas crean un millón de objetos cada uno: símbolos en uno, strings largos en el otro. ¿Usan la misma memoria?",
+      "opciones": [
+        "Sí: mismo número de objetos",
+        "No: el conteo no dice cuánta memoria usas"
+      ],
+      "correcta": 1,
+      "porque": "Los objetos viven en <b>slots de tamaño fijo</b> dentro de páginas que Ruby administra. Lo que no cabe en el slot se guarda aparte y no aparece en la cuenta. Por eso «número de objetos» es una métrica de memoria mentirosa."
+    },
+
     cuandoNo: "No uses «número de objetos» como métrica de memoria. Un millón de símbolos y un millón de strings largos cuentan igual y no pesan igual; si te importa la RSS, mide la RSS.",
 
     mito: {

@@ -33,6 +33,16 @@
 
     callout: { tag: "Mito", text: '«El JIT compila todo mi programa al arrancar». No: solo compila lo caliente, tras muchas ejecuciones, y puede <b>deshacer</b> esa compilación si tus suposiciones de tipo cambian. El umbral real de YJIT anda entre 30 y 120 llamadas según versión y tamaño del programa — esta demo usa 20 para que no esperes.' },
 
+    predice: {
+      "pregunta": "En una instalación limpia de Ruby 4.0, <code class=\"ic\">RubyVM::YJIT.enabled?</code> devuelve…",
+      "opciones": [
+        "<code class=\"ic\">true</code>: 4.0 ya lo trae prendido",
+        "<code class=\"ic\">false</code>: hay que activarlo a mano"
+      ],
+      "correcta": 1,
+      "porque": "Medido en 4.0.0: <code class=\"ic\">false</code>, y ZJIT igual. Se activa con <code class=\"ic\">--yjit</code> o <code class=\"ic\">RUBYOPT</code>. Y aun activado no compila tu programa: compila los métodos que se calientan, uno por uno."
+    },
+
     cuandoNo: "No lo actives en procesos de vida corta —scripts, tareas cron chicas, un <code class=\"ic\">rake</code> de dos segundos—: el warmup y la memoria extra no alcanzan a amortizarse. El JIT paga en procesos largos que repiten el mismo trabajo.",
 
     mito: {

@@ -50,6 +50,16 @@
 
     callout: { tag: "Mito", text: '«Ruby interpreta mi texto tal cual». No: para cuando algo se ejecuta, tu código ya es bytecode. El texto solo existe en la primera etapa.' },
 
+    predice: {
+      "pregunta": "Un archivo con <code class=\"ic\">puts \"hola\"</code> en la primera línea y un error de sintaxis en la última. ¿Alcanza a imprimir?",
+      "opciones": [
+        "Sí: va ejecutando línea por línea hasta que truena",
+        "No: no imprime nada"
+      ],
+      "correcta": 1,
+      "porque": "Prism parsea el archivo <b>completo</b> antes de que se ejecute la primera instrucción. Lo que corre es bytecode, no tu texto — y si el parseo falla, nunca hubo bytecode que correr."
+    },
+
     cuandoNo: "No leas ISEQ para «optimizar». El bytecode te dice <em>qué hace</em> Ruby, no <em>qué te cuesta</em>: para eso está el perfilador de la ficha 11. Leer disasm y reescribir código por lo que viste es la forma más elegante de perder una tarde.",
 
     mito: {

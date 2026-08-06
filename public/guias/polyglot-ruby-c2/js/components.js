@@ -48,6 +48,36 @@
     return bar;
   };
 
+  // ---- Compuerta: el lector apuesta antes de ver la simulación -----------
+  G.prediccion = function (p, alResponder) {
+    var caja = h("div", { class: "predice" });
+    caja.insertAdjacentHTML("beforeend", '<p class="predice__q">' + p.pregunta + "</p>");
+
+    var ops = h("div", { class: "predice__ops", role: "group" });
+    var veredicto = h("p", { class: "predice__v", "aria-live": "polite" });
+
+    p.opciones.forEach(function (texto, i) {
+      var btn = h("button", { type: "button", class: "op" });
+      btn.innerHTML = texto;
+      btn.addEventListener("click", function () {
+        G.qsa("button", ops).forEach(function (b, j) {
+          b.disabled = true;
+          if (j === p.correcta) b.classList.add("op--correcta");
+          if (j === i && j !== p.correcta) b.classList.add("op--tuya");
+        });
+        veredicto.className =
+          "predice__v " + (i === p.correcta ? "predice__v--bien" : "predice__v--mal");
+        veredicto.innerHTML = (i === p.correcta ? "<b>Le atinaste.</b> " : "<b>No.</b> ") + p.porque;
+        alResponder();
+      });
+      ops.appendChild(btn);
+    });
+
+    caja.appendChild(ops);
+    caja.appendChild(veredicto);
+    return caja;
+  };
+
   // ---- Riel: el índice de la guía, presente en la ficha -------------------
   G.rail = function (current) {
     // En pantalla angosta el riel es la única navegación: solo abre el bloque en curso.
@@ -217,10 +247,18 @@
     sec3.innerHTML =
       '<div class="section__head"><span class="section__n">03</span>' +
         '<h2 class="section__h">' + esc(w.title) + '</h2></div>' +
-      '<p class="prose" style="max-width:70ch;">' + w.intro + '</p>' +
-      '<div class="widget" data-widget="' + esc(w.kind) + '"></div>' +
-      (t.callout ? '<div class="callout"><span class="callout__tag">' + esc(t.callout.tag) + '</span>' +
-        '<p>' + t.callout.text + '</p></div>' : '');
+      '<p class="prose" style="max-width:70ch;">' + w.intro + '</p>';
+
+    var mount = h("div", { class: "widget", "data-widget": esc(w.kind) });
+    if (t.predice) {
+      mount.classList.add("widget--velado");
+      sec3.appendChild(G.prediccion(t.predice, function () { mount.classList.remove("widget--velado"); }));
+    }
+    sec3.appendChild(mount);
+    if (t.callout)
+      sec3.insertAdjacentHTML("beforeend",
+        '<div class="callout"><span class="callout__tag">' + esc(t.callout.tag) + '</span>' +
+        '<p>' + t.callout.text + '</p></div>');
     main.appendChild(sec3);
 
     // 04 Cuándo NO · 05 Mito

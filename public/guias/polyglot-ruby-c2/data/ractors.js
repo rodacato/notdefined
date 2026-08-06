@@ -42,6 +42,16 @@
 
     callout: { tag: "Regla", text: 'Solo se comparten objetos <b>shareable</b>: inmutables por naturaleza (Integer, Symbol, true/false) o congelados con <code class="ic">.freeze</code>. Todo lo demás se copia o se mueve.' },
 
+    predice: {
+      "pregunta": "<code class=\"ic\">config = {retries: 3}</code> y luego <code class=\"ic\">Ractor.new(config) { |c| c }</code>. ¿Truena?",
+      "opciones": [
+        "Sí: el hash no es shareable",
+        "No: pasarlo como argumento lo copia"
+      ],
+      "correcta": 1,
+      "porque": "Pasar un objeto a un Ractor lo <b>copia</b>, y eso siempre funciona. Lo que truena es <em>capturar</em> una variable del scope dentro del bloque — y con <code class=\"ic\">ArgumentError</code>, no con <code class=\"ic\">Ractor::IsolationError</code>."
+    },
+
     cuandoNo: "No los metas a una app Rails para «paralelizar»: el ecosistema todavía no es ractor-safe y vas a pelearte con cada gema, no con tu problema. Hoy son para trabajo CPU-bound aislado y bien delimitado.",
 
     mito: {

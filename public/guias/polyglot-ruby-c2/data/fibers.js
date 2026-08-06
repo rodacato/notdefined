@@ -43,6 +43,16 @@
 
     callout: { tag: "Mito", text: '«Fibers = paralelismo ligero». No: es <b>concurrencia</b>, un solo hilo. Sirve para solapar esperas de I/O, no para usar varios núcleos — eso es tarea de <a href="#/ractors">Ractors →</a>.' },
 
+    predice: {
+      "pregunta": "Un Fiber que hace trabajo largo sin llamar <code class=\"ic\">Fiber.yield</code>. ¿Lo interrumpe el planificador?",
+      "opciones": [
+        "Sí: es como un hilo ligero",
+        "No: solo cede cuando tu código lo dice"
+      ],
+      "correcta": 1,
+      "porque": "No hay preempción. Un hilo lo interrumpe el planificador cuando quiere; un Fiber cede solo donde tú lo escribiste. Por eso un Fiber solo no te da concurrencia: te da corrutinas."
+    },
+
     cuandoNo: "No armes tu propio bucle de Fibers para I/O concurrente. Ese es exactamente el trabajo del scheduler (<code class=\"ic\">Fiber.set_scheduler</code>) y de gemas como Async; a mano vas a reimplementar un event loop con menos pruebas.",
 
     mito: {

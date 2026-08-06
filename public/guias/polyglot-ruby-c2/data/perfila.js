@@ -48,6 +48,16 @@
 
     callout: { tag: "Mito", text: '«Corro el código mil veces, tomo el tiempo, y ya». Sin warmup no mediste tu código: mediste el arranque — el <a href="#/jit">JIT</a> compilando y las <a href="#/caches">cachés</a> llenándose en frío. Por eso benchmark-ips calienta primero y descarta esos números; una medición que no lo hace trae el arranque del motor revuelto en el promedio.' },
 
+    predice: {
+      "pregunta": "Terminaste esta guía. ¿Qué tan seguido tu cuello de botella es una de las cosas que acabas de leer?",
+      "opciones": [
+        "Seguido: por eso vale la pena conocerlas",
+        "Casi nunca"
+      ],
+      "correcta": 1,
+      "porque": "Es lo más caro de esta guía: todas las fichas anteriores describen mecanismos <em>reales</em> que casi nunca son tu cuello de botella. La tentación después de leer es optimizar por lo último que aprendiste. El perfilador existe para desmentirte a ti, no al motor."
+    },
+
     cuandoNo: "No perfiles en tu laptop y decidas para producción: distinto hardware, distintos datos, distinta concurrencia. Y no midas con un microbenchmark lo que vas a desplegar en una app: mide la app.",
 
     mito: {

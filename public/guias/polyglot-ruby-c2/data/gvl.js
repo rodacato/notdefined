@@ -38,6 +38,16 @@
 
     callout: { tag: "Mito", text: '«Más hilos = más rápido, siempre». Solo si esperas I/O. Para trabajo de CPU en paralelo necesitas <a href="#/ractors">Ractors →</a> o varios procesos.' },
 
+    predice: {
+      "pregunta": "Ocho tareas que solo esperan 0.1 s cada una, en ocho hilos de Ruby. ¿Cuánto tardan?",
+      "opciones": [
+        "~0.8 s: el GVL los serializa",
+        "~0.1 s: el GVL se suelta en I/O"
+      ],
+      "correcta": 1,
+      "porque": "Medido: 0.104 s contra 0.803 s en serie — 8×. En CPU sería otra historia: ahí cuatro hilos tardan lo mismo que cuatro llamadas en fila. La regla es «un hilo por espera», no «un hilo por core»."
+    },
+
     cuandoNo: "No metas hilos a trabajo CPU-bound esperando ganancia: pagas el costo de coordinarlos y no ganas nada. Para eso son los Ractors (ficha 05) o procesos. Y no midas la mejora en tu laptop con un <code class=\"ic\">sleep</code>: mide con tu I/O real.",
 
     mito: {

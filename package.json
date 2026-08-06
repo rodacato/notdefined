@@ -20,7 +20,8 @@
     "check:guias": "node scripts/check-guias.mjs",
     "check:snippets": "node scripts/verify-snippets.mjs",
     "ci": "npm run check && npm run lint && npm run format:check && npm run lint:md && npm run build && npm run check:links",
-    "astro": "astro"
+    "astro": "astro",
+    "check:render": "node scripts/check-render.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.15",

@@ -37,6 +37,16 @@
 
     callout: { tag: "Clave", text: 'Inicializa siempre las ivars en el <b>mismo orden</b> (típicamente en <code class="ic">initialize</code>): así todas tus instancias comparten shape y el acceso se mantiene rápido y cacheable.' },
 
+    predice: {
+      "pregunta": "Dos clases con las mismas ivars, asignadas en orden distinto: <code class=\"ic\">@x,@y</code> y <code class=\"ic\">@y,@x</code>. ¿Misma shape?",
+      "opciones": [
+        "Sí: tienen las mismas variables",
+        "No: el orden es la identidad"
+      ],
+      "correcta": 1,
+      "porque": "Medido en 4.0: shape 143 contra 145. Cada asignación es una <b>transición</b> en un árbol, así que el orden <em>es</em> la forma. Misma clase en tu cabeza, dos formas para Ruby."
+    },
+
     cuandoNo: "No reordenes tus ivars «por performance». El costo aparece cuando un mismo call site ve muchas shapes distintas, no por tener dos órdenes en el código. Asigna todas en <code class=\"ic\">initialize</code> y olvídate: eso resuelve el 95%.",
 
     mito: {

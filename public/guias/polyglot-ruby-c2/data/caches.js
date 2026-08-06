@@ -32,6 +32,16 @@
 
     callout: { tag: "Conexión", text: 'El JIT compila código máquina bajo la misma suposición («hablar sigue siendo este método»). Cuando esa versión cambia (en Ruby moderno, la de <b>esa clase</b>), se invalidan a la vez el inline cache <b>y</b> el código JIT que dependía de él.' },
 
+    predice: {
+      "pregunta": "El mismo <code class=\"ic\">o.m</code>, una vez siempre con la misma clase y otra viendo cuatro clases distintas. ¿Cuesta igual?",
+      "opciones": [
+        "Sí: el método cacheado es el mismo",
+        "No: el polimórfico es más lento"
+      ],
+      "correcta": 1,
+      "porque": "Medido: <b>1.26×</b> más lento, con el método idéntico. El caché no vive en el método, vive en el <b>call site</b>. Lo que cambia no es qué llamas, es desde dónde."
+    },
+
     cuandoNo: "No conviertas esto en una regla de diseño. «Evita el polimorfismo por los inline caches» es exactamente el consejo que produce código malo y rápido en el lugar equivocado: 1.26× sobre nanosegundos no paga una jerarquía peor.",
 
     mito: {

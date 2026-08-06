@@ -50,6 +50,16 @@
 
     callout: { tag: "Truco", text: 'En tu consola: <code class="ic">puts RubyVM::InstructionSequence.compile("2 * (3 + 4)").disasm</code> imprime exactamente estas instrucciones.' },
 
+    predice: {
+      "pregunta": "Si reescribes un método para que su ISEQ tenga menos instrucciones, ¿corre más rápido?",
+      "opciones": [
+        "Sí: menos instrucciones, menos trabajo",
+        "No necesariamente: no todas cuestan igual"
+      ],
+      "correcta": 1,
+      "porque": "Una <code class=\"ic\">opt_plus</code> con su inline cache caliente se resuelve casi gratis; un <code class=\"ic\">send</code> genérico contra un receptor que cambia paga lookup. Contar instrucciones no predice tiempo."
+    },
+
     cuandoNo: "No reescribas código para «bajar instrucciones». El compilador emite lo que emite y sus decisiones no son tuyas; la única razón honesta de mirar el ISEQ es entender qué está pasando, no negociar con él.",
 
     mito: {
