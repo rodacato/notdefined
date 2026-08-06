@@ -42,6 +42,13 @@
 
     callout: { tag: "Regla", text: 'Solo se comparten objetos <b>shareable</b>: inmutables por naturaleza (Integer, Symbol, true/false) o congelados con <code class="ic">.freeze</code>. Todo lo demás se copia o se mueve.' },
 
+    cuandoNo: "No los metas a una app Rails para «paralelizar»: el ecosistema todavía no es ractor-safe y vas a pelearte con cada gema, no con tu problema. Hoy son para trabajo CPU-bound aislado y bien delimitado.",
+
+    mito: {
+      creencia: "«Los Ractors ya son el reemplazo de los hilos: paralelismo real y ya.»",
+      realidad: "El paralelismo sí es real, el reemplazo no. Siguen marcados como <b>experimental</b> —te lo advierten en cada uso— y el aislamiento es tan estricto que la mayoría de las gemas no sobrevive: cualquier estado global compartido es un error, no una advertencia. Ojo con el disparador: <em>pasar</em> un objeto lo copia; lo que truena es <em>capturar</em> una variable del scope."
+    },
+
     recursos: [
       { title: "doc/ractor.md", note: "la referencia oficial, en ruby/ruby", url: "https://github.com/ruby/ruby/blob/master/doc/ractor.md" },
       { title: "What's The Deal With Ractors?", note: "Jean Boussier (byroot), core team", url: "https://byroot.github.io/ruby/performance/2025/02/27/whats-the-deal-with-ractors.html" },

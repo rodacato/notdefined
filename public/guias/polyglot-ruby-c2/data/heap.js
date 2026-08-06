@@ -32,6 +32,13 @@
 
     callout: { tag: "Clave", text: 'Tener muchos <code class="ic">heap_free_slots</code> no siempre es bueno: si están dispersos, la memoria no vuelve al sistema. Compactar los junta y permite liberar páginas enteras.' },
 
+    cuandoNo: "No uses «número de objetos» como métrica de memoria. Un millón de símbolos y un millón de strings largos cuentan igual y no pesan igual; si te importa la RSS, mide la RSS.",
+
+    mito: {
+      creencia: "«Un objeto de Ruby es un <code class=\"ic\">malloc</code>, como en C.»",
+      realidad: "Falso: los objetos viven en <b>slots de tamaño fijo</b> dentro de páginas que Ruby administra. Por eso crear un objeto chico casi no cuesta —ya hay slot— y por eso el conteo de objetos no te dice cuánta memoria usas: lo que no cabe en el slot se guarda aparte y no aparece en la cuenta."
+    },
+
     recursos: [
       { title: "GC.stat y ObjectSpace", note: "mira tus propios slots y páginas", url: "https://docs.ruby-lang.org/en/master/GC.html#method-c-stat" },
       { title: "Defragging Ruby", note: "Aaron Patterson, Brighton Ruby 2019", url: "https://brightonruby.com/2019/defragging-ruby-aaron-patterson/" },

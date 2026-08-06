@@ -223,14 +223,31 @@
         '<p>' + t.callout.text + '</p></div>' : '');
     main.appendChild(sec3);
 
-    // 04 Para seguir
+    // 04 Cuándo NO · 05 Mito
+    var n = 4;
+    if (t.cuandoNo) {
+      main.insertAdjacentHTML("beforeend",
+        section(pad(n++), "Cuándo NO tocarlo",
+          '<div class="aviso aviso--no"><p>' + t.cuandoNo + "</p></div>"));
+    }
+    if (t.mito) {
+      main.insertAdjacentHTML("beforeend",
+        section(pad(n++), "Mito a desmontar",
+          '<div class="aviso aviso--mito">' +
+            '<div class="aviso__etq">lo que se repite</div>' +
+            '<p class="aviso__creencia">' + t.mito.creencia + "</p>" +
+            '<div class="aviso__etq">lo que pasa</div>' +
+            '<p class="aviso__realidad">' + t.mito.realidad + "</p></div>"));
+    }
+
+    // Para seguir
     var res = t.recursos.map(function (r) {
       return '<a class="reslink" href="' + esc(r.url) + '" target="_blank" rel="noopener">' +
         '<span><b>' + esc(r.title) + '</b> <small>· ' + esc(r.note) + '</small></span>' +
         '<span class="arrow">↗</span></a>';
     }).join("");
     main.insertAdjacentHTML("beforeend",
-      section("04", "Para seguir", '<div class="reslist">' + res + '</div>'));
+      section(pad(n), "Para seguir", '<div class="reslist">' + res + '</div>'));
 
     // Navegación entre fichas
     var nav = '<div class="fichanav">';
@@ -253,6 +270,10 @@
     };
     return root;
   };
+
+  function pad(n) {
+    return String(n).padStart(2, "0");
+  }
 
   function section(n, title, bodyHtml) {
     return '<section class="section"><div class="section__head">' +

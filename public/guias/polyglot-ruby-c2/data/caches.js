@@ -32,6 +32,13 @@
 
     callout: { tag: "Conexión", text: 'El JIT compila código máquina bajo la misma suposición («hablar sigue siendo este método»). Cuando esa versión cambia (en Ruby moderno, la de <b>esa clase</b>), se invalidan a la vez el inline cache <b>y</b> el código JIT que dependía de él.' },
 
+    cuandoNo: "No conviertas esto en una regla de diseño. «Evita el polimorfismo por los inline caches» es exactamente el consejo que produce código malo y rápido en el lugar equivocado: 1.26× sobre nanosegundos no paga una jerarquía peor.",
+
+    mito: {
+      creencia: "«Un método cacheado cuesta lo mismo sin importar quién lo llame.»",
+      realidad: "Falso: el caché no vive en el método, vive en el <b>call site</b>. Un <code class=\"ic\">o.m</code> que siempre ve la misma clase acierta siempre; el mismo <code class=\"ic\">o.m</code> viendo cuatro clases distintas falla y vuelve a buscar. Medido en 4.0: <b>1.26×</b> más lento el polimórfico, con el método idéntico. Lo que cambia no es el método, es el lugar desde donde lo llamas."
+    },
+
     recursos: [
       { title: "Docs de YJIT · invariants", note: "qué invalida el código compilado", url: "https://docs.ruby-lang.org/en/3.4/yjit/yjit_md.html" },
       { title: "Rails at Scale", note: "posts sobre caché de métodos y performance", url: "https://railsatscale.com/" },

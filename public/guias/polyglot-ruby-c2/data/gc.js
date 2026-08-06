@@ -49,6 +49,13 @@
 
     callout: { tag: "Mito", text: '«El GC pausa todo el programa cada vez». El GC generacional e incremental evita justo eso: la mayoría de ciclos son cortos, sobre objetos jóvenes, y el marcado se reparte en pasos.' },
 
+    cuandoNo: "No toques el tuning del GC porque «se siente lento». Las variables de entorno del GC son la última palanca, no la primera: si no mediste con el perfilador de la ficha 11 y no sabes si tu problema es allocation rate o retención, cualquier número que pongas es superstición.",
+
+    mito: {
+      creencia: "«Cada vez que corre el GC, Ruby para el mundo entero.»",
+      realidad: "Falso desde 2.1: el GC es <b>generacional</b>. La mayoría de las corridas son <em>minor</em> y solo tocan la generación joven. Medido en 4.0 creando 100 000 objetos: <b>16 minor contra 2 major</b>. Los major sí son caros — pero son la excepción, no el pulso normal."
+    },
+
     recursos: [
       { title: "Building a Compacting GC for MRI", note: "Aaron Patterson, RubyConf 2017", url: "https://www.youtube.com/watch?v=8Q7M513vewk" },
       { title: "Ruby Under a Microscope", note: "los capítulos de GC", url: "https://patshaughnessy.net/ruby-under-a-microscope" },

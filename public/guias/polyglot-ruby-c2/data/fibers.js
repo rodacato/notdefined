@@ -43,6 +43,13 @@
 
     callout: { tag: "Mito", text: '«Fibers = paralelismo ligero». No: es <b>concurrencia</b>, un solo hilo. Sirve para solapar esperas de I/O, no para usar varios núcleos — eso es tarea de <a href="#/ractors">Ractors →</a>.' },
 
+    cuandoNo: "No armes tu propio bucle de Fibers para I/O concurrente. Ese es exactamente el trabajo del scheduler (<code class=\"ic\">Fiber.set_scheduler</code>) y de gemas como Async; a mano vas a reimplementar un event loop con menos pruebas.",
+
+    mito: {
+      creencia: "«Un Fiber es un hilo ligero.»",
+      realidad: "Falso en lo que más importa: <b>no hay preempción</b>. Un hilo lo interrumpe el planificador cuando quiere; un Fiber solo cede cuando <em>tu código</em> dice <code class=\"ic\">Fiber.yield</code>. Por eso un Fiber solo no te da concurrencia: te da corrutinas. La concurrencia aparece cuando un <em>scheduler</em> los cede por ti en cada espera de I/O."
+    },
+
     recursos: [
       { title: "Fiber y Fiber::Scheduler", note: "docs oficiales", url: "https://docs.ruby-lang.org/en/master/Fiber.html" },
       { title: "gema async", note: "Samuel Williams, el scheduler de fibers", url: "https://github.com/socketry/async" },

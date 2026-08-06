@@ -33,6 +33,13 @@
 
     callout: { tag: "Mito", text: '«El JIT compila todo mi programa al arrancar». No: solo compila lo caliente, tras muchas ejecuciones, y puede <b>deshacer</b> esa compilación si tus suposiciones de tipo cambian. El umbral real de YJIT anda entre 30 y 120 llamadas según versión y tamaño del programa — esta demo usa 20 para que no esperes.' },
 
+    cuandoNo: "No lo actives en procesos de vida corta —scripts, tareas cron chicas, un <code class=\"ic\">rake</code> de dos segundos—: el warmup y la memoria extra no alcanzan a amortizarse. El JIT paga en procesos largos que repiten el mismo trabajo.",
+
+    mito: {
+      creencia: "«Ruby 4.0 ya trae el JIT prendido, por eso es más rápido.»",
+      realidad: "Falso: <code class=\"ic\">RubyVM::YJIT.enabled?</code> devuelve <b>false</b> en una instalación limpia de 4.0, y ZJIT igual. Hay que activarlo a mano (<code class=\"ic\">--yjit</code> o <code class=\"ic\">RUBYOPT</code>). Y aun activado no compila tu programa: compila los métodos que se calientan, uno por uno, mientras corres."
+    },
+
     recursos: [
       { title: "YJIT: Building a New JIT Compiler for CRuby", note: "Shopify Engineering", url: "https://shopify.engineering/yjit-just-in-time-compiler-cruby" },
       { title: "ZJIT: Building a Next Generation Ruby JIT", note: "equipo YJIT / Shopify", url: "https://www.rubyevents.org/talks/zjit-building-a-next-generation-ruby-jit" },

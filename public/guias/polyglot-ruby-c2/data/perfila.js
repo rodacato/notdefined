@@ -48,6 +48,13 @@
 
     callout: { tag: "Mito", text: '«Corro el código mil veces, tomo el tiempo, y ya». Sin warmup no mediste tu código: mediste el arranque — el <a href="#/jit">JIT</a> compilando y las <a href="#/caches">cachés</a> llenándose en frío. Por eso benchmark-ips calienta primero y descarta esos números; una medición que no lo hace trae el arranque del motor revuelto en el promedio.' },
 
+    cuandoNo: "No perfiles en tu laptop y decidas para producción: distinto hardware, distintos datos, distinta concurrencia. Y no midas con un microbenchmark lo que vas a desplegar en una app: mide la app.",
+
+    mito: {
+      creencia: "«Ya sé dónde está lento; el perfilador solo confirma lo que sospecho.»",
+      realidad: "Falso casi siempre, y es lo más caro de esta guía: todas las fichas anteriores describen mecanismos <em>reales</em> que casi nunca son tu cuello de botella. Después de leer sobre shapes, GC e inline caches, la tentación es optimizar por lo último que aprendiste. El perfilador existe para desmentirte a ti, no al motor."
+    },
+
     recursos: [
       { title: "stackprof · vernier", note: "profilers de muestreo; vernier es el sucesor moderno", url: "https://github.com/jhawthorn/vernier" },
       { title: "benchmark-ips", note: "el que este widget imita: warmup + iteraciones/seg", url: "https://github.com/evanphx/benchmark-ips" },

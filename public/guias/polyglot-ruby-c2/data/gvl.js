@@ -38,6 +38,13 @@
 
     callout: { tag: "Mito", text: '«Más hilos = más rápido, siempre». Solo si esperas I/O. Para trabajo de CPU en paralelo necesitas <a href="#/ractors">Ractors →</a> o varios procesos.' },
 
+    cuandoNo: "No metas hilos a trabajo CPU-bound esperando ganancia: pagas el costo de coordinarlos y no ganas nada. Para eso son los Ractors (ficha 05) o procesos. Y no midas la mejora en tu laptop con un <code class=\"ic\">sleep</code>: mide con tu I/O real.",
+
+    mito: {
+      creencia: "«Los hilos de Ruby no sirven: el GVL los serializa y ya.»",
+      realidad: "Falso a medias, y la mitad que falta es la que te importa: <b>el GVL se suelta en I/O</b>. Medido en 4.0: cuatro hilos durmiendo 0.2 s tardan 0.2 s, no 0.8 s. Lo que no escala es CPU — ahí cuatro hilos tardan lo mismo que cuatro llamadas en fila. La regla es «un hilo por espera», no «un hilo por core»."
+    },
+
     recursos: [
       { title: "The Practical Effects of the GVL on Scaling", note: "Nate Berkopec, Speedshop", url: "https://www.speedshop.co/2020/05/11/the-ruby-gvl-and-scaling.html" },
       { title: "Working with Ruby Threads", note: "Jesse Storimer", url: "https://workingwithruby.com/" },

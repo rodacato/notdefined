@@ -50,6 +50,13 @@
 
     callout: { tag: "Truco", text: 'En tu consola: <code class="ic">puts RubyVM::InstructionSequence.compile("2 * (3 + 4)").disasm</code> imprime exactamente estas instrucciones.' },
 
+    cuandoNo: "No reescribas código para «bajar instrucciones». El compilador emite lo que emite y sus decisiones no son tuyas; la única razón honesta de mirar el ISEQ es entender qué está pasando, no negociar con él.",
+
+    mito: {
+      creencia: "«Menos instrucciones en el ISEQ significa código más rápido.»",
+      realidad: "Falso: las instrucciones no cuestan lo mismo. Una <code class=\"ic\">opt_plus</code> con su inline cache caliente se resuelve casi gratis; un <code class=\"ic\">send</code> genérico contra un receptor que cambia paga lookup. Contar instrucciones no predice tiempo — es como contar líneas para estimar complejidad."
+    },
+
     recursos: [
       { title: "RubyVM::InstructionSequence", note: "#disasm en las docs", url: "https://docs.ruby-lang.org/en/master/RubyVM/InstructionSequence.html" },
       { title: "Ruby Under a Microscope", note: "el capítulo de YARV", url: "https://patshaughnessy.net/ruby-under-a-microscope" },

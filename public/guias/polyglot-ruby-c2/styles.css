@@ -403,6 +403,26 @@ code, .mono { font-family: var(--font-mono); }
   .rail__hint { margin-top: 0; }
 }
 
+/* --- Cuándo NO / Mito (la jugada firma de Polyglot) ---------------------- */
+.aviso {
+  display: grid; gap: 8px; padding: 18px 20px; border-radius: 5px;
+  border: 1px solid var(--color-border-default); background: var(--color-bg-surface);
+  max-width: 78ch;
+}
+.aviso--no { border-left: 3px solid var(--data-bad); }
+.aviso--mito { border-left: 3px solid var(--data-warn); }
+.aviso p { margin: 0; line-height: 1.6; color: var(--color-fg-muted); }
+.aviso__etq {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--color-fg-muted);
+}
+.aviso__creencia {
+  font-family: var(--font-display); font-style: italic; font-weight: 500;
+  font-size: 18px; line-height: 1.4; color: var(--color-fg-default) !important;
+}
+.aviso__realidad { font-size: 15px; }
+.aviso b { color: var(--color-fg-default); }
+
 .ficha { padding-top: 28px; padding-bottom: 80px; }
 .ficha__label { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em;
   text-transform: uppercase; color: var(--fam, var(--color-primary)); }

@@ -37,6 +37,13 @@
 
     callout: { tag: "Clave", text: 'Inicializa siempre las ivars en el <b>mismo orden</b> (típicamente en <code class="ic">initialize</code>): así todas tus instancias comparten shape y el acceso se mantiene rápido y cacheable.' },
 
+    cuandoNo: "No reordenes tus ivars «por performance». El costo aparece cuando un mismo call site ve muchas shapes distintas, no por tener dos órdenes en el código. Asigna todas en <code class=\"ic\">initialize</code> y olvídate: eso resuelve el 95%.",
+
+    mito: {
+      creencia: "«El orden en que asignas tus variables de instancia da igual.»",
+      realidad: "Falso desde 3.2. Cada asignación es una <b>transición</b> en un árbol de shapes, así que el orden <em>es</em> la identidad. Medido en 4.0: una clase que asigna <code class=\"ic\">@x</code> y luego <code class=\"ic\">@y</code> queda en shape 143; otra que asigna <code class=\"ic\">@y</code> y luego <code class=\"ic\">@x</code>, en 145. Misma forma en tu cabeza, dos formas para Ruby."
+    },
+
     recursos: [
       { title: "Implementing Object Shapes in CRuby", note: "Jemma Issroff, RubyKaigi 2022", url: "https://rubykaigi.org/2022/presentations/jemmaissroff.html" },
       { title: "Propuesta de Object Shapes", note: "Feature #18776", url: "https://bugs.ruby-lang.org/issues/18776" },

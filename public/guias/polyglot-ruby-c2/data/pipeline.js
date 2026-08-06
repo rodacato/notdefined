@@ -50,6 +50,13 @@
 
     callout: { tag: "Mito", text: '«Ruby interpreta mi texto tal cual». No: para cuando algo se ejecuta, tu código ya es bytecode. El texto solo existe en la primera etapa.' },
 
+    cuandoNo: "No leas ISEQ para «optimizar». El bytecode te dice <em>qué hace</em> Ruby, no <em>qué te cuesta</em>: para eso está el perfilador de la ficha 11. Leer disasm y reescribir código por lo que viste es la forma más elegante de perder una tarde.",
+
+    mito: {
+      creencia: "«Ruby es interpretado: lee tu archivo y lo va ejecutando línea por línea.»",
+      realidad: "Falso. Antes de correr nada, <b>Prism</b> parsea el archivo completo a un AST y el compilador lo baja a ISEQ. Lo que YARV ejecuta es bytecode, no tu texto. La prueba cabe en una línea: pon un error de sintaxis en la última línea y la primera <code class=\"ic\">puts</code> tampoco corre — porque el parseo termina antes de que empiece la ejecución."
+    },
+
     recursos: [
       { title: "ruby/prism", note: "el parser por defecto de Ruby", url: "https://github.com/ruby/prism" },
       { title: "Ruby Under a Microscope", note: "tokenización, parsing y compilación", url: "https://patshaughnessy.net/ruby-under-a-microscope" },
