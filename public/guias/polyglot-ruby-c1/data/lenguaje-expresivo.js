@@ -164,7 +164,7 @@
       'expected = 7',
       'case Point.new(3, 7)',
       'in { y: ^expected } then "y coincide con la variable"   # pin: compara',
-      'in { y: } then "y ligó a #{y}"',
+      'in { y: } then "y bound to #{y}"',
       'end',
       '# => "y coincide con la variable"',
       '',

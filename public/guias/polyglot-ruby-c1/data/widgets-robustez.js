@@ -28,7 +28,7 @@
       {
         nota: 'Resultado: se escapa de casi todos los <code>rescue</code> del ecosistema.',
         marca: { malerror: 'pierde' },
-        panel: { titulo: 'Consecuencia', lineas: [{ texto: 'begin; raise BadError; rescue => e; "capturado"; end' }, { texto: '# => BadError: invisible   # nadie lo atajó', estado: 'pierde' }] }
+        panel: { titulo: 'Consecuencia', lineas: [{ texto: 'begin; raise BadError; rescue => e; "caught"; end' }, { texto: '# => BadError: invisible   # nadie lo atajó', estado: 'pierde' }] }
       },
       {
         nota: 'Lo correcto: un base error por dominio, bajo <code>StandardError</code>.',
@@ -43,7 +43,7 @@
       {
         nota: 'Al cruzar de capa, envuelves dentro del <code>rescue</code>: <code>cause</code> conserva el original solo.',
         marca: { base: 'ok', hijos: 'ok' },
-        panel: { titulo: 'cause', lineas: [{ texto: 'rescue IOError' }, { texto: '  raise Payments::Indisponible, "gateway sin respuesta"', estado: 'activo' }, { texto: 'e.cause  # => #<IOError: timeout del gateway>', estado: 'ok' }] }
+        panel: { titulo: 'cause', lineas: [{ texto: 'rescue IOError' }, { texto: '  raise Payments::Indisponible, "gateway not responding"', estado: 'activo' }, { texto: 'e.cause  # => #<IOError: timeout del gateway>', estado: 'ok' }] }
       }
     ]
   };
@@ -59,14 +59,14 @@
     ],
     pasos: [
       {
-        nota: '<code>raise "algo grave"</code>. La excepción empieza a subir y toca el <code>ensure</code>.',
+        nota: '<code>raise "something bad"</code>. La excepción empieza a subir y toca el <code>ensure</code>.',
         marca: { excepcion: 'activo' },
-        panel: { titulo: 'Código', lineas: [{ texto: 'def swallows_it' }, { texto: '  raise "algo grave"' }, { texto: 'ensure' }, { texto: '  return :all_good', estado: 'activo' }, { texto: 'end' }] }
+        panel: { titulo: 'Código', lineas: [{ texto: 'def swallows_it' }, { texto: '  raise "something bad"' }, { texto: 'ensure' }, { texto: '  return :all_good', estado: 'activo' }, { texto: 'end' }] }
       },
       {
         nota: 'El <code>return</code> dentro del <code>ensure</code> cambia el flujo. Ruby obedece: la excepción se abandona.',
         marca: { excepcion: 'pierde', retorno: 'pierde', limpieza: 'ok', log: 'pierde' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: 'swallows_it  # => :all_good', estado: 'pierde' }, { texto: 'nadie supo del "algo grave"', estado: 'pierde' }] }
+        panel: { titulo: 'Resultado', lineas: [{ texto: 'swallows_it  # => :all_good', estado: 'pierde' }, { texto: 'nadie supo del "something bad"', estado: 'pierde' }] }
       },
       {
         nota: 'Igual de malo con <code>next</code> o <code>break</code> dentro de un <code>ensure</code> en un bloque.',
@@ -86,7 +86,7 @@
       {
         nota: 'Tercero: un thread cuyo error nadie recoge. <code>report_on_exception</code> lo imprime, <code>value</code> lo levanta.',
         marca: { log: 'ok', excepcion: 'ok' },
-        panel: { titulo: 'Threads', lineas: [{ texto: 'h = Thread.new { raise "muero solo" }' }, { texto: 'h.value  # => RuntimeError: muero solo', estado: 'ok' }] }
+        panel: { titulo: 'Threads', lineas: [{ texto: 'h = Thread.new { raise "dying alone" }' }, { texto: 'h.value  # => RuntimeError: muero solo', estado: 'ok' }] }
       }
     ]
   };
@@ -124,12 +124,12 @@
       {
         nota: '<code>frozen_string_literal</code> es otra cosa: deduplica literales, ahorra allocations.',
         marca: { str: 'ok' },
-        panel: { titulo: 'El pragma', lineas: [{ texto: '# frozen_string_literal: true' }, { texto: '"hola".object_id == "hola".object_id  # => true', estado: 'ok' }] }
+        panel: { titulo: 'El pragma', lineas: [{ texto: '# frozen_string_literal: true' }, { texto: '"hey".object_id == "hey".object_id  # => true', estado: 'ok' }] }
       },
       {
         nota: 'Sin pragma y desde 3.4, los literales son «chilled»: avisan a la primera mutación. Sigue sin ser default en 4.0.',
         marca: { str: 'activo' },
-        panel: { titulo: 'Chilled', lineas: [{ texto: 's = "hola"; s << "!"' }, { texto: '# warning: literal string will be frozen in the future', estado: 'activo' }] }
+        panel: { titulo: 'Chilled', lineas: [{ texto: 's = "hey"; s << "!"' }, { texto: '# warning: literal string will be frozen in the future', estado: 'activo' }] }
       }
     ]
   };

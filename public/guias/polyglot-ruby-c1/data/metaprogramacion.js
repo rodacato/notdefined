@@ -107,9 +107,9 @@
       'Box.instance_eval { def factory; :metodo_de_clase; end }',
       'Box.factory                     # => :metodo_de_clase',
       '',
-      'label = "desde el caller"',
+      'label = "from the caller"',
       'box.instance_exec(3) { |n| [self.class, n, label] }',
-      '# => [Box, 3, "desde el caller"]   # self cambió, el binding no'
+      '# => [Box, 3, "from the caller"]   # self cambió, el binding no'
     ].join('\n'),
     cuandoNo: 'No uses <code>instance_eval</code> con bloque para un DSL si el bloque necesita el scope del caller — al cambiar self, los métodos del objeto que llama desaparecen. Ahí <code>yield self</code> (bloque con argumento) es menos mágico y no rompe el binding.',
     mito: {
@@ -154,7 +154,7 @@
       '',
       'String.prepend(SafeTrim)',
       '',
-      '"\\u00A0hola\\u00A0".strip       # => "hola"',
+      '"\\u00A0hey\\u00A0".strip       # => "hey"',
       'String.ancestors.first(2)     # => [SafeTrim, String]',
       'String.instance_method(:strip).owner  # => SafeTrim',
       '',
@@ -168,9 +168,9 @@
       'def indirect(s) = s.upcase',
       '',
       'using Shout',
-      '"hola".upcase                 # => "¡HOLA!"',
-      'indirect("hola")             # => "HOLA"     # el método no ve el refinement',
-      '"hola".send(:upcase)          # => "¡HOLA!"   # send SÍ lo ve: la activación',
+      '"hey".upcase                 # => "¡HEY!"',
+      'indirect("hey")             # => "HEY"     # el método no ve el refinement',
+      '"hey".send(:upcase)          # => "¡HEY!"   # send SÍ lo ve: la activación',
       '                              #               es del scope, no de la sintaxis'
     ].join('\n'),
     cuandoNo: 'No hagas monkey-patch del core o de una gema para tapar un bug ajeno en prod — revienta en silencio cuando la gema actualiza. Prepend un módulo tuyo o abre el issue.',

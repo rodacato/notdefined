@@ -49,7 +49,7 @@
 
   D.widgets.self = {
     titulo: 'El mismo bloque, tres receptores',
-    encabezado: 'Bloque: { def marca; :aqui; end }  ·  ¿quién es self, dónde cae el def?',
+    encabezado: 'Bloque: { def marca; :here; end }  ·  ¿quién es self, dónde cae el def?',
     filas: [
       { id: 'self', texto: 'self dentro del bloque' },
       { id: 'definee', texto: 'default definee (dónde cae el def)' },
@@ -60,7 +60,7 @@
       {
         nota: 'Punto de partida: <code>box = Box.new</code>, y una local <code>label</code> en el caller.',
         marca: {},
-        panel: { titulo: 'Setup', lineas: [{ texto: 'box = Box.new' }, { texto: 'label = "desde el caller"' }] }
+        panel: { titulo: 'Setup', lineas: [{ texto: 'box = Box.new' }, { texto: 'label = "from the caller"' }] }
       },
       {
         nota: '<code>box.instance_eval</code>: self es el objeto; el <code>def</code> cae en SU singleton class.',
@@ -75,12 +75,12 @@
       {
         nota: '<code>Box.instance_eval</code>: self es la clase, pero el definee es la singleton class → método de CLASE.',
         marca: { self: 'gana', definee: 'nuevo' },
-        panel: { titulo: 'instance_eval sobre la clase', lineas: [{ texto: 'self     # => Box', estado: 'activo' }, { texto: 'definee  # => #<Class:Box>', estado: 'nuevo' }, { texto: 'Box.marca  # => :aqui', estado: 'ok' }] }
+        panel: { titulo: 'instance_eval sobre la clase', lineas: [{ texto: 'self     # => Box', estado: 'activo' }, { texto: 'definee  # => #<Class:Box>', estado: 'nuevo' }, { texto: 'Box.marca  # => :here', estado: 'ok' }] }
       },
       {
         nota: '<code>instance_exec</code> = <code>instance_eval</code> + argumentos. Es la única diferencia.',
         marca: { self: 'activo', definee: 'activo', locales: 'ok', args: 'ok' },
-        panel: { titulo: 'instance_exec', lineas: [{ texto: 'box.instance_exec(3) { |n| [self.class, n, label] }' }, { texto: '# => [Box, 3, "desde el caller"]', estado: 'ok' }] }
+        panel: { titulo: 'instance_exec', lineas: [{ texto: 'box.instance_exec(3) { |n| [self.class, n, label] }' }, { texto: '# => [Box, 3, "from the caller"]', estado: 'ok' }] }
       },
       {
         nota: 'Lo que NUNCA cambia: el binding. Lo que SÍ se pierde: los métodos del caller (self se fue).',
@@ -110,17 +110,17 @@
       {
         nota: 'Con <code>using Shout</code>, la llamada directa lo ve — y <code>send</code> también: lo que activa el refinement es el <em>scope</em>, no la sintaxis de la llamada.',
         marca: { directo: 'ok', send: 'ok' },
-        panel: { titulo: 'Alcance', lineas: [{ texto: '"hola".upcase         # => "¡HOLA!"', estado: 'ok' }, { texto: '"hola".send(:upcase)  # => "¡HOLA!"', estado: 'ok' }] }
+        panel: { titulo: 'Alcance', lineas: [{ texto: '"hey".upcase         # => "¡HEY!"', estado: 'ok' }, { texto: '"hey".send(:upcase)  # => "¡HEY!"', estado: 'ok' }] }
       },
       {
         nota: 'El scope arranca en la línea del <code>using</code>: arriba no aplica.',
         marca: { directo: 'ok', antes: 'pierde' },
-        panel: { titulo: 'Alcance', lineas: [{ texto: '# arriba del using', estado: 'pierde' }, { texto: '"hola".upcase  # => "HOLA"', estado: 'pierde' }] }
+        panel: { titulo: 'Alcance', lineas: [{ texto: '# arriba del using', estado: 'pierde' }, { texto: '"hey".upcase  # => "HEY"', estado: 'pierde' }] }
       },
       {
         nota: 'No se propaga: el cuerpo de un método definido fuera del scope refinado NO ve el refinement, aunque lo llames desde dentro.',
         marca: { metodo: 'pierde' },
-        panel: { titulo: 'Alcance', lineas: [{ texto: 'def indirect(s) = s.upcase' }, { texto: 'indirect("hola")     # => "HOLA"', estado: 'pierde' }, { texto: 'el scope léxico se queda en el archivo, no viaja', estado: 'pierde' }] }
+        panel: { titulo: 'Alcance', lineas: [{ texto: 'def indirect(s) = s.upcase' }, { texto: 'indirect("hey")     # => "HEY"', estado: 'pierde' }, { texto: 'el scope léxico se queda en el archivo, no viaja', estado: 'pierde' }] }
       },
       {
         nota: 'Fuera del archivo, cero. Y no deja rastro auditable en ningún lado.',

@@ -20,7 +20,7 @@
       {
         nota: 'Punto de partida: <code>include Label</code> deja el módulo DEBAJO de la clase.',
         marca: {},
-        panel: { titulo: 'Estado del código', lineas: [{ texto: 'class Box' }, { texto: '  include Label' }, { texto: '  def name; "clase"; end' }, { texto: 'end' }] }
+        panel: { titulo: 'Estado del código', lineas: [{ texto: 'class Box' }, { texto: '  include Label' }, { texto: '  def name; "class"; end' }, { texto: 'end' }] }
       },
       {
         nota: 'La llamada entra por el primer eslabón: <code>Box</code>.',
@@ -30,7 +30,7 @@
       {
         nota: '<code>Box</code> define <code>name</code>: gana ahí mismo. El módulo nunca se consulta.',
         marca: { caja: 'gana', etiqueta: 'pierde' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: '# => "clase"', estado: 'ok' }, { texto: 'Label quedó abajo: inalcanzable', estado: 'pierde' }] }
+        panel: { titulo: 'Resultado', lineas: [{ texto: '# => "class"', estado: 'ok' }, { texto: 'Label quedó abajo: inalcanzable', estado: 'pierde' }] }
       },
       {
         nota: 'Ahora sí: <code>prepend Front</code> inserta ARRIBA de la clase.',
@@ -45,7 +45,7 @@
       {
         nota: '<code>Front</code> gana y su <code>super</code> continúa la cadena hacia <code>Box</code>.',
         marca: { encima: 'gana', caja: 'activo' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: '# => "prepend → clase"', estado: 'ok' }, { texto: 'prepend pisa la clase; include no.', estado: 'activo' }] }
+        panel: { titulo: 'Resultado', lineas: [{ texto: '# => "prepend → class"', estado: 'ok' }, { texto: 'prepend pisa la clase; include no.', estado: 'activo' }] }
       }
     ]
   };
@@ -73,12 +73,12 @@
       {
         nota: '<code>def box.open_it</code> materializa la eigenclass y la inserta ANTES de <code>Object</code>.',
         marca: { eigen: 'nuevo' },
-        panel: { titulo: 'Estado del código', lineas: [{ texto: 'def box.open_it; "solo yo"; end', estado: 'activo' }] }
+        panel: { titulo: 'Estado del código', lineas: [{ texto: 'def box.open_it; "only me"; end', estado: 'activo' }] }
       },
       {
         nota: 'Ahora el lookup entra por la eigenclass y encuentra el método ahí.',
         marca: { eigen: 'gana' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: 'box.open_it  # => "solo yo"', estado: 'ok' }, { texto: 'box.singleton_methods  # => [:open_it]' }] }
+        panel: { titulo: 'Resultado', lineas: [{ texto: 'box.open_it  # => "only me"', estado: 'ok' }, { texto: 'box.singleton_methods  # => [:open_it]' }] }
       },
       {
         nota: 'Otro <code>Object.new</code> no tiene esa clase: el método nunca fue de <code>Object</code>.',
@@ -98,7 +98,7 @@
     encabezado: 'Resolución de X desde dos formas de abrir A::B',
     filas: [
       { id: 'lex1', texto: 'léxico  · Module.nesting[0] = A::B      ¿X? no' },
-      { id: 'lex2', texto: 'léxico  · Module.nesting[1] = A        ¿X? SÍ → "de A"' },
+      { id: 'lex2', texto: 'léxico  · Module.nesting[1] = A        ¿X? SÍ → "from A"' },
       { id: 'anc', texto: 'ancestros de A::B → Object             ¿X? SÍ → "top-level"' },
       { id: 'top', texto: 'Object (top-level)                     X = "top-level"' }
     ],
@@ -106,7 +106,7 @@
       {
         nota: 'Escenario: <code>X</code> existe en top-level y también dentro de <code>module A</code>.',
         marca: {},
-        panel: { titulo: 'Setup', lineas: [{ texto: 'X = "top-level"' }, { texto: 'module A' }, { texto: '  X = "de A"' }, { texto: '  module B … end' }, { texto: 'end' }] }
+        panel: { titulo: 'Setup', lineas: [{ texto: 'X = "top-level"' }, { texto: 'module A' }, { texto: '  X = "from A"' }, { texto: '  module B … end' }, { texto: 'end' }] }
       },
       {
         nota: 'Forma anidada: el nesting tiene DOS eslabones, <code>A::B</code> y <code>A</code>.',
@@ -114,9 +114,9 @@
         panel: { titulo: 'module A; module B', lineas: [{ texto: 'Module.nesting  # => [A::B, A]', estado: 'activo' }] }
       },
       {
-        nota: 'Se busca léxico primero: <code>A::B</code> no tiene <code>X</code>, <code>A</code> sí. Gana <code>"de A"</code>.',
+        nota: 'Se busca léxico primero: <code>A::B</code> no tiene <code>X</code>, <code>A</code> sí. Gana <code>"from A"</code>.',
         marca: { lex1: 'apagado', lex2: 'gana', anc: 'pierde' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: 'A::B.which  # => "de A"', estado: 'ok' }, { texto: 'los ancestros ni se consultaron', estado: 'pierde' }] }
+        panel: { titulo: 'Resultado', lineas: [{ texto: 'A::B.which  # => "from A"', estado: 'ok' }, { texto: 'los ancestros ni se consultaron', estado: 'pierde' }] }
       },
       {
         nota: 'Ahora reabro con la forma compacta <code>module A::B</code>: el nesting pierde <code>A</code>.',
@@ -131,7 +131,7 @@
       {
         nota: 'El gotcha: la forma de abrir el módulo cambió el valor. <code>const_get</code> sigue viendo el de <code>A</code>.',
         marca: { anc: 'gana', top: 'gana' },
-        panel: { titulo: 'Escape', lineas: [{ texto: 'A::B.const_get(:X)  # => "top-level"', estado: 'pierde' }, { texto: 'A.const_get(:X)     # => "de A"  ← pregúntale a A', estado: 'ok' }, { texto: '::X                 # => "top-level" explícito', estado: 'ok' }] }
+        panel: { titulo: 'Escape', lineas: [{ texto: 'A::B.const_get(:X)  # => "top-level"', estado: 'pierde' }, { texto: 'A.const_get(:X)     # => "from A"  ← pregúntale a A', estado: 'ok' }, { texto: '::X                 # => "top-level" explícito', estado: 'ok' }] }
       }
     ]
   };
