@@ -130,8 +130,12 @@ writing a doctest for its runtime. Only Ruby exists today.
 
 ## B2. Almanaque técnico · 1001 — concepts, not languages
 
-**This collection has no agreed part-set, and that is a real gap, not an omission here.**
-Measured across its four published tomos:
+> **PLACEHOLDER.** This section records what the collection measurably *is*, not what it
+> should be. Its contract gets decided after Polyglot closes; until then, treat the tomos as
+> unreviewed and do not extend the collection on the strength of this section.
+
+**It has no agreed part-set, and that is a real gap, not an omission here.** Measured across
+its four published tomos:
 
 | Tomo | `mito` | `cuandoNo` | code |
 |---|---|---|---|
