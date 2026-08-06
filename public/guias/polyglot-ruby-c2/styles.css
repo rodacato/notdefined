@@ -403,6 +403,21 @@ code, .mono { font-family: var(--font-mono); }
   .rail__hint { margin-top: 0; }
 }
 
+/* --- Bibliografía por capítulo ------------------------------------------- */
+.biblio__ficha {
+  display: flex; align-items: baseline; gap: 10px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--color-fg-muted);
+  padding-left: 9px; border-left: 3px solid var(--fam, var(--color-primary));
+  margin-bottom: 10px; text-decoration: none;
+}
+.biblio__ficha:hover { color: var(--color-fg-default); }
+.biblio__n { color: var(--fam, var(--color-primary)); }
+.biblio__transversal {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--color-fg-muted); margin: 18px 0 18px;
+}
+
 /* --- Portada: los cuatro bloques, sin tarjetas ---------------------------- */
 .bloque {
   display: block; padding: 16px 18px; margin-bottom: 10px;

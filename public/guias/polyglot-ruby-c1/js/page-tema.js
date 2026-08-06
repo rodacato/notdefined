@@ -74,28 +74,11 @@
       ])
     ]);
 
-    var recursos = G.comp.seccion('recursos', [
-      G.el('ul', { clase: 'recursos' }, ficha.recursos.map(function (r) {
-        var titulo = r.url
-          ? G.el('a', {
-              clase: 'recurso__titulo',
-              texto: r.titulo,
-              attr: { href: r.url, target: '_blank', rel: 'noopener' }
-            })
-          : G.el('span', { clase: 'recurso__titulo', texto: r.titulo });
-
-        return G.el('li', {}, [
-          G.el('p', { clase: 'recurso__linea' }, [
-            titulo,
-            G.el('span', { clase: 'recurso__fuente', texto: r.fuente })
-          ]),
-          G.el('p', { clase: 'recurso__nota', html: r.nota })
-        ]);
-      }))
-    ]);
+    // Los recursos viven en #/bibliografia, por capítulo: al terminar una
+    // ficha lo que sigue es la siguiente, no un libro.
 
     var columna = G.el('article', {}, [
-      cabeza, breve, fundamento, mecanica, interactivo, pruebalo, cuandoNo, mito, recursos, paginacion(ficha)
+      cabeza, breve, fundamento, mecanica, interactivo, pruebalo, cuandoNo, mito, paginacion(ficha)
     ]);
 
     return G.el('div', { clase: 'envoltura' }, [

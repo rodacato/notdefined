@@ -301,6 +301,15 @@
       return grupo;
     });
 
+    var biblio = G.el('a', {
+      clase: 'riel__link riel__link--fin',
+      attr: { href: '#/bibliografia' }
+    }, [
+      G.el('span', { clase: 'riel__folio', texto: '↗' }),
+      G.el('span', { clase: 'riel__t', texto: 'Bibliografía' })
+    ]);
+    if (actual === 'bibliografia') biblio.setAttribute('aria-current', 'page');
+
     var leyenda = G.el('p', { clase: 'riel__leyenda' }, [
       G.el('span', { clase: 'dif--lleno', texto: '◆' }),
       G.el('span', { clase: 'dif--vacio', texto: '◇◇' }),
@@ -310,7 +319,7 @@
     ]);
 
     return G.el('nav', { clase: 'riel', attr: { 'aria-label': 'Temas de la guía' } },
-      [G.el('span', { clase: 'riel__badge', texto: 'nivel C1' }), intro].concat(grupos, [leyenda]));
+      [G.el('span', { clase: 'riel__badge', texto: 'nivel C1' }), intro].concat(grupos, [biblio, leyenda]));
   };
 
   /* --- Sección con título de galera -------------------------------------- */

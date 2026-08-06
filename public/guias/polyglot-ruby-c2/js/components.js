@@ -202,14 +202,8 @@
     layout.appendChild(G.rail("bibliografia"));
     layout.appendChild(main);
 
-    var html =
-      '<span class="eyebrow ficha__eyebrow">Para seguir · ★ = imprescindible</span>' +
-      '<h1 class="ficha__title">Bibliografía curada</h1>' +
-      '<p class="ficha__lede">Las fuentes de las que sale cada ficha. Si vas a leer una sola cosa de aquí, que sea una marcada con ★.</p>' +
-      '<hr class="rule-double" style="margin-top:30px;">';
-
-    c.biblio.forEach(function (grp) {
-      var items = grp.items
+    function enlaces(items) {
+      return items
         .map(function (r) {
           return (
             '<a class="reslink" href="' + esc(r.url) + '" target="_blank" rel="noopener">' +
@@ -218,9 +212,33 @@
           );
         })
         .join("");
+    }
+
+    var html =
+      '<span class="eyebrow ficha__eyebrow">Para seguir · ★ = imprescindible</span>' +
+      '<h1 class="ficha__title">Bibliografía</h1>' +
+      '<p class="ficha__lede">Primero lo de cada ficha, en el mismo orden que la guía; abajo lo que cubre más de una.</p>' +
+      '<hr class="rule-double" style="margin-top:30px;">';
+
+    // Por capítulo: la ruta corta para volver a lo que acabas de leer.
+    c.order.forEach(function (slug) {
+      var t = G.data.topics[slug];
+      if (!t || !t.recursos || !t.recursos.length) return;
+      var fam = G.FAMILIES[t.family];
+      html +=
+        '<div class="biblio__group" style="--fam:' + fam.color + ';">' +
+        '<a class="biblio__ficha" href="#/' + esc(slug) + '">' +
+        '<span class="biblio__n">' + esc(t.n) + '</span>' + esc(t.navShort || t.title) +
+        '</a><div class="biblio__grid">' + enlaces(t.recursos) + '</div></div>';
+    });
+
+    html += '<hr class="rule-double" style="margin:38px 0 8px;">' +
+      '<p class="biblio__transversal">Transversales — cubren varias fichas a la vez</p>';
+
+    c.biblio.forEach(function (grp) {
       html +=
         '<div class="biblio__group"><div class="biblio__title">' + esc(grp.title) + '</div>' +
-        '<div class="biblio__grid">' + items + '</div></div>';
+        '<div class="biblio__grid">' + enlaces(grp.items) + '</div></div>';
     });
 
     html += '<p class="colofon">' + c.colofon + '</p>';
@@ -302,14 +320,8 @@
             '<p class="aviso__realidad">' + t.mito.realidad + "</p></div>"));
     }
 
-    // Para seguir
-    var res = t.recursos.map(function (r) {
-      return '<a class="reslink" href="' + esc(r.url) + '" target="_blank" rel="noopener">' +
-        '<span><b>' + esc(r.title) + '</b> <small>· ' + esc(r.note) + '</small></span>' +
-        '<span class="arrow">↗</span></a>';
-    }).join("");
-    main.insertAdjacentHTML("beforeend",
-      section(pad(n), "Para seguir", '<div class="reslist">' + res + '</div>'));
+    // Sin «para seguir» aquí: lo que sigue es la ficha siguiente, no un libro.
+    // Sus recursos viven en #/bibliografia, agrupados por ficha.
 
     // Navegación entre fichas
     var nav = '<div class="fichanav">';

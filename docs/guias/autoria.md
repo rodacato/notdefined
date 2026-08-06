@@ -89,6 +89,13 @@ The contract is fixed and every ficha carries all of it.
 | `cuandoNo` | when this knowledge should **not** change their code |
 | `mito` | the wrong belief, dismantled |
 
+**Sources do not close a ficha.** Ending on "para seguir" makes the next step look like a book
+when it is the next ficha. They live at `#/bibliografia`, linked from the rail *after* the last
+block, and grouped **by chapter in the guide's own order** — a reader arrives wanting more of
+ficha 09, not wanting "a book". Each group heads back to its ficha and carries its block colour.
+Add a "transversal" section only when something actually spans fichas: measure it. And before
+deleting per-ficha resources, check the overlap — in Ruby a fondo, 17 of 34 existed nowhere else.
+
 The last two are the collection's signature move. A Polyglot guide missing them is a manual —
 Ruby a fondo shipped with 0 of 11 and had to have them written after the fact.
 
