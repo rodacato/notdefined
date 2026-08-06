@@ -403,6 +403,30 @@ code, .mono { font-family: var(--font-mono); }
   .rail__hint { margin-top: 0; }
 }
 
+/* --- Portada: los cuatro bloques, sin tarjetas ---------------------------- */
+.bloque {
+  display: block; padding: 16px 18px; margin-bottom: 10px;
+  background: var(--color-bg-surface); border: 1px solid var(--color-border-default);
+  border-left: 3px solid var(--fam, var(--color-primary)); border-radius: 5px;
+  text-decoration: none; color: inherit;
+  transition: background .15s ease, border-color .15s ease;
+}
+.bloque:hover { background: var(--color-bg-lit); border-color: var(--color-border-strong); }
+.bloque__eyebrow {
+  display: block; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--color-fg-muted);
+}
+.bloque__hint {
+  display: block; font-family: var(--font-display); font-style: italic; font-size: 19px;
+  color: var(--color-fg-default); margin: 4px 0 0; letter-spacing: -.01em;
+}
+.bloque__pie {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--color-border-default);
+  font-family: var(--font-mono); font-size: 11px; color: var(--color-fg-muted);
+}
+.bloque__ir { color: var(--color-primary); font-size: 12px; }
+
 /* --- Compuerta de predicción --------------------------------------------- */
 .predice { margin: 18px 0 20px; max-width: 78ch; }
 .predice__q {

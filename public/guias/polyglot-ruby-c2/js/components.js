@@ -126,10 +126,13 @@
     var root = h("div");
     root.appendChild(G.topbar(""));
 
-    var main = h("main", { class: "wrap" });
+    var layout = h("div", { class: "wrap page tema-layout" });
+    var main = h("main");
+    layout.appendChild(G.rail("inicio"));
+    layout.appendChild(main);
 
     // Hero de la casa
-    var hero = h("div", { class: "page hero" });
+    var hero = h("div", { class: "hero" });
     hero.innerHTML =
       '<div class="hero__brand">' +
         '<div class="hero__mark">' + G.markSVG(26) +
@@ -152,32 +155,25 @@
     hero.insertAdjacentHTML("beforeend", '<hr class="rule-double" style="margin-top:26px;">');
     main.appendChild(hero);
 
-    // Bloques del catálogo
+    // El catálogo lo carga el riel; aquí van los cuatro bloques y su hilo.
+    var mapa = h("section", { class: "block" });
+    var filas = "";
     c.blocks.forEach(function (b) {
       var fam = G.FAMILIES[b.family];
-      var block = h("section", { class: "block" });
-      var cardsHtml = "";
-      b.topics.forEach(function (slug) {
-        var t = G.data.topics[slug];
-        if (!t) return;
-        var chips = (t.chips || []).map(function (g) { return '<span class="chip">' + esc(g) + '</span>'; }).join("");
-        cardsHtml +=
-          '<a class="card" href="#/' + esc(slug) + '" style="--fam:' + fam.color + ';">' +
-            '<div class="card__top"><span>' + esc(t.n) + ' · ' + esc(t.kind) + '</span>' +
-              '<span class="card__glyph">' + esc(t.glyph) + '</span></div>' +
-            '<h3 class="card__title">' + esc(t.title) + '</h3>' +
-            '<p class="card__tag">' + esc(t.tagline) + '</p>' +
-            '<div class="card__chips">' + chips + '</div>' +
-            '<span class="card__go">entrar →</span>' +
-          '</a>';
-      });
-      block.innerHTML =
-        '<div class="block__head"><span class="eyebrow" style="color:' + fam.color + ';">' + esc(b.eyebrow) + '</span>' +
-          '<span class="block__hint">' + esc(b.hint) + '</span></div>' +
-        '<hr class="rule" style="margin-bottom:16px;">' +
-        '<div class="cards">' + cardsHtml + '</div>';
-      main.appendChild(block);
+      var t0 = G.data.topics[b.topics[0]];
+      filas +=
+        '<a class="bloque" href="#/' + esc(b.topics[0]) + '" style="--fam:' + fam.color + ';">' +
+          '<span class="bloque__eyebrow">' + esc(b.eyebrow) + '</span>' +
+          '<span class="bloque__hint">' + esc(b.hint) + '</span>' +
+          '<span class="bloque__pie">' + b.topics.length + ' ficha' + (b.topics.length > 1 ? 's' : '') +
+            '<span class="bloque__ir">empezar por ' + esc(t0.navShort || t0.title) + ' →</span></span>' +
+        '</a>';
     });
+    mapa.innerHTML =
+      '<div class="block__head"><span class="eyebrow">Los cuatro bloques</span>' +
+        '<span class="block__hint">el riel de la izquierda los lleva completos</span></div>' +
+      '<hr class="rule" style="margin-bottom:16px;">' + filas;
+    main.appendChild(mapa);
 
     // Panel oscuro (mito rector)
     var quote = h("div", { class: "dark-panel" });
@@ -201,7 +197,7 @@
     main.appendChild(bib);
 
     main.insertAdjacentHTML("beforeend", '<p class="colofon">' + c.colofon + '</p>');
-    root.appendChild(main);
+    root.appendChild(layout);
     return root;
   };
 

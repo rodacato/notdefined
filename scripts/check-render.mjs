@@ -119,9 +119,14 @@ for (const slug of slugs) {
     let vacias = 0;
     let errores = 0;
     for (const [ruta, s] of vistas) {
-      if (!s || s.hijos <= 0 || s.texto < 80) {
+      if (!s) {
         console.error(
-          `      ${slug}${ruta}: pintó vacío (hijos ${s ? s.hijos : '?'}, ${s ? s.texto : '?'} chars)`,
+          `      ${slug}${ruta}: la sonda no respondió (¿JS roto, o el archivo cambió a media corrida?)`,
+        );
+        vacias++;
+      } else if (s.hijos <= 0 || s.texto < 80) {
+        console.error(
+          `      ${slug}${ruta}: pintó vacío (${s.hijos} hijos, ${s.texto} chars)`,
         );
         vacias++;
       }
