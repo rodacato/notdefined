@@ -7,43 +7,43 @@
 
   D.widgets.lookup = {
     titulo: 'El recorrido de ancestors',
-    encabezado: 'Caja.new.nombre — la cadena, de arriba hacia abajo',
+    encabezado: 'Box.new.name — la cadena, de arriba hacia abajo',
     filas: [
-      { id: 'encima', texto: 'Encima          def nombre → super', desde: 3 },
-      { id: 'caja', texto: 'Caja            def nombre' },
-      { id: 'etiqueta', texto: 'Etiqueta        def nombre   (include)' },
+      { id: 'encima', texto: 'Front          def name → super', desde: 3 },
+      { id: 'caja', texto: 'Box            def name' },
+      { id: 'etiqueta', texto: 'Label        def name   (include)' },
       { id: 'object', texto: 'Object' },
       { id: 'kernel', texto: 'Kernel' },
       { id: 'basic', texto: 'BasicObject' }
     ],
     pasos: [
       {
-        nota: 'Punto de partida: <code>include Etiqueta</code> deja el módulo DEBAJO de la clase.',
+        nota: 'Punto de partida: <code>include Label</code> deja el módulo DEBAJO de la clase.',
         marca: {},
-        panel: { titulo: 'Estado del código', lineas: [{ texto: 'class Caja' }, { texto: '  include Etiqueta' }, { texto: '  def nombre; "clase"; end' }, { texto: 'end' }] }
+        panel: { titulo: 'Estado del código', lineas: [{ texto: 'class Box' }, { texto: '  include Label' }, { texto: '  def name; "clase"; end' }, { texto: 'end' }] }
       },
       {
-        nota: 'La llamada entra por el primer eslabón: <code>Caja</code>.',
+        nota: 'La llamada entra por el primer eslabón: <code>Box</code>.',
         marca: { caja: 'activo' },
-        panel: { titulo: 'Cursor del lookup', lineas: [{ texto: 'Caja.new.nombre' }, { texto: '→ reviso Caja', estado: 'activo' }] }
+        panel: { titulo: 'Cursor del lookup', lineas: [{ texto: 'Box.new.name' }, { texto: '→ reviso Box', estado: 'activo' }] }
       },
       {
-        nota: '<code>Caja</code> define <code>nombre</code>: gana ahí mismo. El módulo nunca se consulta.',
+        nota: '<code>Box</code> define <code>name</code>: gana ahí mismo. El módulo nunca se consulta.',
         marca: { caja: 'gana', etiqueta: 'pierde' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: '# => "clase"', estado: 'ok' }, { texto: 'Etiqueta quedó abajo: inalcanzable', estado: 'pierde' }] }
+        panel: { titulo: 'Resultado', lineas: [{ texto: '# => "clase"', estado: 'ok' }, { texto: 'Label quedó abajo: inalcanzable', estado: 'pierde' }] }
       },
       {
-        nota: 'Ahora sí: <code>prepend Encima</code> inserta ARRIBA de la clase.',
+        nota: 'Ahora sí: <code>prepend Front</code> inserta ARRIBA de la clase.',
         marca: { encima: 'nuevo' },
-        panel: { titulo: 'Estado del código', lineas: [{ texto: 'class Caja' }, { texto: '  prepend Encima', estado: 'activo' }, { texto: 'end' }] }
+        panel: { titulo: 'Estado del código', lineas: [{ texto: 'class Box' }, { texto: '  prepend Front', estado: 'activo' }, { texto: 'end' }] }
       },
       {
-        nota: 'El cursor ahora arranca en <code>Encima</code>, no en <code>Caja</code>.',
+        nota: 'El cursor ahora arranca en <code>Front</code>, no en <code>Box</code>.',
         marca: { encima: 'activo' },
-        panel: { titulo: 'Cursor del lookup', lineas: [{ texto: 'Caja.ancestors.first  # => Encima' }, { texto: '→ reviso Encima', estado: 'activo' }] }
+        panel: { titulo: 'Cursor del lookup', lineas: [{ texto: 'Box.ancestors.first  # => Front' }, { texto: '→ reviso Front', estado: 'activo' }] }
       },
       {
-        nota: '<code>Encima</code> gana y su <code>super</code> continúa la cadena hacia <code>Caja</code>.',
+        nota: '<code>Front</code> gana y su <code>super</code> continúa la cadena hacia <code>Box</code>.',
         marca: { encima: 'gana', caja: 'activo' },
         panel: { titulo: 'Resultado', lineas: [{ texto: '# => "prepend → clase"', estado: 'ok' }, { texto: 'prepend pisa la clase; include no.', estado: 'activo' }] }
       }
@@ -51,44 +51,44 @@
   };
 
   D.widgets.eigenclass = {
-    titulo: 'La clase que aparece al hacer def caja.abrir',
-    encabezado: 'caja.singleton_class.ancestors — el eslabón invisible',
+    titulo: 'La clase que aparece al hacer def box.open_it',
+    encabezado: 'box.singleton_class.ancestors — el eslabón invisible',
     filas: [
-      { id: 'eigen', texto: '#<Class:#<Object:0x…>>   ← la eigenclass de caja', desde: 2 },
+      { id: 'eigen', texto: '#<Class:#<Object:0x…>>   ← la eigenclass de box', desde: 2 },
       { id: 'object', texto: 'Object' },
       { id: 'kernel', texto: 'Kernel' },
       { id: 'basic', texto: 'BasicObject' }
     ],
     pasos: [
       {
-        nota: '<code>caja = Object.new</code>. Cadena normal, sin nada propio.',
+        nota: '<code>box = Object.new</code>. Cadena normal, sin nada propio.',
         marca: {},
-        panel: { titulo: 'Estado', lineas: [{ texto: 'caja.singleton_methods  # => []' }] }
+        panel: { titulo: 'Estado', lineas: [{ texto: 'box.singleton_methods  # => []' }] }
       },
       {
-        nota: 'Llamo <code>caja.abrir</code>: nadie en la cadena lo define.',
+        nota: 'Llamo <code>box.open_it</code>: nadie en la cadena lo define.',
         marca: { object: 'activo', kernel: 'activo', basic: 'activo' },
         panel: { titulo: 'Resultado', lineas: [{ texto: '# => NoMethodError', estado: 'pierde' }] }
       },
       {
-        nota: '<code>def caja.abrir</code> materializa la eigenclass y la inserta ANTES de <code>Object</code>.',
+        nota: '<code>def box.open_it</code> materializa la eigenclass y la inserta ANTES de <code>Object</code>.',
         marca: { eigen: 'nuevo' },
-        panel: { titulo: 'Estado del código', lineas: [{ texto: 'def caja.abrir; "solo yo"; end', estado: 'activo' }] }
+        panel: { titulo: 'Estado del código', lineas: [{ texto: 'def box.open_it; "solo yo"; end', estado: 'activo' }] }
       },
       {
         nota: 'Ahora el lookup entra por la eigenclass y encuentra el método ahí.',
         marca: { eigen: 'gana' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: 'caja.abrir  # => "solo yo"', estado: 'ok' }, { texto: 'caja.singleton_methods  # => [:abrir]' }] }
+        panel: { titulo: 'Resultado', lineas: [{ texto: 'box.open_it  # => "solo yo"', estado: 'ok' }, { texto: 'box.singleton_methods  # => [:open_it]' }] }
       },
       {
         nota: 'Otro <code>Object.new</code> no tiene esa clase: el método nunca fue de <code>Object</code>.',
         marca: { eigen: 'apagado', object: 'activo' },
-        panel: { titulo: 'Contraste', lineas: [{ texto: 'Object.new.respond_to?(:abrir)  # => false', estado: 'pierde' }] }
+        panel: { titulo: 'Contraste', lineas: [{ texto: 'Object.new.respond_to?(:open_it)  # => false', estado: 'pierde' }] }
       },
       {
-        nota: 'Lo mismo pasa con un «método de clase»: es instancia de <code>Bodega.singleton_class</code>.',
+        nota: 'Lo mismo pasa con un «método de clase»: es instancia de <code>Warehouse.singleton_class</code>.',
         marca: { eigen: 'gana' },
-        panel: { titulo: 'El mismo mecanismo', lineas: [{ texto: 'def self.inventario  ==' }, { texto: 'Bodega.singleton_class.define_method(:inventario)', estado: 'ok' }] }
+        panel: { titulo: 'El mismo mecanismo', lineas: [{ texto: 'def self.inventory  ==' }, { texto: 'Warehouse.singleton_class.define_method(:inventory)', estado: 'ok' }] }
       }
     ]
   };
@@ -116,7 +116,7 @@
       {
         nota: 'Se busca léxico primero: <code>A::B</code> no tiene <code>X</code>, <code>A</code> sí. Gana <code>"de A"</code>.',
         marca: { lex1: 'apagado', lex2: 'gana', anc: 'pierde' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: 'A::B.cual  # => "de A"', estado: 'ok' }, { texto: 'los ancestros ni se consultaron', estado: 'pierde' }] }
+        panel: { titulo: 'Resultado', lineas: [{ texto: 'A::B.which  # => "de A"', estado: 'ok' }, { texto: 'los ancestros ni se consultaron', estado: 'pierde' }] }
       },
       {
         nota: 'Ahora reabro con la forma compacta <code>module A::B</code>: el nesting pierde <code>A</code>.',
@@ -126,7 +126,7 @@
       {
         nota: 'Sin candidato léxico, se pasa a los ancestros y ahí solo está el <code>X</code> de top-level.',
         marca: { lex1: 'apagado', lex2: 'apagado', anc: 'activo', top: 'gana' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: 'A::B.cual2  # => "top-level"', estado: 'ok' }, { texto: 'mismo archivo, mismo X escrito igual', estado: 'pierde' }] }
+        panel: { titulo: 'Resultado', lineas: [{ texto: 'A::B.which2  # => "top-level"', estado: 'ok' }, { texto: 'mismo archivo, mismo X escrito igual', estado: 'pierde' }] }
       },
       {
         nota: 'El gotcha: la forma de abrir el módulo cambió el valor. <code>const_get</code> sigue viendo el de <code>A</code>.',

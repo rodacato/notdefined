@@ -9,10 +9,10 @@
     filas: [
       { id: 'exception', texto: 'Exception                       fuera del rescue pelón' },
       { id: 'signal', texto: '├─ SignalException  NoMemoryError   NUNCA los rescates' },
-      { id: 'malerror', texto: '├─ MalError  < Exception          tu error mal parido', desde: 2 },
+      { id: 'malerror', texto: '├─ BadError  < Exception          tu error mal parido', desde: 2 },
       { id: 'standard', texto: '└─ StandardError                  el default de rescue' },
-      { id: 'base', texto: '   └─ Pagos::Error                  tu base por dominio', desde: 4 },
-      { id: 'hijos', texto: '      ├─ Pagos::Rechazado  ├─ Pagos::Indisponible', desde: 5 }
+      { id: 'base', texto: '   └─ Payments::Error                  tu base por dominio', desde: 4 },
+      { id: 'hijos', texto: '      ├─ Payments::Rechazado  ├─ Payments::Indisponible', desde: 5 }
     ],
     pasos: [
       {
@@ -23,27 +23,27 @@
       {
         nota: 'Heredas de <code>Exception</code> «para que sea de verdad»: tu error queda del lado equivocado.',
         marca: { malerror: 'nuevo', exception: 'activo' },
-        panel: { titulo: 'El mito', lineas: [{ texto: 'class MalError < Exception; end', estado: 'activo' }] }
+        panel: { titulo: 'El mito', lineas: [{ texto: 'class BadError < Exception; end', estado: 'activo' }] }
       },
       {
         nota: 'Resultado: se escapa de casi todos los <code>rescue</code> del ecosistema.',
         marca: { malerror: 'pierde' },
-        panel: { titulo: 'Consecuencia', lineas: [{ texto: 'begin; raise MalError; rescue => e; "capturado"; end' }, { texto: '# => MalError: invisible   # nadie lo atajó', estado: 'pierde' }] }
+        panel: { titulo: 'Consecuencia', lineas: [{ texto: 'begin; raise BadError; rescue => e; "capturado"; end' }, { texto: '# => BadError: invisible   # nadie lo atajó', estado: 'pierde' }] }
       },
       {
         nota: 'Lo correcto: un base error por dominio, bajo <code>StandardError</code>.',
         marca: { malerror: 'apagado', standard: 'ok', base: 'nuevo' },
-        panel: { titulo: 'Diseño', lineas: [{ texto: 'module Pagos' }, { texto: '  Error = Class.new(StandardError)', estado: 'ok' }, { texto: 'end' }] }
+        panel: { titulo: 'Diseño', lineas: [{ texto: 'module Payments' }, { texto: '  Error = Class.new(StandardError)', estado: 'ok' }, { texto: 'end' }] }
       },
       {
         nota: 'Y debajo, las especializaciones que el consumidor quiera distinguir. Tres, no quince.',
         marca: { base: 'ok', hijos: 'nuevo' },
-        panel: { titulo: 'Uso', lineas: [{ texto: 'rescue Pagos::Error => e   # atrapa todo el dominio', estado: 'ok' }, { texto: 'rescue Pagos::Rechazado    # cuando importa la razón', estado: 'ok' }] }
+        panel: { titulo: 'Uso', lineas: [{ texto: 'rescue Payments::Error => e   # atrapa todo el dominio', estado: 'ok' }, { texto: 'rescue Payments::Rechazado    # cuando importa la razón', estado: 'ok' }] }
       },
       {
         nota: 'Al cruzar de capa, envuelves dentro del <code>rescue</code>: <code>cause</code> conserva el original solo.',
         marca: { base: 'ok', hijos: 'ok' },
-        panel: { titulo: 'cause', lineas: [{ texto: 'rescue IOError' }, { texto: '  raise Pagos::Indisponible, "gateway sin respuesta"', estado: 'activo' }, { texto: 'e.cause  # => #<IOError: timeout del gateway>', estado: 'ok' }] }
+        panel: { titulo: 'cause', lineas: [{ texto: 'rescue IOError' }, { texto: '  raise Payments::Indisponible, "gateway sin respuesta"', estado: 'activo' }, { texto: 'e.cause  # => #<IOError: timeout del gateway>', estado: 'ok' }] }
       }
     ]
   };
@@ -61,12 +61,12 @@
       {
         nota: '<code>raise "algo grave"</code>. La excepción empieza a subir y toca el <code>ensure</code>.',
         marca: { excepcion: 'activo' },
-        panel: { titulo: 'Código', lineas: [{ texto: 'def se_traga' }, { texto: '  raise "algo grave"' }, { texto: 'ensure' }, { texto: '  return :todo_bien', estado: 'activo' }, { texto: 'end' }] }
+        panel: { titulo: 'Código', lineas: [{ texto: 'def swallows_it' }, { texto: '  raise "algo grave"' }, { texto: 'ensure' }, { texto: '  return :all_good', estado: 'activo' }, { texto: 'end' }] }
       },
       {
         nota: 'El <code>return</code> dentro del <code>ensure</code> cambia el flujo. Ruby obedece: la excepción se abandona.',
         marca: { excepcion: 'pierde', retorno: 'pierde', limpieza: 'ok', log: 'pierde' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: 'se_traga  # => :todo_bien', estado: 'pierde' }, { texto: 'nadie supo del "algo grave"', estado: 'pierde' }] }
+        panel: { titulo: 'Resultado', lineas: [{ texto: 'swallows_it  # => :all_good', estado: 'pierde' }, { texto: 'nadie supo del "algo grave"', estado: 'pierde' }] }
       },
       {
         nota: 'Igual de malo con <code>next</code> o <code>break</code> dentro de un <code>ensure</code> en un bloque.',

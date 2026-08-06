@@ -90,13 +90,30 @@ reorder their ivars.
 **Blocks carry a mental model**, not just a name: "la fila de casilleros" beats "El modelo de
 objetos".
 
-### Code: English identifiers, Spanish prose
+### Code in English, prose in es-MX
 
-Snippet identifiers are **English**: `class Box`, not `class Caja`. The reader will meet
-`ancestors` and `prepend` in English; mixing them with Spanish class names produces a dialect
-that exists in no repository and does not survive a grep of their own codebase. Prose,
-comments and everything the reader reads stay **es-MX**. This refines
-`feedback_repo_language`; its es-MX exception is prose, never identifiers.
+**The code is English — all of it.** Identifiers *and* string literals: `class Box`, not
+`class Caja`; `raise "something bad"`, not `raise "algo grave"`. The reader will meet
+`ancestors` and `prepend` in English, and mixing them with Spanish names produces a dialect
+that exists in no repository and does not survive a grep of their own codebase.
+
+**Comments inside a snippet may be es-MX, and should be rare.** A comment there is a last
+resort: if the snippet needs one to be understood, the snippet is unclear. Fix the names or
+the shape first. What the comment must never do is narrate what the line already says —
+it earns its place only by marking the moment that matters (`# ⚠️ la excepción desaparece`)
+or by carrying the expected output (`# => …`, which is an assertion, not a comment).
+
+**A snippet must read as intent.** Names carry the lesson: `swallows_it` and `cleans_only`
+teach the ficha before a single comment does. If you cannot name the example so its point is
+visible, you do not understand the point yet.
+
+Everything outside the code block — prose, notes, myths, the widget's narration — stays
+**es-MX**. This refines `feedback_repo_language`; its es-MX exception is prose, never code.
+
+> **Whole-ficha consistency.** An identifier appears in four places: the snippet, the widget's
+> steps, the `<code>` spans in the prose, and the runner's `# =>` assertions. Renaming one and
+> not the others is how a guide starts contradicting itself. `check:snippets` catches only the
+> assertions; the other three are yours.
 
 ### Snippets are executable, and they get executed
 
