@@ -8,6 +8,7 @@
     const h = (location.hash || "").replace(/^#\/?/, "");
     const parts = h.split("/").filter(Boolean);
     if (parts[0] === "tema" && parts[1]) return { view: "tema", slug: decodeURIComponent(parts[1]) };
+    if (parts[0] === "bibliografia") return { view: "bibliografia" };
     return { view: "index" };
   }
 
@@ -22,11 +23,15 @@
       if (node._teardownPlayer) activeTeardown = node._teardownPlayer;
       const t = G.data.topics[r.slug];
       document.title = (t ? t.title + " \u00b7 " : "") + "JavaScript a fondo \u00b7 Polyglot";
+    } else if (r.view === "bibliografia") {
+      node = G.pages.bibliografia();
+      document.title = "Bibliograf\u00eda \u00b7 JavaScript a fondo \u00b7 Polyglot";
     } else {
       node = G.pages.index();
       document.title = "JavaScript a fondo \u00b7 Polyglot";
     }
     G.mount(node);
+    window.scrollTo(0, 0);
   }
 
   function boot() {

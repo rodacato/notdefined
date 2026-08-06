@@ -1,13 +1,15 @@
 /* page-tema.js — ficha interior: qué es · en breve · fundamento · cómo
-   funciona · widget (si lo pide el tema) · mito · recursos. */
+   funciona · snippet · widget (si lo pide el tema) · mito.
+   Las fuentes no cierran la ficha: lo que sigue es el tema siguiente. */
 (function (G) {
   "use strict";
   const el = G.el, C = G.comp;
 
   function head(t) {
     const eb = el("div", { class: "tema__eyebrow" });
-    if (t.star) eb.appendChild(el("span", { class: "eyebrow", style: "color:var(--data-star);font-weight:600" }, "\u2605 El tema estrella"));
+    if (t.star) eb.appendChild(el("span", { class: "eyebrow tema__star" }, "El tema estrella"));
     eb.appendChild(C.tag(t.tag));
+    eb.appendChild(C.difficulty(t.difficulty));
     return el("div", { class: "tema__head" },
       el("span", { class: "tema__folio" }, t.folio),
       el("div", {},
@@ -18,40 +20,58 @@
     );
   }
 
+  function orden() {
+    return G.data.blocks.flatMap(function (b) { return b.slugs; });
+  }
+
+  function paginacion(slug) {
+    const todos = orden();
+    const i = todos.indexOf(slug);
+    const prev = i > 0 ? G.data.topics[todos[i - 1]] : null;
+    const next = i < todos.length - 1 ? G.data.topics[todos[i + 1]] : null;
+    return el("nav", { class: "endnav", "aria-label": "Temas contiguos" },
+      prev
+        ? el("a", { class: "endnav__link", href: "#/tema/" + prev.slug },
+            el("span", { class: "caption" }, "← anterior"), el("span", {}, prev.title))
+        : el("span", {}),
+      next
+        ? el("a", { class: "endnav__link endnav__link--next", href: "#/tema/" + next.slug },
+            el("span", { class: "caption" }, "siguiente →"), el("span", {}, next.title))
+        : el("a", { class: "endnav__link endnav__link--next", href: "#/bibliografia" },
+            el("span", { class: "caption" }, "para seguir →"), el("span", {}, "Bibliografía"))
+    );
+  }
+
   function render(slug) {
     const t = G.data.topics[slug];
-    if (!t) return el("div", { class: "shell" }, C.topbar(), el("p", { style: "margin-top:40px" }, "Tema no encontrado."));
+    if (!t) return C.layout(null, el("p", { style: "margin-top:40px" }, "Tema no encontrado."));
 
-    const node = el("div", { class: "shell" },
-      C.topbar(),
-      head(t),
-      el("hr", { class: "rule-double", style: "margin-top:24px" })
-    );
+    const cuerpo = [];
+    cuerpo.push(head(t));
+    cuerpo.push(el("hr", { class: "rule-double", style: "margin-top:24px" }));
+    cuerpo.push(C.section("En breve", C.briefGrid(t.breve)));
+    cuerpo.push(C.section("Qué es · fundamento",
+      el("div", { class: "panelgrid", style: "margin-top:0" },
+        C.panel("Qué es", t.quees, t.tag),
+        C.panel("Fundamento", t.fundamento, t.tag))));
+    cuerpo.push(C.section("Cómo funciona", C.stepsGrid(t.como)));
 
-    // qué es (fundamento en dos paneles) + en breve
-    node.appendChild(C.section("En breve", C.briefGrid(t.breve)));
+    if (t.snippet)
+      cuerpo.push(C.section("El código — corre y se verifica",
+        C.codeBlock(null, t.snippet.split("\n"))));
 
-    const panels = el("div", { class: "panelgrid", style: "margin-top:0" },
-      C.panel("Qué es", t.quees, t.tag),
-      C.panel("Fundamento", t.fundamento, t.tag));
-    node.appendChild(C.section("Qué es \u00b7 fundamento", panels));
-
-    // widget (opcional)
+    let teardown = null;
     if (t.widget) {
-      const w = C.section("Qu\u00e9 ves \u2014 v\u00eddeo que se toca", G.player(t.widget));
-      node.appendChild(w);
-      node._teardownPlayer = w.querySelector(".widget")._teardown;
+      const w = C.section("Qué ves — vídeo que se toca", G.player(t.widget));
+      cuerpo.push(w);
+      teardown = w.querySelector(".widget")._teardown;
     }
 
-    // cómo funciona
-    node.appendChild(C.section("C\u00f3mo funciona", C.stepsGrid(t.como)));
+    cuerpo.push(C.mito(t.mito));
+    cuerpo.push(paginacion(slug));
 
-    // mito
-    node.appendChild(C.mito(t.mito));
-
-    // recursos
-    node.appendChild(C.section("Recursos profesionales", C.recursos(t.recursos)));
-
+    const node = C.layout(slug, ...cuerpo);
+    node._teardownPlayer = teardown;
     return node;
   }
 

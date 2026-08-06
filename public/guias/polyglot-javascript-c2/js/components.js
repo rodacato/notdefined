@@ -70,6 +70,85 @@
     );
   }
 
+  /* ---- rampa de dificultad (los rombos solos no le dicen nada a un lector
+         de pantalla; la etiqueta es la que informa) ----------------------- */
+  function difficulty(glyph) {
+    const n = (String(glyph).match(/◆/g) || []).length || 2;
+    const label = "dificultad " + n + " de 3";
+    return el("span", { class: "rail__diff", "aria-label": label, title: label },
+      el("span", { class: "diff--full" }, "◆◆◆".slice(0, n)),
+      el("span", { class: "diff--empty" }, "◇◇◇".slice(0, 3 - n))
+    );
+  }
+
+  /* ---- riel: el índice de la guía, presente en todas las vistas ---------- */
+  function rail(current) {
+    // En angosto el riel es la única navegación: sólo abre el bloque en curso.
+    const narrow = window.matchMedia("(max-width: 940px)").matches;
+
+    const intro = el("a", { class: "rail__link rail__link--intro", href: "#/" },
+      el("span", { class: "rail__folio" }, "00"),
+      el("span", { class: "rail__t" }, "Cómo usar esta guía")
+    );
+    if (current === "index") intro.setAttribute("aria-current", "page");
+
+    const groups = G.data.blocks.map(function (b) {
+      let holds = false;
+      const items = b.slugs.map(function (slug) {
+        const t = G.data.topics[slug];
+        const here = slug === current;
+        if (here) holds = true;
+        const link = el("a", { class: "rail__link", href: "#/tema/" + slug },
+          el("span", { class: "rail__folio" }, t.folio),
+          el("span", { class: "rail__t" }, t.title),
+          difficulty(t.difficulty)
+        );
+        if (here) link.setAttribute("aria-current", "page");
+        return el("li", {}, link);
+      });
+
+      const group = el("details", {
+        class: "rail__group",
+        style: "--rail-accent:var(--tag-" + b.layer + ")",
+      },
+        el("summary", { class: "rail__head" },
+          el("span", { class: "rail__title" }, b.folio + " · " + b.title),
+          el("span", { class: "rail__model" }, b.model)
+        ),
+        el("ul", { class: "rail__list" }, items)
+      );
+      if (!narrow || holds) group.setAttribute("open", "");
+      return group;
+    });
+
+    const biblio = el("a", { class: "rail__link rail__link--end", href: "#/bibliografia" },
+      el("span", { class: "rail__folio" }, "↗"),
+      el("span", { class: "rail__t" }, "Bibliografía")
+    );
+    if (current === "bibliografia") biblio.setAttribute("aria-current", "page");
+
+    const legend = el("p", { class: "rail__legend" },
+      el("span", { class: "diff--full" }, "◆"),
+      el("span", { class: "diff--empty" }, "◇◇"),
+      el("span", {}, " entrada · "),
+      el("span", { class: "diff--full" }, "◆◆◆"),
+      el("span", {}, " segunda sentada")
+    );
+
+    return el("nav", { class: "rail", "aria-label": "Temas de la guía" },
+      el("span", { class: "rail__badge" }, "nivel C2"),
+      intro, groups, biblio, legend
+    );
+  }
+
+  /* ---- layout de dos columnas: riel + contenido -------------------------- */
+  function layout(current, ...content) {
+    return el("div", { class: "shell" },
+      topbar(),
+      el("div", { class: "guide-layout" }, rail(current), el("article", {}, ...content))
+    );
+  }
+
   /* ---- secciones de ficha ----------------------------------------------- */
   function section(label, ...content) {
     return el("section", { class: "section" },
@@ -150,6 +229,9 @@
     TAG_LABEL: TAG_LABEL,
     TAG_SUB: TAG_SUB,
     catalogCard: catalogCard,
+    difficulty: difficulty,
+    rail: rail,
+    layout: layout,
     section: section,
     briefGrid: briefGrid,
     panel: panel,
