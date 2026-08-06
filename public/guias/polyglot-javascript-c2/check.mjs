@@ -73,8 +73,10 @@ for (const slug of order) {
   if (!t) continue;
   const at = `topics[${slug}]`;
   if (t.slug !== slug) fail(`${at}: slug interno «${t.slug}» no coincide con la clave`);
+  // `mito` + `cuandoNo` + `snippet` son el contrato de Polyglot: una guía sin
+  // ellos es un manual. Ver docs/guias/autoria.md §B1.
   for (const k of ['folio', 'tag', 'difficulty', 'title', 'tagline', 'avoid',
-    'lede', 'quees', 'fundamento', 'mito'])
+    'lede', 'quees', 'fundamento', 'mito', 'cuandoNo', 'snippet'])
     if (!isStr(t[k])) fail(`${at}: falta ${k}`);
   if (!TAGS.has(t.tag)) fail(`${at}: tag de capa inválido «${t.tag}» (motor/runtime/lenguaje)`);
   if (!GLYPH.test(t.difficulty || '')) fail(`${at}: difficulty «${t.difficulty}» debe ser 3 de ◆/◇`);

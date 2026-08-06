@@ -68,6 +68,7 @@
     }
 
     cuerpo.push(C.mito(t.mito));
+    if (t.cuandoNo) cuerpo.push(C.cuandoNo(t.cuandoNo));
     cuerpo.push(paginacion(slug));
 
     const node = C.layout(slug, ...cuerpo);

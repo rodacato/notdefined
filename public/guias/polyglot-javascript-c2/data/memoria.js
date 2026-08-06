@@ -41,6 +41,7 @@
       "Math.round((100 * (peak - heap())) / (peak - base));   // ~> 101",
     ].join("\n"),
     mito: "<p>\u00abPoner <span class=\"inline-code\">x = null</span> libera la memoria al instante.\u00bb No: s\u00f3lo <em class=\"serif-italic\">rompe una referencia</em>. El objeto se recuperar\u00e1 cuando el GC decida correr y confirme que ya nadie lo alcanza. Y \u00abel GC congela todo\u00bb: hoy la mayor parte del trabajo de Orinoco es concurrente/incremental \u2014 las pausas visibles son m\u00ednimas.</p>",
+    cuandoNo: "<p>No escribas código «para ayudarle al GC». Poner <span class=\"inline-code\">= null</span> a variables locales que están por salir de ámbito no acelera nada, y forzar un <span class=\"inline-code\">gc()</span> en producción es peor que no hacerlo. Esto sirve para <strong>leer un heap snapshot</strong> cuando sospechas una fuga —una referencia viva que no debería estarlo—, no para decorar el código de limpiezas manuales.</p>",
     recursos: [
       { kind: "V8 blog", star: true, title: "Trash talk: the Orinoco garbage collector", sub: "v8.dev \u2014 la visi\u00f3n general de Orinoco", href: "https://v8.dev/blog/trash-talk" },
       { kind: "V8 blog", title: "Orinoco: young generation GC", sub: "v8.dev \u2014 el Scavenger paralelo", href: "https://v8.dev/blog/orinoco-parallel-scavenger" },
@@ -120,6 +121,7 @@
       "%HaveSameMap(a, built);       // => false",
     ].join("\n"),
     mito: "<p>\u00abEl orden en que asigno las propiedades no importa.\u00bb Para el resultado, no; para el <strong>rendimiento</strong>, s\u00ed. <span class=\"inline-code\">{a, b}</span> y <span class=\"inline-code\">{b, a}</span> terminan en Shapes <em class=\"serif-italic\">distintas</em>, y mezclarlas convierte un acceso monom\u00f3rfico (rapid\u00edsimo) en poli o megam\u00f3rfico (lento). Inicializa tus objetos con la misma forma y en el mismo orden.</p>",
+    cuandoNo: "<p>Aquí es donde más fácil te pasas de rosca. <strong>No salgas a reordenar las propiedades de todos tus objetos.</strong> Esto importa en código que corre millones de veces —un bucle caliente, una ruta crítica—; en el resto es ruido que hace tu código peor de leer a cambio de nada medible. La regla útil es una sola: inicializa un mismo tipo de objeto siempre igual. Lo demás, sólo si el perfil te lleva ahí.</p>",
     recursos: [
       { kind: "Art\u00edculo", star: true, title: "JS engine fundamentals: Shapes and Inline Caches", sub: "Mathias Bynens & Benedikt Meurer \u2014 la referencia", href: "https://mathiasbynens.be/notes/shapes-ics" },
       { kind: "Motor", title: "Fundamentals: optimizing prototypes", sub: "misma dupla \u2014 c\u00f3mo V8 optimiza el acceso", href: "https://mathiasbynens.be/notes/prototypes" },
@@ -189,6 +191,7 @@
       "%IsSmi(-(2 ** 31));      // => true",
     ].join("\n"),
     mito: "<p>\u00abTodos los n\u00fameros en JS son doubles de 64 bits.\u00bb En la <em class=\"serif-italic\">spec</em>, s\u00ed. Pero el motor hace trampa: los enteros peque\u00f1os se guardan como Smi inline, sin heap ni double. Por eso un bucle con \u00edndices enteros es mucho m\u00e1s barato de lo que la spec sugerir\u00eda \u2014 hasta que el n\u00famero crece y se vuelve un heap number.</p>",
+    cuandoNo: "<p>No contorsiones tu aritmética para quedarte en el rango Smi. Ni truncar con <span class=\"inline-code\">| 0</span> por deporte, ni evitar decimales «porque van al heap». Esto explica <em class=\"serif-italic\">por qué</em> un bucle de índices enteros sale barato; no es una lista de reglas para escribir números.</p>",
     recursos: [
       { kind: "Art\u00edculo", title: "JS engine fundamentals", sub: "Mathias Bynens & Benedikt Meurer \u2014 representaci\u00f3n de valores", href: "https://mathiasbynens.be/notes/shapes-ics" },
       { kind: "Fuente", title: "V8 blog", sub: "v8.dev \u2014 value representation y pointer compression", href: "https://v8.dev/blog" },

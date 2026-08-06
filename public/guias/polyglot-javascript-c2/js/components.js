@@ -197,6 +197,13 @@
     );
   }
 
+  function cuandoNo(html) {
+    return el("section", { class: "cuandono" },
+      el("div", { class: "cuandono__label" }, "Cuándo NO"),
+      el("div", { class: "prose", html: html })
+    );
+  }
+
   function recursos(list) {
     return el("div", { class: "recursos" },
       list.map(function (r) {
@@ -237,6 +244,7 @@
     prose: prose,
     stepsGrid: stepsGrid,
     mito: mito,
+    cuandoNo: cuandoNo,
     recursos: recursos,
     codeBlock: codeBlock,
   };

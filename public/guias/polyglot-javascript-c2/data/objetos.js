@@ -43,6 +43,7 @@
       "Object.getPrototypeOf(Derived.prototype) === Base.prototype;   // => true",
     ].join("\n"),
     mito: "<p>\u00ab<span class=\"inline-code\">class</span> trae herencia cl\u00e1sica a JavaScript.\u00bb No: <span class=\"inline-code\">class</span> es <strong>az\u00facar sint\u00e1ctico</strong> sobre esta misma cadena de prototipos. Los m\u00e9todos viven en el <span class=\"inline-code\">prototype</span>, y <span class=\"inline-code\">extends</span> s\u00f3lo enlaza un prototipo con otro. Debajo, todo es la b\u00fasqueda que acabas de recorrer.</p>",
+    cuandoNo: "<p>Saber que <span class=\"inline-code\">class</span> es azúcar <strong>no es razón para dejar de usarla</strong>. Escribir cadenas de <span class=\"inline-code\">Object.create</span> a mano para «estar más cerca del metal» produce código que tu equipo lee peor y el motor ejecuta igual. Esto sirve para <em class=\"serif-italic\">depurar</em> —de dónde salió este método, por qué esta instancia no lo tiene— no para elegir sintaxis.</p>",
     recursos: [
       { kind: "Referencia", title: "Inheritance and the prototype chain", sub: "MDN Web Docs \u2014 la referencia can\u00f3nica", href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain" },
       { kind: "Libro", star: true, title: "You Don't Know JS: this & Object Prototypes", sub: "Kyle Simpson \u2014 gratis en GitHub", href: "https://github.com/getify/You-Dont-Know-JS" },
@@ -123,6 +124,7 @@
       "withLet.map((f) => f()).join(',');   // => '0,1,2'",
     ].join("\n"),
     mito: "<p>\u00abUna closure copia las variables de la funci\u00f3n externa.\u00bb No las copia: <strong>mantiene una referencia viva</strong> al entorno. Por eso dos closures creadas en la misma llamada comparten el mismo <span class=\"inline-code\">count</span>, y por eso capturar una variable de bucle con <span class=\"inline-code\">var</span> da resultados sorprendentes (todas ven el \u00faltimo valor).</p>",
+    cuandoNo: "<p>Que una closure retenga su entorno no la vuelve sospechosa. No empieces a poner <span class=\"inline-code\">= null</span> a lo capturado ni a evitar closures «por las fugas»: la retención es el mecanismo, no el bug. El caso real es acotado —un handler que nunca se desuscribe, algo capturado en una estructura de vida larga— y se confirma con un snapshot, no con paranoia.</p>",
     recursos: [
       { kind: "Referencia", title: "Closures", sub: "MDN \u2014 la referencia can\u00f3nica", href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures" },
       { kind: "Libro", star: true, title: "You Don't Know JS: Scope & Closures", sub: "Kyle Simpson \u2014 gratis en GitHub", href: "https://github.com/getify/You-Dont-Know-JS" },
@@ -189,6 +191,7 @@
       "lexical.greet();   // => undefined",
     ].join("\n"),
     mito: "<p>\u00ab<span class=\"inline-code\">this</span> es la funci\u00f3n donde est\u00e1 escrito.\u00bb No: en funciones normales, <span class=\"inline-code\">this</span> se decide <strong>en cada llamada</strong> seg\u00fan c\u00f3mo se invoca. Las <em class=\"serif-italic\">arrow functions</em> son la excepci\u00f3n: no tienen <span class=\"inline-code\">this</span> propio, lo toman l\u00e9xicamente del lugar donde se definieron. Por eso se usan tanto como callbacks.</p>",
+    cuandoNo: "<p>No salgas a hacer <span class=\"inline-code\">.bind(this)</span> defensivo en todos lados. Con arrow functions como callbacks el problema clásico casi no aparece, y blindar cada método contra un desprendimiento que nunca ocurre es ceremonia. Esto sirve para <strong>leer</strong> el <span class=\"inline-code\">this</span> de código ajeno, y para el caso puntual en que sí extraes un método de su objeto.</p>",
     recursos: [
       { kind: "Art\u00edculo", title: "JavaScript Visualized: Hoisting", sub: "Lydia Hallie", href: "https://dev.to/lydiahallie/javascript-visualized-hoisting-478h" },
       { kind: "Referencia", title: "this", sub: "MDN \u2014 todas las reglas de enlace", href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this" },

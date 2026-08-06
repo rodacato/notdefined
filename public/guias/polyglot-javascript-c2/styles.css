@@ -427,9 +427,23 @@ html.dark .prose code, html.dark .inline-code { color: var(--color-primary); }
   border: 1px solid color-mix(in srgb, var(--data-bad) 40%, transparent);
   border-radius: var(--radius-lg); padding: 18px 22px;
 }
+/* La tinta la pone --color-fg-subtle (5.68:1 claro / 7.90:1 oscuro); --data-bad
+   se queda en el borde y el rombo, donde marcar no exige contraste de texto. */
 .mito__label {
   font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em;
-  text-transform: uppercase; color: var(--data-bad); font-weight: 600; margin-bottom: 8px;
+  text-transform: uppercase; color: var(--color-fg-subtle); font-weight: 600; margin-bottom: 8px;
+}
+.mito__label::before { content: "◆ "; color: var(--data-bad); }
+
+.cuandono {
+  margin-top: 14px; background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-left: 3px solid var(--data-star);
+  border-radius: var(--radius-lg); padding: 18px 22px;
+}
+.cuandono__label {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--color-fg-subtle); font-weight: 600; margin-bottom: 8px;
 }
 
 /* recursos */
