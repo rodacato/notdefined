@@ -138,7 +138,7 @@
       'El find pattern <code>[*, x, *]</code> sigue emitiendo warning experimental (también en 4.0). <code>case/in</code> es estable desde 3.0.'
     ],
     fundamento: 'Ruby ya tenía destructuring en asignaciones (<code>a, b = arr</code>) y comparación con <code>===</code>. Pattern matching junta las dos ideas y les agrega un protocolo: cualquier objeto puede decidir cómo se desarma. Es la vía para tratar JSON, ASTs y respuestas de API como datos con forma, no como hashes que se navegan a mano.',
-    comoFunciona: 'Los patrones se prueban en orden. Un nombre suelto <em>liga</em> (no compara); para comparar contra una variable existente usas el pin: <code>^x</code>. Los guards (<code>if</code>/<code>unless</code>) se evalúan después de que el patrón ligó.',
+    comoFunciona: 'Los patrones se prueban en orden. Un nombre suelto <em>liga</em> (no compara); para comparar contra una variable existente usas el pin: <code>^x</code>. Los guards (<code>if</code>/<code>unless</code>) se evalúan <em>después</em> de que el patrón ligó — y ahí está el filo: si el guard falla, la cláusula no matchea y se pasa a la siguiente <code>in</code>. No se reintenta el patrón. En un find pattern eso significa que el guard NO busca otra posición: la condición tiene que ir dentro del patrón.',
     snippet: [
       'Punto = Struct.new(:x, :y) do',
       '  def deconstruct; [x, y]; end',
@@ -168,7 +168,13 @@
       'case [1, 42, 3, 4]',
       'in [*, Integer => n, *] if n > 40 then n',
       'end',
-      '# => 42',
+      '# => NoMatchingPatternError   # el guard NO reintenta las otras posiciones:',
+      '#                             # ligó n=1, falló, y ahí se acabó la cláusula',
+      '',
+      'case [1, 42, 3, 4]',
+      'in [*, (41..) => n, *] then n',
+      'end',
+      '# => 42                       # la condición va DENTRO del patrón',
       '',
       'case 5',
       'in String then :nunca',

@@ -121,14 +121,14 @@
         panel: { titulo: 'El pin', lineas: [{ texto: '^esperado → compara con "ok"  ✓', estado: 'ok' }, { texto: 'items: []  → array pattern exacto ✗', estado: 'pierde' }] }
       },
       {
-        nota: 'Cuarto: el find pattern <code>[*, Integer =&gt; n, *]</code> busca un elemento en cualquier posición y lo liga.',
+        nota: 'Cuarto: el find pattern <code>[*, Integer =&gt; n, *]</code> liga en la PRIMERA posición que encaja — <code>n = 1</code> —. El guard corre hasta después de ligar.',
         marca: { p4: 'activo' },
-        panel: { titulo: 'Find pattern', lineas: [{ texto: 'items.deconstruct → [1, 42, 3]', estado: 'activo' }, { texto: 'n = 1 → guard falla; n = 42 → guard pasa', estado: 'activo' }, { texto: '⚠ warning: Find pattern is experimental', estado: 'pierde' }] }
+        panel: { titulo: 'Find pattern', lineas: [{ texto: 'items.deconstruct → [1, 42, 3]', estado: 'activo' }, { texto: 'n = 1  (primera posición Integer)', estado: 'activo' }, { texto: '⚠ warning: Find pattern is experimental', estado: 'pierde' }] }
       },
       {
-        nota: 'Matchea: <code>n</code> quedó ligada. El quinto patrón nunca se prueba.',
-        marca: { p4: 'gana', p5: 'apagado' },
-        panel: { titulo: 'Resultado', lineas: [{ texto: 'n  # => 42', estado: 'ok' }, { texto: 'ligar ≠ comparar: eso es pattern matching', estado: 'ok' }] }
+        nota: 'El guard falla con <code>n = 1</code> y ahí se acaba la cláusula: <b>no reintenta con 42</b>. Cae al quinto, que sí liga.',
+        marca: { p4: 'pierde', p5: 'gana' },
+        panel: { titulo: 'Resultado', lineas: [{ texto: '1 > 40  # => false', estado: 'pierde' }, { texto: 'estado  # => "ok"   (ganó el quinto)', estado: 'ok' }, { texto: 'la condición va DENTRO del patrón: (41..) => n', estado: 'ok' }] }
       }
     ]
   };
