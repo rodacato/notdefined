@@ -62,6 +62,48 @@
       creencia: '«<code>method_missing</code> es como se hacen los métodos dinámicos en Ruby.»',
       realidad: 'Falso: es el ÚLTIMO recurso. <code>define_method</code> genera métodos reales (salen en <code>respond_to?</code>, se cachean, aparecen en el lookup); <code>method_missing</code> es un catch-all que rompe cachés y MIENTE en <code>respond_to?</code> si no defines <code>respond_to_missing?</code>.'
     },
+    escena: {
+      titulo: 'Métodos reales contra un portero',
+      pasos: [
+        {
+          lineas: [1, 9],
+          nota: 'Tres campos conocidos, generados en load-time. Nada de <code>method_missing</code> aquí — se define un método por nombre.',
+          predice: {
+            pregunta: '<code>Config.instance_methods(false)</code> — ¿qué sale?',
+            opciones: [
+              'Los tres campos y <code>initialize</code>: cuatro métodos',
+              'Solo los tres campos'
+            ],
+            correcta: 1,
+            porque: 'Ruby hace <code>initialize</code> privado él solo, así que no aparece en <code>instance_methods</code>. Es un detalle chico que delata si generaste métodos de verdad o estás leyendo otra cosa.'
+          }
+        },
+        {
+          lineas: [11, 16],
+          nota: 'Métodos reales: salen en la lista, contestan <code>respond_to?</code> y se cachean. Y sin <code>.sort</code> el orden es el de la tabla de métodos, no el de definición.',
+          salida: 'c.port                               # => 5432\nConfig.instance_methods(false).sort  # => [:host, :port, :tls]'
+        },
+        {
+          lineas: [19, 31],
+          nota: 'Ahora el otro camino, cuando el conjunto de nombres <em>sí</em> es abierto: un catch-all que se define el método al primer uso, para no volver a pagar el fallo.',
+          predice: {
+            pregunta: 'Después de llamar <code>p.sort</code> una vez, ¿qué trae <code>Proxy.instance_methods(false)</code>?',
+            opciones: [
+              'Los cuatro: <code>sort</code>, <code>initialize</code>, <code>method_missing</code> y <code>respond_to_missing?</code>',
+              'Dos: <code>method_missing</code> y el <code>sort</code> recién nacido'
+            ],
+            correcta: 1,
+            porque: '<code>respond_to_missing?</code> también lo hace privado Ruby solo, igual que <code>initialize</code>. Dato que casi nadie tiene y que explica por qué no lo ves donde lo buscas.'
+          }
+        },
+        {
+          lineas: [33, 36],
+          nota: 'El criterio del bloque, en una línea: si puedes enumerar los nombres, <code>define_method</code>. Si no puedes, catch-all — pero honesto, con <code>respond_to_missing?</code>.',
+          salida: 'p.sort                              # => [1, 2, 3]\nProxy.instance_methods(false).sort  # => [:method_missing, :sort]'
+        }
+      ]
+    },
+
     callout: {
       dice: "Struct genera métodos de verdad, no un catch-all — compruébalo:",
       cmd: "p Struct.new(:a).instance_methods(false).sort",
@@ -100,12 +142,12 @@
       'box.singleton_methods           # => [:lid]',
       'Box.instance_methods(false)     # => []',
       '',
-      'Box.class_eval { def lid2; :instancia; end }',
-      'Box.new.lid2                   # => :instancia',
+      'Box.class_eval { def lid2; :instance; end }',
+      'Box.new.lid2                   # => :instance',
       'Box.instance_methods(false)     # => [:lid2]',
       '',
-      'Box.instance_eval { def factory; :metodo_de_clase; end }',
-      'Box.factory                     # => :metodo_de_clase',
+      'Box.instance_eval { def factory; :class_method; end }',
+      'Box.factory                     # => :class_method',
       '',
       'label = "from the caller"',
       'box.instance_exec(3) { |n| [self.class, n, label] }',
@@ -116,6 +158,61 @@
       creencia: '«<code>instance_eval</code> y <code>class_eval</code> hacen casi lo mismo.»',
       realidad: 'Falso: <code>instance_eval</code> cambia self y define en la singleton class del receptor; <code>class_eval</code> (sobre una clase) define métodos de INSTANCIA de esa clase. Confundirlos = tu <code>def</code> termina en el lugar equivocado.'
     },
+    escena: {
+      titulo: 'Dónde cae el def',
+      pasos: [
+        {
+          lineas: [1, 4],
+          nota: 'Un <code>def</code> dentro de un bloque que corre con <code>instance_eval</code> sobre una <em>instancia</em>. Son dos cosas independientes: quién es <code>self</code>, y dónde aterriza el <code>def</code>.',
+          predice: {
+            pregunta: '¿Dónde queda <code>lid</code>?',
+            opciones: [
+              'Como método de instancia de <code>Box</code>: todas las cajas lo tendrán',
+              'En la singleton class de <code>box</code>: solo esa caja'
+            ],
+            correcta: 1,
+            porque: '<code>instance_eval</code> pone <code>self</code> en el receptor <b>y</b> el definee en su singleton class. Por eso el <code>def</code> aterriza pegado al objeto, no a la clase.'
+          }
+        },
+        {
+          lineas: [5, 7],
+          nota: 'Solo esa caja. <code>Box</code> quedó sin un método nuevo — otra instancia no sabe nada de <code>lid</code>.',
+          salida: 'box.singleton_methods        # => [:lid]\nBox.instance_methods(false)  # => []'
+        },
+        {
+          lineas: [9, 11],
+          nota: 'Cambio una palabra: <code>class_eval</code> sobre la <em>clase</em>. El bloque es idéntico en forma.',
+          predice: {
+            pregunta: '¿Y ahora dónde cae?',
+            opciones: [
+              'También en una singleton class: son casi lo mismo',
+              'Como método de instancia de <code>Box</code>'
+            ],
+            correcta: 1,
+            porque: 'Aquí está la diferencia que la gente confunde: <code>class_eval</code> sobre una clase define métodos de INSTANCIA de esa clase. Confundirlos = tu <code>def</code> termina en el lugar equivocado y no entiendes por qué.'
+          }
+        },
+        {
+          lineas: [13, 14],
+          nota: 'El tercer caso, el que amarra los dos anteriores: <code>instance_eval</code> pero sobre la clase.',
+          predice: {
+            pregunta: '<code>Box.instance_eval { def factory; end }</code> — ¿qué acabo de definir?',
+            opciones: [
+              'Un método de instancia más',
+              'Un método de CLASE: <code>Box.factory</code>'
+            ],
+            correcta: 1,
+            porque: 'Coherente con el paso 1: <code>instance_eval</code> siempre define en la singleton class del receptor. Si el receptor es una clase, su singleton class es donde viven los métodos de clase. Un solo mecanismo, tres resultados.'
+          }
+        },
+        {
+          lineas: [16, 18],
+          nota: 'Lo que <em>nunca</em> cambia: el binding. <code>self</code> se movió, pero la local del caller sigue ahí — por eso un DSL con <code>instance_eval</code> puede leer tus variables y no llamar a tus métodos.',
+          salida: 'box.instance_exec(3) { |n| [self.class, n, label] }\n# => [Box, 3, "from the caller"]'
+        }
+      ]
+    },
+
     callout: {
       dice: "Las dos formas cambian dónde CAE el <code>def</code>, no solo quién es <code>self</code>:",
       cmd: "class C; end; C.instance_eval { def a; end }; C.class_eval { def b; end }; p [C.methods(false), C.instance_methods(false)]",
@@ -178,6 +275,41 @@
       creencia: '«Los refinements son monkey-patching seguro y con scope.»',
       realidad: 'Medio falso: su scope léxico es tan estricto que casi nunca hace lo que esperas (no se propaga a métodos llamados desde dentro del scope, no viaja con <code>send</code> dinámico) y la comunidad los abandonó. <code>prepend</code> de un módulo nombrado —rastreable en <code>ancestors</code>— es la respuesta adulta.'
     },
+    escena: {
+      titulo: 'Hasta dónde llega cada parche',
+      pasos: [
+        {
+          lineas: [1, 7],
+          nota: 'Monkey-patching con modales: un módulo <b>con nombre</b>, insertado con <code>prepend</code>, que llama a <code>super</code>. Nada de reabrir <code>String</code> y pisar el método.',
+          salida: 'String.ancestors.first(2)             # => [SafeTrim, String]\nString.instance_method(:strip).owner  # => SafeTrim'
+        },
+        {
+          lineas: [9, 11],
+          nota: 'Esa es toda la diferencia con reabrir la clase: <code>ancestors</code> y el backtrace dicen tu nombre. El parche es auditable — alguien puede encontrarte.',
+          salida: '"\\u00A0hey\\u00A0".strip  # => "hey"'
+        },
+        {
+          lineas: [13, 22],
+          nota: 'Ahora la alternativa «segura»: un refinement, que promete no filtrarse fuera de su scope léxico. Tres formas de llamar al mismo método, después del <code>using</code>.',
+          predice: {
+            pregunta: '¿Cuáles de las tres ven el refinement — <code>"hey".upcase</code>, <code>indirect("hey")</code> y <code>"hey".send(:upcase)</code>?',
+            opciones: [
+              'Solo la directa: ni el método ni <code>send</code> lo ven',
+              'La directa y <code>send</code>; el método definido aparte, no',
+              'Las tres: estamos dentro del scope'
+            ],
+            correcta: 1,
+            porque: 'Lo que activa un refinement es el <em>scope léxico</em>, no la sintaxis de la llamada. <code>send</code> ocurre en el scope refinado y sí lo ve — el folklore de que «send no ve refinements» es falso desde hace muchas versiones. Lo que no lo ve es el <b>cuerpo</b> de <code>indirect</code>, definido fuera del scope, aunque lo llames desde dentro.'
+          }
+        },
+        {
+          lineas: [23, 26],
+          nota: 'El scope no viaja con la llamada, se queda en el archivo. Por eso un refinement es más seguro que un monkey-patch — y por eso es más difícil de razonar: el mismo código hace cosas distintas según dónde esté escrito.',
+          salida: '"hey".upcase         # => "¡HEY!"\nindirect("hey")      # => "HEY"\n"hey".send(:upcase)  # => "¡HEY!"'
+        }
+      ]
+    },
+
     callout: {
       dice: "Antes de parchar, mira quién es el dueño actual del método:",
       cmd: "p String.instance_method(:upcase).owner",
