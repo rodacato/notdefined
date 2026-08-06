@@ -89,9 +89,6 @@
     return lista;
   };
 
-  G.widgetDe = function (ficha) {
-    return (G.datos && G.datos.widgets && G.datos.widgets[ficha.widget]) || null;
-  };
 
   G.sinAnimacion = function () {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;

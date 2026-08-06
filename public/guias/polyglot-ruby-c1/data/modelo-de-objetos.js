@@ -96,7 +96,6 @@
       cmd: "p [].method(:sum).owner",
       sale: "Array"
     },
-    widget: 'lookup',
     recursos: [
       { titulo: 'Module#ancestors, #include, #prepend', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Module.html', nota: 'La documentación de inserción es explícita sobre la posición. Léela una vez y ya.' },
       { titulo: 'Metaprogramming Ruby 2, cap. «Object Model»', fuente: 'Paolo Perrotta', nota: 'La explicación canónica del «one step to the right, then up».' },
@@ -189,7 +188,6 @@
       cmd: "p Integer.singleton_class.ancestors.first(3)",
       sale: "[#<Class:Integer>, #<Class:Numeric>, #<Class:Object>]"
     },
-    widget: 'eigenclass',
     recursos: [
       { titulo: 'Object#singleton_class, #extend, #define_singleton_method', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Object.html', nota: 'La API completa cabe en una pantalla.' },
       { titulo: 'Metaprogramming Ruby 2, cap. «Singleton Methods»', fuente: 'Paolo Perrotta', nota: 'Incluye el diagrama de las siete reglas; es el que sí se queda en la cabeza.' },
@@ -299,7 +297,6 @@
       cmd: "module A; X = 1; module B; p Module.nesting; end; end",
       sale: "[A::B, A]"
     },
-    widget: 'constantes',
     recursos: [
       { titulo: 'Constant lookup', fuente: 'docs oficiales de Ruby (syntax/modules_and_classes)', url: 'https://docs.ruby-lang.org/en/master/syntax/modules_and_classes_rdoc.html', nota: 'El orden está escrito; casi nadie lo ha leído.' },
       { titulo: 'Zeitwerk — README y modo eager/lazy', fuente: 'Xavier Noria', url: 'https://github.com/fxn/zeitwerk', nota: 'Explica por qué el autoload casero falla justo con nombres anidados.' },

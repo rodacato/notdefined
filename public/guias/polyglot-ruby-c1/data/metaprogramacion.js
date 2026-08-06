@@ -109,7 +109,6 @@
       cmd: "p Struct.new(:a).instance_methods(false).sort",
       sale: "[:a, :a=]"
     },
-    widget: 'generacion',
     recursos: [
       { titulo: 'BasicObject#method_missing y Object#respond_to_missing?', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/BasicObject.html', nota: 'La doc dice literalmente que llames a <code>super</code> si no reconoces el nombre.' },
       { titulo: 'Metaprogramming Ruby 2, cap. «Dynamic Methods» / «Ghost Methods»', fuente: 'Paolo Perrotta', nota: 'La distinción dynamic vs ghost method es de aquí.' },
@@ -218,7 +217,6 @@
       cmd: "class C; end; C.instance_eval { def a; end }; C.class_eval { def b; end }; p [C.methods(false), C.instance_methods(false)]",
       sale: "[[:a], [:b]]"
     },
-    widget: 'self',
     recursos: [
       { titulo: 'BasicObject#instance_eval / #instance_exec, Module#class_eval', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/BasicObject.html', nota: 'La nota sobre el «default definee» está ahí, en letra chica.' },
       { titulo: 'Metaprogramming Ruby 2, cap. «Class Definitions» y «Clean Rooms»', fuente: 'Paolo Perrotta', nota: 'De aquí sale el vocabulario de self / definee que uso arriba.' },
@@ -315,7 +313,6 @@
       cmd: "p String.instance_method(:upcase).owner",
       sale: "String"
     },
-    widget: 'refinements',
     recursos: [
       { titulo: 'Refinements — spec y limitaciones', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/syntax/refinements_rdoc.html', nota: 'La lista de «no aplica en…» es más larga que la de «aplica».' },
       { titulo: 'Namespace / Ruby::Box', fuente: 'propuesta y charlas de Satoshi Tagomori (RubyKaigi)', url: 'https://bugs.ruby-lang.org/issues/21311', nota: 'El diagnóstico oficial de por qué el aislamiento faltaba.' },

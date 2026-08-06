@@ -64,12 +64,57 @@
       creencia: '«Hereda tus excepciones de <code>Exception</code> para que sean "de verdad".»',
       realidad: 'Falso y peligroso: <code>rescue</code> pelón captura <code>StandardError</code>, no <code>Exception</code> — si heredas de <code>Exception</code>, tu error se escapa de casi todos los <code>rescue</code> del ecosistema (y te pones al nivel de <code>SignalException</code>/<code>NoMemoryError</code>, que NUNCA debes rescatar). Hereda de <code>StandardError</code>.'
     },
+    escena: {
+      "titulo": "De quién heredas decide quién te atrapa",
+      "pasos": [
+        {
+          "lineas": [
+            1,
+            11
+          ],
+          "nota": "Un base error por dominio y dos especializaciones. Al cruzar la frontera de capa, se envuelve: se levanta el error propio <em>dentro</em> del <code>rescue</code>.",
+          "salida": "module Payments\n  Error = Class.new(StandardError)\n  Unavailable = Class.new(Error)\nend"
+        },
+        {
+          "lineas": [
+            13,
+            18
+          ],
+          "nota": "Envolver dentro del <code>rescue</code> es lo que llena <code>cause</code> solo. Si armas el mensaje a mano concatenando, pierdes el original y con él el backtrace que necesitabas.",
+          "salida": "# => [Payments::Unavailable, \"gateway not responding\",\n#     IOError, \"gateway timeout\"]"
+        },
+        {
+          "lineas": [
+            20,
+            27
+          ],
+          "nota": "Ahora lo que no debes hacer, y que se ve razonable: heredar de <code>Exception</code> «para que sea un error de verdad».",
+          "predice": {
+            "pregunta": "El <code>rescue</code> pelón de abajo, ¿lo atrapa?",
+            "opciones": [
+              "Sí: <code>rescue</code> sin clase atrapa todo",
+              "No: se escapa"
+            ],
+            "correcta": 1,
+            "porque": "<code>rescue</code> sin clase captura <code>StandardError</code>, no <code>Exception</code>. Si heredas de <code>Exception</code> te pones al nivel de <code>SignalException</code> y <code>NoMemoryError</code> —que NUNCA debes rescatar— y tu error se escapa de casi todos los <code>rescue</code> del ecosistema."
+          }
+        },
+        {
+          "lineas": [
+            30,
+            38
+          ],
+          "nota": "Y la otra mitad del criterio: un usuario que no existe no es «excepcional». Para el flujo esperado, un valor comunica mejor la intención que una excepción.",
+          "salida": "find_user(9).error  # => :not_found"
+        }
+      ]
+    },
+
     callout: {
       dice: "La frontera del <code>rescue</code> pelón, en una línea:",
       cmd: "p [NoMemoryError.ancestors.include?(StandardError), ArgumentError.ancestors.include?(StandardError)]",
       sale: "[false, true]"
     },
-    widget: 'jerarquia',
     recursos: [
       { titulo: 'Exception — jerarquía, #cause, #full_message', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Exception.html', nota: 'El árbol completo de clases built-in está aquí; vale imprimirlo.' },
       { titulo: 'dry-monads — Result', fuente: 'dry-rb', url: 'https://dry-rb.org/gems/dry-monads/', nota: 'La implementación seria de errores-como-valores en Ruby, sin misticismo.' },
@@ -187,7 +232,6 @@
       cmd: "def f; raise \"grave\"; ensure; return :ok; end; p f",
       sale: ":ok      # el \"grave\" desapareció"
     },
-    widget: 'ensure',
     recursos: [
       { titulo: 'Exceptions — begin/rescue/ensure/retry', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/syntax/exceptions_rdoc.html', nota: 'La semántica de <code>ensure</code> frente a una excepción en vuelo, escrita.' },
       { titulo: 'Thread#report_on_exception y #abort_on_exception', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Thread.html', nota: 'Qué cambió en 2.5 y por qué antes los threads morían en silencio.' },
@@ -224,33 +268,94 @@
       'b[0].frozen?       # => true        # este sí recorre el grafo',
       '',
       '# Data (3.2+): value object',
-      'Punto = Data.define(:x, :y)',
-      'p1 = Punto.new(x: 1, y: 2)',
+      'Point = Data.define(:x, :y)',
+      'p1 = Point.new(x: 1, y: 2)',
       '',
       'p1.x               # => 1',
-      'p1.with(y: 9)      # => #<data Punto x=1, y=9>',
-      'p1 == Punto.new(x: 1, y: 2)   # => true    # igualdad por valor',
+      'p1.with(y: 9)      # => #<data Point x=1, y=9>',
+      'p1 == Point.new(x: 1, y: 2)   # => true    # igualdad por valor',
       'p1.respond_to?(:x=)           # => false   # no hay setters',
       'p1.to_h                       # => {x: 1, y: 2}',
       '',
       '# Struct: mutable e indexable, otro caso de uso',
-      'Par = Struct.new(:a, :b)',
-      'par = Par.new(1, 2)',
-      'par.a = 10         # => 10',
-      'par[1]             # => 2',
-      'par.to_a           # => [10, 2]'
+      'Pair = Struct.new(:a, :b)',
+      'pair = Pair.new(1, 2)',
+      'pair.a = 10         # => 10',
+      'pair[1]             # => 2',
+      'pair.to_a           # => [10, 2]'
     ].join('\n'),
     cuandoNo: 'No rocíes <code>.freeze</code> por todos lados por «performance» — el ahorro de <code>frozen_string_literal</code> viene de deduplicar literales de string, no de congelar cada objeto.',
     mito: {
       creencia: '«<code>obj.freeze</code> congela el objeto y todo lo que contiene.»',
       realidad: 'Falso: <code>freeze</code> es superficial (shallow). <code>[[1,2]].freeze</code> congela el array de afuera pero NO los de adentro — <code>arr[0] &lt;&lt; 3</code> sigue mutando. Para profundo, congelas recursivo tú o usas algo que ya lo hace (<code>Data</code>, <code>Ractor.make_shareable</code>).'
     },
+    escena: {
+      "titulo": "Qué congela freeze, exactamente",
+      "pasos": [
+        {
+          "lineas": [
+            1,
+            4
+          ],
+          "nota": "Un array congelado que contiene otros arrays. El contenedor dice <code>frozen? # => true</code>; el primer elemento dice <code>false</code>.",
+          "predice": {
+            "pregunta": "<code>a[0] &lt;&lt; 3</code> — ¿truena o muta?",
+            "opciones": [
+              "Truena con <code>FrozenError</code>: el array está congelado",
+              "Muta: el elemento nunca se congeló"
+            ],
+            "correcta": 1,
+            "porque": "Congelar profundo requeriría recorrer un grafo arbitrario en cada llamada: caro e imposible de hacer bien con ciclos. Ruby hizo lo predecible y baratísimo —un bit por objeto— y dejó lo profundo a quien lo necesite."
+          }
+        },
+        {
+          "lineas": [
+            5,
+            6
+          ],
+          "nota": "Las dos líneas juntas: la de arriba sí truena, la de abajo muta feliz. Ese contraste es todo el tema.",
+          "salida": "a << [4]    # => FrozenError\na[0] << 3   # => [1, 2, 3]   ← mutó"
+        },
+        {
+          "lineas": [
+            8,
+            10
+          ],
+          "nota": "La versión que sí recorre el grafo existe, y existe justamente porque los Ractors la exigen: sin aislamiento profundo no hay paralelismo seguro.",
+          "salida": "Ractor.make_shareable(b = [[1, 2]])\nb[0].frozen?  # => true"
+        },
+        {
+          "lineas": [
+            12,
+            20
+          ],
+          "nota": "<code>Data</code> (3.2+) es el value object que Ruby no tenía: sin setters, igualdad por valor, y <code>with</code> para derivar en vez de mutar.",
+          "predice": {
+            "pregunta": "<code>p1 == Point.new(x: 1, y: 2)</code> — ¿son iguales dos instancias distintas?",
+            "opciones": [
+              "Sí: la igualdad es por valor",
+              "No: son objetos distintos"
+            ],
+            "correcta": 0,
+            "porque": "Eso es lo que lo vuelve un <em>value object</em>: dos instancias con los mismos campos son el mismo valor. Es la diferencia con un <code>Struct</code>, que es mutable e indexable y sirve para otra cosa."
+          }
+        },
+        {
+          "lineas": [
+            22,
+            27
+          ],
+          "nota": "<code>Struct</code> sigue existiendo y no está obsoleto: es mutable, indexable y convertible a array. Otro caso de uso, no una versión vieja de <code>Data</code>.",
+          "salida": "pair.a = 10   # => 10\npair.to_a     # => [10, 2]"
+        }
+      ]
+    },
+
     callout: {
       dice: "El <code>freeze</code> superficial, comprobado:",
       cmd: "p [[1,2]].freeze.then { |a| a[0] << 3; a }",
       sale: "[[1, 2, 3]]"
     },
-    widget: 'freeze',
     recursos: [
       { titulo: 'Data', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Data.html', nota: 'Incluye la comparación explícita con <code>Struct</code>.' },
       { titulo: 'Chilled strings y el camino a frozen_string_literal por default', fuente: 'ruby-lang.org / Feature #20205', url: 'https://bugs.ruby-lang.org/issues/20205', nota: 'La razón por la que el default sigue posponiéndose.' },
@@ -292,8 +397,8 @@
       '# ~> cpu threads   0.618  (real)   # cero ganancia: CPU con GVL',
       '',
       '# Ractors: paralelismo real, aislamiento estricto (4.0: #value, Port)',
-      'rs = 4.times.map { Ractor.new { 3_000_000.times { |i| i * i }; :listo } }',
-      'rs.map(&:value)     # => [:listo, :listo, :listo, :listo]   # sí escala en CPU',
+      'rs = 4.times.map { Ractor.new { 3_000_000.times { |i| i * i }; :done } }',
+      'rs.map(&:value)     # => [:done, :done, :done, :done]   # sí escala en CPU',
       '',
       'config = { retries: 3 }',
       'Ractor.new(config) { |c| c }.value   # => {retries: 3}   # pasarlo lo COPIA',
@@ -309,12 +414,66 @@
       creencia: '«Los Ractors ya le quitaron el GVL a Ruby, así que hay paralelismo real para todo.»',
       realidad: 'Medio falso: los Ractors dan paralelismo de CPU real, pero su modelo de aislamiento (solo objetos shareable cruzan, casi todo tiene que ir frozen) los deja fuera de la mayoría del código Rails. En 4.0 maduraron (comunicación por Port, <code>#value</code>/<code>#join</code> en vez de <code>#take</code>) pero siguen experimentales. Para I/O, los threads —con el GVL soltándose en I/O— siguen siendo la respuesta.'
     },
+    escena: {
+      "titulo": "Qué escala y qué no",
+      "pasos": [
+        {
+          "lineas": [
+            1,
+            11
+          ],
+          "nota": "Cuatro mediciones: I/O en serie contra I/O en hilos, y CPU en serie contra CPU en hilos. El mismo trabajo, la misma máquina.",
+          "predice": {
+            "pregunta": "¿Dónde ganan los hilos de Ruby?",
+            "opciones": [
+              "En ninguno: el GVL los serializa siempre",
+              "En I/O, no en CPU",
+              "En los dos: son hilos de sistema"
+            ],
+            "correcta": 1,
+            "porque": "El GVL <b>se suelta</b> en I/O. Medido: 8 esperas de 0.1 s tardan 0.104 s en hilos contra 0.803 s en serie — 8×. En CPU no hay ganancia: 0.618 contra 0.612. La regla es «un hilo por espera», no «un hilo por core»."
+          }
+        },
+        {
+          "lineas": [
+            12,
+            15
+          ],
+          "nota": "Los números son de una corrida real, no de una estimación. La segunda línea es la que desmiente el mito de que los hilos de Ruby «no sirven».",
+          "salida": "io serial     0.803   ·   io threads   0.104   → 8x\ncpu serial    0.612   ·   cpu threads  0.618   → nada"
+        },
+        {
+          "lineas": [
+            17,
+            19
+          ],
+          "nota": "Para CPU sí existe paralelismo real: Ractors. Cuatro corriendo a la vez, cada uno con su propio intérprete y sin GVL compartido.",
+          "salida": "rs.map(&:value)  # => [:done, :done, :done, :done]"
+        },
+        {
+          "lineas": [
+            21,
+            24
+          ],
+          "nota": "Pero el aislamiento cobra. Y el disparador no es el que la gente cree.",
+          "predice": {
+            "pregunta": "<code>Ractor.new(config) { |c| c }</code> con un hash normal — ¿truena?",
+            "opciones": [
+              "Sí: el hash no es shareable",
+              "No: pasarlo como argumento lo COPIA"
+            ],
+            "correcta": 1,
+            "porque": "Pasar un objeto a un Ractor lo copia, y eso siempre funciona. Lo que truena es <em>capturar</em> una variable del scope dentro del bloque — y con <code>ArgumentError</code>, no con <code>Ractor::IsolationError</code>. Confundir las dos cosas es el error más común al empezar."
+          }
+        }
+      ]
+    },
+
     callout: {
       dice: "Un Ractor de verdad, con su warning de experimental incluido:",
       cmd: "p Ractor.new { 1 + 1 }.value",
       sale: "2"
     },
-    widget: 'concurrencia',
     recursos: [
       { titulo: 'Ractor — modelo, Port y estado experimental', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Ractor.html', nota: 'La lista de qué es shareable es el criterio de viabilidad real.' },
       { titulo: 'The Async gem y el scheduler de fibers', fuente: 'Samuel Williams (RubyKaigi)', url: 'https://github.com/socketry/async', nota: 'De la persona que metió <code>Fiber::Scheduler</code> al lenguaje.' },

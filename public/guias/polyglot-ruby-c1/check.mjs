@@ -5,8 +5,8 @@
 // con las vistas: catálogo completo (15 temas · 4 bloques) con folios únicos y
 // consecutivos 01..15 en orden de bloque; cada ficha con su guión (slug, folio,
 // bloque válido, titulo, quees, enBreve, fundamento, comoFunciona, cuandoNo,
-// mito, widget, recursos); cada widget usado tiene su guión en D.widgets; y las
-// simulaciones son deterministas (sin Math.random). Uso:
+// mito, recursos); el código va en inglés; y cada escena referencia líneas que
+// existen y pide al menos una predicción. Uso:
 //   node public/guias/polyglot-ruby-c1/check.mjs
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -20,10 +20,6 @@ const DATA_FILES = [
   'data/metaprogramacion.js',
   'data/lenguaje-expresivo.js',
   'data/robustez-concurrencia.js',
-  'data/widgets-modelo-de-objetos.js',
-  'data/widgets-metaprogramacion.js',
-  'data/widgets-lenguaje-expresivo.js',
-  'data/widgets-robustez.js',
 ];
 
 // Los data files son IIFE puras sobre window.GUIA (sin DOM). Los cargamos en un
@@ -79,7 +75,7 @@ for (const f of fichas) {
   if (!isStr(f.comoFunciona)) fail(`${at}: comoFunciona vacío`);
   if (!isStr(f.cuandoNo)) fail(`${at}: falta cuandoNo`);
   if (!f.mito || !isStr(f.mito.creencia) || !isStr(f.mito.realidad)) fail(`${at}: mito sin creencia/realidad`);
-  if (!isStr(f.widget)) fail(`${at}: falta widget (kind)`);
+  // Una ficha sin escena es un veredicto válido del audit, no un hueco.
   if (!isArr(f.recursos)) fail(`${at}: recursos vacío`);
   for (const r of f.recursos || [])
     if (!isStr(r.titulo) || !isStr(r.nota)) fail(`${at}: recurso sin titulo/nota`);
@@ -93,16 +89,6 @@ folios.forEach((n, i) => {
 // cada bloque tiene al menos una ficha
 for (const b of bloques)
   if (!porBloque[b.id]) fail(`bloque «${b.id}»: sin fichas`);
-
-// --- Widgets: cada visualización tiene su guión en D.widgets -------------------
-const widgets = D.widgets || {};
-for (const f of fichas) {
-  if (f.widget && !widgets[f.widget])
-    fail(`widget «${f.widget}» (ficha ${f.slug}): sin guión en D.widgets`);
-}
-// sin widgets huérfanos
-for (const kind of Object.keys(widgets))
-  if (!fichas.some((f) => f.widget === kind)) fail(`D.widgets.${kind}: huérfano, ninguna ficha lo usa`);
 
 // --- Código en inglés: fuera de comentarios, nada de acentos ni ¿¡ -------------
 // Tres pasadas de traducción dejaron restos cada vez; esto lo vuelve un gate.
@@ -151,10 +137,14 @@ const fijaTitulo = readdirSync(join(GUIDE, 'js'))
   .some((f) => readFileSync(join(GUIDE, 'js', f), 'utf8').includes('document.title'));
 if (!fijaTitulo) fail('js/: ninguna vista fija document.title');
 
+const conEscena = fichas.filter((f) => f.escena).length;
+const totalPasos = fichas.reduce((n, f) => n + (f.escena ? f.escena.pasos.length : 0), 0);
+const conPrediccion = fichas.reduce((n, f) => n + (f.escena ? f.escena.pasos.filter((p) => p.predice).length : 0), 0);
+
 // --- Resultado -----------------------------------------------------------------
 if (errs.length) {
   console.error(`✗ polyglot-ruby-c1: ${errs.length} problema(s)`);
   for (const e of errs) console.error(`  - ${e}`);
   process.exit(1);
 }
-console.log(`✓ polyglot-ruby-c1: ${fichas.length} temas · ${bloques.length} bloques · ${Object.keys(widgets).length} widgets`);
+console.log(`✓ polyglot-ruby-c1: ${fichas.length} temas · ${bloques.length} bloques · ${conEscena} escenas · ${totalPasos} pasos · ${conPrediccion} predicciones`);

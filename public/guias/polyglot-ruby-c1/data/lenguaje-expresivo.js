@@ -105,7 +105,6 @@
       cmd: "p [->(){}.lambda?, proc{}.lambda?]",
       sale: "[true, false]"
     },
-    widget: 'closures',
     recursos: [
       { titulo: 'Proc — lambda? y la tabla de diferencias', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Proc.html', nota: 'La doc de <code>Proc</code> lista las diferencias explícitamente; es corta.' },
       { titulo: 'Binding y local_variables', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Binding.html', nota: 'La herramienta para demostrarle a alguien de dónde sale la fuga.' },
@@ -211,7 +210,6 @@
       cmd: "p method(:puts).parameters",
       sale: "[[:rest]]"
     },
-    widget: 'forwarding',
     recursos: [
       { titulo: 'Separation of positional and keyword arguments in Ruby 3.0', fuente: 'ruby-lang.org, post del core team', url: 'https://www.ruby-lang.org/en/news/2019/12/12/separation-of-positional-and-keyword-arguments-in-ruby-3-0/', nota: 'El documento fundacional. Explica <code>ruby2_keywords</code> desde dentro.' },
       { titulo: 'Method arguments — argument forwarding', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/syntax/methods_rdoc.html', nota: 'Sintaxis exacta de <code>...</code>, <code>*</code>, <code>**</code>, <code>&amp;</code> anónimos.' },
@@ -282,16 +280,69 @@
       creencia: '«Es un switch bonito.»',
       realidad: 'Falso: es destructuring con binding de variables, no comparación de igualdad. <code>case/in</code> no cae a <code>==</code>; llama <code>deconstruct</code>/<code>deconstruct_keys</code> y liga nombres.'
     },
+    escena: {
+      "titulo": "Ligar no es comparar",
+      "pasos": [
+        {
+          "lineas": [
+            1,
+            10
+          ],
+          "nota": "Un objeto que implementa el protocolo: <code>deconstruct</code> para array patterns, <code>deconstruct_keys</code> para hash patterns. <code>case/in</code> no compara con <code>==</code> — llama a estos.",
+          "predice": {
+            "pregunta": "En <code>in [0, y]</code>, ¿qué hace la <code>y</code>?",
+            "opciones": [
+              "Compara contra una variable <code>y</code> que ya existía",
+              "Liga: crea <code>y</code> con lo que venga en esa posición"
+            ],
+            "correcta": 1,
+            "porque": "Un nombre suelto en un patrón <em>liga</em>, no compara. Es la diferencia que convierte a <code>case/in</code> en destructuring y no en un switch bonito. Para comparar contra una variable existente necesitas el pin: <code>^y</code>."
+          }
+        },
+        {
+          "lineas": [
+            12,
+            17
+          ],
+          "nota": "Aquí está el pin en acción: <code>^expected</code> sí compara contra la local. Sin el circunflejo, la segunda cláusula habría ligado y ganado siempre.",
+          "salida": "expected = 7\n# => \"y matches the pinned var\""
+        },
+        {
+          "lineas": [
+            25,
+            30
+          ],
+          "nota": "El find pattern busca un elemento en cualquier posición. El array trae un 42, que cumple el guard.",
+          "predice": {
+            "pregunta": "¿Devuelve 42?",
+            "opciones": [
+              "Sí: recorre las posiciones hasta que el guard pase",
+              "No: levanta <code>NoMatchingPatternError</code>"
+            ],
+            "correcta": 1,
+            "porque": "El find pattern SÍ retrocede entre posiciones cuando falla el <em>patrón</em> — pero el guard se evalúa una sola vez, después de que ligó en la primera posición candidata (<code>n = 1</code>). Al fallar, la cláusula se acabó. No reintenta con 42."
+          }
+        },
+        {
+          "lineas": [
+            32,
+            35
+          ],
+          "nota": "La forma que sí funciona: la condición va <b>dentro</b> del patrón, no en el guard. Ahí el motor puede seguir buscando.",
+          "salida": "in [*, (41..) => n, *] then n\n# => 42"
+        }
+      ]
+    },
+
     callout: {
       dice: "El <code>in</code> suelto es un match booleano que además liga:",
       cmd: "x = {estado: \"ok\", n: 42}; hit = (x in {n: Integer => n}); p [hit, n]",
       sale: "[true, 42]"
     },
-    widget: 'pattern',
     recursos: [
       { titulo: 'Pattern matching — sintaxis completa', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/syntax/pattern_matching_rdoc.html', nota: 'Incluye la tabla de qué patrón llama a qué protocolo.' },
       { titulo: 'Charlas de pattern matching de Kazuki Tsujimoto', fuente: 'RubyKaigi', url: 'https://rubykaigi.org/', nota: 'Del autor de la feature: por qué el find pattern sigue experimental.' },
-      { titulo: 'Data#deconstruct / #deconstruct_keys', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Data.html', nota: '<code>Data</code> ya implementa el protocolo: es el par natural del pattern matching.' }
+      { titulo: 'Data#deconstruct / #deconstruct_keys', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Data.html', nota: '<code>Data</code> ya implementa el protocolo: es el pair natural del pattern matching.' }
     ]
   });
 
@@ -337,12 +388,49 @@
       creencia: '«<code>.lazy</code> siempre es más rápido porque no crea arrays intermedios.»',
       realidad: 'Falso: cambia arrays intermedios por overhead de Enumerator por elemento. En colecciones chicas o cadenas cortas, <code>.lazy</code> es MÁS lento. Paga solo con secuencias grandes/infinitas o cuando cortas temprano (<code>.first(n)</code>, <code>.take</code>).'
     },
+    escena: {
+      "titulo": "Cuándo paga la pereza",
+      "pasos": [
+        {
+          "lineas": [
+            1,
+            8
+          ],
+          "nota": "La misma cadena dos veces sobre 2 000 elementos: <code>map</code>, <code>select</code>, <code>sum</code>. Una eager, otra con <code>.lazy</code>.",
+          "predice": {
+            "pregunta": "¿Cuál gana?",
+            "opciones": [
+              "<code>lazy</code>: no crea arrays intermedios",
+              "<code>eager</code>: <code>lazy</code> paga overhead por elemento"
+            ],
+            "correcta": 1,
+            "porque": "Medido: la lazy tarda ~2.4× más. La cadena es corta y la colección chica, así que los arrays intermedios cuestan menos que el Enumerator envolviendo cada elemento. <code>lazy</code> es una herramienta de <em>expresividad</em> que a veces también es la rápida — no una optimización general."
+          }
+        },
+        {
+          "lineas": [
+            12,
+            14
+          ],
+          "nota": "Donde <code>lazy</code> no es una optimización sino la única respuesta posible: una secuencia infinita. Eager ni siquiera puede intentarlo.",
+          "salida": "primes.first(5)  # => [2, 3, 5, 7, 11]"
+        },
+        {
+          "lineas": [
+            16,
+            19
+          ],
+          "nota": "Y el caso real donde paga en producción: cortar temprano sobre una colección grande. Cinco millones de elementos, y solo se tocan los necesarios para juntar tres.",
+          "salida": "big.lazy.map { _1 * 3 }.select { _1 % 7 == 0 }.first(3)\n# => [21, 42, 63]"
+        }
+      ]
+    },
+
     callout: {
       dice: "La secuencia infinita que solo <code>lazy</code> puede recorrer:",
       cmd: "p((1..Float::INFINITY).lazy.map { _1 * 2 }.first(3))",
       sale: "[2, 4, 6]"
     },
-    widget: 'lazy',
     recursos: [
       { titulo: 'Enumerator::Lazy', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Enumerator/Lazy.html', nota: 'La lista de métodos que sí son lazy es más corta de lo que la gente cree.' },
       { titulo: 'Enumerator y Fiber', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Enumerator.html', nota: 'El detalle de por qué el enumerador externo cuesta más que el interno.' },
@@ -408,7 +496,6 @@
       cmd: "p Comparable.instance_methods.sort",
       sale: "[:<, :<=, :==, :>, :>=, :between?, :clamp]"
     },
-    widget: 'mixin',
     recursos: [
       { titulo: 'Comparable y Enumerable', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Enumerable.html', nota: 'Leer la lista completa de métodos derivados una vez cambia cómo diseñas clases.' },
       { titulo: 'Object#to_enum / Enumerator.new', fuente: 'docs oficiales de Ruby', url: 'https://docs.ruby-lang.org/en/master/Object.html', nota: 'El detalle que hace que tu <code>each</code> sea ciudadano de primera.' },
