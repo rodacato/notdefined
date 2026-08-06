@@ -144,7 +144,6 @@
   /* ---- layout de dos columnas: riel + contenido -------------------------- */
   function layout(current, ...content) {
     return el("div", { class: "shell" },
-      topbar(),
       el("div", { class: "guide-layout" }, rail(current), el("article", {}, ...content))
     );
   }

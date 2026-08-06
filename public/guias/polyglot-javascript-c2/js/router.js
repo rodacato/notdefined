@@ -36,6 +36,8 @@
 
   function boot() {
     G.watchSystemTheme();
+    // Fuera de #app: la barra es cromo, no contenido, y no se repinta por ruta.
+    document.body.insertBefore(G.comp.topbar(), document.body.firstChild);
     window.addEventListener("hashchange", route);
     route();
   }
