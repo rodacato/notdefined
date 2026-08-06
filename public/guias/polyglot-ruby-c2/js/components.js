@@ -48,6 +48,48 @@
     return bar;
   };
 
+  // ---- Riel: el índice de la guía, presente en la ficha -------------------
+  G.rail = function (current) {
+    // En pantalla angosta el riel es la única navegación: solo abre el bloque en curso.
+    var compact = window.matchMedia("(max-width: 940px)").matches;
+    var nav = h("nav", { class: "rail", "aria-label": "Temas de la guía" });
+    nav.insertAdjacentHTML("beforeend", '<span class="rail__badge">nivel C2</span>');
+    nav.insertAdjacentHTML("beforeend",
+      '<a class="rail__link rail__link--intro" href="#/">' +
+        '<span class="rail__n">00</span><span class="rail__t">Índice y bibliografía</span></a>');
+
+    G.data.catalog.blocks.forEach(function (b) {
+      var fam = G.FAMILIES[b.family];
+      var holds = b.topics.indexOf(current) !== -1;
+      var items = "";
+      b.topics.forEach(function (slug) {
+        var t = G.data.topics[slug];
+        if (!t) return;
+        var lleno = (t.glyph || "").replace(/◇/g, "");
+        var vacio = (t.glyph || "").replace(/◆/g, "");
+        items +=
+          '<li><a class="rail__link" href="#/' + esc(slug) + '"' +
+            (slug === current ? ' aria-current="page"' : "") + ">" +
+            '<span class="rail__n">' + esc(t.n) + "</span>" +
+            '<span class="rail__t">' + esc(t.navShort || t.title) + "</span>" +
+            '<span class="rail__dif" aria-label="dificultad ' + lleno.length + ' de 3">' +
+              '<span class="dif--full">' + lleno + '</span>' +
+              '<span class="dif--empty">' + vacio + "</span></span></a></li>";
+      });
+      nav.insertAdjacentHTML("beforeend",
+        '<details class="rail__group"' + (!compact || holds ? " open" : "") +
+          ' style="--fam:' + fam.color + ';">' +
+          '<summary class="rail__head"><span class="rail__eyebrow">' + esc(b.eyebrow) + "</span>" +
+          '<span class="rail__hint">' + esc(b.hint) + "</span></summary>" +
+          '<ul class="rail__list">' + items + "</ul></details>");
+    });
+
+    nav.insertAdjacentHTML("beforeend",
+      '<p class="rail__legend"><span class="dif--full">◆</span><span class="dif--empty">◇◇</span>' +
+      ' entrada · <span class="dif--full">◆◆◆</span> a fondo</p>');
+    return nav;
+  };
+
   // ---- Portada / índice --------------------------------------------------
   G.renderIndex = function () {
     var c = G.data.catalog;
@@ -145,7 +187,10 @@
     var root = h("div", { style: "--fam:" + fam.color + ";" });
     root.appendChild(G.topbar('Ruby a fondo &nbsp;<b>/ ' + esc(t.navShort || t.title) + '</b>'));
 
-    var main = h("main", { class: "wrap wrap--narrow page ficha" });
+    var layout = h("div", { class: "wrap page tema-layout" });
+    var main = h("main", { class: "ficha" });
+    layout.appendChild(G.rail(slug));
+    layout.appendChild(main);
 
     // Encabezado
     var breveHtml = "";
@@ -198,7 +243,7 @@
     nav += '</div>';
     main.insertAdjacentHTML("beforeend", nav);
 
-    root.appendChild(main);
+    root.appendChild(layout);
 
     // Deja que el iniciador del widget pinte dentro del mount, tras montar.
     root._mountWidget = function () {
