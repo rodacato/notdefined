@@ -166,7 +166,7 @@
       {
         nota: 'Cambio el escenario: 5 000 000 de elementos y corto en el tercero.',
         marca: { arr1: 'pierde', arr2: 'pierde', veredicto: 'activo' },
-        panel: { titulo: 'Escenario grande', lineas: [{ texto: 'eager: dos arrays de 5M + 2 recorridos completos', estado: 'pierde' }] }
+        panel: { titulo: 'Escenario big', lineas: [{ texto: 'eager: dos arrays de 5M + 2 recorridos completos', estado: 'pierde' }] }
       },
       {
         nota: 'Ahí lazy no es una optimización: es la única opción sensata (y con infinitos, la única posible).',

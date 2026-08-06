@@ -53,6 +53,53 @@
       creencia: '«Un proc y una lambda son lo mismo, la lambda solo es más estricta.»',
       realidad: 'Falso en dos ejes que muerden: el <code>return</code> de un proc sale del método que lo creó (<code>LocalJumpError</code> si ese método ya regresó); el de una lambda sale de la lambda. Y la lambda valida arity; el proc rellena con <code>nil</code>. Objetos distintos, semántica de flujo distinta.'
     },
+    escena: {
+      titulo: 'Dos objetos, dos semánticas de flujo',
+      pasos: [
+        {
+          lineas: [1, 11],
+          nota: 'Dos métodos gemelos. La única diferencia es cómo se construyó el objeto que guardan: <code>Proc.new</code> contra <code>-></code>. Los dos hacen <code>return</code> adentro y los dos tienen una línea después de la llamada.',
+          predice: {
+            pregunta: '¿Qué devuelve cada uno?',
+            opciones: [
+              'Lo mismo: la lambda solo es más estricta con los argumentos',
+              '<code>with_proc</code> sale del método; <code>with_lambda</code> sale solo de la lambda'
+            ],
+            correcta: 1,
+            porque: 'El bloque nació como azúcar de iteración: es un pedazo del método que lo invoca, y por eso su <code>return</code> es el del método. La lambda vino después, como función de primera clase de verdad, y necesitaba <code>return</code> propio. Dos ideas distintas que comparten la clase <code>Proc</code> por accidente histórico.'
+          }
+        },
+        {
+          lineas: [13, 14],
+          nota: 'La línea <code>:never_here</code> nunca corrió: el <code>return</code> del proc se llevó el método completo. Si guardas ese proc y lo llamas cuando el método ya regresó, eso es un <code>LocalJumpError</code>.',
+          salida: 'with_proc    # => :from_the_proc\nwith_lambda  # => :i_get_here'
+        },
+        {
+          lineas: [16, 17],
+          nota: 'El segundo eje que muerde: la aridad. Los dos reciben un argumento donde esperan dos.',
+          salida: 'proc { |a, b| [a, b] }.call(1)  # => [1, nil]      rellena\n->(a, b) { [a, b] }.call(1)     # => ArgumentError  valida'
+        },
+        {
+          lineas: [19, 23],
+          nota: 'Última pieza, y la más cara en producción: una lambda que solo menciona <code>counter</code>. La variable <code>heavy</code> son 10 MB que nadie usa.',
+          predice: {
+            pregunta: '¿Qué retiene el closure?',
+            opciones: [
+              'Solo <code>counter</code>: es lo único que menciona',
+              'El binding completo, <code>heavy</code> incluido'
+            ],
+            correcta: 1,
+            porque: 'El closure retiene el <em>binding</em>, no las variables que usa. Guarda esa lambda en una constante o en un registro global y esos 10 MB no se liberan nunca. Es la fuga de memoria clásica de Ruby.'
+          }
+        },
+        {
+          lineas: [25, 27],
+          nota: 'Y se puede demostrar, que es lo que lo vuelve un argumento y no una advertencia.',
+          salida: 'f.binding.local_variables                      # => [:heavy, :counter]\nf.binding.local_variable_get(:heavy).bytesize  # => 10000000'
+        }
+      ]
+    },
+
     callout: {
       dice: "La diferencia no es de estilo, el objeto la lleva encima:",
       cmd: "p [->(){}.lambda?, proc{}.lambda?]",
@@ -120,6 +167,45 @@
       creencia: '«<code>def wrap(*args, &amp;blk); real(*args, &amp;blk); end</code> reenvía todo.»',
       realidad: 'Falso desde Ruby 3.0: la separación posicional/kwargs deja los keyword arguments fuera (o los degrada a un hash posicional). El forwarding completo hoy es <code>def wrap(...); real(...); end</code>. Y <code>ruby2_keywords</code> existe precisamente porque esa separación rompió gemas entre 2.7 y 3.0.'
     },
+    escena: {
+      titulo: 'La cicatriz de Ruby 3.0',
+      pasos: [
+        {
+          lineas: [1, 8],
+          nota: 'Un método con un keyword argument, y el wrapper que todos escribimos durante años para reenviarle lo que sea.',
+          predice: {
+            pregunta: '<code>old_wrap(1, mode: :wet) { :b }</code> — ¿qué pasa en Ruby 3.x?',
+            opciones: [
+              'Funciona: <code>*args</code> captura todo y lo reenvía',
+              'Truena: el hash de kwargs llega como segundo posicional'
+            ],
+            correcta: 1,
+            porque: 'Hasta 2.7 los kwargs eran un hash disfrazado, y la ambigüedad («¿este hash es opciones o es un argumento?») producía bugs imposibles de arreglar desde la librería. 3.0 los volvió una categoría real. El costo: todos los wrappers escritos con <code>*args</code> quedaron mal — y siguen ahí, en tu código y en gemas.'
+          }
+        },
+        {
+          lineas: [10, 12],
+          nota: 'Este es el error que te encuentras en una gema vieja y no entiendes: pide 1 argumento, le llegaron 2, y tú solo pasaste uno más una keyword.',
+          salida: 'old_wrap(1, mode: :wet) { :b }\n# => ArgumentError: wrong number of arguments (given 2, expected 1)'
+        },
+        {
+          lineas: [14, 19],
+          nota: 'La respuesta de hoy es <code>...</code>: reenvía las tres categorías —posicionales, keywords y bloque— intactas. Es lo único que reenvía <em>todo</em>.',
+          salida: 'new_wrap(1, mode: :wet) { :b }  # => [1, :wet, :b]'
+        },
+        {
+          lineas: [21, 26],
+          nota: 'Y si prefieres declarar las categorías por separado, 3.2 trajo los anónimos: <code>*</code>, <code>**</code> y <code>&amp;</code> sin nombre.',
+          salida: 'partial(1, mode: :wet) { :b }  # => [1, :wet, :b]'
+        },
+        {
+          lineas: [28, 31],
+          nota: 'El otro lado de la moneda: <code>**nil</code> declara que este método <b>nunca</b> acepta keywords. Sirve para desambiguar el último hash, no como decoración.',
+          salida: 'strict(a: 1)  # => ArgumentError: no keywords accepted'
+        }
+      ]
+    },
+
     callout: {
       dice: "Cualquier método te dice su firma real, incluido el de Ruby:",
       cmd: "p method(:puts).parameters",
@@ -156,23 +242,23 @@
       'end',
       '',
       'case Point.new(0, 7)',
-      'in [0, y] then "en el eje Y, altura #{y}"      # liga y',
-      'in { x:, y: } then "libre #{x},#{y}"',
+      'in [0, y] then "on the Y axis, height #{y}"      # liga y',
+      'in { x:, y: } then "free #{x},#{y}"',
       'end',
-      '# => "en el eje Y, altura 7"',
+      '# => "on the Y axis, height 7"',
       '',
       'expected = 7',
       'case Point.new(3, 7)',
-      'in { y: ^expected } then "y coincide con la variable"   # pin: compara',
+      'in { y: ^expected } then "y matches the pinned var"   # pin: compara',
       'in { y: } then "y bound to #{y}"',
       'end',
-      '# => "y coincide con la variable"',
+      '# => "y matches the pinned var"',
       '',
       'case { status: "ok", items: [1, 2, 3] }',
       'in { status: "ok", items: [_, *rest] } if rest.size > 1',
-      '  "cola de #{rest.size}"',
+      '  "tail of #{rest.size}"',
       'end',
-      '# => "cola de 2"',
+      '# => "tail of 2"',
       '',
       '# find pattern (warning: experimental, también en 4.0)',
       'case [1, 42, 3, 4]',
@@ -187,7 +273,7 @@
       '# => 42                       # la condición va DENTRO del patrón',
       '',
       'case 5',
-      'in String then :nunca',
+      'in String then :never',
       'end',
       '# => NoMatchingPatternError: 5'
     ].join('\n'),
@@ -242,8 +328,8 @@
       'primes.first(5)          # => [2, 3, 5, 7, 11]',
       '',
       '# y donde paga por cortar temprano',
-      'grande = (1..5_000_000)',
-      'grande.lazy.map { _1 * 3 }.select { _1 % 7 == 0 }.first(3)  # => [21, 42, 63]',
+      'big = (1..5_000_000)',
+      'big.lazy.map { _1 * 3 }.select { _1 % 7 == 0 }.first(3)  # => [21, 42, 63]',
       '# la versión eager recorrería 5M y crearía dos arrays de 5M'
     ].join('\n'),
     cuandoNo: 'No metas <code>.lazy</code> a un pipeline que igual materializas entero (<code>.to_a</code> al final sobre una colección finita chica) — pagas el overhead sin cobrar el beneficio.',

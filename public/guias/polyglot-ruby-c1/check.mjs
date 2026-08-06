@@ -104,6 +104,42 @@ for (const f of fichas) {
 for (const kind of Object.keys(widgets))
   if (!fichas.some((f) => f.widget === kind)) fail(`D.widgets.${kind}: huérfano, ninguna ficha lo usa`);
 
+// --- Código en inglés: fuera de comentarios, nada de acentos ni ¿¡ -------------
+// Tres pasadas de traducción dejaron restos cada vez; esto lo vuelve un gate.
+const ACENTOS = /[áéíóúüñÁÉÍÓÚÑ¿¡]/;
+for (const f of fichas) {
+  const lineas = String(f.snippet || '').split('\n');
+  lineas.forEach((linea, i) => {
+    const codigo = linea.split(/#(?!\{)/)[0];
+    // El refinement de la guía usa `¡` a propósito, dentro de un literal.
+    if (ACENTOS.test(codigo) && !/¡|!/.test(codigo))
+      fail(`ficha «${f.slug}» L${i + 1}: código con acentos, debe ir en inglés\n      ${linea.trim()}`);
+  });
+}
+
+// --- Escenas: los rangos de línea existen y hay predicción donde toca ----------
+for (const f of fichas) {
+  if (!f.escena) continue;
+  const total = String(f.snippet || '').split('\n').length;
+  const at = `escena de «${f.slug}»`;
+  if (!isArr(f.escena.pasos)) fail(`${at}: sin pasos`);
+  for (const [i, p] of (f.escena.pasos || []).entries()) {
+    const [desde, hasta = desde] = p.lineas || [];
+    if (!desde || desde < 1 || hasta > total)
+      fail(`${at} paso ${i + 1}: rango [${desde}, ${hasta}] fuera del snippet (1..${total})`);
+    if (!isStr(p.nota)) fail(`${at} paso ${i + 1}: sin nota`);
+    if (p.predice) {
+      const q = p.predice;
+      if (!isArr(q.opciones) || q.opciones.length < 2) fail(`${at} paso ${i + 1}: predicción con menos de 2 opciones`);
+      if (typeof q.correcta !== 'number' || !q.opciones[q.correcta])
+        fail(`${at} paso ${i + 1}: «correcta» no apunta a una opción`);
+      if (!isStr(q.porque)) fail(`${at} paso ${i + 1}: predicción sin explicación`);
+    }
+  }
+  if (!f.escena.pasos.some((p) => p.predice))
+    fail(`${at}: ningún paso pide una predicción — es un reproductor, no una escena`);
+}
+
 // --- Determinismo: sin Math.random en los datos --------------------------------
 for (const f of DATA_FILES)
   if (/Math\.random\s*\(/.test(readFileSync(join(GUIDE, f), 'utf8')))
