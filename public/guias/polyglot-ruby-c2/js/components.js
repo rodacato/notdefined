@@ -289,7 +289,7 @@
     sec3.innerHTML =
       '<div class="section__head"><span class="section__n">03</span>' +
         '<h2 class="section__h">' + esc(w.title) + '</h2></div>' +
-      '<p class="prose" style="max-width:70ch;">' + w.intro + '</p>';
+      '<p class="prose">' + w.intro + '</p>';
 
     var mount = h("div", { class: "widget", "data-widget": esc(w.kind) });
     if (t.predice) {

@@ -39,7 +39,18 @@ When a harness accuses something strange, **verify it as a plain file** before b
 `using` and `binding` depend on lexical scope, and a statement-by-statement evaluator can
 manufacture failures that do not exist.
 
-## A3. Colour encodes, it does not write
+## A3. Containers span, paragraphs measure
+
+**One text measure per guide — 72ch — and it lives on the paragraph, never on the box.** A
+callout, an aviso, a prediction button and a widget all reach the same right edge; only the
+prose inside them is capped. Put the measure on the container and boxes stop lining up, which
+reads as "some cards are cut short" long before anyone can name why.
+
+Ruby a fondo had drifted to five: 78ch on two boxes, 70ch inline on prose, 66ch on a lede, 64ch
+on a code note. Measuring the rendered right edge of every container is how you find it — the
+CSS looks reasonable rule by rule.
+
+## A4. Colour encodes, it does not write
 
 The `--fam-*` tokens are a **fixed data-encoding contract**: identical in light and dark, so a
 colour means the same thing in both. Measured against the light canvas they run 2.64:1 to
@@ -48,7 +59,7 @@ colour means the same thing in both. Measured against the light canvas they run 
 Same rule for the difficulty ramp: render ◆ with an `aria-label`. The diamonds alone say
 nothing to a screen reader.
 
-## A4. Before a guide ships
+## A5. Before a guide ships
 
 ```
 npm run check:guias        # integridad de los datos de todas las guías
@@ -89,15 +100,15 @@ The contract is fixed and every ficha carries all of it.
 | `cuandoNo` | when this knowledge should **not** change their code |
 | `mito` | the wrong belief, dismantled |
 
+The last two are the collection's signature move. A Polyglot guide missing them is a manual —
+Ruby a fondo shipped with 0 of 11 and had to have them written after the fact.
+
 **Sources do not close a ficha.** Ending on "para seguir" makes the next step look like a book
 when it is the next ficha. They live at `#/bibliografia`, linked from the rail *after* the last
 block, and grouped **by chapter in the guide's own order** — a reader arrives wanting more of
 ficha 09, not wanting "a book". Each group heads back to its ficha and carries its block colour.
 Add a "transversal" section only when something actually spans fichas: measure it. And before
 deleting per-ficha resources, check the overlap — in Ruby a fondo, 17 of 34 existed nowhere else.
-
-The last two are the collection's signature move. A Polyglot guide missing them is a manual —
-Ruby a fondo shipped with 0 of 11 and had to have them written after the fact.
 
 **`cuandoNo` reframes by level.** In a C1 ("dominado") it is *don't use this technique here*.
 In a C2 ("a fondo") you do not *use* the GC — there it becomes *when this knowledge should not

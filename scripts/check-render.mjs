@@ -1,5 +1,5 @@
 // Abre cada guía en un navegador real y verifica que PINTE algo.
-// Cobertura parcial a propósito: ver docs/guias/autoria.md §A4.
+// Cobertura parcial a propósito: ver docs/guias/autoria.md §A5.
 import {
   readdirSync,
   existsSync,
