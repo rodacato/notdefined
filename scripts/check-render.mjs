@@ -1,7 +1,5 @@
 // Abre cada guía en un navegador real y verifica que PINTE algo.
-// Los otros checks leen datos; ninguno abre la página — así se coló un <main>
-// vacío con los tres gates en verde.
-// Uso: node scripts/check-render.mjs [slug]
+// Cobertura parcial a propósito: ver docs/guias/autoria.md §A4.
 import {
   readdirSync,
   existsSync,
@@ -16,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 
 const RAIZ = dirname(dirname(fileURLToPath(import.meta.url)));
 const GUIAS = join(RAIZ, 'public', 'guias');
+const TOPE = 60; // techo por guía; si se alcanza, se dice cuántas quedaron
 
 const CHROMES = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -98,13 +97,28 @@ for (const slug of slugs) {
       continue;
     }
 
-    // La portada manda: de ahí salen las rutas que la guía dice tener.
-    const rutas = ['#/'].concat(portada.rutas.filter((r) => r !== '#/'));
+    // Crawl transitivo: varias portadas solo enlazan sus secciones y las fichas
+    // cuelgan de adentro — quedarse en el primer nivel cubría 4 de 13.
+    const vistas = new Map([['#/', portada]]);
+    const cola = portada.rutas.filter((r) => r !== '#/');
+    let topado = false;
+
+    while (cola.length) {
+      const ruta = cola.shift();
+      if (vistas.has(ruta)) continue;
+      if (vistas.size >= TOPE) {
+        topado = true;
+        break;
+      }
+      const s = abrir(sondado, ruta);
+      vistas.set(ruta, s);
+      for (const nueva of (s && s.rutas) || [])
+        if (!vistas.has(nueva) && cola.indexOf(nueva) === -1) cola.push(nueva);
+    }
+
     let vacias = 0;
     let errores = 0;
-
-    for (const ruta of rutas) {
-      const s = ruta === '#/' ? portada : abrir(sondado, ruta);
+    for (const [ruta, s] of vistas) {
       if (!s || s.hijos <= 0 || s.texto < 80) {
         console.error(
           `      ${slug}${ruta}: pintó vacío (hijos ${s ? s.hijos : '?'}, ${s ? s.texto : '?'} chars)`,
@@ -119,7 +133,8 @@ for (const slug of slugs) {
 
     fallas += vacias + errores;
     console.log(
-      `  ${vacias + errores ? '✗' : '✓'} ${slug.padEnd(24)} ${String(rutas.length).padStart(2)} rutas` +
+      `  ${vacias + errores ? '✗' : '✓'} ${slug.padEnd(24)} ${String(vistas.size).padStart(3)} rutas` +
+        (topado ? ` · TOPE ${TOPE}, quedaron ${cola.length} sin visitar` : '') +
         (vacias + errores ? ` · ${vacias} vacías · ${errores} con error` : ''),
     );
   } finally {

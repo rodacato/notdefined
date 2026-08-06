@@ -53,8 +53,18 @@ nothing to a screen reader.
 ```
 npm run check:guias        # integridad de los datos de todas las guías
 npm run check:snippets     # solo guías con código ejecutable (ver B1)
+npm run check:render       # abre cada guía en un navegador y verifica que pinte
 npm run ci                 # el gate del sitio
 ```
+
+`check:render` exists because the others read data and none of them opens the page. Deleting
+three components along with a dead engine left one guide painting an empty `<main>` while every
+other gate stayed green.
+
+**Its coverage is partial and the number it prints is the disclosure.** It walks `#/` anchors
+transitively, so a guide whose index navigates by `onclick: location.hash = …` instead of by
+link exposes only its top-level views — `apis-1001` reports 4 routes against 17. When you read
+a route count far below a guide's ficha count, that gap is unchecked pages, not a clean bill.
 
 Then the **S13 gate** ([`research/experts.md`](../research/experts.md)): the instructional
 designer reviews the draft *and* the shipped artefact. The second pass is not optional — Ruby
