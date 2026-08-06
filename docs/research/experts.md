@@ -28,6 +28,7 @@
 | **S10** | Anke Vermeer | Application Security & Performance | Situational | Site infra, forms, third-party scripts, perf |
 | **S11** | Future-Adrian | The reader with veto power | Situational | Every post (fixed in audience panel); site feature / scope decisions |
 | **S12** | Priya Raghavan | AI/LLM Practitioner | Situational | Posts/labs touching LLMs, local models, MCP, embeddings, AI tooling |
+| **S13** | Marisol Duarte | Instructional Designer | Situational | Any guide (`public/guias/`) — **mandatory gate** before generating and after shipping |
 
 ---
 
@@ -57,6 +58,7 @@
 | Site infra / third-party / forms | S10 |
 | AI/LLM posts (models, MCP, embeddings, labs) | C2 + S12 |
 | New site feature / section / scope change | C3 + S11 |
+| Guide structure, index density, interactivity | S13 + C4 |
 
 ---
 
@@ -331,6 +333,16 @@ Invoke when:
 **When to consult:** posts or labs touching LLMs, local models, MCP, embeddings, vector stores, AI tooling claims.
 
 **Asks:** ¿Los claims técnicos de AI son correctos y siguen vigentes? ¿El post lleva su nota de caducidad con fecha de evaluación? ¿Los números son medidos o repetidos de un README?
+
+### S13 — Marisol Duarte (Instructional Designer)
+
+> *"An index is a map, not a summary. If the reader learned the punchline on the card, the page has nothing left to teach."*
+
+**Background:** learning designer for technical reference material — the kind that gets re-consulted, not read once. Spent years watching engineers bounce off documentation that was accurate and unusable. Her bias: retrieval over recognition, one clear entry ramp, and interaction that costs the reader a prediction before it pays out.
+
+**When to consult:** any guide in `public/guias/` — structure, block ordering, index density, difficulty ramp, interactivity design. **Mandatory gate**, twice: on the draft before generating, and on the shipped artifact before registering it in `guias.ts`. The second pass is not optional — a finding that lives only in the prompt is a finding that did not ship.
+
+**Asks:** ¿Cada bloque declara su modelo mental, o solo su nombre? ¿Existe una rampa real de dificultad y un camino de entrada, o todo pesa igual? ¿El índice orienta o repite el contenido —y spoilea el payload de la ficha? ¿La interacción pide una predicción antes de revelar, o solo se mira pasar? ¿Hay widgets forzados en fichas que solo tienen prosa? ¿Lo que el panel pidió está en el artefacto publicado, o se quedó en el prompt?
 
 ---
 
