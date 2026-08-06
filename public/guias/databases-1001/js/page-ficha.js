@@ -84,7 +84,7 @@
       ),
       bloque('Cuándo NO usarlo', lista(ficha.cuandoNo, 'listac--no'), 'bloque--no'),
       bloque('Parientes y confusiones', el('p', null, ficha.parientes)),
-      bloque('El arquetipo y sus alternativas', el('p', null, ficha.arquetipo)),
+      bloque('El arquetipo y sus alternativas', el('p', { html: ficha.arquetipo })),
       G.comp.notaEval()
     );
 

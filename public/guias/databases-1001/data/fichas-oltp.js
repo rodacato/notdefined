@@ -12,7 +12,7 @@
     paga: ['Escalar escrituras más allá de una máquina es doloroso', 'El esquema rígido pelea con datos que cambian de forma', 'Agregaciones sobre tablas anchas arrastran columnas que no pediste'],
     cuandoNo: ['Analítica sobre miles de millones de filas (ahí manda columnar)', 'Escritura masiva multi-región sin un solo líder', 'Cuando el dato es genuinamente sin forma y cambia cada request'],
     parientes: 'Es pariente de casi todo: NewSQL es «relacional que además escala en horizontal», columnar es «relacional que guarda por columna». La confusión típica es creer que Postgres «no aguanta»: con jsonb, pgvector y particiones aguanta más de lo que crees.',
-    arquetipo: 'PostgreSQL es la respuesta por defecto (jsonb, extensiones, pgvector, particiones nativas). MySQL/MariaDB para el mundo LAMP. SQL Server y Oracle si ya vives ahí. Empieza en Postgres; sal cuando un número concreto te duela.',
+    arquetipo: 'PostgreSQL es la respuesta por defecto (jsonb, extensiones, pgvector, particiones nativas). MySQL/MariaDB para el mundo LAMP. SQL Server y Oracle si ya vives ahí. Empieza en Postgres; sal cuando un número concreto te duela. Esta guía te dice <em>qué tipo</em> de base elegir; lo que Postgres hace por dentro cuando corres un query vive en <a href="/guias/polyglot-sql-c2/">«SQL a fondo»</a>, y el criterio de uso —índices, aislamiento, esquema— en <a href="/guias/polyglot-sql-c1/">«SQL dominado»</a>.',
     ratings: { point: 6, write: 4, analytics: 4, horiz: 3, schema: 3, tx: 7, ops: 5 },
     dolores: ['clave-ms', 'relaciones', 'sin-operar'],
     veredicto: 'Si dudas, es esta. La carga de la prueba la tiene quien quiere usar otra cosa.'
