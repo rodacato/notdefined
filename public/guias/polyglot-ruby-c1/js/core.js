@@ -18,6 +18,10 @@
 
   G.vaciar = function (nodo) { while (nodo.firstChild) nodo.removeChild(nodo.firstChild); };
 
+  G.qsaBotones = function (raiz) {
+    return Array.prototype.slice.call(raiz.getElementsByTagName('button'));
+  };
+
   G.escapar = function (texto) {
     return String(texto).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   };

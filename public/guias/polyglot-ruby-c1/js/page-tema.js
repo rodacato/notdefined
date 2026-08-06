@@ -49,13 +49,17 @@
       G.el('p', { html: ficha.fundamento })
     ]);
 
-    var mecanica = G.comp.seccion('cómo funciona', [
-      G.el('p', { html: ficha.comoFunciona }),
-      G.comp.pre(ficha.snippet)
-    ]);
+    // Con escena, el snippet ES el escenario y no se pinta también aquí.
+    var escena = G.comp.escena(ficha);
+    var mecanica = G.comp.seccion('cómo funciona',
+      [G.el('p', { html: ficha.comoFunciona })].concat(escena ? [] : [G.comp.pre(ficha.snippet)]));
 
-    var widget = G.comp.widget(G.widgetDe(ficha));
-    var interactivo = widget ? G.comp.seccion('hazlo visible', [widget]) : null;
+    var interactivo = escena
+      ? G.comp.seccion('recórrelo', [escena])
+      : (function () {
+          var widget = G.comp.widget(G.widgetDe(ficha));
+          return widget ? G.comp.seccion('hazlo visible', [widget]) : null;
+        })();
 
     var consola = G.comp.consola(ficha.callout);
     var pruebalo = consola ? G.comp.seccion('pruébalo en tu consola', [consola]) : null;

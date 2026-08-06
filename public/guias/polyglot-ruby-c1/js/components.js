@@ -45,14 +45,16 @@
   };
 
   /* --- Bloque de código: resalta comentarios y outputs `# =>` ------------- */
+  function pintarLinea(linea) {
+    var corte = indiceDeComentario(linea);
+    if (corte < 0) return G.escapar(linea);
+    var clase = /^#\s*=>/.test(linea.slice(corte)) ? 'out' : 'cmt';
+    return G.escapar(linea.slice(0, corte)) +
+      '<span class="' + clase + '">' + G.escapar(linea.slice(corte)) + '</span>';
+  }
+
   C.pre = function (codigo) {
-    var lineas = String(codigo).split('\n').map(function (linea) {
-      var corte = indiceDeComentario(linea);
-      if (corte < 0) return G.escapar(linea);
-      var clase = /^#\s*=>/.test(linea.slice(corte)) ? 'out' : 'cmt';
-      return G.escapar(linea.slice(0, corte)) +
-        '<span class="' + clase + '">' + G.escapar(linea.slice(corte)) + '</span>';
-    });
+    var lineas = String(codigo).split('\n').map(pintarLinea);
     return G.el('pre', { clase: 'pre' }, [G.el('code', { html: lineas.join('\n') })]);
   };
 
@@ -221,6 +223,136 @@
     ]);
 
     mostrar(def.opciones[0]);
+    return raiz;
+  };
+
+  /* --- Escena: el snippet ES el escenario; los pasos iluminan sus líneas --- */
+  C.escena = function (ficha) {
+    var def = ficha.escena;
+    if (!def) return null;
+
+    var codigo = ficha.snippet.split('\n');
+    var indice = 0;
+    var respondido = {};
+
+    var filas = codigo.map(function (texto, i) {
+      return G.el('div', { clase: 'linea' }, [
+        G.el('span', { clase: 'linea__n', texto: String(i + 1) }),
+        G.el('code', { clase: 'linea__src', html: pintarLinea(texto) || '&nbsp;' })
+      ]);
+    });
+
+    var bloque = G.el('div', { clase: 'escena__codigo' }, filas);
+    var nota = G.el('p', { clase: 'escena__nota', attr: { 'aria-live': 'polite' } });
+    var caja = G.el('div', { clase: 'escena__caja' });
+    var contador = G.el('span', { clase: 'escena__paso' });
+
+    var btnAtras = G.el('button', {
+      clase: 'btn', texto: '← Atrás', attr: { type: 'button' },
+      al: { click: function () { ir(indice - 1); } }
+    });
+    var btnAvanzar = G.el('button', {
+      clase: 'btn btn--principal', texto: 'Avanzar →', attr: { type: 'button' },
+      al: { click: function () { ir(indice + 1); } }
+    });
+    var btnReiniciar = G.el('button', {
+      clase: 'btn', texto: 'Reiniciar', attr: { type: 'button' },
+      al: { click: function () { respondido = {}; ir(0); } }
+    });
+
+    var puntos = def.pasos.map(function () { return G.el('span', { clase: 'progreso__punto' }); });
+
+    function prediccion(paso) {
+      var p = paso.predice;
+      var caja2 = G.el('div', { clase: 'predice' });
+      caja2.appendChild(G.el('p', { clase: 'predice__pregunta', html: p.pregunta }));
+
+      var veredicto = G.el('p', { clase: 'predice__veredicto', attr: { 'aria-live': 'polite' } });
+      var opciones = G.el('div', { clase: 'predice__ops', attr: { role: 'group' } });
+
+      p.opciones.forEach(function (texto, i) {
+        var btn = G.el('button', {
+          clase: 'op', html: texto, attr: { type: 'button' },
+          al: {
+            click: function () {
+              respondido[indice] = i;
+              G.qsaBotones(opciones).forEach(function (b, j) {
+                b.disabled = true;
+                b.classList.toggle('op--correcta', j === p.correcta);
+                b.classList.toggle('op--tuya', j === i && j !== p.correcta);
+              });
+              veredicto.className = 'predice__veredicto ' +
+                (i === p.correcta ? 'predice__veredicto--bien' : 'predice__veredicto--mal');
+              veredicto.innerHTML = (i === p.correcta ? '<b>Le atinaste.</b> ' : '<b>No.</b> ') + p.porque;
+              btnAvanzar.disabled = indice === def.pasos.length - 1;
+            }
+          }
+        });
+        opciones.appendChild(btn);
+      });
+
+      caja2.appendChild(opciones);
+      caja2.appendChild(veredicto);
+      return caja2;
+    }
+
+    function ir(nuevo) {
+      indice = Math.max(0, Math.min(def.pasos.length - 1, nuevo));
+      pintar();
+    }
+
+    function pintar() {
+      var paso = def.pasos[indice];
+      var desde = paso.lineas[0];
+      var hasta = paso.lineas[1] || paso.lineas[0];
+
+      filas.forEach(function (f, i) {
+        var n = i + 1;
+        f.className = 'linea' + (n >= desde && n <= hasta ? ' linea--foco' : ' linea--apagada');
+      });
+
+      // El bloque sigue al foco sin mover la página (nada de scrollIntoView).
+      var primera = filas[desde - 1];
+      if (primera) {
+        var margen = primera.offsetHeight * 2;
+        var arriba = primera.offsetTop - bloque.offsetTop;
+        var alto = (hasta - desde + 1) * primera.offsetHeight;
+        if (arriba - margen < bloque.scrollTop) bloque.scrollTop = Math.max(0, arriba - margen);
+        else if (arriba + alto + margen > bloque.scrollTop + bloque.clientHeight)
+          bloque.scrollTop = arriba + alto + margen - bloque.clientHeight;
+      }
+
+      G.vaciar(caja);
+      nota.innerHTML = paso.nota;
+      contador.textContent = 'paso ' + (indice + 1) + ' / ' + def.pasos.length;
+
+      // Un paso de predicción retiene el avance hasta que el lector se compromete.
+      var pendiente = paso.predice && respondido[indice] === undefined;
+      if (paso.predice) caja.appendChild(prediccion(paso));
+      if (paso.salida) caja.appendChild(G.el('pre', { clase: 'escena__salida', texto: paso.salida }));
+
+      btnAtras.disabled = indice === 0;
+      btnAvanzar.disabled = pendiente || indice === def.pasos.length - 1;
+      puntos.forEach(function (p, i) {
+        p.className = 'progreso__punto' + (i <= indice ? ' progreso__punto--hecho' : '');
+      });
+    }
+
+    var raiz = G.el('div', { clase: 'escena' }, [
+      G.el('div', { clase: 'escena__cabeza' }, [
+        G.el('h3', { clase: 'escena__titulo', texto: def.titulo }),
+        contador
+      ]),
+      bloque,
+      nota,
+      caja,
+      G.el('div', { clase: 'escena__controles' }, [
+        btnAtras, btnAvanzar, btnReiniciar,
+        G.el('div', { clase: 'progreso', attr: { 'aria-hidden': 'true' } }, puntos)
+      ])
+    ]);
+
+    pintar();
     return raiz;
   };
 

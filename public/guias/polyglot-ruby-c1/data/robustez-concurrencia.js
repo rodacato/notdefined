@@ -139,6 +139,49 @@
       creencia: '«Con <code>rescue =&gt; e</code> ya estás manejando errores.»',
       realidad: 'Falso: capturar no es manejar. Un <code>rescue</code> que loguea y sigue esconde el fallo; un <code>rescue</code> pelón sin re-raise se traga bugs que no viste venir.'
     },
+    escena: {
+      titulo: 'El ensure que se traga la excepción',
+      pasos: [
+        {
+          lineas: [1, 5],
+          nota: 'Un método que levanta una excepción, y un <code>ensure</code> que hace <code>return</code>. Los dos hechos están a la vista.',
+          predice: {
+            pregunta: 'Antes de avanzar: ¿qué te regresa <code>se_traga</code>, y qué pasa con el <code>"algo grave"</code>?',
+            opciones: [
+              'Levanta <code>RuntimeError</code>: el <code>ensure</code> corre pero la excepción sigue subiendo',
+              'Regresa <code>:todo_bien</code> y la excepción desaparece',
+              'Regresa <code>nil</code> y loguea el error'
+            ],
+            correcta: 1,
+            porque: 'El <code>ensure</code> corre <em>mientras</em> la excepción va subiendo. Al cambiar el flujo con <code>return</code>, Ruby obedece: el nuevo flujo gana y la excepción se abandona. No es un bug — es la consecuencia de que <code>ensure</code> sea código normal.'
+          }
+        },
+        {
+          lineas: [7, 7],
+          nota: 'Nadie se enteró del <code>"algo grave"</code>. No hay log, no hay backtrace, no hay nada: el método regresó como si todo hubiera salido bien.',
+          salida: 'se_traga  # => :todo_bien'
+        },
+        {
+          lineas: [9, 13],
+          nota: 'El mismo esqueleto, con una sola diferencia: el <code>ensure</code> <em>limpia</em> en vez de <em>decidir</em>. No hay <code>return</code>, <code>next</code> ni <code>break</code>.',
+          predice: {
+            pregunta: '¿Cambia algo para la excepción?',
+            opciones: [
+              'No: el <code>ensure</code> siempre se la traga',
+              'Sí: ahora la excepción propaga y además <code>$log</code> quedó puesto'
+            ],
+            correcta: 1,
+            porque: 'La regla es de estilo y es absoluta: <code>ensure</code> para limpiar, <code>rescue</code> para decidir. Mientras no cambies el flujo dentro del <code>ensure</code>, la excepción sigue su camino.'
+          }
+        },
+        {
+          lineas: [15, 15],
+          nota: 'Las dos cosas a la vez: se cerraron los recursos <b>y</b> la excepción llegó a quien tenía que manejarla.',
+          salida: 'limpia_bien rescue $log  # => :cerre_recursos'
+        }
+      ]
+    },
+
     callout: {
       dice: "Míralo tragarse la excepción en tu propia consola:",
       cmd: "def f; raise \"grave\"; ensure; return :ok; end; p f",

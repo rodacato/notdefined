@@ -180,6 +180,48 @@ em { font-family: var(--display); font-style: italic; font-weight: 500; }
   font-family: var(--display); font-size: 18px; line-height: 1.45; color: var(--fg);
 }
 
+/* --- Escena: el snippet como escenario ----------------------------------- */
+.escena { border: 1px solid var(--border); border-radius: 6px; background: var(--surface); overflow: hidden; }
+.escena__cabeza {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+}
+.escena__titulo { font-family: var(--display); font-weight: 600; font-size: 17px; margin: 0; }
+.escena__paso { font-family: var(--mono); font-size: 11px; color: var(--faint); flex: none; }
+
+/* Alto acotado: con un snippet largo, la pregunta del paso quedaba fuera de pantalla. */
+.escena__codigo { background: #201319; padding: 14px 0; overflow: auto; max-height: 21em; scroll-behavior: smooth; }
+.linea { display: flex; gap: 14px; padding: 1px 18px; transition: opacity var(--paso), background var(--paso); }
+.linea__n { font-family: var(--mono); font-size: 11px; color: #6B4F5A; flex: none; width: 2ch; text-align: right; user-select: none; }
+.linea__src { font-family: var(--mono); font-size: 13px; line-height: 1.65; white-space: pre; color: var(--code-fg, #F3E7EC); }
+.linea--apagada { opacity: 0.34; }
+.linea--foco { background: rgba(226, 77, 104, 0.12); box-shadow: inset 3px 0 0 var(--primary); }
+
+.escena__nota { margin: 0; padding: 14px 18px; font-size: 15px; line-height: 1.6; color: var(--subtle); border-bottom: 1px solid var(--border-soft); }
+.escena__salida {
+  margin: 0 18px 16px; padding: 10px 12px; background: var(--canvas);
+  border: 1px solid var(--border); border-radius: 4px;
+  font-family: var(--mono); font-size: 12.5px; color: var(--fg); white-space: pre-wrap;
+}
+
+.predice { padding: 16px 18px 4px; }
+.predice__pregunta { margin: 0 0 12px; font-family: var(--display); font-style: italic; font-size: 17px; line-height: 1.4; color: var(--fg); }
+.predice__ops { display: flex; flex-direction: column; gap: 6px; }
+.predice__ops .op {
+  text-align: left; font-size: 14px; line-height: 1.45; padding: 10px 13px;
+  background: var(--canvas); border: 1px solid var(--border); border-radius: 5px;
+  color: var(--subtle); cursor: pointer; transition: border-color var(--paso), color var(--paso);
+}
+.predice__ops .op:hover:not(:disabled) { border-color: var(--primary); color: var(--fg); }
+.predice__ops .op:disabled { cursor: default; }
+.op--correcta { border-color: var(--dato-ok, #3FA46B) !important; color: var(--fg) !important; }
+.op--tuya { border-color: var(--dato-pierde) !important; text-decoration: line-through; }
+.predice__veredicto { margin: 12px 0 0; font-size: 14.5px; line-height: 1.55; color: var(--subtle); }
+.predice__veredicto:empty { display: none; }
+.predice__veredicto b { color: var(--fg); }
+
+.escena__controles { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+
 /* --- Consola: el one-liner copiable -------------------------------------- */
 .consola {
   background: var(--surface); border: 1px solid var(--border);
@@ -471,4 +513,5 @@ html.dark .op[aria-pressed='true'] { color: var(--canvas-muted); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  .escena__codigo { scroll-behavior: auto; }
 }
