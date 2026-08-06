@@ -21,13 +21,13 @@
     order: ["pipeline", "yarv", "jit", "gvl", "ractors", "fibers", "gc", "heap", "shapes", "caches", "perfila"],
 
     blocks: [
-      { family: "exec", eyebrow: "Bloque 1 · Ejecución y compilación", hint: "del texto al código máquina",
+      { family: "exec", eyebrow: "I · Ejecución y compilación", hint: "del texto al código máquina",
         topics: ["pipeline", "yarv", "jit"] },
-      { family: "conc", eyebrow: "Bloque 2 · Concurrencia y paralelismo", hint: "concurrente no es paralelo",
+      { family: "conc", eyebrow: "II · Concurrencia y paralelismo", hint: "concurrente no es paralelo",
         topics: ["gvl", "ractors", "fibers"] },
-      { family: "mem", eyebrow: "Bloque 3 · Memoria y objetos", hint: "dónde viven los objetos y cómo se cachea su lookup",
+      { family: "mem", eyebrow: "III · Memoria y objetos", hint: "dónde viven los objetos y cómo se cachea su lookup",
         topics: ["gc", "heap", "shapes", "caches"] },
-      { family: "taller", eyebrow: "Bloque 4 · El taller", hint: "observa todo lo anterior en TU app",
+      { family: "taller", eyebrow: "IV · El taller", hint: "observa todo lo anterior en TU app",
         topics: ["perfila"] }
     ],
 

@@ -18,6 +18,9 @@
     if (!slug) {
       view = G.renderIndex();
       document.title = "Ruby a fondo · Polyglot";
+    } else if (slug === "bibliografia") {
+      view = G.renderBiblio();
+      document.title = "Bibliografía · Ruby a fondo";
     } else if (G.data.topics[slug]) {
       view = G.renderTopic(slug);
       var t = G.data.topics[slug];

@@ -85,8 +85,9 @@
     var nav = h("nav", { class: "rail", "aria-label": "Temas de la guía" });
     nav.insertAdjacentHTML("beforeend", '<span class="rail__badge">nivel C2</span>');
     nav.insertAdjacentHTML("beforeend",
-      '<a class="rail__link rail__link--intro" href="#/">' +
-        '<span class="rail__n">00</span><span class="rail__t">Índice y bibliografía</span></a>');
+      '<a class="rail__link rail__link--intro" href="#/"' +
+        (current === "inicio" ? ' aria-current="page"' : '') +
+        '><span class="rail__n">00</span><span class="rail__t">Cómo usar esta guía</span></a>');
 
     G.data.catalog.blocks.forEach(function (b) {
       var fam = G.FAMILIES[b.family];
@@ -113,6 +114,11 @@
           '<span class="rail__hint">' + esc(b.hint) + "</span></summary>" +
           '<ul class="rail__list">' + items + "</ul></details>");
     });
+
+    nav.insertAdjacentHTML("beforeend",
+      '<a class="rail__link rail__link--fin" href="#/bibliografia"' +
+        (current === "bibliografia" ? ' aria-current="page"' : '') +
+        '><span class="rail__n">↗</span><span class="rail__t">Bibliografía curada</span></a>');
 
     nav.insertAdjacentHTML("beforeend",
       '<p class="rail__legend"><span class="dif--full">◆</span><span class="dif--empty">◇◇</span>' +
@@ -180,23 +186,45 @@
     quote.innerHTML = '<span class="eyebrow">' + esc(c.quote.eyebrow) + '</span><p>' + c.quote.html + '</p>';
     main.appendChild(quote);
 
-    // Bibliografía
-    var bib = h("section", { class: "biblio" });
-    var bibHtml = '<div class="block__head"><span class="eyebrow" style="color:var(--color-fg-faint);">Bibliografía curada</span>' +
-      '<span class="block__hint">★ = imprescindible</span></div><hr class="rule">';
+    main.insertAdjacentHTML("beforeend", '<p class="colofon">' + c.colofon + '</p>');
+    root.appendChild(layout);
+    return root;
+  };
+
+  // ---- Bibliografía: su propia vista, al final del riel -------------------
+  G.renderBiblio = function () {
+    var c = G.data.catalog;
+    var root = h("div");
+    root.appendChild(G.topbar("Ruby a fondo &nbsp;<b>/ Bibliografía</b>"));
+
+    var layout = h("div", { class: "wrap page tema-layout" });
+    var main = h("main", { class: "ficha" });
+    layout.appendChild(G.rail("bibliografia"));
+    layout.appendChild(main);
+
+    var html =
+      '<span class="eyebrow ficha__eyebrow">Para seguir · ★ = imprescindible</span>' +
+      '<h1 class="ficha__title">Bibliografía curada</h1>' +
+      '<p class="ficha__lede">Las fuentes de las que sale cada ficha. Si vas a leer una sola cosa de aquí, que sea una marcada con ★.</p>' +
+      '<hr class="rule-double" style="margin-top:30px;">';
+
     c.biblio.forEach(function (grp) {
-      var items = grp.items.map(function (r) {
-        return '<a class="reslink" href="' + esc(r.url) + '" target="_blank" rel="noopener">' +
-          '<span><b>' + (r.star ? '<span class="star">★ </span>' : '') + esc(r.title) + '</b> <small>· ' + esc(r.note) + '</small></span>' +
-          '<span class="arrow">↗</span></a>';
-      }).join("");
-      bibHtml += '<div class="biblio__group"><div class="biblio__title">' + esc(grp.title) + '</div>' +
+      var items = grp.items
+        .map(function (r) {
+          return (
+            '<a class="reslink" href="' + esc(r.url) + '" target="_blank" rel="noopener">' +
+            '<span><b>' + (r.star ? '<span class="star">★ </span>' : '') + esc(r.title) +
+            '</b> <small>· ' + esc(r.note) + '</small></span><span class="arrow">↗</span></a>'
+          );
+        })
+        .join("");
+      html +=
+        '<div class="biblio__group"><div class="biblio__title">' + esc(grp.title) + '</div>' +
         '<div class="biblio__grid">' + items + '</div></div>';
     });
-    bib.innerHTML = bibHtml;
-    main.appendChild(bib);
 
-    main.insertAdjacentHTML("beforeend", '<p class="colofon">' + c.colofon + '</p>');
+    html += '<p class="colofon">' + c.colofon + '</p>';
+    main.innerHTML = html;
     root.appendChild(layout);
     return root;
   };
