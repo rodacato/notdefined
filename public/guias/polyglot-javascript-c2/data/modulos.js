@@ -41,6 +41,16 @@
       "Object.getOwnPropertyDescriptor(mod, 'n').writable;   // => true",
     ].join("\n"),
     mito: "<p>\u00ab<span class=\"inline-code\">import</span> es <span class=\"inline-code\">require</span> con az\u00facar sint\u00e1ctica.\u00bb No: <span class=\"inline-code\">require</span> es s\u00edncrono y lo que te llega es el objeto exports \u2014si el m\u00f3dulo <em class=\"serif-italic\">reasigna</em> la variable despu\u00e9s, no te enteras\u2014; <span class=\"inline-code\">import</span> es as\u00edncrono, en fases, est\u00e1tico y te da <strong>enlaces vivos</strong> que s\u00ed reflejan el rebinding. Por eso el interop duele donde duele: el <span class=\"inline-code\">default</span> de un CJS se envuelve, los named exports se detectan por heur\u00edstica, y no hay <span class=\"inline-code\">top-level await</span> dentro de CJS.</p>",
+    predice: {
+      pregunta: "Un módulo declara <code>let n = 0</code> y una función <code>bump()</code> que hace <code>n++</code>. Lo importas, llamas <code>bump()</code> y vuelves a leer <code>n</code>. <strong>¿Qué ves?</strong>",
+      opciones: [
+        "<code>0</code> con CommonJS y <code>1</code> con ESM",
+        "<code>1</code> con los dos: es la misma variable",
+        "<code>0</code> con los dos: importaste una copia",
+      ],
+      correcta: 0,
+      porque: "<code>require</code> te entrega el <strong>valor</strong> que había al momento de importar — si el módulo reasigna la variable después, tu copia ni se entera. <code>import</code> te da un <strong>enlace vivo</strong> al binding, así que ves el <code>1</code>. Ésa es exactamente la diferencia que el mito niega.",
+    },
     cuandoNo: "<p>Entender que <span class=\"inline-code\">import</span> da enlaces vivos <strong>no es razón para migrar</strong> un CommonJS que funciona. La diferencia se paga cuando te muerde —interop, <span class=\"inline-code\">default</span> envuelto, top-level await— y ahí sí hay que saberla. Migrar por elegancia un paquete que nadie está tocando es trabajo sin trigger.</p>",
     callout: {
       dice: "Comprueba que un export de ESM es un enlace vivo y no una copia:",

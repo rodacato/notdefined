@@ -97,6 +97,16 @@
       "calc(3, 4);   // => 13",
     ].join("\n"),
     mito: "<p>\u00abEl bytecode es un detalle interno sin relevancia pr\u00e1ctica.\u00bb Al contrario: el bytecode de Ignition es <strong>el que m\u00e1s se ejecuta</strong> en la mayor\u00eda de programas \u2014 s\u00f3lo lo verdaderamente caliente llega al c\u00f3digo m\u00e1quina. Y el feedback que recoge aqu\u00ed es la <em class=\"serif-italic\">materia prima</em> de toda optimizaci\u00f3n.</p>",
+    predice: {
+      pregunta: "V8 va a ejecutar <code>calc(3, 4)</code>, que hace <code>a * b + 1</code>. Tanto <code>Mul</code> como <code>AddSmi</code> anotan lo que ven en el feedback vector. <strong>¿En qué slot escribe <code>Mul</code>?</strong>",
+      opciones: [
+        "En el <code>[0]</code> — es la primera operación que se ejecuta",
+        "En el <code>[1]</code>",
+        "En ninguno: sólo las sumas perfilan tipos",
+      ],
+      correcta: 1,
+      porque: "Los slots se reparten al <em class=\\\"serif-italic\\\">generar</em> el bytecode, no en el orden en que corre el programa. V8 emite <code>Mul a0, [1]</code> y <code>AddSmi [1], [0]</code>: la multiplicación se lleva el [1] y la suma el [0]. Si no me crees, el callout de esta ficha te lo imprime.",
+    },
     cuandoNo: "<p>Leer bytecode es una herramienta de <em class=\"serif-italic\">diagnóstico</em>, no un criterio de diseño. Nunca escribas una función para que emita menos instrucciones: el conteo no predice el tiempo —una instrucción puede ser cien veces más cara que otra— y en cuanto la función se calienta, lo que corre ya no es este bytecode. Ábrelo para entender algo, no para acelerarlo.</p>",
     callout: {
       dice: "Pídele a V8 el bytecode de tu propia función, sin intermediarios:",
@@ -171,6 +181,16 @@
       "isOptimized();   // => false",
     ].join("\n"),
     mito: "<p>\u00abUn JIT siempre hace tu c\u00f3digo m\u00e1s r\u00e1pido.\u00bb No gratis: compilar <em class=\"serif-italic\">cuesta</em>, y la desoptimizaci\u00f3n tiene precio. Una funci\u00f3n que ve muchos tipos distintos (megam\u00f3rfica) puede quedarse atascada bajando y subiendo de nivel. Escribir con tipos <strong>consistentes</strong> es lo que deja al JIT trabajar.</p>",
+    predice: {
+      pregunta: "Llamaste <code>add(i, 1)</code> doscientas mil veces con enteros y TurboFan la compiló especulando que sus argumentos son números. Ahora la llamas <strong>una sola vez</strong> con <code>add('x', 'y')</code>. <strong>¿Qué pasa con la versión optimizada?</strong>",
+      opciones: [
+        "Sigue optimizada: una llamada rara no tira 200.000",
+        "Se desoptimiza y vuelve al intérprete",
+        "Se recompila al vuelo para aceptar también strings",
+      ],
+      correcta: 1,
+      porque: "Una sola basta. La suposición de tipos era una <strong>condición</strong>, no una estadística: en cuanto se rompe, V8 desoptimiza, reconstruye el estado del intérprete y sigue en Ignition. Volver a subir cuesta calentarla otra vez desde abajo.",
+    },
     cuandoNo: "<p>No escribas código para complacer al JIT. La lección es de <strong>consistencia de tipos</strong>, no de micro-optimización: no reescribas funciones para forzar monomorfismo, ni midas una función suelta en un bucle vacío —ahí el JIT optimiza un escenario que no existe y el número que sacas no aplica a tu app—. Si algo va lento, empieza por el perfil real.</p>",
     callout: {
       dice: "Míralo optimizar y desoptimizar en vivo, con una sola llamada de más:",

@@ -197,6 +197,31 @@
     );
   }
 
+  /* ---- compuerta: el lector apuesta ANTES de ver la simulación ----------- */
+  function prediccion(p, alResponder) {
+    const ops = el("div", { class: "predice__ops", role: "group", "aria-label": "Opciones" });
+    const veredicto = el("p", { class: "predice__v", "aria-live": "polite" });
+
+    p.opciones.forEach(function (texto, i) {
+      const btn = el("button", { type: "button", class: "op", html: texto });
+      btn.addEventListener("click", function () {
+        for (const [j, b] of [...ops.children].entries()) {
+          b.disabled = true;
+          if (j === p.correcta) b.classList.add("op--correcta");
+          if (j === i && j !== p.correcta) b.classList.add("op--tuya");
+        }
+        const bien = i === p.correcta;
+        veredicto.className = "predice__v " + (bien ? "predice__v--bien" : "predice__v--mal");
+        veredicto.innerHTML = (bien ? "<b>Le atinaste.</b> " : "<b>No.</b> ") + p.porque;
+        alResponder();
+      });
+      ops.appendChild(btn);
+    });
+
+    return el("div", { class: "predice" },
+      el("p", { class: "predice__q", html: p.pregunta }), ops, veredicto);
+  }
+
   /* ---- callout: una línea que el lector pega en su consola --------------- */
   function copiar(texto) {
     // file:// no es contexto seguro y ahí navigator.clipboard no existe.
@@ -278,6 +303,7 @@
     mito: mito,
     cuandoNo: cuandoNo,
     consola: consola,
+    prediccion: prediccion,
     recursos: recursos,
     codeBlock: codeBlock,
   };

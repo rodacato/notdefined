@@ -65,9 +65,17 @@
 
     let teardown = null;
     if (t.widget) {
-      const w = C.section("Qué ves — vídeo que se toca", G.player(t.widget));
-      cuerpo.push(w);
-      teardown = w.querySelector(".widget")._teardown;
+      const caja = G.player(t.widget);
+      teardown = caja._teardown;
+      const partes = [];
+      if (t.predice) {
+        caja.classList.add("widget--velado");
+        partes.push(C.prediccion(t.predice, function () {
+          caja.classList.remove("widget--velado");
+        }));
+      }
+      partes.push(caja);
+      cuerpo.push(C.section("Qué ves — vídeo que se toca", ...partes));
     }
 
     cuerpo.push(C.mito(t.mito));
