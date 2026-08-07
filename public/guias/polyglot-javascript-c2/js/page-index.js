@@ -38,14 +38,17 @@
     return C.section("Los cuatro bloques, y qué modelo mental deja cada uno",
       el("div", { class: "models" },
         G.data.blocks.map(function (b) {
-          return el("div", {
+          const primera = G.data.topics[b.slugs[0]];
+          return el("section", {
             class: "model",
             style: "--rail-accent:var(--tag-" + b.layer + ")",
           },
             el("div", { class: "model__folio" }, b.folio),
             el("h3", { class: "model__title" }, b.title),
             el("p", { class: "model__name" }, b.model),
-            el("p", { class: "body", html: b.modelLong })
+            el("p", { class: "body", html: b.modelLong }),
+            el("a", { class: "model__entrar", href: "#/tema/" + primera.slug },
+              "empezar en " + primera.folio + " · " + primera.title + " →")
           );
         })
       )

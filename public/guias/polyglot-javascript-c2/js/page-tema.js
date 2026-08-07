@@ -49,12 +49,10 @@
     const cuerpo = [];
     cuerpo.push(head(t));
     cuerpo.push(el("hr", { class: "rule-double", style: "margin-top:24px" }));
-    cuerpo.push(C.section("En breve", C.briefGrid(t.breve)));
-    cuerpo.push(C.section("Qué es · fundamento",
-      el("div", { class: "panelgrid", style: "margin-top:0" },
-        C.panel("Qué es", t.quees, t.tag),
-        C.panel("Fundamento", t.fundamento, t.tag))));
-    cuerpo.push(C.section("Cómo funciona", C.stepsGrid(t.como)));
+    cuerpo.push(C.briefLine(t.breve));
+    cuerpo.push(C.section("Qué es y por qué existe",
+      el("div", { class: "prose", html: t.quees + t.fundamento })));
+    cuerpo.push(C.section("Cómo funciona", C.mecanismo(t.como)));
 
     if (t.snippet)
       cuerpo.push(C.section("El código — corre y se verifica",

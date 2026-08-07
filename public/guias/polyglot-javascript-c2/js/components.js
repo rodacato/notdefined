@@ -44,32 +44,6 @@
     return el("span", { class: "tag tag--" + kind }, TAG_LABEL[kind]);
   }
 
-  /* ---- tarjeta de catálogo ---------------------------------------------- */
-  function catalogCard(t) {
-    const diff = el("span", { class: "card__diff" });
-    if (t.star) diff.appendChild(el("span", { class: "card__star", title: "Tema estrella" }, "\u2605 "));
-    diff.appendChild(document.createTextNode(t.difficulty));
-
-    return el("a", {
-      class: "card card--" + t.tag,
-      href: "#/tema/" + t.slug,
-      "aria-label": t.title + " \u2014 " + TAG_LABEL[t.tag],
-    },
-      el("div", { class: "card__top" },
-        el("span", { class: "card__folio" }, t.folio),
-        el("span", { class: "card__title" }, t.title),
-        diff
-      ),
-      el("div", { style: "display:flex;gap:8px;align-items:center;flex-wrap:wrap" }, tag(t.tag)),
-      el("p", { class: "card__tagline" }, t.tagline),
-      el("div", { class: "card__avoid" },
-        el("span", { class: "card__avoid-label" }, "Evita"),
-        el("span", { class: "card__avoid-text" }, t.avoid)
-      ),
-      el("span", { class: "card__cta" }, "entrar \u2192")
-    );
-  }
-
   /* ---- rampa de dificultad (los rombos solos no le dicen nada a un lector
          de pantalla; la etiqueta es la que informa) ----------------------- */
   function difficulty(glyph) {
@@ -113,7 +87,13 @@
       },
         el("summary", { class: "rail__head" },
           el("span", { class: "rail__title" }, b.folio + " · " + b.title),
-          el("span", { class: "rail__model" }, b.model)
+          el("span", { class: "rail__model" }, b.model),
+          // Dentro del summary, un click navega Y colapsaría: hay que cortarlo.
+          el("a", {
+            class: "rail__entrar", href: "#/tema/" + b.slugs[0],
+            "aria-label": "Empezar el bloque " + b.folio,
+            onClick: function (e) { e.stopPropagation(); },
+          }, "empezar →")
         ),
         el("ul", { class: "rail__list" }, items)
       );
@@ -156,21 +136,15 @@
     );
   }
 
-  function briefGrid(items) {
-    return el("div", { class: "brief" },
+  // Cuatro datos son una línea de ficha técnica, no cuatro tarjetas compitiendo.
+  function briefLine(items) {
+    return el("p", { class: "datos" },
       items.map(function (it) {
-        return el("div", { class: "brief__item" },
-          el("div", { class: "brief__k" }, it.k),
-          el("div", { class: "brief__v", html: it.v })
+        return el("span", { class: "dato" },
+          el("span", { class: "dato__k" }, it.k),
+          el("span", { class: "dato__v", html: it.v })
         );
       })
-    );
-  }
-
-  function panel(label, html, accentKind) {
-    return el("div", { class: "panel", style: accentKind ? "--card-accent:var(--tag-" + accentKind + ")" : "" },
-      el("div", { class: "panel__label" }, label),
-      el("div", { class: "prose", html: html })
     );
   }
 
@@ -178,15 +152,9 @@
     return el("div", { class: "prose" }, paragraphs.map(function (p) { return el("p", { html: p }); }));
   }
 
-  const STEP_COLORS = ["var(--tag-motor)", "var(--sim-micro)", "var(--sim-macro)", "var(--sim-web)"];
-  function stepsGrid(items) {
-    return el("div", { class: "steps" },
-      items.map(function (s, i) {
-        return el("div", { class: "step" },
-          el("div", { class: "step__n", style: "color:" + STEP_COLORS[i % STEP_COLORS.length] }, String(i + 1)),
-          el("p", { class: "body", style: "font-size:13px", html: s })
-        );
-      })
+  function mecanismo(items) {
+    return el("ol", { class: "mecanismo" },
+      items.map(function (s) { return el("li", { html: s }); })
     );
   }
 
@@ -291,15 +259,13 @@
     tag: tag,
     TAG_LABEL: TAG_LABEL,
     TAG_SUB: TAG_SUB,
-    catalogCard: catalogCard,
     difficulty: difficulty,
     rail: rail,
     layout: layout,
     section: section,
-    briefGrid: briefGrid,
-    panel: panel,
+    briefLine: briefLine,
     prose: prose,
-    stepsGrid: stepsGrid,
+    mecanismo: mecanismo,
     mito: mito,
     cuandoNo: cuandoNo,
     consola: consola,

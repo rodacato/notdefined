@@ -301,63 +301,7 @@ button { font-family: inherit; }
   font-family: var(--font-mono); font-size: 11px; font-weight: 500;
   letter-spacing: .14em; text-transform: uppercase; color: var(--color-fg-faint);
 }
-.catalog {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
 
-.card {
-  position: relative; display: flex; flex-direction: column; gap: 9px;
-  background: var(--color-bg-surface); border: 1px solid var(--color-border-default);
-  border-left: 3px solid var(--card-accent, var(--color-border-strong));
-  border-radius: var(--radius-lg); padding: 15px 17px 13px;
-  box-shadow: var(--shadow-sm); color: var(--color-fg-default);
-  min-height: 150px; transition: border-color .14s, box-shadow .14s, transform .14s;
-}
-.card--motor    { --card-accent: var(--tag-motor); }
-.card--runtime  { --card-accent: var(--tag-runtime); }
-.card--lenguaje { --card-accent: var(--tag-lenguaje); }
-.card:hover {
-  border-color: var(--color-border-strong); box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-.card__top { display: flex; align-items: flex-start; gap: 10px; }
-.card__folio {
-  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
-  color: var(--color-fg-faint); padding-top: 2px;
-}
-.card__title {
-  font-family: var(--font-display); font-weight: 700; font-size: 17px;
-  letter-spacing: -.015em; line-height: 1.15; flex: 1; color: var(--color-fg-default);
-}
-.card__diff {
-  font-family: var(--font-mono); font-size: 12px; letter-spacing: .05em;
-  color: var(--color-fg-subtle); white-space: nowrap; padding-top: 3px;
-}
-.card__star { color: var(--data-star); }
-.card__tagline {
-  font-family: var(--font-sans); font-size: 13px; line-height: 1.45;
-  color: var(--color-fg-subtle); margin: 0;
-}
-.card__avoid {
-  display: flex; gap: 7px; align-items: baseline; margin-top: auto;
-  padding-top: 9px; border-top: 1px dotted var(--color-border-default);
-}
-.card__avoid-label {
-  font-family: var(--font-mono); font-size: 9.5px; font-weight: 600;
-  letter-spacing: .12em; text-transform: uppercase; color: var(--data-bad);
-  flex-shrink: 0;
-}
-.card__avoid-text {
-  font-family: var(--font-sans); font-size: 11.5px; line-height: 1.35;
-  color: var(--color-fg-subtle);
-}
-.card__cta {
-  position: absolute; top: 15px; right: 17px;
-  font-family: var(--font-mono); font-size: 11px; color: var(--card-accent);
-  opacity: 0; transform: translateX(-3px); transition: opacity .14s, transform .14s;
-}
-.card:hover .card__cta { opacity: 1; transform: none; }
 
 /* ==========================================================================
    FICHA (tema interior)
@@ -381,27 +325,7 @@ button { font-family: inherit; }
 }
 
 /* en breve — 4 datos */
-.brief { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-.brief__item {
-  background: var(--color-bg-surface); border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg); padding: 14px 16px;
-}
-.brief__k {
-  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--color-fg-faint); margin-bottom: 6px;
-}
-.brief__v { font-family: var(--font-display); font-weight: 600; font-size: 15px; line-height: 1.3; }
 
-.panelgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-.panel {
-  background: var(--color-bg-surface); border: 1px solid var(--color-border-default);
-  border-left: 3px solid var(--card-accent, var(--color-border-strong));
-  border-radius: var(--radius-lg); padding: 20px 22px;
-}
-.panel__label {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em;
-  text-transform: uppercase; color: var(--color-fg-faint); margin-bottom: 10px;
-}
 
 .prose p { max-width: var(--measure); }
 .prose p { margin-bottom: 14px; color: var(--color-fg-default); }
@@ -414,12 +338,6 @@ button { font-family: inherit; }
 html.dark .prose code, html.dark .inline-code { color: var(--color-primary); }
 
 /* pasos numerados */
-.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
-.step {
-  background: var(--color-bg-surface); border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg); padding: 16px;
-}
-.step__n { font-family: var(--font-mono); font-size: 20px; font-weight: 600; margin-bottom: 6px; }
 
 /* mito */
 .mito {
@@ -434,6 +352,46 @@ html.dark .prose code, html.dark .inline-code { color: var(--color-primary); }
   text-transform: uppercase; color: var(--color-fg-subtle); font-weight: 600; margin-bottom: 8px;
 }
 .mito__label::before { content: "◆ "; color: var(--data-bad); }
+
+/* La ficha se lee como capítulo: los datos son una línea, el mecanismo una
+   lista numerada, y la prosa no vive dentro de tarjetas que compitan. */
+.datos {
+  display: flex; flex-wrap: wrap; gap: 4px 22px; margin: 20px 0 4px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--color-border-soft);
+  font-size: 13.5px;
+}
+.dato { display: flex; gap: 7px; align-items: baseline; }
+.dato__k {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--color-fg-faint);
+}
+.dato__v { font-family: var(--font-display); font-weight: 600; }
+
+.mecanismo {
+  max-width: var(--measure); margin: 0; padding-left: 0; list-style: none;
+  counter-reset: paso;
+}
+.mecanismo li {
+  position: relative; padding-left: 30px; margin-bottom: 12px;
+  font-size: 15px; line-height: 1.6; text-wrap: pretty;
+}
+.mecanismo li::before {
+  counter-increment: paso; content: counter(paso);
+  position: absolute; left: 0; top: 1px;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--color-primary);
+}
+
+.model__entrar {
+  display: inline-block; margin-top: 12px;
+  font-family: var(--font-mono); font-size: 12px;
+}
+.rail__entrar {
+  display: block; margin-top: 3px;
+  font-family: var(--font-mono); font-size: 10.5px;
+  color: var(--color-fg-faint);
+}
+.rail__entrar:hover { color: var(--color-primary); }
 
 /* Velado, no oculto: se ve que hay algo y que falta un paso para llegar. */
 .widget--velado {
