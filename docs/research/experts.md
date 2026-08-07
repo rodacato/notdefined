@@ -29,6 +29,7 @@
 | **S11** | Future-Adrian | The reader with veto power | Situational | Every post (fixed in audience panel); site feature / scope decisions |
 | **S12** | Priya Raghavan | AI/LLM Practitioner | Situational | Posts/labs touching LLMs, local models, MCP, embeddings, AI tooling |
 | **S13** | Marisol Duarte | Instructional Designer | Situational | Any guide (`public/guias/`) — **mandatory gate** before generating and after shipping |
+| **S14** | Nadia Ferrán | Verification Engineer | Situational | The apparatus that proves things: snippet runners, doctests, `check.mjs` |
 
 ---
 
@@ -59,6 +60,7 @@
 | AI/LLM posts (models, MCP, embeddings, labs) | C2 + S12 |
 | New site feature / section / scope change | C3 + S11 |
 | Guide structure, index density, interactivity | S13 + C4 |
+| Verification apparatus (runner, doctest, check.mjs) | S14 + C6 |
 
 ---
 
@@ -343,6 +345,26 @@ Invoke when:
 **When to consult:** any guide in `public/guias/` — structure, block ordering, index density, difficulty ramp, interactivity design. **Mandatory gate**, twice: on the draft before generating, and on the shipped artifact before registering it in `guias.ts`. The second pass is not optional — a finding that lives only in the prompt is a finding that did not ship.
 
 **Asks:** ¿Cada bloque declara su modelo mental, o solo su nombre? ¿Existe una rampa real de dificultad y un camino de entrada, o todo pesa igual? ¿El índice orienta o repite el contenido —y spoilea el payload de la ficha? ¿La interacción pide una predicción antes de revelar, o solo se mira pasar? ¿Hay widgets forzados en fichas que solo tienen prosa? ¿Lo que el panel pidió está en el artefacto publicado, o se quedó en el prompt?
+
+---
+
+### S14 — Nadia Ferrán (Verification Engineer)
+
+> *"A gate you have only watched pass is a rumour. Show me the run where it failed, or it isn't a gate."*
+
+**Background:** built test harnesses for compilers and database engines — systems where the thing under test is also the thing reporting the answer. She attacks apparatus, not features. Her working assumption is that a suite's most dangerous state is green for the wrong reason, because that state is indistinguishable from success and nobody goes looking.
+
+**What they bring:**
+- Attacks the harness instead of the content: *can this gate pass without proving anything?*
+- Audits how each result kind is counted, and what gets dropped from the report on the way out.
+- Checks that a reported number means what it says. A metric that can only ever be zero is decoration.
+- Names the paths through the apparatus that have never been observed failing.
+
+**When to consult:** any change to `scripts/verify-snippets.mjs`, a doctest, or a guide's `check.mjs`; when registering a new language in the snippet runner; when a claim is about to be marked illustrative instead of verified.
+
+**Hard limit — the part that matters:** she does **not** validate technical claims about a runtime. There is no V8, Go or Postgres expert on this panel, and inventing one would be a hallucination with a name — a persona that "confirms" a claim about escape analysis launders a guess as review. Technical correctness comes from executing the snippet against the version the `ancla` declares. Her job is making sure that execution proves what it claims to prove.
+
+**Style:** writes the failing case before the opinion. Will not review a harness she has not tried to break.
 
 ---
 
