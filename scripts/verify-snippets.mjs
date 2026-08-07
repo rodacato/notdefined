@@ -159,6 +159,7 @@ const dir = mkdtempSync(join(tmpdir(), `snips-${slug}-`));
 let fallas = 0;
 let sinDeclarar = 0;
 let comprobadas = 0;
+let ilustrativas = 0;
 let sinSnippet = 0;
 
 console.log(`▶ ${slug} · ${conf.lenguaje} ${real} (ancla: ${anclada})\n`);
@@ -203,12 +204,24 @@ for (const ficha of fichas) {
     (x) => x.kind === 'valor' || x.kind === 'error',
   );
   const mudas = salida.results.filter((x) => x.kind === 'sin-declarar');
+  const ilustra = salida.results.filter((x) => x.kind === 'ilustrativa');
   comprobadas += declaradas.length;
   sinDeclarar += mudas.length;
+  ilustrativas += ilustra.length;
+
+  // Un snippet que no declara ni una salida no prueba nada, y pasaría en verde.
+  if (!declaradas.length && !ilustra.length) {
+    console.error(
+      `  ✗ ${ficha.folio} ${ficha.titulo}: el snippet no declara una sola salida`,
+    );
+    fallas++;
+    continue;
+  }
 
   const marca = rotas.length ? '✗' : '✓';
+  const cola = ilustra.length ? ` · ${ilustra.length} ilustrativa(s)` : '';
   console.log(
-    `  ${marca} ${ficha.folio} ${ficha.titulo.slice(0, 34).padEnd(34)} ${String(declaradas.length).padStart(2)} comprobadas · ${String(mudas.length).padStart(2)} sin declarar`,
+    `  ${marca} ${ficha.folio} ${ficha.titulo.slice(0, 34).padEnd(34)} ${String(declaradas.length).padStart(2)} comprobadas${cola}`,
   );
 
   for (const x of rotas) {
@@ -219,8 +232,13 @@ for (const ficha of fichas) {
   }
 }
 
-const cola = sinSnippet ? ` · ${sinSnippet} ficha(s) sin snippet` : '';
+const resto = [
+  ilustrativas && `${ilustrativas} ilustrativa(s), corridas y no comparadas`,
+  sinDeclarar && `${sinDeclarar} sentencia(s) sin declarar salida`,
+  sinSnippet && `${sinSnippet} ficha(s) sin snippet`,
+].filter(Boolean);
 console.log(
-  `\n${comprobadas} aserciones comprobadas · ${sinDeclarar} sentencias sin declarar salida · ${fallas} falla(s)${cola}`,
+  `\n${comprobadas} aserciones comprobadas · ${fallas} falla(s)` +
+    (resto.length ? ` · ${resto.join(' · ')}` : ''),
 );
 process.exit(fallas ? 1 : 0);
