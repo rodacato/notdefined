@@ -38,6 +38,11 @@
     ].join("\n"),
     mito: "<p><span class=\"inline-code\">setTimeout(fn, 0)</span> <strong>no</strong> ejecuta <span class=\"inline-code\">fn</span> de inmediato ni \u00aben 0 ms\u00bb. El callback espera a que la pila se vac\u00ede <em class=\"serif-italic\">y</em> a que se drenen todas las microtareas; adem\u00e1s, el navegador impone un m\u00ednimo (~4 ms con anidamiento). La lecci\u00f3n es el <strong>orden</strong>, no el tiempo exacto.</p>",
     cuandoNo: "<p>Saber el orden no te autoriza a <strong>depender</strong> de él. Usar <span class=\"inline-code\">setTimeout(fn, 0)</span> o una microtarea para «que esto pase después de aquello» es coordinación por accidente: funciona hasta que alguien mete un <span class=\"inline-code\">await</span> en medio. Si dos cosas tienen un orden, hazlo explícito con una promesa, no con la fila.</p>",
+    callout: {
+      dice: "El orden que discutimos, en tu consola:",
+      cmd: "node -e \"const o=[];o.push(1);setTimeout(()=>o.push(2));Promise.resolve().then(()=>o.push(3));o.push(4);setTimeout(()=>console.log(o.join(',')),9)\"",
+      sale: "1,4,3,2",
+    },
     recursos: [
       { kind: "Charla", star: true, title: "What the heck is the event loop anyway?", sub: "Philip Roberts \u00b7 JSConf EU \u2014 con Loupe", href: "https://www.youtube.com/watch?v=8aGhZQkoFbQ" },
       { kind: "Charla", star: true, title: "In The Loop", sub: "Jake Archibald \u00b7 JSConf.Asia", href: "https://www.youtube.com/watch?v=cCOL7MC4Pl0" },
@@ -144,6 +149,11 @@
     ].join("\n"),
     mito: "<p>\u00ab<span class=\"inline-code\">await</span> bloquea o pausa el hilo.\u00bb No: no hay hilos nuevos ni bloqueo. <span class=\"inline-code\">await</span> s\u00f3lo <strong>parte</strong> la funci\u00f3n y devuelve el control; la continuaci\u00f3n vuelve como microtarea cuando la promesa se resuelve. El hilo sigue libre mientras tanto.</p>",
     cuandoNo: "<p>Que <span class=\"inline-code\">await</span> agende una microtarea <strong>no es un costo que debas evitar</strong>. Volver a cadenas de <span class=\"inline-code\">.then</span> «porque son más rápidas» cambia legibilidad por un ahorro que no vas a medir. Lo que sí vale de aquí: no pongas <span class=\"inline-code\">await</span> dentro de un bucle cuando las tareas son independientes —eso sí se nota, y es <span class=\"inline-code\">Promise.all</span>—.</p>",
+    callout: {
+      dice: "Dónde exactamente parte <code>await</code> la función:",
+      cmd: "node -e \"const o=[];o.push('a');(async()=>{o.push('b');await 0;o.push('c')})();o.push('d');setTimeout(()=>console.log(o.join(',')),9)\"",
+      sale: "a,b,d,c",
+    },
     recursos: [
       { kind: "Referencia", star: true, title: "Tasks, microtasks, queues and schedules", sub: "Jake Archibald \u2014 el orden exacto", href: "https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/" },
       { kind: "Art\u00edculo", title: "JavaScript Visualized: Promises & async/await", sub: "Lydia Hallie", href: "https://dev.to/lydiahallie/javascript-visualized-promises-async-await-5gje" },
@@ -213,6 +223,11 @@
     ].join("\n"),
     mito: "<p>\u00abLos Workers comparten variables con el hilo principal.\u00bb No: cada uno tiene su memoria. Por defecto los datos se <strong>copian</strong> (structured clone). La \u00fanica memoria realmente compartida es <span class=\"inline-code\">SharedArrayBuffer</span>, y ah\u00ed <em class=\"serif-italic\">t\u00fa</em> debes sincronizar con <span class=\"inline-code\">Atomics</span> para evitar condiciones de carrera.</p>",
     cuandoNo: "<p>Un Worker no es «paralelismo gratis». Si la tarea no está <strong>atada a CPU</strong>, el structured clone de ida y vuelta cuesta más que hacerla en el hilo principal. No muevas ahí trabajo de I/O —ya es asíncrono— ni pedazos chicos: el umbral donde gana es más alto de lo que parece, y se mide.</p>",
+    callout: {
+      dice: "Comprueba que el Worker no comparte tu memoria:",
+      cmd: "node -e \"const {Worker}=require('node:worker_threads');let n=0;new Worker('let n=0;n++;require(\\\"node:worker_threads\\\").parentPort.postMessage(n)',{eval:true}).on('message',m=>{console.log('worker',m,'principal',n);process.exit(0)})\"",
+      sale: "worker 1 principal 0",
+    },
     recursos: [
       { kind: "Referencia", title: "Using Web Workers", sub: "MDN \u2014 Workers en el navegador", href: "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers" },
       { kind: "Node", title: "Worker Threads", sub: "Node.js docs \u2014 hilos en Node", href: "https://nodejs.org/api/worker_threads.html" },

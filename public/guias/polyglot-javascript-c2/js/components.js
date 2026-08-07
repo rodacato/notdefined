@@ -197,6 +197,38 @@
     );
   }
 
+  /* ---- callout: una línea que el lector pega en su consola --------------- */
+  function copiar(texto) {
+    // file:// no es contexto seguro y ahí navigator.clipboard no existe.
+    if (navigator.clipboard && window.isSecureContext)
+      return navigator.clipboard.writeText(texto);
+    const area = el("textarea", { class: "copia-oculta" });
+    area.value = texto;
+    document.body.appendChild(area);
+    area.select();
+    try { document.execCommand("copy"); } finally { document.body.removeChild(area); }
+    return Promise.resolve();
+  }
+
+  function consola(callout) {
+    if (!callout) return null;
+    const boton = el("button", { class: "consola__copiar", type: "button" }, "copiar");
+    boton.addEventListener("click", function () {
+      copiar(callout.cmd).then(function () {
+        boton.textContent = "copiado ✓";
+        window.setTimeout(function () { boton.textContent = "copiar"; }, 1600);
+      });
+    });
+    return el("section", { class: "consola" },
+      el("p", { class: "consola__dice body", html: callout.dice }),
+      el("div", { class: "consola__caja" },
+        el("code", { class: "consola__cmd" }, callout.cmd),
+        boton
+      ),
+      el("p", { class: "consola__sale caption" }, "→ " + callout.sale)
+    );
+  }
+
   function cuandoNo(html) {
     return el("section", { class: "cuandono" },
       el("div", { class: "cuandono__label" }, "Cuándo NO"),
@@ -245,6 +277,7 @@
     stepsGrid: stepsGrid,
     mito: mito,
     cuandoNo: cuandoNo,
+    consola: consola,
     recursos: recursos,
     codeBlock: codeBlock,
   };

@@ -78,6 +78,8 @@ for (const slug of order) {
   for (const k of ['folio', 'tag', 'difficulty', 'title', 'tagline', 'avoid',
     'lede', 'quees', 'fundamento', 'mito', 'cuandoNo', 'snippet'])
     if (!isStr(t[k])) fail(`${at}: falta ${k}`);
+  for (const k of ['dice', 'cmd', 'sale'])
+    if (!isStr(t.callout?.[k])) fail(`${at}: callout sin ${k}`);
   if (!TAGS.has(t.tag)) fail(`${at}: tag de capa inválido «${t.tag}» (motor/runtime/lenguaje)`);
   if (!GLYPH.test(t.difficulty || '')) fail(`${at}: difficulty «${t.difficulty}» debe ser 3 de ◆/◇`);
 

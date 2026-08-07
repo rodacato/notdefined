@@ -60,6 +60,9 @@
       cuerpo.push(C.section("El código — corre y se verifica",
         C.codeBlock(null, t.snippet.split("\n"))));
 
+    if (t.callout)
+      cuerpo.push(C.section("Compruébalo tú", C.consola(t.callout)));
+
     let teardown = null;
     if (t.widget) {
       const w = C.section("Qué ves — vídeo que se toca", G.player(t.widget));
