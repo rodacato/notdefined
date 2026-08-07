@@ -54,38 +54,7 @@
       { kind: "Libro", star: true, title: "You Don't Know JS: this & Object Prototypes", sub: "Kyle Simpson \u2014 gratis en GitHub", href: "https://github.com/getify/You-Dont-Know-JS" },
       { kind: "Motor", title: "Engine fundamentals: optimizing prototypes", sub: "Mathias Bynens & Benedikt Meurer", href: "https://mathiasbynens.be/notes/prototypes" },
     ],
-    widget: {
-      storeKey: "proto", console: true,
-      zones: [{ id: "cadena", label: "Cadena de prototipos", cls: "micro" }],
-      variants: [
-        {
-          id: "walk", label: "buscar longEar.walk", codeCap: "lookup",
-          code: ["longEar.walk"],
-          frames: [
-            { phase: "longEar", cadena: ["\u25B6 longEar { earLength, listen() }", "rabbit { jumps, hide() }", "animal { eats, walk() }", "Object.prototype", "null"], out: [],
-              cap: "\u00bflongEar posee <span class=\"inline-code\">walk</span>? No. Saltamos a su [[Prototype]]." },
-            { phase: "rabbit", cadena: ["longEar { earLength, listen() }", "\u25B6 rabbit { jumps, hide() }", "animal { eats, walk() }", "Object.prototype", "null"], out: [],
-              cap: "\u00bfrabbit posee <span class=\"inline-code\">walk</span>? Tampoco. Seguimos subiendo." },
-            { phase: "animal \u2713", cadena: ["longEar { earLength, listen() }", "rabbit { jumps, hide() }", "\u25B6 animal { eats, walk() }", "Object.prototype", "null"], out: ["\u21B3 animal.walk"],
-              cap: "animal POSEE <span class=\"inline-code\">walk()</span>: se detiene aqu\u00ed y usa esa. La herencia es exactamente esta subida." },
-          ],
-        },
-        {
-          id: "fly", label: "buscar longEar.fly", codeCap: "lookup",
-          code: ["longEar.fly"],
-          frames: [
-            { phase: "longEar", cadena: ["\u25B6 longEar { earLength, listen() }", "rabbit { jumps, hide() }", "animal { eats, walk() }", "Object.prototype", "null"], out: [],
-              cap: "Buscamos <span class=\"inline-code\">fly</span>: longEar no la tiene." },
-            { phase: "rabbit", cadena: ["longEar", "\u25B6 rabbit { jumps, hide() }", "animal { eats, walk() }", "Object.prototype", "null"], out: [], cap: "rabbit tampoco." },
-            { phase: "animal", cadena: ["longEar", "rabbit", "\u25B6 animal { eats, walk() }", "Object.prototype", "null"], out: [], cap: "animal tampoco." },
-            { phase: "Object.prototype", cadena: ["longEar", "rabbit", "animal", "\u25B6 Object.prototype", "null"], out: [], cap: "Object.prototype tampoco tiene <span class=\"inline-code\">fly</span>." },
-            { phase: "null", cadena: ["longEar", "rabbit", "animal", "Object.prototype", "\u25B6 null"], out: ["undefined"],
-              cap: "Llegamos a <span class=\"inline-code\">null</span>: nadie la tiene. La lectura es <span class=\"inline-code\">undefined</span> \u2014 no lanza error." },
-          ],
-        },
-      ],
-    },
-  };
+};
 
   D.topics["closures"] = {
     slug: "closures", folio: "12", tag: "lenguaje", difficulty: "\u25C6\u25C7\u25C7",
@@ -129,6 +98,16 @@
       "withLet.map((f) => f()).join(',');   // => '0,1,2'",
     ].join("\n"),
     mito: "<p>\u00abUna closure copia las variables de la funci\u00f3n externa.\u00bb No las copia: <strong>mantiene una referencia viva</strong> al entorno. Por eso dos closures creadas en la misma llamada comparten el mismo <span class=\"inline-code\">count</span>, y por eso capturar una variable de bucle con <span class=\"inline-code\">var</span> da resultados sorprendentes (todas ven el \u00faltimo valor).</p>",
+    predice: {
+      pregunta: "Metes tres funciones en un arreglo dentro de un bucle: <code>for (var i = 0; i &lt; 3; i++) fns.push(() =&gt; i)</code>. Después las llamas todas. <strong>¿Qué imprimen?</strong>",
+      opciones: [
+        "<code>0, 1, 2</code>",
+        "<code>3, 3, 3</code>",
+        "<code>0, 0, 0</code>",
+      ],
+      correcta: 1,
+      porque: "<code>var</code> tiene <strong>un solo binding</strong> para todo el bucle, y la closure retiene el entorno, no copia el valor: las tres ven la misma <code>i</code>, que al salir vale 3. Con <code>let</code> hay un binding nuevo por iteración y salen <code>0, 1, 2</code>. Ésa es la diferencia entera.",
+    },
     cuandoNo: "<p>Que una closure retenga su entorno no la vuelve sospechosa. No empieces a poner <span class=\"inline-code\">= null</span> a lo capturado ni a evitar closures «por las fugas»: la retención es el mecanismo, no el bug. El caso real es acotado —un handler que nunca se desuscribe, algo capturado en una estructura de vida larga— y se confirma con un snapshot, no con paranoia.</p>",
     callout: {
       dice: "El clásico que separa <code>var</code> de <code>let</code> en un bucle:",
@@ -148,15 +127,13 @@
       ],
       variants: [{
         id: "counter", label: "contador con closure", codeCap: "counter.js",
-        code: ["function makeCounter() {", "  let count = 0;", "  return function inc() {", "    count++;", "    return count;", "  };", "}", "const c = makeCounter();", "c(); // 1", "c(); // 2"],
+        code: ["const fns = [];", "for (var i = 0; i < 3; i++) {", "  fns.push(() => i);", "}", "", "fns.map((f) => f());"],
         frames: [
-          { line: 7, stack: ["(global)"], envs: ["Global \u00b7 makeCounter, c=? \u25C4"], cap: "Arranca el programa. Se llama makeCounter() y se apila su contexto." },
-          { line: 0, stack: ["(global)", "makeCounter()"], envs: ["Global \u00b7 makeCounter, c=?", "makeCounter \u00b7 count = 0 \u25C4"], cap: "Dentro de makeCounter se crea <span class=\"inline-code\">count = 0</span> en su entorno l\u00e9xico." },
-          { line: 2, stack: ["(global)", "makeCounter()"], envs: ["Global \u00b7 makeCounter, c=?", "makeCounter \u00b7 count = 0 \u25C4"], cap: "Se crea la funci\u00f3n <span class=\"inline-code\">inc</span>. Su entorno l\u00e9xico apunta al de makeCounter \u2014 ah\u00ed vive count." },
-          { line: 7, stack: ["(global)"], envs: ["Global \u00b7 makeCounter, c=inc", "makeCounter \u00b7 count = 0 \u00b7 retenido"], cap: "makeCounter retorna inc y sale de la pila. PERO su entorno NO se recolecta: inc (ahora c) lo retiene. Eso es la closure." },
-          { line: 8, stack: ["(global)", "inc()"], envs: ["Global \u00b7 makeCounter, c=inc", "makeCounter \u00b7 count = 1 \u00b7 retenido \u25C4"], cap: "c() llama a inc. Sube por su cadena de \u00e1mbitos hasta el entorno retenido y hace <span class=\"inline-code\">count++</span> \u2192 1." },
-          { line: 8, stack: ["(global)"], envs: ["Global \u00b7 makeCounter, c=inc", "makeCounter \u00b7 count = 1 \u00b7 retenido"], cap: "inc retorna 1 y sale de la pila. El entorno con count sigue vivo, esperando la pr\u00f3xima llamada." },
-          { line: 9, stack: ["(global)", "inc()"], envs: ["Global \u00b7 makeCounter, c=inc", "makeCounter \u00b7 count = 2 \u00b7 retenido \u25C4"], cap: "c() otra vez: la MISMA closure, el MISMO entorno. count pasa de 1 a 2. No se reinici\u00f3: fue recordado." },
+          { line: 1, stack: ["(global)"], envs: ["Global · i = 0  ◄ UN solo binding"], cap: "<code>var</code> no tiene ámbito de bloque: declara <strong>un</strong> binding <code>i</code> para todo el bucle, en el entorno de alrededor. Arranca en 0." },
+          { line: 2, stack: ["(global)"], envs: ["Global · i = 1  ◄", "fns[0] ─┐"], cap: "Primera vuelta: se crea una flecha y se guarda. <strong>No copia</strong> el 0 — se queda apuntando al binding. El <code>i++</code> lo deja en 1." },
+          { line: 2, stack: ["(global)"], envs: ["Global · i = 2  ◄", "fns[0] ─┤", "fns[1] ─┤"], cap: "Segunda vuelta: otra flecha, y apunta al <strong>mismo</strong> binding que la primera. Las dos ven ahora el 2." },
+          { line: 3, stack: ["(global)"], envs: ["Global · i = 3  ◄ el bucle salió", "fns[0] ─┤", "fns[1] ─┤", "fns[2] ─┘"], cap: "Tercera vuelta y el bucle termina: la condición falla con <code>i = 3</code>. Las tres flechas siguen apuntando al mismo lugar, y ese lugar vale 3." },
+          { line: 5, stack: ["(global)"], envs: ["Global · i = 3  ◄", "fns[0] ─┤", "fns[1] ─┤", "fns[2] ─┘"], cap: "Al llamarlas, las tres leen el binding <em class=\"serif-italic\">vivo</em>: sale <strong>3, 3, 3</strong>. Cambia <code>var</code> por <code>let</code> y hay un binding nuevo por vuelta — entonces sí, <strong>0, 1, 2</strong>." },
         ],
       }],
     },
@@ -201,6 +178,16 @@
       "lexical.greet();   // => undefined",
     ].join("\n"),
     mito: "<p>\u00ab<span class=\"inline-code\">this</span> es la funci\u00f3n donde est\u00e1 escrito.\u00bb No: en funciones normales, <span class=\"inline-code\">this</span> se decide <strong>en cada llamada</strong> seg\u00fan c\u00f3mo se invoca. Las <em class=\"serif-italic\">arrow functions</em> son la excepci\u00f3n: no tienen <span class=\"inline-code\">this</span> propio, lo toman l\u00e9xicamente del lugar donde se definieron. Por eso se usan tanto como callbacks.</p>",
+    predice: {
+      pregunta: "<code>user.greet()</code> devuelve <code>'Eva'</code>. Sacas el método a una variable —<code>const suelto = user.greet</code>— y llamas <code>suelto()</code>. <strong>¿Qué devuelve?</strong>",
+      opciones: [
+        "<code>'Eva'</code>: es exactamente el mismo método",
+        "<code>undefined</code>",
+        "Lanza un <code>TypeError</code>",
+      ],
+      correcta: 1,
+      porque: "<code>this</code> no viaja con la función: se decide <strong>en cada llamada</strong>, según cómo la invocas. Suelta no hay receptor, y en un módulo (modo estricto) <code>this</code> es <code>undefined</code> — por eso sale <code>undefined</code> y no un error. El método no cambió; cambió la llamada.",
+    },
     cuandoNo: "<p>No salgas a hacer <span class=\"inline-code\">.bind(this)</span> defensivo en todos lados. Con arrow functions como callbacks el problema clásico casi no aparece, y blindar cada método contra un desprendimiento que nunca ocurre es ceremonia. Esto sirve para <strong>leer</strong> el <span class=\"inline-code\">this</span> de código ajeno, y para el caso puntual en que sí extraes un método de su objeto.</p>",
     callout: {
       dice: "La misma función, tres formas de llamarla, tres <code>this</code>:",

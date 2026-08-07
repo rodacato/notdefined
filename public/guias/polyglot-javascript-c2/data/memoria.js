@@ -41,6 +41,16 @@
       "Math.round((100 * (peak - heap())) / (peak - base));   // ~> 101",
     ].join("\n"),
     mito: "<p>\u00abPoner <span class=\"inline-code\">x = null</span> libera la memoria al instante.\u00bb No: s\u00f3lo <em class=\"serif-italic\">rompe una referencia</em>. El objeto se recuperar\u00e1 cuando el GC decida correr y confirme que ya nadie lo alcanza. Y \u00abel GC congela todo\u00bb: hoy la mayor parte del trabajo de Orinoco es concurrente/incremental \u2014 las pausas visibles son m\u00ednimas.</p>",
+    predice: {
+      pregunta: "Llenaste un arreglo con 200.000 objetos y el heap subió ~10 MB. Le pones <code>cache = null</code> y vuelves a medir, <strong>sin forzar nada</strong>. ¿Bajó?",
+      opciones: [
+        "Sí: soltar la referencia libera la memoria",
+        "No: sigue arriba hasta que el GC decida correr",
+        "Baja a la mitad, y el resto se recupera después",
+      ],
+      correcta: 1,
+      porque: "<code>= null</code> sólo <strong>rompe una referencia</strong>. El objeto queda <em class=\"serif-italic\">inalcanzable</em>, que no es lo mismo que liberado: la memoria vuelve cuando el GC corre y confirma que nadie lo alcanza. Con <code>--expose-gc</code> puedes forzarlo y ver el salto; en producción, no.",
+    },
     cuandoNo: "<p>No escribas código «para ayudarle al GC». Poner <span class=\"inline-code\">= null</span> a variables locales que están por salir de ámbito no acelera nada, y forzar un <span class=\"inline-code\">gc()</span> en producción es peor que no hacerlo. Esto sirve para <strong>leer un heap snapshot</strong> cuando sospechas una fuga —una referencia viva que no debería estarlo—, no para decorar el código de limpiezas manuales.</p>",
     callout: {
       dice: "Suelta la referencia y mide: los MB no vuelven hasta que el GC corre.",
@@ -126,6 +136,16 @@
       "%HaveSameMap(a, built);       // => false",
     ].join("\n"),
     mito: "<p>\u00abEl orden en que asigno las propiedades no importa.\u00bb Para el resultado, no; para el <strong>rendimiento</strong>, s\u00ed. <span class=\"inline-code\">{a, b}</span> y <span class=\"inline-code\">{b, a}</span> terminan en Shapes <em class=\"serif-italic\">distintas</em>, y mezclarlas convierte un acceso monom\u00f3rfico (rapid\u00edsimo) en poli o megam\u00f3rfico (lento). Inicializa tus objetos con la misma forma y en el mismo orden.</p>",
+    predice: {
+      pregunta: "Creas <code>{ x: 1, y: 2 }</code> y <code>{ y: 2, x: 1 }</code>: mismas propiedades, mismos valores, distinto orden de escritura. <strong>¿Comparten Shape?</strong>",
+      opciones: [
+        "Sí: acaban con las mismas propiedades",
+        "No: el orden de creación las manda a Shapes distintas",
+        "Sólo si las escribes como literal en vez de asignarlas una por una",
+      ],
+      correcta: 1,
+      porque: "La Shape guarda nombres y offsets <strong>en el orden en que aparecieron</strong>, así que cada orden recorre una cadena de transiciones distinta y termina en otra Shape. Para el resultado da igual; para el inline cache no: mezclar las dos formas convierte un acceso monomórfico en polimórfico.",
+    },
     cuandoNo: "<p>Aquí es donde más fácil te pasas de rosca. <strong>No salgas a reordenar las propiedades de todos tus objetos.</strong> Esto importa en código que corre millones de veces —un bucle caliente, una ruta crítica—; en el resto es ruido que hace tu código peor de leer a cambio de nada medible. La regla útil es una sola: inicializa un mismo tipo de objeto siempre igual. Lo demás, sólo si el perfil te lleva ahí.</p>",
     callout: {
       dice: "La pregunta de la ficha, en una línea: ¿el orden cambia la Shape?",
@@ -201,6 +221,16 @@
       "%IsSmi(-(2 ** 31));      // => true",
     ].join("\n"),
     mito: "<p>\u00abTodos los n\u00fameros en JS son doubles de 64 bits.\u00bb En la <em class=\"serif-italic\">spec</em>, s\u00ed. Pero el motor hace trampa: los enteros peque\u00f1os se guardan como Smi inline, sin heap ni double. Por eso un bucle con \u00edndices enteros es mucho m\u00e1s barato de lo que la spec sugerir\u00eda \u2014 hasta que el n\u00famero crece y se vuelve un heap number.</p>",
+    predice: {
+      pregunta: "Los enteros chicos viajan como Smi, dentro de la palabra y sin tocar el heap. <strong>¿<code>3_000_000_000</code> es un Smi?</strong>",
+      opciones: [
+        "Sí: es un entero, y los enteros son Smi",
+        "No: se sale del rango",
+        "Depende de si lo escribes con guiones bajos o sin ellos",
+      ],
+      correcta: 1,
+      porque: "El rango llega hasta <code>2**31 - 1</code> = <code>2147483647</code>. Tres mil millones se pasa, así que se guarda como <strong>HeapNumber</strong> —un double de 64 bits en el heap— y la palabra sólo carga el puntero. Un decimal tampoco es Smi, por chiquito que sea.",
+    },
     cuandoNo: "<p>No contorsiones tu aritmética para quedarte en el rango Smi. Ni truncar con <span class=\"inline-code\">| 0</span> por deporte, ni evitar decimales «porque van al heap». Esto explica <em class=\"serif-italic\">por qué</em> un bucle de índices enteros sale barato; no es una lista de reglas para escribir números.</p>",
     callout: {
       dice: "Dónde está la frontera entre Smi y HeapNumber:",
@@ -214,7 +244,7 @@
     widget: {
       storeKey: "layout",
       zones: [
-        { id: "palabra", label: "Palabra en memoria (32 bits)", cls: "stack" },
+        { id: "palabra", label: "Palabra en memoria", cls: "stack" },
         { id: "heap", label: "Heap", cls: "heap" },
       ],
       variants: [{
@@ -222,6 +252,9 @@
         frames: [
           { code: ["let x = 42;"], phase: "Smi \u00b7 inline", palabra: ["valor: 0\u20260101010", "tag: 0"], heap: [],
             cap: "El bit de tag es <strong>0</strong> \u2192 es un <strong>Smi</strong>. El valor entero vive DENTRO de la palabra. Operar con \u00e9l no toca el heap: rapid\u00edsimo." },
+          { code: ["let x = 2_147_483_647;"], phase: "El último Smi",
+            palabra: ["valor: 0111…1111", "tag: 0"], heap: [],
+            cap: "<code>2**31 - 1</code>: el entero más grande que <strong>todavía</strong> cabe inline. Un paso más y cambia de representación — ésa es toda la frontera.<br><span class=\"mono\" style=\"font-size:12px;color:var(--color-fg-faint)\">El ancho exacto depende de la compilación: con pointer compression la carga útil es de 31 bits.</span>" },
           { code: ["let x = 3_000_000_000;"], phase: "Fuera de rango Smi", palabra: ["puntero \u2192", "tag: 1"], heap: ["HeapNumber \u00b7 3,000,000,000 \u00b7 double 64b"],
             cap: "3.000 millones no cabe en el rango Smi (~2\u00b3\u00b9). El bit de tag es <strong>1</strong> \u2192 es un puntero; el n\u00famero real (un double) vive en el heap." },
           { code: ["let x = 3.14;"], phase: "Decimal \u2192 HeapNumber", palabra: ["puntero \u2192", "tag: 1"], heap: ["HeapNumber \u00b7 3.14 \u00b7 double 64b"],

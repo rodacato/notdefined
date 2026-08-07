@@ -80,6 +80,18 @@ for (const slug of order) {
     if (!isStr(t[k])) fail(`${at}: falta ${k}`);
   for (const k of ['dice', 'cmd', 'sale'])
     if (!isStr(t.callout?.[k])) fail(`${at}: callout sin ${k}`);
+  // Cero widget es un veredicto válido; widget SIN compuerta tiene que declararse
+  // escena a propósito, para que no pase por olvido. Ver el audit de widgets.
+  if (t.widget && !t.predice && !t.widget.escena)
+    fail(`${at}: widget sin compuerta y sin declararse escena`);
+  if (t.predice) {
+    if (!isStr(t.predice.pregunta)) fail(`${at}: predice sin pregunta`);
+    if (!isArr(t.predice.opciones) || t.predice.opciones.length < 2)
+      fail(`${at}: predice necesita ≥2 opciones`);
+    if (typeof t.predice.correcta !== 'number' || !t.predice.opciones?.[t.predice.correcta])
+      fail(`${at}: predice.correcta no apunta a una opción`);
+    if (!isStr(t.predice.porque)) fail(`${at}: predice sin porque`);
+  }
   if (!TAGS.has(t.tag)) fail(`${at}: tag de capa inválido «${t.tag}» (motor/runtime/lenguaje)`);
   if (!GLYPH.test(t.difficulty || '')) fail(`${at}: difficulty «${t.difficulty}» debe ser 3 de ◆/◇`);
 

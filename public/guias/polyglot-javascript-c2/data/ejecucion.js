@@ -44,7 +44,7 @@
       { kind: "Fuente", title: "V8 blog", sub: "v8.dev \u2014 parser, Ignition y los compiladores", href: "https://v8.dev/blog" },
     ],
     widget: {
-      storeKey: "pipeline",
+      storeKey: "pipeline", escena: true,
       variants: [{
         id: "greet", label: "pipeline",
         frames: [
