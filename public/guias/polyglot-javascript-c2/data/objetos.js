@@ -7,7 +7,6 @@
     slug: "prototype-chain", folio: "11", tag: "lenguaje", star: true, difficulty: "\u25C6\u25C6\u25C7",
     title: "La cadena de prototipos",
     tagline: "JS no tiene clases bajo el capó: hereda subiendo por [[Prototype]] hasta encontrar la propiedad.",
-    avoid: "creer que class introduce herencia clásica; es azúcar sobre prototipos.",
     lede: "JavaScript no tiene clases \u00abde verdad\u00bb bajo el cap\u00f3: hereda por <em class=\"serif-italic\">prototipos</em>. Cuando pides una propiedad y el objeto no la tiene, el motor sube por una cadena hasta encontrarla \u2014 o hasta <span class=\"mono\">null</span>.",
     breve: [
       { k: "Capa", v: "Lenguaje" },
@@ -60,7 +59,6 @@
     slug: "closures", folio: "12", tag: "lenguaje", difficulty: "\u25C6\u25C7\u25C7",
     title: "Call stack y closures",
     tagline: "Cómo una función recuerda dónde nació aunque su función externa ya haya salido de la pila.",
-    avoid: "pensar que un closure copia variables; captura el entorno vivo.",
     lede: "\u00bfC\u00f3mo \u00abrecuerda\u00bb una funci\u00f3n las variables de donde naci\u00f3, aun despu\u00e9s de que la funci\u00f3n externa termin\u00f3? Con <em class=\"serif-italic\">closures</em> y la cadena de \u00e1mbitos.",
     breve: [
       { k: "Capa", v: "Lenguaje" },
@@ -143,7 +141,6 @@
     slug: "this-hoisting", folio: "13", tag: "lenguaje", difficulty: "\u25C6\u25C6\u25C7",
     title: "this, hoisting y el entorno léxico",
     tagline: "Fase de creación vs ejecución, la TDZ, y a qué apunta this según cómo llamas la función.",
-    avoid: "creer que this depende de dónde se define la función, no de cómo se llama.",
     lede: "Dos fuentes cl\u00e1sicas de bugs: <span class=\"mono\">this</span> (depende de <em class=\"serif-italic\">c\u00f3mo</em> se llama, no de d\u00f3nde se define) y el <em class=\"serif-italic\">hoisting</em>. Ambos se explican mirando c\u00f3mo el motor prepara el contexto antes de ejecutar.",
     breve: [
       { k: "Capa", v: "Lenguaje" },

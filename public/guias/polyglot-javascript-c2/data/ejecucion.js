@@ -8,7 +8,6 @@
     slug: "pipeline-ejecucion", folio: "01", tag: "motor", difficulty: "\u25C6\u25C6\u25C7",
     title: "El pipeline de ejecuci\u00f3n",
     tagline: "De texto a c\u00f3digo m\u00e1quina: parser \u2192 AST \u2192 bytecode \u2192 JIT. El mapa que ubica todo lo dem\u00e1s.",
-    avoid: "creer que JavaScript es \u00abinterpretado\u00bb a secas: empieza as\u00ed, pero lo caliente se compila.",
     lede: "El motor no ejecuta tu c\u00f3digo como texto. Lo parsea, lo convierte en bytecode y lo va optimizando por niveles seg\u00fan qu\u00e9 tan <em class=\"serif-italic\">caliente</em> est\u00e9. Este es el mapa que ubica todos los dem\u00e1s temas.",
     breve: [
       { k: "Capa", v: "Motor \u00b7 V8" },
@@ -72,7 +71,6 @@
     slug: "ignition-bytecode", folio: "02", tag: "motor", difficulty: "\u25C6\u25C6\u25C7",
     title: "Ignition: la m\u00e1quina de bytecode",
     tagline: "El int\u00e9rprete de registros que ejecuta y perfila tipos antes de que nada se optimice.",
-    avoid: "pensar que el bytecode es un detalle interno sin efecto pr\u00e1ctico.",
     lede: "Antes de optimizar nada, V8 ejecuta tu c\u00f3digo en un int\u00e9rprete llamado <em class=\"serif-italic\">Ignition</em>, sobre bytecode compacto. Es el modelo mental que hace que todo lo dem\u00e1s tenga sentido.",
     breve: [
       { k: "Capa", v: "Motor \u00b7 V8" },
@@ -107,7 +105,7 @@
       correcta: 1,
       porque: "Los slots se reparten al <em class=\\\"serif-italic\\\">generar</em> el bytecode, no en el orden en que corre el programa. V8 emite <code>Mul a0, [1]</code> y <code>AddSmi [1], [0]</code>: la multiplicación se lleva el [1] y la suma el [0]. Si no me crees, el callout de esta ficha te lo imprime.",
     },
-    cuandoNo: "<p>Leer bytecode es una herramienta de <em class=\"serif-italic\">diagnóstico</em>, no un criterio de diseño. Nunca escribas una función para que emita menos instrucciones: el conteo no predice el tiempo —una instrucción puede ser cien veces más cara que otra— y en cuanto la función se calienta, lo que corre ya no es este bytecode. Ábrelo para entender algo, no para acelerarlo.</p>",
+    cuandoNo: "<p>El bytecode que estás leyendo <strong>no es lo que va a correr</strong> en cuanto la función se caliente: Maglev o TurboFan la recompilan y ese listado deja de existir. Por eso contar instrucciones no predice tiempo —una puede costar cien veces más que otra— y por eso este listado sirve para <em class=\"serif-italic\">entender</em> una función, no para decidir cómo escribirla.</p>",
     callout: {
       dice: "Pídele a V8 el bytecode de tu propia función, sin intermediarios:",
       cmd: "node --print-bytecode --print-bytecode-filter=f -e \"function f(a,b){return a*b+1} f(3,4)\"",
@@ -147,7 +145,6 @@
     slug: "niveles-jit", folio: "03", tag: "motor", difficulty: "\u25C6\u25C6\u25C6",
     title: "Los niveles del JIT",
     tagline: "Ignition \u2192 Sparkplug \u2192 Maglev \u2192 TurboFan, y la desoptimizaci\u00f3n cuando la suposici\u00f3n se rompe.",
-    avoid: "creer que el JIT siempre acelera; los tipos inconsistentes lo hacen desoptimizar.",
     lede: "V8 no tiene <em class=\"serif-italic\">un</em> compilador JIT: tiene cuatro niveles que equilibran \u00abcompilar r\u00e1pido\u00bb contra \u00abcompilar bien\u00bb. El c\u00f3digo caliente sube; si una suposici\u00f3n se rompe, <em class=\"serif-italic\">desoptimiza</em> y cae de vuelta al int\u00e9rprete.",
     breve: [
       { k: "Capa", v: "Motor \u00b7 V8" },

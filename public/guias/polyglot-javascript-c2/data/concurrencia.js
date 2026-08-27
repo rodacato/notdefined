@@ -8,7 +8,6 @@
     slug: "event-loop", folio: "05", tag: "runtime", star: true, difficulty: "\u25C6\u25C6\u25C7",
     title: "El Event Loop",
     tagline: "Un hilo, dos colas y por qu\u00e9 las promesas le ganan a los timers. El tema estrella.",
-    avoid: "creer que setTimeout(fn, 0) ejecuta \u00abya\u00bb o \u00aben 0 ms\u00bb.",
     lede: "JavaScript ejecuta en <em class=\"serif-italic\">un solo hilo</em>: s\u00f3lo una cosa a la vez. Entonces, \u00bfc\u00f3mo hace peticiones, timers y clicks sin congelarse? Con un bucle que coordina la pila con dos colas de trabajo pendiente.",
     breve: [
       { k: "Capa", v: "Runtime" },
@@ -95,7 +94,6 @@
     slug: "async-await", folio: "06", tag: "lenguaje", difficulty: "\u25C6\u25C6\u25C7",
     title: "async / await y microtareas",
     tagline: "Az\u00facar sobre promesas: cada await parte la funci\u00f3n y agenda su continuaci\u00f3n como microtarea.",
-    avoid: "pensar que await pausa el hilo o crea paralelismo.",
     lede: "<span class=\"mono\" style=\"font-size:15px\">async/await</span> no crea hilos ni magia paralela: es az\u00facar sobre <em class=\"serif-italic\">promesas</em>, que se resuelven v\u00eda la cola de microtareas.",
     breve: [
       { k: "Capa", v: "Lenguaje + runtime" },
@@ -179,7 +177,6 @@
     slug: "workers", folio: "07", tag: "runtime", difficulty: "\u25C6\u25C6\u25C7",
     title: "Paralelismo real: Workers",
     tagline: "Hilos con memoria propia que hablan por mensajes. Copiado vs transferido vs compartido.",
-    avoid: "creer que los workers comparten variables con el hilo principal por defecto.",
     lede: "Si JavaScript es de un solo hilo, \u00bfc\u00f3mo usas varios n\u00facleos? Con <em class=\"serif-italic\">Workers</em>: hilos separados, con su propia memoria, que se comunican por mensajes.",
     breve: [
       { k: "Capa", v: "Runtime" },

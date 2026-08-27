@@ -75,7 +75,7 @@ for (const slug of order) {
   if (t.slug !== slug) fail(`${at}: slug interno «${t.slug}» no coincide con la clave`);
   // `mito` + `cuandoNo` + `snippet` son el contrato de Polyglot: una guía sin
   // ellos es un manual. Ver docs/guias/autoria.md §B1.
-  for (const k of ['folio', 'tag', 'difficulty', 'title', 'tagline', 'avoid',
+  for (const k of ['folio', 'tag', 'difficulty', 'title', 'tagline',
     'lede', 'quees', 'fundamento', 'mito', 'cuandoNo', 'snippet'])
     if (!isStr(t[k])) fail(`${at}: falta ${k}`);
   for (const k of ['dice', 'cmd', 'sale'])

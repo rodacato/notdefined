@@ -7,7 +7,6 @@
     slug: "garbage-collector", folio: "08", tag: "motor", difficulty: "\u25C6\u25C6\u25C6",
     title: "Garbage Collector (Orinoco)",
     tagline: "Generacional: Scavenger copia los j\u00f3venes, Mark-Compact limpia los viejos, sin congelar la app.",
-    avoid: "creer que poner x = null libera la memoria al instante.",
     lede: "El GC libera la memoria de objetos que ya nadie alcanza. \u00bfC\u00f3mo sabe el motor qu\u00e9 es basura, y c\u00f3mo evita <em class=\"serif-italic\">congelar</em> la app mientras limpia?",
     breve: [
       { k: "Capa", v: "Motor \u00b7 V8" },
@@ -103,7 +102,6 @@
     slug: "shapes-inline-caches", folio: "09", tag: "motor", star: true, difficulty: "\u25C6\u25C6\u25C6",
     title: "Shapes e Inline Caches",
     tagline: "El plano secreto de cada objeto y por qu\u00e9 el orden de las propiedades s\u00ed importa.",
-    avoid: "asumir que el orden en que asignas propiedades no afecta el rendimiento.",
     lede: "Los objetos JS parecen diccionarios din\u00e1micos, pero eso ser\u00eda lent\u00edsimo. El motor les asigna en secreto una <em class=\"serif-italic\">Shape</em>: un plano compartido que dice qu\u00e9 propiedades tiene y en qu\u00e9 offset.",
     breve: [
       { k: "Capa", v: "Motor \u00b7 V8" },
@@ -195,7 +193,6 @@
     slug: "layout-memoria", folio: "10", tag: "motor", difficulty: "\u25C6\u25C6\u25C7",
     title: "Layout de memoria y valores",
     tagline: "Smi tagging: un entero peque\u00f1o va inline; un n\u00famero grande o decimal va como puntero al heap.",
-    avoid: "pensar que todos los n\u00fameros en JS son doubles de 64 bits.",
     lede: "\u00bfC\u00f3mo guarda el motor un n\u00famero, un booleano o una referencia a objeto en el mismo espacio? Con trucos de <em class=\"serif-italic\">etiquetado</em> que hacen barat\u00edsimas las operaciones comunes.",
     breve: [
       { k: "Capa", v: "Motor \u00b7 V8" },
