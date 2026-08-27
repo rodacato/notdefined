@@ -8,7 +8,6 @@
     slug: "modulos-esm-cjs", folio: "04", tag: "lenguaje", difficulty: "\u25C6\u25C6\u25C7",
     title: "Módulos por dentro: ESM vs CJS",
     tagline: "Resolución, live bindings vs copia de valores, top-level await, y por qué el interop ESM\u2194CJS duele.",
-    avoid: "creer que import es un require con azúcar sintáctica.",
     lede: "Los dos sistemas de m\u00f3dulos de JavaScript no son intercambiables. <span class=\"mono\">require</span> es s\u00edncrono y te entrega el objeto exports tal como qued\u00f3; <span class=\"mono\">import</span> resuelve un grafo en fases y entrega <em class=\"serif-italic\">enlaces vivos</em>. Ah\u00ed nace casi todo el dolor del interop.",
     breve: [
       { k: "Capa", v: "Lenguaje + runtime" },
