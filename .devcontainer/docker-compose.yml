@@ -4,9 +4,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    # tini como PID 1 — `sleep infinity` nunca hace reap, así que los zombies
+    # de git/node/claude se acumulan.
+    init: true
     volumes:
       - ../..:/workspaces:cached
-      - bashhistory:/commandhistory
+      # La feature shell-history escribe aquí (/dc/shellhistory, según su
+      # devcontainer-feature.json); sin el volumen cada rebuild empieza vacío.
+      - bashhistory:/dc/shellhistory
       - npmcache:/home/node/.npm
       - rubygems:/usr/local/rvm/gems
     command: sleep infinity
