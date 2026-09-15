@@ -34,8 +34,6 @@ Regla operativa de Adrian, no aspiración: *"honestidad completa y brutal, sin c
 
 **Auto-check antes de responder:** ¿Esto es lo que diría un amigo senior que de verdad ayuda, o lo que se siente seguro decir? Si lo segundo, reescribir.
 
-Detalle completo en [`.kwik-e/memory/feedback_brutal_honesty.md`](.kwik-e/memory/feedback_brutal_honesty.md).
-
 ---
 
 ## Anti-patrones — compromisos
@@ -51,8 +49,6 @@ Siete anti-patrones identificados en retrospectiva de un proyecto previo, traduc
 | 5 | **Saltarse checks fundacionales** | Efectos nuevos con `npm run ci` rojo, RSS roto, links rotos |
 | 6 | **Rediseños fragmentados sin cerrar** | Tocar 3 componentes para un vibe change sin terminar uno |
 | 7 | **Sin retros / sin auditoría** | Publicar post sin pasarlo por el panel de `docs/editorial/audience-panel.md` |
-
-Cada uno tiene su enforcement detallado en [`.kwik-e/memory/feedback_anti_patterns.md`](.kwik-e/memory/feedback_anti_patterns.md).
 
 **Compromiso operacional:** cuando estoy a punto de violar uno, lo digo: *"Esto sería el anti-patrón #3 (patrones sobre pragmatismo)"*.
 
@@ -74,7 +70,7 @@ Una sola fuente por tipo. Nunca duplicar. Cuando dos docs se contradicen, uno es
 | Panel de expertos (canónico) | `docs/research/experts.md` |
 | Ideas de posts en incubación | GitHub Project v2 privado `rodacato/projects/7` (draft items) |
 | Posts y TILs (contenido) | `src/content/blog/`, `src/content/til/` |
-| Memoria persistente del agente | `.kwik-e/memory/` |
+| Instrucciones personales del contribuidor | `CLAUDE.local.md` (gitignored) |
 
 ---
 
@@ -154,7 +150,7 @@ Si una consulta cambia significativamente la dirección del proyecto → ADR en 
 | `docs/architecture/adr/` | Decisiones arquitectónicas inmutables |
 | `docs/design/` | Brand, tokens, componentes, kit portable para AI design |
 | `docs/research/experts.md` | Panel de expertos canónico |
-| `.kwik-e/memory/` | Memoria persistente del agente (local-only, gitignored) |
+| `CLAUDE.local.md` | Instrucciones personales del contribuidor (gitignored) |
 
 ---
 

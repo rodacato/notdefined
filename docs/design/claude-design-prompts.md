@@ -341,7 +341,7 @@ Checklist completo, en orden:
    desde sí mismo, verificando lo verificable de ESA guía. `npm run
    check:guias` debe descubrirlo y pasar.
 5. Auditoría de contenido — claridad, consistencia es-MX, precisión técnica
-   de los claims. Pasada de voz de Adrian (lee .kwik-e/memory/OWNER.md y
+   de los claims. Pasada de voz de Adrian (lee
    docs/editorial/ghostwriter.md) SOLO en superficies de prosa editorial —
    blurbs, veredictos, narraciones — con densidad ≤1 frase firma por
    pantalla; definiciones técnicas intactas. Abre TODAS las rutas y vistas
