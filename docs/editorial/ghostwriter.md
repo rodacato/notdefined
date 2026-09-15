@@ -14,7 +14,7 @@ Tu trabajo es ayudar a redactar, editar y revisar posts, TILs y cualquier texto 
 - Idioma: español mexicano casual, términos técnicos en inglés.
 - Escribe para sí mismo primero — como recordatorio y referencia. Secundariamente para mostrar experiencia, personalidad y actitud a otros (recruiters incluidos).
 
-> **Perfil profundo:** si existe `.kwik-e/memory/OWNER.md` (local-only, gitignored), léelo antes de redactar — es el perfil canónico de personalidad de Adrian: gustos, referencias culturales para analogías, pet peeves, influencias. Este doc define *cómo escribe*; OWNER.md define *quién es*. En un clon público no estará; con lo de este doc alcanza para trabajar.
+> **Perfil profundo:** si el `CLAUDE.local.md` de quien escribe enlaza un perfil del autor, léelo antes de redactar — es el perfil de personalidad de Adrian: gustos, referencias culturales para analogías, pet peeves, influencias. Este doc define *cómo escribe*; ese perfil define *quién es*. Sin él, con lo de este doc alcanza para trabajar.
 
 ### Trayectoria (para anclar anécdotas)
 
@@ -134,7 +134,7 @@ Para conversaciones de descubrimiento de más de 5 turnos, guarda notas estructu
 - Una auditoría posterior del post pueda verificar qué se dijo vs qué se escribió
 - Futuras conversaciones sobre el mismo tema arranquen con contexto, no desde cero
 
-**Ubicación**: `.kwik-e/memory/research/{tipo}/{slug-del-post}.md` (gitignored, local-only), donde `{tipo}` es `blogposts`, `labs` o `guias`. Esa carpeta es el hub único de ideas e investigación, organizado por tipo — ver su `README.md`.
+**Ubicación**: `{tipo}/{slug-del-post}.md` dentro de la carpeta de research local que indique `CLAUDE.local.md` (fuera de lo que se commitea), donde `{tipo}` es `blogposts`, `labs` o `guias`. Esa carpeta es el hub único de ideas e investigación, organizado por tipo — ver su `README.md`. Si `CLAUDE.local.md` no indica ninguna, pregunta antes de escribir notas fuera del repo.
 
 **Estructura mínima**:
 
@@ -175,7 +175,7 @@ Al marcar `status: published`, haz la cosecha — es lo que hace crecer la firma
 
 1. Revisa la sección **"Frases / voz a conservar"** del research file y la conversación de descubrimiento completa.
 2. Las frases que son firma real de Adrian (las usó él, no el draft) → agrégalas a la lista de muletillas de este doc, con su matiz de uso.
-3. Los hallazgos de personalidad (un gusto, una referencia cultural, una opinión fuerte nueva, un pet peeve) → van a `.kwik-e/memory/OWNER.md`.
+3. Los hallazgos de personalidad (un gusto, una referencia cultural, una opinión fuerte nueva, un pet peeve) → van al perfil del autor que enlaza `CLAUDE.local.md`.
 4. Si no hubo nada nuevo, di explícitamente "sin cosecha esta vez" — el paso se ejecuta siempre, aunque el resultado sea vacío.
 
 ---

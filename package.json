@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,mjs,cjs,ts,mts,cts,astro,css,json,jsonc,yml,yaml}\"",
     "format:check": "prettier --check \"**/*.{js,mjs,cjs,ts,mts,cts,astro,css,json,jsonc,yml,yaml}\"",
-    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#dist\"",
+    "lint:md": "git ls-files -z -- '*.md' | xargs -0 markdownlint-cli2",
     "check:links": "start-server-and-test \"npm run preview:ci\" http://127.0.0.1:4173 \"linkinator http://127.0.0.1:4173 --recurse --skip '^https?://(?!127\\\\.0\\\\.0\\\\.1:4173)'\"",
     "check:project": "bash scripts/check-project-leak.sh",
     "check:guias": "node scripts/check-guias.mjs",

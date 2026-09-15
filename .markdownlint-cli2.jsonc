@@ -17,7 +17,5 @@
     "node_modules/**",
     "dist/**",
     ".astro/**",
-    ".kwik-e/**",
-    ".claude/**",
   ],
 }

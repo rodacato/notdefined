@@ -8,17 +8,13 @@ dist/
 .env.*
 !.env.example
 
-# Local AI/LLM tool files
-.claude/
-.cursor/
-.windsurf/
-.roo/
+# Per-contributor local state of AI coding tools (shared config stays committed)
+CLAUDE.local.md
+.claude/settings.local.json
+.claude/worktrees/
+.claude/agent-memory-local/
 .aider*
-.kwik-e/
 
 # sonda de check-render; su finally la borra, un kill a media corrida no
 public/guias/*/_sonda.html
 logo.png
-CLAUDE.local.md
-.mcp.json
-CLAUDE.kwik.md
