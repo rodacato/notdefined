@@ -6,7 +6,7 @@ Este archivo es el índice de contexto para agentes AI (Claude Code, Copilot, et
 
 ## Antes de cualquier tarea
 
-1. **Memoria local del agente** — si existe `.kwik-e/memory/MEMORY.md` en este workspace, léelo. Es el índice de memoria persistente (perfil de Adrian, feedback acumulado, decisiones del proyecto). La carpeta `.kwik-e/` está gitignored — solo existe en la máquina de Adrian; en un clon público no estará.
+1. **Instrucciones locales** — si existe `CLAUDE.local.md` en la raíz, léelo: es el archivo de instrucciones personal de quien trabaja en esta máquina, en `.gitignore` y nunca se commitea. Claude Code lo carga solo. Suma las preferencias de esa persona sobre este archivo; si choca con una regla del proyecto, pregunta en vez de elegir.
 2. **Persona según la tarea** — abajo.
 
 ---
@@ -116,8 +116,6 @@ El workflow editorial corre en un **Project v2 privado** a nivel de usuario (`ro
 
 **Check de fuga:** `npm run check:project` lista issues del repo público. Debería estar vacío salvo issues externos legítimos filed por lectores.
 
-Detalle operativo completo: [`.kwik-e/memory/feedback_project_v2_no_convert.md`](.kwik-e/memory/feedback_project_v2_no_convert.md) (local).
-
 ---
 
 ## Documentación completa
@@ -146,11 +144,11 @@ Detalle operativo completo: [`.kwik-e/memory/feedback_project_v2_no_convert.md`]
 | `docs/architecture/adr/` | Decisiones arquitectónicas inmutables (ADRs) |
 | `docs/design/` | Brand, tokens, componentes, kit portable para AI design |
 
-### Memoria local del agente
+### Local por contribuidor
 
-| Carpeta | Propósito |
+| Archivo | Propósito |
 |---------|-----------|
-| `.kwik-e/memory/` | Memoria persistente (gitignored, local-only). Entry point: `.kwik-e/memory/MEMORY.md`. |
+| `CLAUDE.local.md` | Instrucciones personales de cada contribuidor (gitignored, nunca se commitea). |
 
 ### Público
 
