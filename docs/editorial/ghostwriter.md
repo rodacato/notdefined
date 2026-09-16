@@ -249,6 +249,28 @@ Las 10 reglas de arriba son principios. Esta sección lista los **patrones concr
 | **Párrafos de longitud uniforme** | Todos los párrafos entre 60-100 palabras | LLM tiende a balancear sin variación | Mezclar párrafos de 20 palabras con párrafos de 150 |
 | **Transiciones limpias entre secciones** | "Eso fue X. Ahora pasemos a Y, que es otro mundo." | LLM siempre conecta; humanos a veces solo cortan | A veces simplemente cambiar de tema sin transición |
 
+### Tells específicos del español
+
+El catálogo de arriba salió de revisiones reales del panel. Estos son los que **ningún catálogo
+en inglés cubre**, porque no existen en inglés — y son los que más delatan traducción o modelo sin
+calibrar a México.
+
+| Patrón | Ejemplo malo | Por qué delata | Cómo romperlo |
+|---|---|---|---|
+| **Gerundio en cadena** | "Refactorizamos el módulo, permitiendo que el equipo avanzara, logrando así reducir el tiempo" | Es el tell #1 del español generado por máquina. El gerundio de posterioridad además es incorrecto | Punto y seguido: "Refactorizamos el módulo. El equipo avanzó y el tiempo bajó" |
+| **Pasiva perifrástica** | "La página de precios fue actualizada" | En español suena a traducción del inglés, no a español escrito | Actor explícito ("actualizamos la página") o pasiva refleja ("se actualizó") |
+| **"Se" impersonal cuando sí hay actor** | "Se decidió migrar a Kamal" | Borra al responsable igual que la pasiva inglesa, y aquí el responsable eres tú | "Decidí migrar a Kamal" |
+| **Calco sintáctico** | "basado en", "hacer sentido", "aplicar para el puesto", "lava tus manos" | Traducción literal de una construcción que el español arma distinto | "a partir de" / "con base en", "tener sentido", "postularse a", "lávate las manos" |
+| **Neutro panhispánico** | "ordenador", "móvil", "zumo", "vale", "coger" | Delata traducción o modelo sin calibrar. Adrian escribe en mexicano | "computadora", "celular", "jugo", "va/órale", "agarrar" |
+| **Tú/usted inconsistente** | "Si quieres probarlo, ejecute el comando" | Nadie cambia de registro a media oración | Tú en todo el texto |
+| **Imperativo publicitario en cascada** | "Descubre. Transforma. Impulsa." | Staccato de marketing con una forma verbal propia del español promocional | Una oración que diga qué hace la cosa |
+| **Raya al estilo inglés** | "El deploy — que tardaba 20 min — ahora..." o con guion corto `-` | La raya española va **pegada** al inciso. El espaciado inglés y el guion corto delatan la fuente | "El deploy —que tardaba 20 min— ahora..." |
+
+> **La raya (—) NO es un tell en español.** Los catálogos anti-IA en inglés la prohíben de plano;
+> en español es el signo correcto para incisos y obligatorio en diálogo. Prohibirla no te hace
+> sonar humano, te hace escribir con puntuación defectuosa. Lo que delata es el **espaciado
+> inglés** y el guion corto usado como raya, no la raya bien puesta.
+
 ### Heurísticas de detección rápida
 
 Antes de marcar `draft: false`, hacer estos chequeos sobre el post:
@@ -259,6 +281,11 @@ Antes de marcar `draft: false`, hacer estos chequeos sobre el post:
 4. **Palabras LLM-formales**: grep por "invaluable", "fundamental", "esencial", "crucial", "asimismo", "no obstante", "por consiguiente". Reemplazar
 5. **Promedio de longitud de párrafos**: si todos los párrafos tienen entre 60-100 palabras, hay uniformidad LLM. Variar
 6. **Aforismos en cierres**: si la última línea del post o de una sección es un aforismo abstracto, reemplazar por instrucción concreta o opinión específica
+7. **Gerundios**: `grep -oiE '\b[a-záéíóúñ]+(ando|iendo|yendo)\b' <post> | tr 'A-ZÁÉÍÓÚÑ' 'a-záéíóúñ' | grep -viE '^(cuando|comando|mando|bando|blando|contrabando)$' | sort | uniq -c`. La stoplist es necesaria: "cuando" y "comando" terminan en `-ando` sin ser gerundios, y `-yendo` (leyendo, construyendo) se escapa si solo buscas `iendo`. El cuantificador es `+` y no `{4,}` porque "leyendo" solo tiene dos letras antes del sufijo. Más de dos o tres en un post — y sobre todo dos en la misma oración — es cadena de gerundio
+8. **Calcos y neutro**: `grep -nE 'basado en|hacer sentido|aplicar para|ordenador|móvil|zumo|coger|\bvale\b' <post>`
+9. **Pasiva perifrástica**: `grep -nE '\b(fue|fueron|será|serán|ha sido|han sido) [a-záéíóúñ]+(ado|ada|ados|adas|ido|ida|idos|idas)\b' <post>`
+10. **Raya mal espaciada**: `grep -n ' — \| -- ' <post>`
+11. **Registro mixto**: `grep -nE '\b(usted|ejecute|revise|considere|puede usted)\b' <post>` en un texto que tutea
 
 ### Señales humanas que se conservan (no sobre-corregir)
 
@@ -271,6 +298,25 @@ Estas son marcas de autoría real y deben quedarse aunque "suenen menos pulidas"
 - Anécdotas con detalles específicos: proyecto, stack, lo que salió mal, año aproximado
 - Auto-correcciones visibles ("a mi forma de verlo... bueno, mejor dicho:")
 - Opiniones sin balanceo ("no le encontré el gusto", "me regresé a X")
+
+### Honestidad: el eje que no es de estilo
+
+Todo lo anterior es sobre **cómo suena**. Esto es distinto: son defectos aunque el texto suene
+perfecto, y de hecho son más peligrosos justo cuando suena bien, porque una invención específica
+se lee como honestidad.
+
+- **Cifras sin fuente real.** Ningún número entra al post si no puedes decir de dónde salió. Si no
+  hay dato, no hay número — vacío es mejor que engañoso.
+- **Nombres, empresas, fechas o citas inventadas.** Aplica aunque sean "de ejemplo": en un post en
+  primera persona no hay forma de que el lector distinga el ejemplo del recuerdo.
+- **Relleno especulativo.** Cuando no sabes un dato, la salida correcta es no escribir la oración
+  — no "probablemente empezó a finales de los noventa". Si el hueco importa, pregúntale a Adrian.
+- **Una reescritura no agrega hechos.** Editar un borrador para que suene mejor no introduce
+  ningún dato, nombre, número o fecha que no estuviera en el original o que Adrian no haya dicho.
+  La especificidad viene de la fuente, nunca del editor.
+
+Esto es lo único de esta sección que no se negocia contra la voz: un texto que suena a Adrian y
+dice algo falso es peor que uno que suena a modelo.
 
 ### Workflow recomendado al editar contra patrones
 
