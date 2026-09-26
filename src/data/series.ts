@@ -35,17 +35,16 @@ export const series: Series[] = [
     status: 'active',
     order: 2,
   },
-  // Solo 2 partes — decidir si es serie de verdad (con arco planeado) o si
-  // debería ser tag. Ver docs/editorial: umbral ≥3 posts + tesis.
   {
     name: 'DDD funcional',
     thesis:
-      'DDD funcional en la práctica: el modelo mental que fui armando en tres empresas, y por qué su boilerplate se volvió ventaja con la IA.',
+      'DDD funcional en la práctica: el modelo mental que fui armando en tres empresas, por qué su boilerplate se volvió ventaja con la IA, y cómo decido dónde corta una acción en Ruby y en TypeScript.',
     audience: 'Para quien modela dominio y sospecha que Rails no basta.',
     status: 'active',
     order: 3,
   },
-  // Solo 2 partes — misma decisión pendiente que DDD funcional.
+  // Solo 2 partes — decidir si es serie de verdad (con arco planeado) o si
+  // debería ser tag. Ver docs/editorial: umbral ≥3 posts + tesis.
   {
     name: 'Docker en la práctica',
     thesis:
