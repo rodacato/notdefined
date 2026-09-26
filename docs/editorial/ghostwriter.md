@@ -173,9 +173,10 @@ Cuando el post se publica, agrega `status: published` y deja el archivo como ref
 
 Al marcar `status: published`, haz la cosecha — es lo que hace crecer la firma estilística en vez de dejarla congelada:
 
-1. Revisa la sección **"Frases / voz a conservar"** del research file y la conversación de descubrimiento completa.
-2. Las frases que son firma real de Adrian (las usó él, no el draft) → agrégalas a la lista de muletillas de este doc, con su matiz de uso.
-3. Los hallazgos de personalidad (un gusto, una referencia cultural, una opinión fuerte nueva, un pet peeve) → van al perfil del autor que enlaza `CLAUDE.local.md`.
+1. Revisa **los turnos de Adrian** en la conversación de descubrimiento y en el research file, no el draft. Lo que escribió el modelo no se cosecha.
+2. Las frases que son firma real de Adrian van primero a la **cola de voz** que enlaza `CLAUDE.local.md`, textuales, con fecha y pieza. Suben a la lista de muletillas de este doc solo en la sesión de limpieza, con su OK.
+   Sin registro de que la dijo él, no entra. Las analogías más pulidas son las más sospechosas: en la cosecha del 2026-09-26, tres de las ocho frases propuestas ("abogado para prender la luz", "el aparato de distribución", "el peaje cambia de forma") eran del modelo.
+3. Los hallazgos de personalidad (un gusto, una referencia cultural, una opinión fuerte nueva, un pet peeve) → a la misma cola; suben al perfil del autor que enlaza `CLAUDE.local.md` con el mismo OK.
 4. Si no hubo nada nuevo, di explícitamente "sin cosecha esta vez" — el paso se ejecuta siempre, aunque el resultado sea vacío.
 
 ---
@@ -204,12 +205,13 @@ Estas frases son la firma. Úsalas naturalmente (no todas en cada post, pero sí
 - "el pedo es que..." — para ir al punto del problema. **Solo en chat/conversación, NO en blog posts ni TILs publicados**: Adrian la usa poco y solo en confianza; en público prefiere no darla (2026-07-17). En contenido, usar "el problema es que" o ir directo.
 - "no mames" — cuando algo es absurdo o sorprendente (folklore mexicano). **Solo en chat/conversación, NO en blog posts publicados**: Adrian lo considera poco entendible y grosero para un artículo (2026-07-16). En posts, usar otra muletilla o dejar la reacción en la prosa.
 - "chispitas de X" — atenuador honesto cuando algo no llegó al 100% ("Clean Architecture con chispitas de DDD")
-- "alivio" (como sustantivo emocional) — cuando algo resuelve un problema mental, más fuerte que "ayudó" ("el libro fue un alivio")
+- "alivio" (como sustantivo emocional) — cuando algo resuelve un problema mental, más fuerte que "ayudó" ("el libro fue un alivio"). También para un cambio de mentalidad, no solo técnico: soltar expectativas ajenas ("ese alivio cambió más que cualquier refactor")
 - "una delicia" — entusiasmo genuino, no marketing ("discutir con el equipo era una delicia")
 - "vislumbrar" — anticipación intuitiva, no certeza ("ya vislumbraba el combo perfecto")
 - "no fue placentero" — opinión negativa suavizada, equivalente al inglés "wasn't fun"
 - "campo de acción" — espacio de maniobra, no permiso ("no estar en Rails nos dio más campo de acción")
 - "el reto fue distinto" / "el reto en general fue X" — re-encuadre antes de explicar una situación nueva
+- "X con esteroides" — cuando algo rinde muy por encima de lo esperado para lo que es ("como un buscador con esteroides", sobre un modelo de 2B)
 
 > Esta lista debe crecer con el tiempo. Cada que Adrian use una frase característica en conversación, agrégala aquí. El mecanismo formal es la **cosecha al publicar** (ver "Memoria de descubrimiento") — pero no esperes a publicar si la frase es claramente firma.
 
