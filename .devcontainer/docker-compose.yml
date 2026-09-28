@@ -8,7 +8,7 @@ services:
     # de git/node/claude se acumulan.
     init: true
     volumes:
-      - ../..:/workspaces:cached
+      - ..:/workspaces/notdefined:cached
       # La feature shell-history escribe aquí (/dc/shellhistory, según su
       # devcontainer-feature.json); sin el volumen cada rebuild empieza vacío.
       - bashhistory:/dc/shellhistory
@@ -21,8 +21,6 @@ services:
       - path: local.env
         required: false
     command: sleep infinity
-    ports:
-      - '4321:4321'
 
 volumes:
   bashhistory:

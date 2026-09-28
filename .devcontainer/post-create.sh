@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+cd "$(dirname "$0")/.."
+
 echo "==> Installing npm dependencies"
 npm install
 
 echo "==> Installing bundler"
-gem install bundler
+gem list -i bundler >/dev/null || gem install bundler
 
 echo "==> Setting up Claude Code config..."
 CLAUDE_PROJECT_DIR="$(pwd)/.claude"
@@ -20,4 +22,4 @@ else
   echo "  - No .claude in project, created empty ~/.claude."
 fi
 
-echo "==> post-install complete"
+echo "==> post-create complete"
