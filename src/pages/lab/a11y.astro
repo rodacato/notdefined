@@ -199,8 +199,8 @@ const sources = [
         <div><dt><kbd>Esc</kbd> / back</dt><dd>volver a esta pantalla</dd></div>
       </dl>
       <p class="start-focus-note">
-        Si los atajos dejan de responder, da click en la barra del lab — el
-        sitio embebido se queda con el teclado cuando tiene el foco.
+        Con una URL externa, si los atajos dejan de responder, da click en la
+        barra del lab — ese sitio se queda con el teclado cuando tiene el foco.
       </p>
 
       <div class="start-actions">
@@ -240,7 +240,9 @@ const sources = [
     <iframe
       id="frame"
       title="Sitio bajo simulación visual"
-      referrerpolicy="no-referrer"></iframe>
+      referrerpolicy="no-referrer"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+    ></iframe>
     <div id="overlay" class="sim-overlay" aria-hidden="true"></div>
 
     <div id="blind" class="blind" hidden>
@@ -580,6 +582,14 @@ const sources = [
     speechSynthesis.speak(u);
   }
 
+  // replace() deja las cargas del iframe fuera del historial: Back y Esc
+  // salen del lab en vez de retroceder dentro del sitio embebido.
+  function loadFrame(url: string) {
+    const target = new URL(url, location.href).href;
+    if (frame.contentWindow) frame.contentWindow.location.replace(target);
+    else frame.src = target;
+  }
+
   function getFrameDoc(): Document | null {
     try {
       const d = frame.contentDocument;
@@ -591,24 +601,38 @@ const sources = [
     }
   }
 
+  // Sin alt, un lector real no se calla: lee el nombre del archivo.
+  function imageName(img: HTMLElement) {
+    const alt = img.getAttribute('alt');
+    if (alt !== null) return alt.trim();
+    const file = (img.getAttribute('src') || '').split(/[?#]/)[0];
+    return `sin descripción, archivo ${file.split('/').pop() || 'desconocido'}`;
+  }
+
+  function ownText(el: HTMLElement) {
+    if (el.tagName !== 'LI') return el.innerText || el.textContent || '';
+    const clone = el.cloneNode(true) as HTMLElement;
+    clone.querySelectorAll('ul,ol').forEach((list) => list.remove());
+    return clone.textContent || '';
+  }
+
   function readText(el: HTMLElement) {
-    if (el.tagName === 'IMG') return (el.getAttribute('alt') || '').trim();
-    return (el.innerText || el.textContent || '')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 300);
+    const label = el.getAttribute('aria-label')?.trim();
+    if (label) return label;
+    if (el.tagName === 'IMG') return imageName(el);
+    return ownText(el).replace(/\s+/g, ' ').trim().slice(0, 300);
   }
 
   function usable(el: HTMLElement) {
+    if (el.closest('[aria-hidden="true"]')) return false;
     if (!readText(el)) return false;
     return el.offsetParent !== null || el.getClientRects().length > 0;
   }
 
   function describe(el: HTMLElement) {
     const tag = el.tagName.toLowerCase();
-    if (tag === 'img')
-      return `imagen: ${el.getAttribute('alt') || 'sin descripción'}`;
     const text = readText(el);
+    if (tag === 'img') return `imagen: ${text}`;
     if (/^h[1-6]$/.test(tag)) return `encabezado nivel ${tag[1]}: ${text}`;
     if (tag === 'a') return `enlace: ${text}`;
     if (tag === 'button') return `botón: ${text}`;
@@ -618,20 +642,33 @@ const sources = [
 
   function buildNodes(doc: Document) {
     flow = Array.from(
-      doc.querySelectorAll<HTMLElement>(
-        'h1,h2,h3,h4,h5,h6,p,li,button,img[alt]',
-      ),
-    ).filter(usable);
+      doc.querySelectorAll<HTMLElement>('h1,h2,h3,h4,h5,h6,p,li,button,img'),
+    )
+      .filter((el) => !(el.tagName === 'P' && el.closest('li')))
+      .filter(usable);
     headings = flow.filter((el) => /^h[1-6]$/i.test(el.tagName));
     links = Array.from(doc.querySelectorAll<HTMLElement>('a[href]')).filter(
       usable,
     );
   }
 
+  // Un enlace no está en el flujo: las flechas siguen desde el bloque que lo
+  // contiene, o desde justo antes del siguiente bloque.
+  function syncFlowIndex(el: HTMLElement) {
+    const container = flow.findIndex((f) => f === el || f.contains(el));
+    if (container >= 0) {
+      flowIndex = container;
+      return;
+    }
+    const next = flow.findIndex(
+      (f) => el.compareDocumentPosition(f) & Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+    flowIndex = next >= 0 ? next - 1 : flow.length - 1;
+  }
+
   function setCur(el: HTMLElement) {
     cur = el;
-    const i = flow.indexOf(el);
-    if (i >= 0) flowIndex = i;
+    syncFlowIndex(el);
     speak(describe(el));
   }
 
@@ -669,9 +706,7 @@ const sources = [
     if (cur.tagName === 'A') {
       const href = (cur as HTMLAnchorElement).href;
       speak('Abriendo enlace');
-      const doc = getFrameDoc();
-      if (doc && doc.defaultView) doc.defaultView.location.href = href;
-      else frame.src = href;
+      loadFrame(href);
     } else if (cur.tagName === 'BUTTON') {
       speak('Botón — desactivado en el lector');
     }
@@ -724,6 +759,7 @@ const sources = [
   function activateBlind() {
     readerActive = true;
     blindEl.hidden = false;
+    frame.inert = true;
     const doc = getFrameDoc();
     if (!doc) {
       blindUnavailable.hidden = false;
@@ -744,6 +780,7 @@ const sources = [
     if (!readerActive) return;
     readerActive = false;
     blindEl.hidden = true;
+    frame.inert = false;
     if ('speechSynthesis' in window) speechSynthesis.cancel();
   }
 
@@ -790,6 +827,7 @@ const sources = [
     }
 
     stageName.textContent = step.name;
+    slider.setAttribute('aria-valuetext', step.name);
     badge.textContent = `${label} · ${step.name}`;
   }
 
@@ -860,7 +898,7 @@ const sources = [
 
   function showSim() {
     if (!frameLoaded) {
-      frame.src = POST_URL;
+      loadFrame(POST_URL);
       frameLoaded = true;
     }
     start.hidden = true;
@@ -883,11 +921,8 @@ const sources = [
 
   function exitSim() {
     deactivateBlind();
-    if (history.state?.sim) {
-      history.back();
-    } else {
-      showStart();
-    }
+    if (history.state?.sim) history.replaceState(null, '', location.pathname);
+    showStart();
   }
 
   $('exit').addEventListener('click', exitSim);
@@ -907,21 +942,22 @@ const sources = [
     if (!raw) return;
     const url = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
     input.value = url;
-    frame.src = url;
+    loadFrame(url);
   });
 
   $('reset-url').addEventListener('click', () => {
     ($('url') as HTMLInputElement).value = '';
-    frame.src = POST_URL;
+    loadFrame(POST_URL);
   });
 
   $('blind-load-post').addEventListener('click', () => {
-    frame.src = POST_URL;
+    loadFrame(POST_URL);
   });
 
   // Al recargar el iframe (navegar un enlace, o cargar el post desde el modo sin
   // visión), reconstruye el árbol de nodos y sigue leyendo desde arriba.
   frame.addEventListener('load', () => {
+    getFrameDoc()?.defaultView?.addEventListener('keydown', onKey);
     if (!readerActive) return;
     const doc = getFrameDoc();
     if (!doc) {
@@ -937,7 +973,7 @@ const sources = [
     if (cur) speak(describe(cur));
   });
 
-  window.addEventListener('keydown', (e) => {
+  function onKey(e: KeyboardEvent) {
     if (sim.hidden) return;
     const target = e.target as HTMLElement | null;
     // Solo los campos de texto tragan las teclas; radios/botones/slider no, para
@@ -955,19 +991,23 @@ const sources = [
       exitSim();
       return;
     }
-    if (textEntry) return;
+    if (textEntry || e.ctrlKey || e.metaKey || e.altKey) return;
     if (e.key === 'c') {
       setDrawer(drawer.hidden);
       return;
     }
-    if (readerActive && handleReaderKey(e)) return;
+    const readerListening = readerActive && !blindReader.hidden;
+    const onControl = e.key === 'Enter' && !!target?.closest('button, a');
+    if (readerListening && !onControl && handleReaderKey(e)) return;
     const n = Number(e.key);
     if (n >= 1 && n <= radios.length) {
       const radio = radios[n - 1];
       radio.checked = true;
       selectCondition(radio);
     }
-  });
+  }
+
+  window.addEventListener('keydown', onKey);
 
   apply();
 </script>
@@ -1363,10 +1403,11 @@ const sources = [
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     padding: 0.5rem 0.8rem;
-    outline: none;
   }
-  .url-input:focus {
+  .url-input:focus-visible {
     border-color: var(--color-accent);
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
   }
   .url-actions {
     display: flex;
