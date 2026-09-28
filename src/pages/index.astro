@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { labs, statusLabel } from '../data/labs';
+import { labs, labHref, labLinkAttrs, statusLabel } from '../data/labs';
 
 const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
@@ -124,7 +124,7 @@ function formatDate(date: Date) {
       {
         recentLabs.map((lab, i) => (
           <li class={`post-list-item fade-in-item${i > 0 ? ' bordered' : ''}`}>
-            <a href={`/lab/${lab.slug}`} class="post-link">
+            <a href={labHref(lab)} class="post-link" {...labLinkAttrs(lab)}>
               <span class="post-title">{lab.title}</span>
               <span class="post-date">{statusLabel[lab.status]}</span>
             </a>
