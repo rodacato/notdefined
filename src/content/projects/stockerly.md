@@ -21,6 +21,7 @@ stack:
   - Hexagonal
   - PWA
 repo: https://github.com/rodacato/stockerly
+site: https://rodacato.github.io/stockerly/
 url: https://stockerly.notdefined.dev
 accent: '#10b981'
 icon: /projects/icons/stockerly.svg

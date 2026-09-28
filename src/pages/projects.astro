@@ -49,15 +49,28 @@ const projects = (await getCollection('projects')).sort(
                 <h2 class="project-name">{project.data.name}</h2>
                 <p class="project-tagline">{project.data.tagline}</p>
               </div>
-              <a
-                href={project.data.repo}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="project-github"
-                aria-label={`${project.data.name} en GitHub`}
-              >
-                GitHub ↗
-              </a>
+              <div class="project-links">
+                {project.data.site && (
+                  <a
+                    href={project.data.site}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="project-ext"
+                    aria-label={`Sitio de ${project.data.name}`}
+                  >
+                    Sitio ↗
+                  </a>
+                )}
+                <a
+                  href={project.data.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="project-ext"
+                  aria-label={`${project.data.name} en GitHub`}
+                >
+                  GitHub ↗
+                </a>
+              </div>
             </div>
 
             <p class="project-desc">{project.data.product}</p>
@@ -244,15 +257,19 @@ const projects = (await getCollection('projects')).sort(
     line-height: 1.4;
   }
 
-  .project-github {
+  .project-links {
+    display: flex;
     flex-shrink: 0;
     align-self: flex-start;
+    gap: 0.9rem;
+  }
+  .project-ext {
     font-size: 0.75rem;
     color: var(--color-muted);
     text-decoration: none;
     transition: color 150ms ease;
   }
-  .project-github:hover {
+  .project-ext:hover {
     color: var(--accent);
   }
 
