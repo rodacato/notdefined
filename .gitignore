@@ -8,6 +8,11 @@ dist/
 .env.*
 !.env.example
 
+# Devcontainer: initialize.sh rewrites .host.env on every start; local.env is yours.
+/.devcontainer/.host.env
+/.devcontainer/.host.env.tmp
+/.devcontainer/local.env
+
 # Per-contributor local state of AI coding tools (shared config stays committed)
 CLAUDE.local.md
 .claude/settings.local.json
