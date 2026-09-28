@@ -2,9 +2,11 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import TagPill from '../../components/TagPill.astro';
-import { labs, statusLabel } from '../../data/labs';
+import { labs, labHref, labLinkAttrs, statusLabel } from '../../data/labs';
 
-const sorted = [...labs].sort((a, b) => b.date.localeCompare(a.date));
+const sorted = [...labs].sort(
+  (a, b) => Number(!!b.post) - Number(!!a.post) || b.date.localeCompare(a.date),
+);
 ---
 
 <BaseLayout
@@ -21,7 +23,7 @@ const sorted = [...labs].sort((a, b) => b.date.localeCompare(a.date));
     {
       sorted.map((lab) => (
         <li class="lab-grid-item fade-in-item">
-          <a href={`/lab/${lab.slug}`} class="lab-link">
+          <a href={labHref(lab)} class="lab-link" {...labLinkAttrs(lab)}>
             <span class={`lab-status lab-status-${lab.status}`}>
               <span class="lab-dot" />
               {statusLabel[lab.status]}
@@ -41,7 +43,7 @@ const sorted = [...labs].sort((a, b) => b.date.localeCompare(a.date));
                 {lab.metric && <span class="lab-metric">{lab.metric}</span>}
               </p>
             )}
-            <span class="lab-cta">Córrelo →</span>
+            <span class="lab-cta">Córrelo {lab.href ? '↗' : '→'}</span>
           </a>
           {lab.post && (
             <a href={lab.post.href} class="lab-post-link">
