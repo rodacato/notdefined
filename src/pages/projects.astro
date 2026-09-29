@@ -4,10 +4,28 @@ import PageHeader from '../components/PageHeader.astro';
 import TagPill from '../components/TagPill.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
+const VISIBLE_STACK = 4;
+
 const projects = (await getCollection('projects')).sort(
   (a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) =>
     a.data.order - b.data.order || a.data.name.localeCompare(b.data.name),
 );
+
+const writingTitles = new Map<string, string>([
+  ...(await getCollection('blog', (p) => !p.data.draft)).map(
+    (p) => [`/blog/${p.slug}/`, p.data.title] as const,
+  ),
+  ...(await getCollection('til')).map(
+    (t) => [`/til/${t.slug}/`, t.data.title] as const,
+  ),
+]);
+
+const writingFor = (project: CollectionEntry<'projects'>) =>
+  project.data.posts.map((href) => {
+    const title = writingTitles.get(href);
+    if (!title) throw new Error(`${project.id}: no published post at ${href}`);
+    return { href, title };
+  });
 ---
 
 <BaseLayout
@@ -22,84 +40,118 @@ const projects = (await getCollection('projects')).sort(
 
   <div class="projects-grid">
     {
-      projects.map((project) => (
-        <article
-          class="project-card fade-in-item"
-          style={`--accent: ${project.data.accent ?? '#6366f1'}`}
-        >
-          {project.data.image && (
-            <img
-              class="project-shot"
-              src={project.data.image}
-              alt={`Captura de ${project.data.name}`}
-              loading="lazy"
-            />
-          )}
+      projects.map((project, i) => {
+        const { data } = project;
+        const writing = writingFor(project);
+        const extraStack = data.stack.slice(VISIBLE_STACK);
+        return (
+          <article
+            class:list={[
+              'project-card fade-in-item',
+              { 'project-card--featured': i === 0 },
+            ]}
+            style={`--accent: ${data.accent ?? '#6366f1'}`}
+          >
+            {data.image && (
+              <img
+                class="project-shot"
+                src={data.image}
+                alt={`Captura de ${data.name}`}
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+            )}
 
-          <div class="project-body">
-            <div class="project-head">
-              <span class="project-icon" aria-hidden={!project.data.icon}>
-                {project.data.icon ? (
-                  <img src={project.data.icon} alt="" />
-                ) : (
-                  project.data.name.charAt(0)
-                )}
-              </span>
-              <div class="project-id">
-                <h2 class="project-name">{project.data.name}</h2>
-                <p class="project-tagline">{project.data.tagline}</p>
+            <div class="project-body">
+              <div class="project-main">
+                <div class="project-head">
+                  <span class="project-icon" aria-hidden={!data.icon}>
+                    {data.icon ? (
+                      <img src={data.icon} alt="" />
+                    ) : (
+                      data.name.charAt(0)
+                    )}
+                  </span>
+                  <div class="project-id">
+                    <h2 class="project-name">{data.name}</h2>
+                    <p class="project-tagline">{data.tagline}</p>
+                  </div>
+                </div>
+
+                {data.why && <p class="project-why">{data.why}</p>}
+                <p class="project-desc">{data.product}</p>
               </div>
-              <div class="project-links">
-                {project.data.site && (
+
+              <div class="project-aside">
+                <div class="project-pills">
+                  {data.stack.slice(0, VISIBLE_STACK).map((item: string) => (
+                    <TagPill label={item} />
+                  ))}
+                </div>
+
+                {writing.length > 0 && (
+                  <div class="project-writing">
+                    <p class="project-writing-label">Escribí sobre esto</p>
+                    <ul>
+                      {writing.map((post) => (
+                        <li>
+                          <a href={post.href}>{post.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div class="project-actions">
+                  {data.url && (
+                    <a
+                      href={data.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="project-cta"
+                    >
+                      Probar {data.name} ↗
+                    </a>
+                  )}
+                  {data.site && (
+                    <a
+                      href={data.site}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="project-ext"
+                      aria-label={`Sitio de ${data.name}`}
+                    >
+                      Sitio ↗
+                    </a>
+                  )}
                   <a
-                    href={project.data.site}
+                    href={data.repo}
                     target="_blank"
                     rel="noopener noreferrer"
                     class="project-ext"
-                    aria-label={`Sitio de ${project.data.name}`}
+                    aria-label={`${data.name} en GitHub`}
                   >
-                    Sitio ↗
+                    GitHub ↗
                   </a>
-                )}
-                <a
-                  href={project.data.repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="project-ext"
-                  aria-label={`${project.data.name} en GitHub`}
-                >
-                  GitHub ↗
-                </a>
+                </div>
+
+                <details class="project-more">
+                  <summary>Ver detalles</summary>
+                  <div class="project-more-body">
+                    <p class="project-tech">{data.technical}</p>
+                    {extraStack.length > 0 && (
+                      <div class="project-pills">
+                        {extraStack.map((item: string) => (
+                          <TagPill label={item} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </details>
               </div>
             </div>
-
-            <p class="project-desc">{project.data.product}</p>
-
-            <div class="project-pills">
-              {project.data.stack.map((item: string) => (
-                <TagPill label={item} />
-              ))}
-            </div>
-
-            <details class="project-more">
-              <summary>Ver detalles</summary>
-              <div class="project-more-body">
-                <p class="project-tech">{project.data.technical}</p>
-                {project.data.url && (
-                  <a
-                    href={project.data.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="project-cta"
-                  >
-                    Probar {project.data.name} →
-                  </a>
-                )}
-              </div>
-            </details>
-          </div>
-        </article>
-      ))
+          </article>
+        );
+      })
     }
   </div>
 
@@ -182,16 +234,27 @@ const projects = (await getCollection('projects')).sort(
     border-radius: 0.85rem;
     overflow: hidden;
     background-color: var(--color-bg);
-    transition:
-      border-color 180ms ease,
-      transform 180ms ease,
-      box-shadow 180ms ease;
+    transition: border-color 150ms ease-out;
   }
   .project-card:hover {
     border-color: var(--accent);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 28px -14px
-      color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+
+  .project-card--featured {
+    grid-column: 1 / -1;
+  }
+  .project-card--featured .project-shot {
+    aspect-ratio: 21 / 9;
+  }
+  @media (min-width: 52rem) {
+    .project-card--featured .project-body {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 2.5rem;
+    }
+    .project-card--featured .project-aside > :first-child {
+      margin-top: 0;
+    }
   }
 
   .project-shot {
@@ -257,14 +320,51 @@ const projects = (await getCollection('projects')).sort(
     line-height: 1.4;
   }
 
-  .project-links {
+  .project-why {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.55;
+    margin: 1rem 0 0;
+  }
+
+  .project-writing {
+    margin-top: 1.1rem;
+  }
+  .project-writing-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 0 0 0.35rem;
+  }
+  .project-writing ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.3rem;
+  }
+  .project-writing a {
+    font-size: 0.85rem;
+    color: var(--color-text);
+    text-decoration: none;
+    line-height: 1.4;
+    transition: color 150ms ease-out;
+  }
+  .project-writing a:hover {
+    color: var(--accent);
+  }
+
+  .project-actions {
     display: flex;
-    flex-shrink: 0;
-    align-self: flex-start;
-    gap: 0.9rem;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.1rem;
+    margin-top: 1.25rem;
   }
   .project-ext {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--color-muted);
     text-decoration: none;
     transition: color 150ms ease;
@@ -307,7 +407,7 @@ const projects = (await getCollection('projects')).sort(
   }
   .project-more summary::after {
     content: '▸';
-    transition: transform 150ms ease;
+    transition: transform 150ms ease-out;
   }
   .project-more[open] summary::after {
     transform: rotate(90deg);
@@ -328,11 +428,13 @@ const projects = (await getCollection('projects')).sort(
     line-height: 1.65;
     margin: 0;
   }
+  .project-tech + .project-pills {
+    margin-top: 0.85rem;
+  }
 
   .project-cta {
     display: inline-flex;
     align-items: center;
-    margin-top: 1rem;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     background-color: var(--accent);
@@ -340,12 +442,9 @@ const projects = (await getCollection('projects')).sort(
     font-size: 0.82rem;
     font-weight: 500;
     text-decoration: none;
-    transition:
-      opacity 150ms ease,
-      transform 150ms ease;
+    transition: opacity 150ms ease-out;
   }
   .project-cta:hover {
     opacity: 0.9;
-    transform: translateX(2px);
   }
 </style>

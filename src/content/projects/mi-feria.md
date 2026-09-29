@@ -13,9 +13,9 @@ technical: >-
   biométrico nativo, push vía FCM, observabilidad con Sentry y releases por EAS
   Build con OTA updates.
 stack:
-  - TypeScript
   - React Native
   - Expo
+  - TypeScript
   - Firebase
   - Firestore
   - Sentry
@@ -24,4 +24,7 @@ url: https://mi-feria.notdefined.dev
 accent: '#f59e0b'
 icon: /projects/icons/mi-feria.svg
 order: 4
+posts:
+  - /blog/construi-mi-feria-con-expo-y-el-plan-gratis-me-alcanzo/
+  - /blog/pwa-como-alternativa-economica-a-una-app-nativa/
 ---

@@ -14,16 +14,15 @@ technical: >-
 stack:
   - TypeScript
   - React
+  - WebSockets
+  - Kamal
   - Express
   - Node.js
   - PostgreSQL
   - Excalidraw
-  - WebSockets
-  - Kamal
 repo: https://github.com/rodacato/drawhaus
-site: https://rodacato.github.io/drawhaus/
 url: https://drawhaus.notdefined.dev
 accent: '#3b82f6'
 icon: /projects/icons/drawhaus.svg
-order: 2
+order: 5
 ---

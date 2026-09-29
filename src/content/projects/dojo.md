@@ -15,15 +15,17 @@ stack:
   - TypeScript
   - React
   - Hono
+  - LLM
   - Node.js
   - PostgreSQL
   - Vite
   - pnpm monorepo
-  - LLM
 repo: https://github.com/rodacato/dojo
 site: https://rodacato.github.io/dojo/
 url: https://dojo.notdefined.dev
 accent: '#6366f1'
 icon: /projects/icons/dojo.svg
-order: 1
+order: 2
+posts:
+  - /til/cerebro-de-vibe-coder/
 ---
