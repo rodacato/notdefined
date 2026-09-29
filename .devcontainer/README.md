@@ -38,6 +38,11 @@ login; run it again. Check with `gh auth status` inside. If `gh` answers `Bad cr
 403/404 on another repository, the token expired — or it is scoped to this repository, by
 design; another repository gets its own token.
 
+AI coding agents (Claude Code, Codex…) are not part of this devcontainer: nothing here installs
+them, logs them in or keeps their state. Install and log in the one you use, from the host or
+inside the container; its login and history persist only if its home is kept outside the
+container layer. The editor extensions in `customizations` are only the editor side.
+
 ## Security
 
 - The devcontainer's own files carry no credential. `.host.env` holds only the three `GITHUB_*`

@@ -19,7 +19,6 @@
     "ghcr.io/devcontainers/features/ruby:1": {
       "version": "3.4"
     },
-    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
     "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
   },
   "initializeCommand": "sh .devcontainer/initialize.sh || exit 0",
