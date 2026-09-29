@@ -53,6 +53,7 @@ export const labs: Lab[] = [
     tags: ['LLM', 'multi-agente', 'PixiJS'],
     requirements: 'sin API key corre en modo simulado',
     metric: '20 residentes',
+    image: '/lab/shots/ai-town.webp',
   },
   {
     slug: 'pattern-circuit',
@@ -65,6 +66,7 @@ export const labs: Lab[] = [
     tags: ['juego', 'patrones de diseño', 'TypeScript'],
     requirements: 'desktop',
     metric: '27 niveles · 20 patrones',
+    image: '/lab/shots/pattern-circuit.webp',
   },
   {
     slug: 'a11y',
@@ -80,6 +82,7 @@ export const labs: Lab[] = [
       href: '/blog/ver-tu-sitio-con-otros-ojos/',
       label: 'Lee el post',
     },
+    image: '/lab/shots/a11y.webp',
   },
   {
     slug: 'knotty',
@@ -91,5 +94,6 @@ export const labs: Lab[] = [
     date: '2026-09-24',
     tags: ['LLM', 'React Three Fiber', 'BYOK'],
     requirements: 'sin API key corre en modo simulado',
+    image: '/lab/shots/knotty.webp',
   },
 ];
