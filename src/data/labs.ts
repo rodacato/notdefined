@@ -11,6 +11,7 @@ export interface Lab {
   requirements?: string;
   metric?: string;
   post?: { href: string; label: string };
+  image?: string;
 }
 
 export const labHref = (lab: Lab) => lab.href ?? `/lab/${lab.slug}`;
@@ -24,22 +25,8 @@ export const statusLabel: Record<LabStatus, string> = {
   archived: 'archivado',
 };
 
+// Ordered by how much each one says about the work, not by date.
 export const labs: Lab[] = [
-  {
-    slug: 'a11y',
-    title: 'Ver tu sitio con otros ojos',
-    blurb:
-      'Simulador de condiciones visuales: daltonismo con las matrices correctas (Machado 2009), visión baja, cataratas, glaucoma. Aplícalo a este blog o a la URL que quieras.',
-    status: 'experimental',
-    date: '2026-07-15',
-    tags: ['a11y', 'SVG', 'feColorMatrix'],
-    requirements: 'cualquier navegador',
-    metric: '8 modos',
-    post: {
-      href: '/blog/ver-tu-sitio-con-otros-ojos/',
-      label: 'Lee el post',
-    },
-  },
   {
     slug: 'gemma',
     title: 'Gemma 3n en el navegador',
@@ -56,6 +43,18 @@ export const labs: Lab[] = [
     },
   },
   {
+    slug: 'ai-town',
+    href: 'https://rodacato.github.io/ai-town/',
+    title: 'AI Town',
+    blurb:
+      'Un pueblo de vecinos con personalidad y memoria que reaccionan a pregones verdaderos o falsos. Sirve para comparar modelos con los mismos pregones —decisiones, latencia, tokens y costo— o para dejar que una IA gobierne el terrario.',
+    status: 'experimental',
+    date: '2026-09-23',
+    tags: ['LLM', 'multi-agente', 'PixiJS'],
+    requirements: 'sin API key corre en modo simulado',
+    metric: '20 residentes',
+  },
+  {
     slug: 'pattern-circuit',
     href: 'https://rodacato.github.io/pattern-circuit/',
     title: 'Pattern Circuit',
@@ -68,6 +67,21 @@ export const labs: Lab[] = [
     metric: '27 niveles · 20 patrones',
   },
   {
+    slug: 'a11y',
+    title: 'Ver tu sitio con otros ojos',
+    blurb:
+      'Simulador de condiciones visuales: daltonismo con las matrices correctas (Machado 2009), visión baja, cataratas, glaucoma. Aplícalo a este blog o a la URL que quieras.',
+    status: 'experimental',
+    date: '2026-07-15',
+    tags: ['a11y', 'SVG', 'feColorMatrix'],
+    requirements: 'cualquier navegador',
+    metric: '8 modos',
+    post: {
+      href: '/blog/ver-tu-sitio-con-otros-ojos/',
+      label: 'Lee el post',
+    },
+  },
+  {
     slug: 'knotty',
     href: 'https://rodacato.github.io/knotty/',
     title: 'Knotty',
@@ -77,17 +91,5 @@ export const labs: Lab[] = [
     date: '2026-09-24',
     tags: ['LLM', 'React Three Fiber', 'BYOK'],
     requirements: 'sin API key corre en modo simulado',
-  },
-  {
-    slug: 'ai-town',
-    href: 'https://rodacato.github.io/ai-town/',
-    title: 'AI Town',
-    blurb:
-      'Un pueblo de vecinos con personalidad y memoria que reaccionan a pregones verdaderos o falsos. Sirve para comparar modelos con los mismos pregones —decisiones, latencia, tokens y costo— o para dejar que una IA gobierne el terrario.',
-    status: 'experimental',
-    date: '2026-09-23',
-    tags: ['LLM', 'multi-agente', 'PixiJS'],
-    requirements: 'sin API key corre en modo simulado',
-    metric: '20 residentes',
   },
 ];
