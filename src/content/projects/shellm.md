@@ -20,5 +20,6 @@ stack:
   - JavaScript
 repo: https://github.com/rodacato/SheLLM
 site: https://rodacato.github.io/SheLLM/
+image: /projects/shots/shellm.webp
 order: 3
 ---

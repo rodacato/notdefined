@@ -21,8 +21,8 @@ stack:
   - PostgreSQL
   - Excalidraw
 repo: https://github.com/rodacato/drawhaus
-url: https://drawhaus.notdefined.dev
 accent: '#3b82f6'
 icon: /projects/icons/drawhaus.svg
+image: /projects/shots/drawhaus.webp
 order: 5
 ---
