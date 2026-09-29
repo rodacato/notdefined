@@ -13,12 +13,12 @@ technical: >-
   concurrentes, health checks que no gastan cuota, sin reintentos automáticos y
   el fallback entre proveedores apagado por default. SQLite para el estado.
 stack:
-  - JavaScript
   - Node.js
   - Express
-  - SQLite
   - REST API
+  - SQLite
+  - JavaScript
 repo: https://github.com/rodacato/SheLLM
 site: https://rodacato.github.io/SheLLM/
-order: 5
+order: 3
 ---

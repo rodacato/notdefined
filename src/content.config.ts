@@ -37,6 +37,7 @@ const projectsCollection = defineCollection({
   schema: z.object({
     name: z.string(),
     tagline: z.string(),
+    why: z.string().optional(),
     product: z.string(),
     technical: z.string(),
     stack: z.array(z.string()).default([]),
@@ -47,6 +48,7 @@ const projectsCollection = defineCollection({
     icon: z.string().optional(),
     image: z.string().optional(),
     order: z.number().default(0),
+    posts: z.array(z.string().regex(/^\/(blog|til)\/[^/]+\/$/)).default([]),
   }),
 });
 
