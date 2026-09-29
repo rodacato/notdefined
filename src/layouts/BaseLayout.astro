@@ -438,12 +438,12 @@ const ogImageURL = new URL('/logo.png', Astro.site);
   }
 
   // Tag pills staggered landing
-  document
-    .querySelectorAll('.fade-in-item.is-visible .tag-pill, .tag-pill')
-    .forEach((pill, i) => {
-      (pill as HTMLElement).style.animationDelay = `${i * 60}ms`;
-      pill.classList.add('is-landed');
-    });
+  document.querySelectorAll<HTMLElement>('.tag-pill').forEach((pill) => {
+    const siblings = pill.parentElement?.children ?? [];
+    const i = Array.prototype.indexOf.call(siblings, pill);
+    pill.style.animationDelay = `${Math.min(i, 5) * 60}ms`;
+    pill.classList.add('is-landed');
+  });
 
   // Konami code → nivel secreto (/guias). Puerta dramática, no la única:
   // /guias también está en el pie y es públicamente descubrible.
