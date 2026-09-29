@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/devcontainers/javascript-node:24
 
-# Ruby, Claude Code, GitHub CLI, etc. se instalan vía devcontainer features
+# Ruby, GitHub CLI, etc. se instalan vía devcontainer features
 # definidos en devcontainer.json. Aquí sólo las utilidades de búsqueda/edición
 # que el flujo con agentes usa a diario.
 RUN apt-get update && apt-get install -y --no-install-recommends \
