@@ -3,10 +3,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import TagPill from '../../components/TagPill.astro';
 import { labs, labHref, labLinkAttrs, statusLabel } from '../../data/labs';
-
-const sorted = [...labs].sort(
-  (a, b) => Number(!!b.post) - Number(!!a.post) || b.date.localeCompare(a.date),
-);
 ---
 
 <BaseLayout
@@ -21,9 +17,12 @@ const sorted = [...labs].sort(
 
   <ul class="lab-grid">
     {
-      sorted.map((lab) => (
+      labs.map((lab) => (
         <li class="lab-grid-item fade-in-item">
           <a href={labHref(lab)} class="lab-link" {...labLinkAttrs(lab)}>
+            {lab.image && (
+              <img class="lab-shot" src={lab.image} alt="" loading="lazy" />
+            )}
             <span class={`lab-status lab-status-${lab.status}`}>
               <span class="lab-dot" />
               {statusLabel[lab.status]}
@@ -72,7 +71,7 @@ const sorted = [...labs].sort(
     border-radius: 0.9rem;
     overflow: hidden;
     background-color: var(--color-bg);
-    transition: border-color 150ms ease;
+    transition: border-color 150ms ease-out;
   }
   .lab-grid-item:hover {
     border-color: color-mix(
@@ -80,6 +79,16 @@ const sorted = [...labs].sort(
       var(--color-accent) 40%,
       var(--color-border)
     );
+  }
+
+  .lab-shot {
+    display: block;
+    width: calc(100% + 2.8rem);
+    max-width: none;
+    margin: -1.3rem -1.4rem 0.45rem;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .lab-link {
