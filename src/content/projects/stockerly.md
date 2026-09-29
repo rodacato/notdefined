@@ -22,9 +22,9 @@ stack:
   - PWA
 repo: https://github.com/rodacato/stockerly
 site: https://rodacato.github.io/stockerly/
-url: https://stockerly.notdefined.dev
 accent: '#10b981'
 icon: /projects/icons/stockerly.svg
+image: /projects/shots/stockerly.webp
 order: 1
 posts:
   - /blog/pwa-como-alternativa-economica-a-una-app-nativa/

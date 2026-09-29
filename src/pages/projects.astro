@@ -96,36 +96,25 @@ const writingFor = (project: CollectionEntry<'projects'>) =>
               )}
 
               <div class="project-actions">
-                {data.url && (
-                  <a
-                    href={data.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="project-cta"
-                  >
-                    Probar {data.name} ↗
-                  </a>
-                )}
+                <a
+                  href={data.site ?? data.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="project-cta"
+                >
+                  {data.site ? 'Ver el sitio' : 'Ver en GitHub'} ↗
+                </a>
                 {data.site && (
                   <a
-                    href={data.site}
+                    href={data.repo}
                     target="_blank"
                     rel="noopener noreferrer"
                     class="project-ext"
-                    aria-label={`Sitio de ${data.name}`}
+                    aria-label={`${data.name} en GitHub`}
                   >
-                    Sitio ↗
+                    GitHub ↗
                   </a>
                 )}
-                <a
-                  href={data.repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="project-ext"
-                  aria-label={`${data.name} en GitHub`}
-                >
-                  GitHub ↗
-                </a>
               </div>
 
               <details class="project-more">
@@ -238,6 +227,7 @@ const writingFor = (project: CollectionEntry<'projects'>) =>
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
+    object-position: left top;
     border-bottom: 1px solid var(--color-border);
   }
 

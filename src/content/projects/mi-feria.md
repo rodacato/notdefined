@@ -20,9 +20,10 @@ stack:
   - Firestore
   - Sentry
 repo: https://github.com/rodacato/mi-feria
-url: https://mi-feria.notdefined.dev
+site: https://mi-feria.notdefined.dev/
 accent: '#f59e0b'
 icon: /projects/icons/mi-feria.svg
+image: /projects/shots/mi-feria.webp
 order: 4
 posts:
   - /blog/construi-mi-feria-con-expo-y-el-plan-gratis-me-alcanzo/
