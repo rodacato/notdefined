@@ -1,9 +1,9 @@
 ---
 title: "DDD funcional en Ruby y TypeScript: dónde corta una acción"
-description: "En la parte 2 dejé una lista de lo que la IA no decide por ti. Esta parte es cómo lo decido yo: cada acción como qué ocupa, qué hace y qué espera. Código real de stockerly (Rails) y drawhaus (TypeScript), los use cases que partí de más, y una batalla que decidí no dar."
+description: "En la parte 2 dejé una lista de lo que la IA no decide por ti. Esta parte es cómo lo decido yo: cada acción como qué ocupa, qué hace y qué espera. Código real de stockerly (Rails) y drawhaus (TypeScript), un use case que pasó de monads a tres líneas, y una batalla que decidí no dar."
 pubDate: 2026-09-26
 tags: ["ddd", "architecture", "ruby", "typescript", "functional"]
-draft: true
+draft: false
 series: "DDD funcional"
 seriesOrder: 3
 ---
@@ -12,7 +12,7 @@ seriesOrder: 3
 
 - Lo que me hizo click de DDD fue **la acción**: qué ocupa, qué hace y qué espera. Value objects, entities y aggregates son detalles que decido después
 - El mismo modelo mental me funciona en **Ruby** (stockerly, Rails + dry-rb) y en **TypeScript** (drawhaus). No depende del lenguaje
-- Una acción se separa **cuando cambia lo que espera**, no cuando se repite un paso. Partir por reuso fue mi error más común
+- Una acción se separa **cuando cambia lo que espera**, no cuando se repite un paso. Cortar pensando en reuso fue mi error más común
 - Un booleano no necesita monads. Tuve un `ToggleRule` con `Success`/`Failure` casi tres meses
 - En stockerly **no di la batalla de las entidades**: 35 de 83 acciones mutan ActiveRecord directo. Y la acción aguanta
 
@@ -95,7 +95,7 @@ export class TransferDiagramOwnershipUseCase {
 
 Misma forma. No te lo puedes pasar a ti mismo; por cada diagrama revisa que exista y que sea tuyo, y si vive en un workspace, que el nuevo dueño sea miembro. Transferir. Dejar rastro.
 
-Cambia el cómo: aquí todo falla con excepciones, allá casi todo regresa `Failure`; aquí los repositorios llegan inyectados en el constructor, allá la acción llama a ActiveRecord directo. La checklist es la misma.
+Cambia el cómo: el de drawhaus falla con excepciones y el de stockerly regresa `Failure`; en drawhaus los repositorios llegan inyectados en el constructor, en stockerly la acción llama a ActiveRecord directo. La checklist es la misma.
 
 ### Lo que sí cambia entre los dos
 
@@ -103,7 +103,6 @@ Cambia el cómo: aquí todo falla con excepciones, allá casi todo regresa `Fail
 |---|---|---|
 | El ecosistema te empuja | Hacia Rails. Sus convenciones se metieron hasta en las gemas | A nada. Arquitectura libre, tú decides |
 | Qué es "un modelo" | Un `ApplicationRecord`, por default | Lo que tú definas |
-| Lo que me ayudó | dry-rb: me quitó la idea de entidad que traía de Rails | La libertad misma: cambios más puntuales, sistemas más flexibles |
 
 En Ruby el trabajo fue desaprender lo que Rails me enseñó que era un modelo. Por eso la acción me sirve en los dos: no depende de qué te regala el lenguaje.
 
@@ -113,9 +112,9 @@ Esta es la pregunta de la parte 2 que más me costó, y la contesto con lo que m
 
 Cuando lo que cambia es lo que espera, ahí hay otra cosa. A veces es un flujo nuevo que grita ser independiente. Otras, la complejidad misma de querer forzarlo te grita "voy en otro lugar".
 
-La parte 2 dejó colgado un ejemplo: ¿`RenewSubscription` manda el email de renovación, o eso lo hace un subscriber de `SubscriptionRenewed`? Con la regla sale. Quien renueva espera que la suscripción quede renovada: el cobro hecho y la fecha nueva. El email lo espera alguien más, el usuario. La prueba: si el email falla, ¿se debería deshacer la renovación? No. Entonces no es parte de lo que espera la acción, y va en un subscriber.
+La parte 2 dejó colgado un ejemplo: ¿`RenewSubscription` manda el email de renovación, o eso lo hace un subscriber de `SubscriptionRenewed`? Con la regla sale. Quien renueva espera que la suscripción quede renovada: el cobro hecho y la fecha nueva. El email lo espera alguien más, el usuario. La prueba, que en el fondo es consistencia transaccional: si el email falla, ¿se debería deshacer la renovación? No. Entonces no es parte de lo que espera la acción, y va en un subscriber.
 
-Lo vi clarito en [ai-town](https://github.com/rodacato/ai-town), un pueblo simulado para comparar modelos de lenguaje. Fue un arranque de mucho vibe coding con Claude, no tanto en tiempo como en iteraciones. Todo era de un solo pueblo, y yo ya sabía que quería otro. Eso cambió lo que esperaba del sistema: que un mundo nuevo fuera una carpeta nueva, no un fork. A media mañana [reorganicé el código](https://github.com/rodacato/ai-town/commit/2d7b199) en core, providers y worlds; diez minutos después metí un [contrato de "world pack"](https://github.com/rodacato/ai-town/commit/eb98b59): "a new world is a new folder plus one line". Siete minutos más tarde entró el segundo pueblo.
+Lo vi en [ai-town](https://github.com/rodacato/ai-town), un pueblo simulado para comparar modelos de lenguaje. Fue un arranque de mucho vibe coding con Claude, no tanto en tiempo como en iteraciones. Todo era de un solo pueblo, y yo ya sabía que quería otro. Eso cambió lo que esperaba del sistema: que un mundo nuevo fuera una carpeta nueva, no un fork. A media mañana [reorganicé el código](https://github.com/rodacato/ai-town/commit/2d7b199) en core, providers y worlds; diez minutos después metí un [contrato de "world pack"](https://github.com/rodacato/ai-town/commit/eb98b59): "a new world is a new folder plus one line". Siete minutos más tarde entró el segundo pueblo. Es un nivel más arriba que una acción, pero el criterio es el mismo: lo que cambió fue lo que esperaba el sistema.
 
 Ahora, la otra cara. Mis errores con DDD fueron muchos. El más común, por mucho: **partir use cases en varios muy pequeños que todavía no se reusaban**. Los demás:
 
@@ -163,9 +162,7 @@ end
 
 Tres líneas. Si no existe, `find` truena y el controller responde con su flash. La checklist era de dos pasos y no ocupaba más.
 
-No fue el único. La auditoría de mayo contó que cerca de un tercio de los use cases de stockerly eran envolturas así, y de ahí salió el [ADR-006](https://github.com/rodacato/stockerly/blob/master/docs/architecture/adr/0006-simple-use-case-criterion.md): la base se elige por lo que la acción ocupa, no por regla uniforme. Son cuatro pruebas: sin `yield`, sin contrato, sin publicar eventos por la base y sin nadie que haga pattern matching sobre su resultado. Las cuatro, o lleva monads. La cuarta es la que se olvida: en septiembre un issue contó 21 acciones "de más" y en realidad eran 13: a varios los detenía justo la cuarta.
-
-drawhaus tiene su gemelo en TypeScript, `ToggleStarUseCase`: una clase con el repositorio inyectado para marcar un diagrama con estrella. Y un detalle de nombre que vale la pena: se llama *toggle*, pero recibe `starred: boolean`, y el repositorio arrastra el mismo nombre: `toggleStar(diagramId, starred)`. Asigna, no alterna. Es justo lo de nombrar bien que la parte 2 dejaba en manos del humano, y aquí se me pasó.
+No fue el único. La auditoría de mayo contó que cerca de un tercio de los 67 use cases de entonces eran envolturas así, y de ahí salió el [ADR-006](https://github.com/rodacato/stockerly/blob/master/docs/architecture/adr/0006-simple-use-case-criterion.md): la base se elige por lo que la acción ocupa, no por regla uniforme. Son cuatro pruebas: sin `yield`, sin contrato, sin publicar eventos por la base y sin nadie que haga pattern matching sobre su resultado. Las cuatro, o lleva monads. La cuarta es la que se olvida: en septiembre un [issue](https://github.com/rodacato/stockerly/issues/535) contó que 21 de las 51 que heredaban `ApplicationUseCase` no usaban `yield`, contrato ni eventos. El desvío real era de 13: a las otras 8 las detenía justo la cuarta.
 
 ## La batalla que no di
 
@@ -173,10 +170,10 @@ Antes de dry-rb yo usaba los modelos de ActiveRecord como entidades dentro de lo
 
 Si abres stockerly vas a ver lo contrario. `Dry::Struct` aparece en dos archivos de `app/`. De las 83 acciones que tiene hoy, 35 llaman `update!`, `save!` o `create!` sobre ActiveRecord directo. `ExecuteTrade`, el de arriba, hace `position.update!`.
 
-Esa batalla no la di. stockerly es Rails, y ahí las convenciones jalan fuerte. Y la acción aguanta: sigue diciendo qué ocupa, qué hace y qué espera. Lo que hay adentro es el cómo, y el cómo lo puedo cambiar cuando me estorbe.
+Esa batalla no la di. stockerly es Rails, y ahí las convenciones jalan fuerte. Lo de adentro es el cómo, y ese lo cambio cuando me estorbe.
 
-No ha llegado, pero va. En febrero los use cases vivían planos en `app/use_cases`; en marzo los seis contextos pasaron a estructura hexagonal; en mayo salió el ADR-006 con nueve migraciones. Las entidades siguen pendientes y hoy no me estorban. Eso me dio functional domain modeling: escoger las batallas y dejar que el sistema converja sin el cansancio de hacerlo, y muchas veces rehacerlo, en el camino.
+En febrero los use cases vivían planos en `app/use_cases`; en marzo los seis contextos pasaron a estructura hexagonal; en mayo salió el ADR-006 con nueve migraciones. Las entidades siguen pendientes y hoy no me estorban. Eso me dio functional domain modeling: escoger las batallas y dejar que el sistema converja sin el cansancio de hacerlo, y muchas veces rehacerlo, en el camino.
 
 ---
 
-La próxima vez que no sepas si partir una acción, no te preguntes si el paso se repite. Pregúntate si cambió lo que espera.
+Hoy, antes de partir una acción, me hago una sola pregunta: ¿cambió lo que espera? Si solo se repite un paso, no la parto.
