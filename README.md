@@ -36,7 +36,8 @@ notdefined/
   public/               ← assets estáticos
   .github/
     workflows/
-      deploy.yml        ← deploy a GitHub Pages al mergear a master
+      ci-quality.yml    ← quality gate (npm run ci) en cada PR y push a master
+      site-pages.yml    ← deploy a GitHub Pages al mergear a master
   astro.config.mjs
   tailwind.config.mjs
   package.json
@@ -83,7 +84,7 @@ Los posts con `draft: true` no aparecen en el sitio.
 
 ## Deploy
 
-El workflow [deploy.yml](.github/workflows/deploy.yml) se ejecuta automáticamente en cada push a `master`:
+El workflow [site-pages.yml](.github/workflows/site-pages.yml) se ejecuta automáticamente en cada push a `master`:
 
 1. Instala dependencias y corre `npm run build`
 2. Publica el directorio `dist/` en GitHub Pages

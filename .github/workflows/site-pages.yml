@@ -1,4 +1,4 @@
-name: Deploy Astro Site
+name: Site · Pages
 
 on:
   push:
