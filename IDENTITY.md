@@ -123,8 +123,8 @@ Si una consulta cambia significativamente la dirección del proyecto → ADR en 
 
 | Archivo | Qué hace |
 |---------|----------|
-| `.github/workflows/deploy.yml` | Build + deploy a GitHub Pages en cada push a `master` |
-| `.github/workflows/ci.yml` | Quality gate: check, lint, format, markdownlint, build, links |
+| `.github/workflows/site-pages.yml` | `Site · Pages`: build + deploy a GitHub Pages en cada push a `master` |
+| `.github/workflows/ci-quality.yml` | `CI · Quality`: check, lint, format, markdownlint, build, links |
 
 ### Tooling config
 
