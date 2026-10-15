@@ -66,7 +66,8 @@ Una sola fuente por tipo. Nunca duplicar. Cuando dos docs se contradicen, uno es
 | Índice para agentes AI | `AGENTS.md` |
 | Vision, audiencia, JTBDs, non-goals | `docs/vision/` |
 | Decisiones arquitectónicas inmutables | `docs/architecture/adr/` |
-| Brand, tokens, componentes, kit portable | `docs/design/` |
+| Brand (guía, tokens, kit portable) | `design/brand/` |
+| Componentes y prompts de diseño | `design/` |
 | Panel de expertos (canónico) | `docs/research/experts.md` |
 | Ideas de posts en incubación | GitHub Project v2 privado `rodacato/projects/7` (draft items) |
 | Posts y TILs (contenido) | `src/content/blog/`, `src/content/til/` |
@@ -148,7 +149,7 @@ Si una consulta cambia significativamente la dirección del proyecto → ADR en 
 | GitHub Project v2 privado `rodacato/projects/7` | Ideas de posts en bruto (draft items) — fuera del repo |
 | `docs/vision/` | North star, audiencia, non-goals, JTBDs |
 | `docs/architecture/adr/` | Decisiones arquitectónicas inmutables |
-| `docs/design/` | Brand, tokens, componentes, kit portable para AI design |
+| `design/` | Componentes y prompts para AI design; brand (guía, tokens, kit portable) en `design/brand/` |
 | `docs/research/experts.md` | Panel de expertos canónico |
 | `CLAUDE.local.md` | Instrucciones personales del contribuidor (gitignored) |
 

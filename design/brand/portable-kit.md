@@ -3,7 +3,7 @@
 > **Palette:** Indigo Mono — light theme · **Logo:** `notdefined_` (blinking terminal cursor)
 > Personal technical blog · Spanish editorial · brutally minimal · 2026
 
-Single-file pegable brand kit for external AI design tools (Claude Design, Google Stitch, Figma AI, v0). Keep in sync with `tokens.md`, `brand.md`, and `components.md` — diff at sprint close.
+Single-file pegable brand kit for external AI design tools (Claude Design, Google Stitch, Figma AI, v0). Keep in sync with `design/brand/tokens.md`, `design/brand/README.md`, and `design/components.md` — diff at sprint close.
 
 ---
 
@@ -173,4 +173,4 @@ When an AI design tool produces mockup copy:
 
 ---
 
-*End of portable kit. Source-of-truth files: `docs/design/{brand,tokens,components}.md`. Runtime tokens: `src/styles/global.css`.*
+*End of portable kit. Source-of-truth files: `design/brand/README.md`, `design/brand/tokens.md`, `design/components.md`. Runtime tokens: `src/styles/global.css`.*

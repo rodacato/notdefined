@@ -19,7 +19,7 @@ Este archivo es el índice de contexto para agentes AI (Claude Code, Copilot, et
 | Redactar o editar posts, TILs, copy del sitio | [docs/editorial/ghostwriter.md](docs/editorial/ghostwriter.md) |
 | Revisar un blog post terminado con panel de audiencia simulada | [docs/editorial/audience-panel.md](docs/editorial/audience-panel.md) |
 | Consultar al panel de expertos (Core + Situational) | [docs/research/experts.md](docs/research/experts.md) |
-| Diseño visual / generar pantallas con AI design tools | [docs/design/](docs/design/) |
+| Diseño visual / generar pantallas con AI design tools | [design/](design/README.md) (brand en [design/brand/](design/brand/README.md)) |
 | Ambas cosas (técnico + editorial) | Lee los dos |
 
 ---
@@ -44,7 +44,7 @@ Guiado por [docs/editorial/ghostwriter.md](docs/editorial/ghostwriter.md): voz d
 - **No agregar `Co-Authored-By` ni trailers de coautoría en commits.** Adrian es el único autor.
 - **No abrir PRs ni hacer push sin pedido explícito.** Default: commits locales.
 - **Chat en español; commits / issues / docs en inglés; contenido editorial en es-MX casual.**
-- **Para diseño: escribe prompts** (ver [docs/design/claude-design-prompts.md](docs/design/claude-design-prompts.md)) — no intentes mockups directos. Adrian los corre en Claude Design / Stitch / v0.
+- **Para diseño: escribe prompts** (ver [design/prompts.md](design/prompts.md)) — no intentes mockups directos. Adrian los corre en Claude Design / Stitch / v0.
 - **Accesibilidad: no es un feature, es parte de hacer bien la página.** Reglas abajo.
 
 ---
@@ -68,7 +68,7 @@ No es una fase ni un ticket: es una propiedad del código que ya escribes. El si
 | **Landmarks distinguibles**: si hay 2+ `<nav>`, cada uno con `aria-label` | Sin eso, la lista de landmarks dice "navigation" dos veces |
 | **Contenido inyectado por JS se anuncia** (`role="status"` / `aria-live="polite"`) | Buscador, filtros, cualquier resultado dinámico |
 | **El color nunca es el único canal** | Link dentro de un párrafo → subrayado. Estado → ícono o texto, no solo un punto de color |
-| **Contraste WCAG de los tokens** ≥4.5:1 texto, ≥3:1 link-vs-texto circundante | Ver tabla en `docs/design/tokens.md` |
+| **Contraste WCAG de los tokens** ≥4.5:1 texto, ≥3:1 link-vs-texto circundante | Ver tabla en `design/brand/tokens.md` |
 | **Toda animación respeta `prefers-reduced-motion`** | Parallax, animaciones infinitas (`blink`, `accent-slide`, `mesh-drift`), scroll effects |
 | **`:focus-visible` nunca se destruye** | `outline: none` solo si hay reemplazo visible en la misma regla |
 
@@ -142,7 +142,7 @@ El workflow editorial corre en un **Project v2 privado** a nivel de usuario (`ro
 |-------------------|-----------|
 | `docs/vision/` | North star, audiencia, non-goals, JTBDs |
 | `docs/architecture/adr/` | Decisiones arquitectónicas inmutables (ADRs) |
-| `docs/design/` | Brand, tokens, componentes, kit portable para AI design |
+| `design/` | Componentes y prompts para AI design; brand (guía, tokens, kit portable) en `design/brand/` |
 
 ### Local por contribuidor
 

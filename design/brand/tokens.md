@@ -31,7 +31,7 @@ All colors in OKLCH. Hex approximations are informational only — OKLCH is the 
 
 ### Code blocks
 
-Code blocks intentionally stay dark for contrast, regardless of theme. This is a recipe in [`components.md`](components.md), not a separate token set.
+Code blocks intentionally stay dark for contrast, regardless of theme. This is a recipe in [`components.md`](../components.md), not a separate token set.
 
 ### Palette rationale
 
@@ -111,7 +111,7 @@ Common rhythm inside `.prose`:
 
 ## Effects
 
-See [ADR 0004](../architecture/adr/0004-visual-effects-system.md) for the contract.
+See [ADR 0004](../../docs/architecture/adr/0004-visual-effects-system.md) for the contract.
 
 - **Dot grid background:** radial-gradient of `oklch(70% 0.01 250 / 0.18)` 1px dots on 24px grid.
 - **Noise overlay:** SVG turbulence, opacity 0.03, z-index 9999 (above everything, decorative).
