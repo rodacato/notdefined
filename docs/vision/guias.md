@@ -2,7 +2,7 @@
 
 > The map for the guides system: what it is, how it's organized, how a guide
 > gets made. One screen. The decisions live in ADRs; the prompts live in
-> [claude-design-prompts.md](../design/claude-design-prompts.md); the
+> [design/prompts.md](../../design/prompts.md); the
 > operative registry lives in [`src/data/guias.ts`](../../src/data/guias.ts).
 > This doc links them — it never duplicates them.
 

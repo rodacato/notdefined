@@ -35,7 +35,7 @@ claude.ai, generated-content optics next to a hand-written blog, and the
 4. **Export contract.** Guides are generated against a technical contract
    (separate `data.js` content from `app.js` mechanics, relative paths, no
    external requests, es lang, back-link, origin footer, reduced-motion) kept
-   in `docs/design/claude-design-prompts.md`.
+   in `design/prompts.md`.
 5. **Curation by use.** Only guides Adrian actually revisits get published.
    Each carries a visible origin note ("Generada con Claude Design · date").
 

@@ -23,3 +23,6 @@ CLAUDE.local.md
 # sonda de check-render; su finally la borra, un kill a media corrida no
 public/guias/*/_sonda.html
 logo.png
+
+# Portable brand kit, generated on demand from design/brand/
+design/brand/dist/

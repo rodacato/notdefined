@@ -67,7 +67,7 @@ Native, Rails…) belong to Manuales, never to Polyglot.
 ## Consequences
 
 - `guias.ts` carries the operative registry (collections, `nivel`); this ADR
-  carries the rationale; `docs/design/claude-design-prompts.md` carries the
+  carries the rationale; `design/prompts.md` carries the
   generation/integration prompts. One source per type.
 - The shelf renders any number of collections without redesign; empty ones
   are free to pre-register.

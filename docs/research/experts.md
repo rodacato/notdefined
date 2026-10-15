@@ -151,7 +151,7 @@ Invoke when:
 
 **When to consult:** before implementing any new page/component; copy decisions; any "vibe-change" redesign impulse.
 
-**Style:** Sketches before debating. References the tokens file ([`docs/design/tokens.md`](../design/tokens.md)) before proposing exceptions.
+**Style:** Sketches before debating. References the tokens file ([`design/brand/tokens.md`](../../design/brand/tokens.md)) before proposing exceptions.
 
 ---
 

@@ -1,12 +1,12 @@
 # Components — notdefined.dev
 
-> Recipes for the components and CSS primitives currently in use. Source files in [`../../src/components/`](../../src/components/) and [`../../src/styles/global.css`](../../src/styles/global.css). When a component changes, update its recipe here.
+> Recipes for the components and CSS primitives currently in use. Source files in [`../../src/components/`](../src/components/) and [`../../src/styles/global.css`](../src/styles/global.css). When a component changes, update its recipe here.
 
 ---
 
 ## PageHeader
 
-[`src/components/PageHeader.astro`](../../src/components/PageHeader.astro)
+[`src/components/PageHeader.astro`](../src/components/PageHeader.astro)
 
 The top of every section page (blog index, TIL index, about, projects, etc.).
 
@@ -37,7 +37,7 @@ The top of every section page (blog index, TIL index, about, projects, etc.).
 
 ## CardList
 
-[`src/components/CardList.astro`](../../src/components/CardList.astro)
+[`src/components/CardList.astro`](../src/components/CardList.astro)
 
 The list rendering used for blog posts, TILs, projects. Bordered container with stacked items separated by horizontal rules and a subtle accent border on hover (left edge).
 
@@ -64,7 +64,7 @@ The `▎` is the hover accent border — invisible by default, opaque on `:hover
 
 ## TagPill
 
-[`src/components/TagPill.astro`](../../src/components/TagPill.astro)
+[`src/components/TagPill.astro`](../src/components/TagPill.astro)
 
 Small pill rendering a single tag. Three states: default, hover, active.
 
@@ -174,11 +174,11 @@ The container does NOT use `prose` from Tailwind Typography — it's hand-rolled
 
 ## Component / token contract
 
-Every component above uses tokens from [`tokens.md`](tokens.md). Hardcoded values inside components are violations of the contract. When introducing a new color or font size, add the token first, then reference it.
+Every component above uses tokens from [`tokens.md`](brand/tokens.md). Hardcoded values inside components are violations of the contract. When introducing a new color or font size, add the token first, then reference it.
 
 When adding a new component:
 
 1. Define its anatomy here first (ASCII or screenshot is fine).
-2. Identify which tokens it needs. If a needed token doesn't exist, add it to [`tokens.md`](tokens.md) AND [`global.css`](../../src/styles/global.css) first.
+2. Identify which tokens it needs. If a needed token doesn't exist, add it to [`tokens.md`](brand/tokens.md) AND [`global.css`](../src/styles/global.css) first.
 3. Implement the component in `src/components/`.
 4. Cross-link this recipe to the source file.

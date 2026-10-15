@@ -3,12 +3,12 @@
 > Ready-to-paste prompts for generating screen mockups in Claude Design / Google Stitch / v0 / Figma AI.
 >
 > **Workflow:**
-> 1. Paste [`brand-kit-portable.md`](brand-kit-portable.md) once at the start of the session as system context.
+> 1. Paste [`brand/portable-kit.md`](brand/portable-kit.md) once at the start of the session as system context.
 > 2. Use one of the prompts below for the specific screen you want.
 > 3. Review the result against the existing implementation (Adrian's screenshot or live URL).
 > 4. If the result is right, save the mockup in `.local/design-mockups/<batch-name>/`.
 >
-> Prompts are written in English so they work consistently across tools. Output copy MUST be Spanish per the brand guard at the end of `brand-kit-portable.md`.
+> Prompts are written in English so they work consistently across tools. Output copy MUST be Spanish per the brand guard at the end of `brand/portable-kit.md`.
 
 ---
 
@@ -208,7 +208,7 @@ Output viewport: 800×600. Single-color background (the page bg with dot grid).
 ## Prompt 7 — Interactive guide export contract (for `/guias/`)
 
 Guides are standalone artifacts served from `public/guias/<slug>/` (see
-[ADR 0005](../architecture/adr/0005-interactive-guides-collection.md)). They
+[ADR 0005](../docs/architecture/adr/0005-interactive-guides-collection.md)). They
 do NOT use the site's design system — full visual freedom per guide. Append
 this block to any guide prompt in Claude Design; on an existing project,
 prefix it with "Reestructura este proyecto para cumplir este contrato".
@@ -391,17 +391,17 @@ with fresh eyes or more context — verifies WITHOUT trusting the report:
 After Claude Design returns a mockup:
 
 1. Save the SVG / PNG to `.local/design-mockups/<batch>/<screen>.svg`.
-2. Compare to the live site (or current implementation) — does it preserve the brand? Use the panel in [`../research/experts.md`](../research/experts.md), expert **C4 (Pilar Solano)**.
+2. Compare to the live site (or current implementation) — does it preserve the brand? Use the panel in [`docs/research/experts.md`](../docs/research/experts.md), expert **C4 (Pilar Solano)**.
 3. If divergent: identify which rule was missed, refine the bootstrap prompt or the screen prompt, regenerate.
 4. If aligned but missing detail: regenerate with a more specific instruction ("the code block needs a thin accent shadow on hover").
 
-Per [ADR 0004](../architecture/adr/0004-visual-effects-system.md) and anti-pattern #6 (fragmenting redesigns), only one screen redesign at a time. Close it (mockup → SPEC → implementation → screenshot) before starting another.
+Per [ADR 0004](../docs/architecture/adr/0004-visual-effects-system.md) and anti-pattern #6 (fragmenting redesigns), only one screen redesign at a time. Close it (mockup → SPEC → implementation → screenshot) before starting another.
 
 ---
 
 ## When to update these prompts
 
-- A token in [`tokens.md`](tokens.md) changes → update Prompt 0 and the [`brand-kit-portable.md`](brand-kit-portable.md).
+- A token in [`brand/tokens.md`](brand/tokens.md) changes → update Prompt 0 and the [`brand/portable-kit.md`](brand/portable-kit.md).
 - A new component lands in [`components.md`](components.md) → add a Prompt N for the new component.
 - A generated mockup repeatedly drifts on a rule → add the rule explicitly to Prompt 0.
 
