@@ -29,7 +29,7 @@
     "@tailwindcss/vite": "^4.2.1",
     "astro": "^5.5.0",
     "sharp": "^0.33.5",
-    "tailwindcss": "^4.2.1"
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
