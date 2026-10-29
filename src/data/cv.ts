@@ -17,7 +17,7 @@ export const cv = {
     { label: 'notdefined.dev', href: 'https://notdefined.dev' },
   ],
   summary:
-    'Backend engineer and tech lead with 17+ years shipping production systems — fintech payments, HIPAA healthcare, crypto exchanges, eCommerce, and IoT/telematics. Core stack Ruby/Rails and Node.js/TypeScript, with Rust in production for real-time device communications. Designs around functional Domain-Driven Design, hexagonal architecture, and event-driven patterns, and has led teams through redesigns and migrations. Builds with AI every day and keeps the result reviewable: functional DDD for the system, deliberate practice for the people. Prefers boring infrastructure that works over clever infrastructure that doesn’t.',
+    "Backend engineer and tech lead with 17+ years shipping production systems — fintech payments, HIPAA healthcare, crypto exchanges, eCommerce, and IoT/telematics. Core stack Ruby/Rails and Node.js/TypeScript, with Rust in production for real-time device communications. Designs around functional Domain-Driven Design, hexagonal architecture, and event-driven patterns, and has led teams through redesigns and migrations. Builds with AI every day and keeps the result reviewable: functional DDD for the system, deliberate practice for the people. Prefers boring infrastructure that works over clever infrastructure that doesn't.",
 
   // Curated skills taxonomy — professional/proven first. LinkedIn's dated
   // endorsements (jQuery, CoffeeScript, ActionScript, etc.) are intentionally
@@ -209,7 +209,7 @@ export const cv = {
       location: 'Colima, México',
       highlights: [
         'Led the team for Igobono, a high-demand social marketplace.',
-        'Built a Sinatra & Angular API for Red Bull’s photo-sharing media system.',
+        "Built a Sinatra & Angular API for Red Bull's photo-sharing media system.",
         'Balanced Heroku & Engine Yard; direct client engagement on product and feasibility.',
       ],
       stack: ['Ruby on Rails', 'Sinatra', 'AngularJS', 'Heroku', 'Engine Yard'],
