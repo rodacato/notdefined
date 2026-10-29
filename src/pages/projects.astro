@@ -104,7 +104,7 @@ const writingFor = (project: CollectionEntry<'projects'>) =>
                 >
                   {data.site ? 'Ver el sitio' : 'Ver en GitHub'} ↗
                 </a>
-                {data.site && (
+                {data.site && data.repo !== data.site && (
                   <a
                     href={data.repo}
                     target="_blank"
