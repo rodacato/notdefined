@@ -80,7 +80,21 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
           </div>
         ))
       }
-      <p class="cv-earlier">{cv.earlierSummary}</p>
+      <div class="cv-earlier">
+        <h3 class="cv-earlier-title">Earlier roles</h3>
+        <ul class="cv-earlier-list">
+          {
+            cv.experience
+              .filter((job) => job.earlier)
+              .map((job) => (
+                <li>
+                  <strong>{job.company}</strong> — {job.role} · {job.location} ·{' '}
+                  {job.period}
+                </li>
+              ))
+          }
+        </ul>
+      </div>
     </section>
 
     <div class="cv-grid">
@@ -394,13 +408,32 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
 <style is:global>
   .cv-earlier {
     display: none;
+    max-width: 46rem;
   }
-  .cv-short .cv-earlier {
-    display: block;
-    font-size: 0.85rem;
+  .cv-earlier-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    margin: 0 0 0.4rem;
+  }
+  .cv-earlier-list {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.82rem;
+    line-height: 1.55;
     color: var(--color-muted);
   }
+  .cv-earlier-list strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .cv-short .cv-earlier {
+    display: block;
+  }
   .cv-short [data-earlier],
+  .cv-short .cv-job-highlights li:nth-child(n + 4),
+  .cv-short .cv-job-stack,
   .cv-short .cv-beyond,
   .cv-short .cv-rec + .cv-rec {
     display: none;
@@ -420,6 +453,13 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
       background: #fff !important;
     }
     .cv-job {
+      break-inside: avoid;
+    }
+    .cv [data-earlier] {
+      display: none;
+    }
+    .cv .cv-earlier {
+      display: block;
       break-inside: avoid;
     }
   }

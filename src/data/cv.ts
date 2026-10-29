@@ -255,9 +255,6 @@ export const cv = {
     },
   ],
 
-  earlierSummary:
-    'Earlier: Ruby on Rails and PHP roles since 2007 — full history at notdefined.dev/cv',
-
   education: [
     {
       school: 'Universidad de Colima',
