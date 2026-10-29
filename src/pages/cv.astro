@@ -18,8 +18,14 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
         <p class="cv-title">{cv.title}</p>
         <p class="cv-lane">{cv.lane}</p>
       </div>
-      <button class="cv-download" type="button" data-print>Descargar PDF</button
-      >
+      <div class="cv-actions">
+        <button class="cv-download" type="button" data-print
+          >Descargar PDF</button
+        >
+        <button class="cv-download" type="button" data-print-short>
+          Versión corta
+        </button>
+      </div>
     </header>
 
     <p class="cv-contact">
@@ -56,7 +62,7 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
       <h2 class="cv-section-title">Experience</h2>
       {
         cv.experience.map((job) => (
-          <div class="cv-job">
+          <div class="cv-job" data-earlier={job.earlier ? '' : undefined}>
             <div class="cv-job-head">
               <span class="cv-job-company">{job.company}</span>{' '}
               <span class="cv-job-period">{job.period}</span>
@@ -74,6 +80,7 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
           </div>
         ))
       }
+      <p class="cv-earlier">{cv.earlierSummary}</p>
     </section>
 
     <div class="cv-grid">
@@ -106,7 +113,7 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
         }
       </section>
 
-      <section class="cv-section">
+      <section class="cv-section cv-beyond">
         <h2 class="cv-section-title">Beyond code</h2>
         {cv.interests.map((i) => <p class="cv-line">{i}</p>)}
       </section>
@@ -165,6 +172,13 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
     font-size: 0.85rem;
     color: var(--color-muted);
     margin: 0.1rem 0 0;
+  }
+
+  .cv-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
   }
 
   .cv-download {
@@ -378,11 +392,25 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
 </style>
 
 <style is:global>
+  .cv-earlier {
+    display: none;
+  }
+  .cv-short .cv-earlier {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+  .cv-short [data-earlier],
+  .cv-short .cv-beyond,
+  .cv-short .cv-rec + .cv-rec {
+    display: none;
+  }
+
   @media print {
     .site-header,
     .site-footer,
     .cursor-glow,
-    .cv-download {
+    .cv-actions {
       display: none !important;
     }
     main {
@@ -398,7 +426,21 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
 </style>
 
 <script>
+  const cvArticle = document.querySelector('.cv');
+  const shortByUrl = new URLSearchParams(location.search).has('short');
+  cvArticle?.classList.toggle('cv-short', shortByUrl);
+
   document.querySelector('[data-print]')?.addEventListener('click', () => {
+    cvArticle?.classList.remove('cv-short');
     window.print();
+    cvArticle?.classList.toggle('cv-short', shortByUrl);
   });
+
+  document
+    .querySelector('[data-print-short]')
+    ?.addEventListener('click', () => {
+      cvArticle?.classList.add('cv-short');
+      window.print();
+      cvArticle?.classList.toggle('cv-short', shortByUrl);
+    });
 </script>

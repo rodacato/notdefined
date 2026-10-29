@@ -183,6 +183,7 @@ export const cv = {
     },
     {
       company: 'Grupo Regalii (now Arcus, a Mastercard company)',
+      earlier: true,
       role: 'Senior Software Engineer',
       period: 'Feb 2016 – May 2016',
       location: 'Remote',
@@ -194,6 +195,7 @@ export const cv = {
     },
     {
       company: 'MagmaLabs (formerly Crowd Interactive)',
+      earlier: true,
       role: 'Senior Software Engineer',
       period: 'Oct 2015 – Feb 2016',
       location: 'Colima, México',
@@ -204,6 +206,7 @@ export const cv = {
     },
     {
       company: 'Crowd Interactive',
+      earlier: true,
       role: 'Senior Software Engineer · Team Lead',
       period: 'Mar 2013 – Oct 2015',
       location: 'Colima, México',
@@ -216,6 +219,7 @@ export const cv = {
     },
     {
       company: 'Freshout',
+      earlier: true,
       role: 'Backend & DevOps Engineer',
       period: 'Nov 2010 – Mar 2013',
       location: 'Guadalajara, México',
@@ -227,6 +231,7 @@ export const cv = {
     },
     {
       company: 'Crowd Interactive',
+      earlier: true,
       role: 'Agile Web Developer',
       period: 'Dec 2008 – Nov 2010',
       location: 'Colima, México',
@@ -238,6 +243,7 @@ export const cv = {
     },
     {
       company: 'Secretaría de Salud',
+      earlier: true,
       role: 'Web Developer',
       period: 'Dec 2007 – Dec 2008',
       location: 'Colima, México',
@@ -248,6 +254,9 @@ export const cv = {
       stack: ['PHP', 'Flex 3'],
     },
   ],
+
+  earlierSummary:
+    'Earlier: Ruby on Rails and PHP roles since 2007 — full history at notdefined.dev/cv',
 
   education: [
     {
