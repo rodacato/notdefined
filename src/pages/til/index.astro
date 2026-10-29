@@ -43,7 +43,7 @@ function formatDate(date: Date) {
         <CardList>
           {byMonth.get(month)!.map((entry) => (
             <li class="card-list-item fade-in-item">
-              <a href={`/til/${entry.slug}/`} class="til-link">
+              <a href={`/til/${entry.id}/`} class="til-link">
                 <span class="til-title">{entry.data.title}</span>
                 <div class="til-footer">
                   <div class="tag-row">

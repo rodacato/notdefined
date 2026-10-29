@@ -71,7 +71,7 @@ function formatDate(date: Date) {
       {
         featuredPosts.map((post) => (
           <li class="post-list-item featured-item fade-in-item bordered">
-            <a href={`/blog/${post.slug}/`} class="post-link featured-link">
+            <a href={`/blog/${post.id}/`} class="post-link featured-link">
               <span class="post-title">{post.data.title}</span>
               <span class="featured-desc">{post.data.description}</span>
             </a>
@@ -82,7 +82,7 @@ function formatDate(date: Date) {
       {
         recentPosts.map((post) => (
           <li class="post-list-item fade-in-item bordered">
-            <a href={`/blog/${post.slug}/`} class="post-link">
+            <a href={`/blog/${post.id}/`} class="post-link">
               <span class="post-title">{post.data.title}</span>
               <span class="post-date">{formatDate(post.data.pubDate)}</span>
             </a>
@@ -103,7 +103,7 @@ function formatDate(date: Date) {
       {
         tils.map((entry, i) => (
           <li class={`post-list-item fade-in-item${i > 0 ? ' bordered' : ''}`}>
-            <a href={`/til/${entry.slug}/`} class="post-link">
+            <a href={`/til/${entry.id}/`} class="post-link">
               <span class="post-title">{entry.data.title}</span>
               <span class="post-date">{formatDate(entry.data.date)}</span>
             </a>

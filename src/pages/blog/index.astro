@@ -49,7 +49,7 @@ function formatDate(date: Date) {
         <CardList>
           {postsByYear.get(year)!.map((post) => (
             <li class="card-list-item fade-in-item">
-              <a href={`/blog/${post.slug}/`} class="post-link">
+              <a href={`/blog/${post.id}/`} class="post-link">
                 <h3 class="post-title">{post.data.title}</h3>
                 <p class="post-desc">{post.data.description}</p>
                 <div class="post-footer">

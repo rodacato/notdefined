@@ -40,7 +40,7 @@ function formatDate(date: Date) {
       <CardList>
         {drafts.map((post) => (
           <li class="card-list-item">
-            <a href={`/blog/${post.slug}/`} class="post-link">
+            <a href={`/blog/${post.id}/`} class="post-link">
               <div class="post-header-row">
                 <span class="draft-badge">DRAFT</span>
                 <h2 class="post-title">{post.data.title}</h2>

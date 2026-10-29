@@ -7,7 +7,7 @@ const entries = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 );
 
 const posts = entries.map((post) => ({
-  slug: post.slug,
+  slug: post.id,
   title: post.data.title,
   description: post.data.description,
   tags: post.data.tags,
