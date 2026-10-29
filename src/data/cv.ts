@@ -4,8 +4,8 @@
 
 export const cv = {
   name: 'Adrian Castillo',
-  title: 'Backend & Platform Engineer',
-  lane: 'Domain-Driven Design · AI Infrastructure',
+  title: 'Senior Backend Engineer · Tech Lead',
+  lane: 'Functional DDD · LLM integrations',
   location: 'Colima, México',
   email: 'rodacato@gmail.com',
   links: [
@@ -17,7 +17,7 @@ export const cv = {
     { label: 'notdefined.dev', href: 'https://notdefined.dev' },
   ],
   summary:
-    'Backend-heavy engineer with 17+ years shipping production systems — fintech payments, HIPAA healthcare, crypto exchanges, eCommerce, IoT/telematics, and AI/LLM infrastructure. Core stack Ruby/Rails and Node.js/TypeScript, with Rust in production for real-time device communications. Designs around Domain-Driven Design, hexagonal architecture, and event-driven patterns; builds AI tooling rather than just consuming it. Prefers boring infrastructure that works over clever infrastructure that doesn’t.',
+    'Backend engineer and tech lead with 17+ years shipping production systems — fintech payments, HIPAA healthcare, crypto exchanges, eCommerce, and IoT/telematics. Core stack Ruby/Rails and Node.js/TypeScript, with Rust in production for real-time device communications. Designs around functional Domain-Driven Design, hexagonal architecture, and event-driven patterns, and has led teams through redesigns and migrations. Builds with AI every day and keeps the result reviewable: functional DDD for the system, deliberate practice for the people. Prefers boring infrastructure that works over clever infrastructure that doesn’t.',
 
   // Curated skills taxonomy — professional/proven first. LinkedIn's dated
   // endorsements (jQuery, CoffeeScript, ActionScript, etc.) are intentionally
@@ -30,6 +30,7 @@ export const cv = {
         'Ruby on Rails',
         'Sinatra',
         'Node.js',
+        'TypeScript',
         'Rust',
         'API design (REST & GraphQL)',
         'Event-driven systems',
@@ -47,7 +48,7 @@ export const cv = {
     },
     {
       group: 'Frontend',
-      items: ['JavaScript', 'TypeScript', 'React', 'React Native'],
+      items: ['JavaScript', 'React', 'React Native'],
     },
     {
       group: 'Data & messaging',
@@ -81,7 +82,7 @@ export const cv = {
       location: 'Remote',
       highlights: [
         'Core software team for a vehicle-tracking platform covering 200,000+ vehicles across México — maintaining the device-communications and message-processing systems.',
-        'iotHub — the Rust processing layer that ingests and handles real-time device communications.',
+        'iotHub — the Rust processing layer for real-time device communications; joined after the initial build to support it in production and extend it with new features and new device models.',
         'DeviceManager (Rails) — equipment inventory and command dispatch; led the team building it.',
         'Encontrol — React Native apps with a Node/Express backend; lead engineer.',
         'DeviceManager and Encontrol both started as prototypes and consolidated into production internal systems and products by proving their value in daily operations.',
@@ -97,6 +98,7 @@ export const cv = {
         'Led the audit, architectural redesign, and optimization of a cloud-based bill-payments platform (Ruby API).',
         'Designed a DDD + hexagonal + event-driven architecture; migrated the API V1 → V2 behind a canary proxy for zero-downtime rollout.',
         'Established a formal technical-proposal process — authored and documented 17 FIPs (Finco Improvement Proposals) — to guide engineering decisions across the team.',
+        'Built an experimental AI-assisted workflow (Claude Code skills and commands) that guided a FIP from proposal through implementation and review, before spec-driven tooling was common.',
         'Implemented a persisted Event Store for domain events, dependency injection with dry-system, and OAuth 2.0 for the V2 API.',
         'Set up an E2E regression suite and a DevContainer to streamline team onboarding.',
       ],
@@ -118,7 +120,7 @@ export const cv = {
       highlights: [
         'Core team scaling a HIPAA healthcare platform to 10x traffic — multi-tenancy, real-time availability, strict security on medical data.',
         'Migrated infrastructure from Heroku to AWS — better performance and cost.',
-        'Evolved architecture: independent services → microservices → consolidated scalable monolith.',
+        'Proposed consolidating the microservices back into a monolith: deployment complexity and constant shifts in features and integrations made it clear the business had to be understood before splitting it again.',
         'Implemented HIPAA-compliant safeguards for sensitive medical data.',
         'Built and maintained core Sinatra/Ruby APIs and React frontends.',
       ],
