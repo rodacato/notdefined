@@ -230,7 +230,7 @@ export const cv = {
       location: 'Colima, México',
       highlights: [
         'Transitioned from PHP/Flex to Ruby on Rails; Flex UI for AI-powered assistants and Google Ads monitoring.',
-        'PHP support for the Barack Obama Foundation website; built the Modcloth eCommerce platform.',
+        "Maintained a nonprofit organization's PHP website; built the Modcloth eCommerce platform.",
       ],
       stack: ['PHP', 'Flex', 'Ruby on Rails'],
     },
