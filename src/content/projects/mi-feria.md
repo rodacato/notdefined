@@ -19,7 +19,7 @@ stack:
   - Firebase
   - Firestore
   - Sentry
-repo: https://github.com/rodacato/mi-feria
+repo: https://mi-feria.notdefined.dev/
 site: https://mi-feria.notdefined.dev/
 accent: '#f59e0b'
 icon: /projects/icons/mi-feria.svg
