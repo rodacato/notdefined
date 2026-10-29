@@ -1,16 +1,19 @@
 ---
 name: Stockerly
-tagline: Fintech open source para seguir el mercado sin pagar suscripción.
+tagline: Tus inversiones en USD y MXN, con el tipo de cambio que sí era.
 product: >-
-  Plataforma para gestionar portafolios, configurar alertas y leer el mercado:
-  retornos por periodo, benchmarking TWR contra S&P 500, métricas de riesgo,
-  TrendScore de 5 factores, calendario de earnings y feed de noticias con
-  sentiment opcional. 100% gratis y open source, sin tiers ni features premium.
+  Tracker self-hosted de un solo usuario para acciones en USD, cripto y CETES.
+  Cada operación guarda el tipo de cambio de Banxico de su propia fecha, así que
+  separa lo que hizo el activo de lo que hizo el peso. Consolidado con retorno
+  ponderado en el tiempo contra CETES reinvertidos, TrendScore de 5 factores,
+  alertas y captura de operaciones con importación CSV revisable. Open source,
+  licencia MIT.
 technical: >-
   Rails 8 con Hotwire y Tailwind 4 sobre PostgreSQL, instalable como PWA. DDD
-  pragmático + arquitectura hexagonal repartida en 6 bounded contexts. Gateway
-  multi-provider (Polygon, Alpha Vantage, CoinGecko, Banxico) con circuit
-  breakers y scheduling adaptativo. Insights opcionales vía gateway de LLM.
+  pragmático + arquitectura hexagonal en 6 bounded contexts que solo se cruzan
+  por eventos de dominio. Gateways de datos de mercado (Alpaca, Finnhub,
+  CoinGecko, DataBursatil, Banxico y otros) en cadenas con circuit breakers y
+  scheduling adaptativo. 2FA con TOTP y un error tracker dentro de la instancia.
 stack:
   - Ruby
   - Rails
