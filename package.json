@@ -37,11 +37,14 @@
     "eslint-plugin-astro": "^3.2.1",
     "globals": "^16.0.0",
     "linkinator": "^7.5.0",
-    "markdownlint-cli2": "^0.18.1",
+    "markdownlint-cli2": "^0.24.0",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
     "start-server-and-test": "^2.0.10",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.72.1"
+  },
+  "overrides": {
+    "re2js": "~2.8.7"
   }
 }
