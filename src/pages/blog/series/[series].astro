@@ -78,7 +78,7 @@ function formatDate(date: Date) {
     {
       posts.map((post, i) => (
         <li class="card-list-item">
-          <a href={`/blog/${post.slug}/`} class="post-link">
+          <a href={`/blog/${post.id}/`} class="post-link">
             <span class="part-num">{i + 1}</span>
             <div class="post-meta">
               <h2 class="post-title">{post.data.title}</h2>

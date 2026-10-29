@@ -13,10 +13,10 @@ const projects = (await getCollection('projects')).sort(
 
 const writingTitles = new Map<string, string>([
   ...(await getCollection('blog', (p) => !p.data.draft)).map(
-    (p) => [`/blog/${p.slug}/`, p.data.title] as const,
+    (p) => [`/blog/${p.id}/`, p.data.title] as const,
   ),
   ...(await getCollection('til')).map(
-    (t) => [`/til/${t.slug}/`, t.data.title] as const,
+    (t) => [`/til/${t.id}/`, t.data.title] as const,
   ),
 ]);
 

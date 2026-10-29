@@ -1,7 +1,9 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const blogCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -24,7 +26,7 @@ const blogCollection = defineCollection({
 });
 
 const tilCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/til' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
@@ -33,7 +35,7 @@ const tilCollection = defineCollection({
 });
 
 const projectsCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
   schema: z.object({
     name: z.string(),
     tagline: z.string(),
@@ -41,8 +43,8 @@ const projectsCollection = defineCollection({
     product: z.string(),
     technical: z.string(),
     stack: z.array(z.string()).default([]),
-    repo: z.string().url(),
-    site: z.string().url().optional(),
+    repo: z.url(),
+    site: z.url().optional(),
     accent: z.string().optional(),
     icon: z.string().optional(),
     image: z.string().optional(),

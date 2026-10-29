@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "build": "astro build && node scripts/stamp-guias.mjs",
     "preview": "astro preview --host",
-    "preview:ci": "astro preview --host 127.0.0.1 --port 4173",
+    "preview:ci": "astro preview --host 127.0.0.1 --port 4173 --ignore-lock",
     "check": "astro check",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,mjs,cjs,ts,mts,cts,astro,css,json,jsonc,yml,yaml}\"",
@@ -24,15 +24,15 @@
     "check:render": "node scripts/check-render.mjs"
   },
   "dependencies": {
-    "@astrojs/rss": "^4.0.15",
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^5.5.0",
+    "astro": "^7.4.4",
     "sharp": "^0.33.5",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.4",
+    "@astrojs/check": "^0.9.12",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.13.0",
     "eslint-plugin-astro": "^3.2.1",
