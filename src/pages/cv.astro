@@ -50,7 +50,10 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
         {
           cv.skills.map((group) => (
             <div class="cv-skill-group">
-              <dt class="cv-skill-label">{group.group}{'\u00A0'}</dt>
+              <dt class="cv-skill-label">
+                {group.group}
+                {'\u00A0'}
+              </dt>
               <dd class="cv-skill-items">{group.items.join(' · ')}</dd>
             </div>
           ))
@@ -64,11 +67,17 @@ const featuredTestimonials = testimonials.filter((t) => t.featured);
         cv.experience.map((job) => (
           <div class="cv-job" data-earlier={job.earlier ? '' : undefined}>
             <div class="cv-job-head">
-              <span class="cv-job-company">{job.company}{'\u00A0'}</span>
+              <span class="cv-job-company">
+                {job.company}
+                {'\u00A0'}
+              </span>
               <span class="cv-job-period">{job.period}</span>
             </div>
             <div class="cv-job-sub">
-              <span class="cv-job-role">{job.role}{'\u00A0'}</span>
+              <span class="cv-job-role">
+                {job.role}
+                {'\u00A0'}
+              </span>
               <span class="cv-job-loc">{job.location}</span>
             </div>
             <ul class="cv-job-highlights">
