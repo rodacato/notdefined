@@ -39,7 +39,7 @@
     "linkinator": "^7.5.0",
     "markdownlint-cli2": "^0.24.0",
     "prettier": "^3.5.3",
-    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-astro": "^1.1.2",
     "start-server-and-test": "^2.0.10",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.72.1"
