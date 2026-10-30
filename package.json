@@ -36,7 +36,7 @@
     "eslint": "^10.13.0",
     "eslint-plugin-astro": "^3.2.1",
     "globals": "^16.0.0",
-    "linkinator": "^7.5.0",
+    "linkinator": "^8.1.0",
     "markdownlint-cli2": "^0.24.0",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
