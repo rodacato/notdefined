@@ -26,23 +26,23 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
-    "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.4.4",
+    "@tailwindcss/vite": "^4.3.5",
+    "astro": "^7.4.11",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.13.0",
+    "eslint": "^10.14.0",
     "eslint-plugin-astro": "^3.2.1",
     "globals": "^16.0.0",
     "linkinator": "^7.5.0",
-    "markdownlint-cli2": "^0.24.0",
-    "prettier": "^3.5.3",
+    "markdownlint-cli2": "^0.24.1",
+    "prettier": "^3.10.1",
     "prettier-plugin-astro": "^0.14.1",
     "start-server-and-test": "^2.0.10",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.72.1"
+    "typescript-eslint": "^8.72.2"
   },
   "overrides": {
     "re2js": "~2.8.7"
